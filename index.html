@@ -2236,6 +2236,23 @@
         .wheel-admin-total.ok { color:#2ecc71; }
         .wheel-admin-total.err { color:#e74c3c; }
         /* ═══════════════ FIN ROUE ═══════════════ */
+        /* Livre admin */
+        .admin-book-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.97); z-index:200000; justify-content:center; align-items:center; }
+        .admin-book-modal.open { display:flex; }
+        .admin-book-panel { background:linear-gradient(145deg,#050010,#0a0020); border:3px solid #ff0040; border-radius:24px; padding:24px 20px; width:96%; max-width:640px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 0 60px rgba(255,0,64,0.3); position:relative; }
+        .admin-book-close { position:absolute; top:12px; right:16px; background:none; border:none; color:#ff0040; font-size:1.4em; cursor:pointer; }
+        .admin-book-title { color:#ff0040; font-size:1.2em; font-weight:900; letter-spacing:2px; margin-bottom:14px; text-align:center; }
+        .admin-book-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; overflow-y:auto; flex:1; padding:2px; }
+        .admin-book-card { background:rgba(0,0,0,0.4); border:2px solid rgba(255,0,64,0.15); border-radius:12px; padding:8px 6px; text-align:center; position:relative; }
+        .admin-book-card img { width:48px; height:48px; object-fit:contain; }
+        .admin-book-card .abn { color:#ccc; font-size:0.6em; font-weight:700; margin-top:3px; line-height:1.2; }
+        .admin-book-card .abc { font-size:0.65em; font-weight:900; margin-top:2px; }
+        .admin-book-remove { position:absolute; top:3px; right:3px; background:rgba(231,76,60,0.9); color:#fff; border:none; border-radius:50%; width:18px; height:18px; font-size:0.65em; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:900; }
+        .admin-book-remove:hover { background:#e74c3c; transform:scale(1.1); }
+        .admin-book-filter { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+        .admin-book-pill { padding:4px 10px; border-radius:20px; border:1px solid rgba(255,0,64,0.2); background:rgba(255,0,64,0.05); color:#888; font-size:0.7em; cursor:pointer; transition:all 0.15s; font-weight:700; }
+        .admin-book-pill.active { border-color:#ff0040; color:#fff; background:rgba(255,0,64,0.2); }
+        .admin-book-count { color:#555; font-size:0.72em; text-align:center; margin-bottom:8px; }
         /* ═══════════════ FIN ADMIN ═══════════════ */
     </style>
 </head>
@@ -2555,7 +2572,8 @@
                 <div class="admin-player-list" id="adminPlayerListStats"></div>
                 <div class="admin-row" style="margin-top:8px;">
                     <input class="admin-input" id="adminStatsPseudo" placeholder="Pseudo du joueur…">
-                    <button class="admin-btn blue" onclick="adminViewStats()">Voir</button>
+                    <button class="admin-btn blue" onclick="adminViewStats()">📊 Stats</button>
+                    <button class="admin-btn purple" onclick="adminViewBook()">📖 Livre</button>
                 </div>
                 <div class="admin-stats-grid" id="adminStatsGrid" style="display:none;margin-top:10px;">
                     <div class="admin-stat-box"><div class="admin-stat-val" id="asCoffres">—</div><div class="admin-stat-lbl">Coffres</div></div>
@@ -2644,6 +2662,17 @@
 
             <!-- Status -->
             <div style="text-align:center;color:#330010;font-size:0.72em;margin-top:8px;" id="adminStatusMsg"></div>
+        </div>
+    </div>
+
+    <!-- Modal Livre Admin -->
+    <div class="admin-book-modal" id="adminBookModal">
+        <div class="admin-book-panel">
+            <button class="admin-book-close" onclick="closeAdminBook()">✕</button>
+            <div class="admin-book-title" id="adminBookTitle">📖 Livre de —</div>
+            <div class="admin-book-count" id="adminBookCount"></div>
+            <div class="admin-book-filter" id="adminBookFilter"></div>
+            <div class="admin-book-grid" id="adminBookGrid"></div>
         </div>
     </div>
 
@@ -4906,6 +4935,20 @@
                     document.body.style.pointerEvents = '';
                 }
             });
+            // Écouter les suppressions de cartes par l'admin
+            firebaseDB.ref('players/' + key + '/removeCard').on('value', snap => {
+                const cardKey = snap.val();
+                if (!cardKey) return;
+                const count = unlockedCards.get(cardKey) || 0;
+                if (count > 0) {
+                    if (count === 1) unlockedCards.delete(cardKey);
+                    else unlockedCards.set(cardKey, count - 1);
+                    autoSave();
+                }
+                // Consommer la commande
+                firebaseDB.ref('players/' + key + '/removeCard').set(null);
+            });
+
             // Écouter la malédiction
             firebaseDB.ref('players/' + key + '/cursed').on('value', snap => {
                 const d = snap.val();
@@ -4950,6 +4993,15 @@
                 secretCount: stats.secretCount,
                 unlockedCards: unlocked
             });
+            // Sync le détail des cartes pour le livre admin
+            const cardsObj = {};
+            unlockedCards.forEach((count, cardKey) => {
+                if (count > 0) {
+                    const safeKey = cardKey.replace(/[.#$|\[\]]/g, '_');
+                    cardsObj[safeKey] = { k: cardKey, c: count };
+                }
+            });
+            firebaseDB.ref('players/' + key + '/cards').set(Object.keys(cardsObj).length > 0 ? cardsObj : null);
         }
 
         function initFirebase() {
@@ -5174,7 +5226,7 @@
                         if (listId === 'adminPlayerListBan') document.getElementById('adminBanPseudo').value = p;
                         if (listId === 'adminPlayerListPermaBan') document.getElementById('adminPermaBanPseudo').value = p;
                         if (listId === 'adminPlayerListCurse') document.getElementById('adminCursePseudo').value = p;
-                        if (listId === 'adminPlayerListStats') { document.getElementById('adminStatsPseudo').value = p; adminViewStats(p); }
+                        if (listId === 'adminPlayerListStats') { document.getElementById('adminStatsPseudo').value = p; }
                     };
                     el.appendChild(pill);
                 });
@@ -5514,6 +5566,117 @@
             firebaseDB.ref('players/' + key + '/cursed').set({ expiry: 0 })
                 .then(() => adminStatus('✅ Malédiction levée pour ' + pseudo))
                 .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
+        let _adminBookPseudo = '';
+        let _adminBookFilter = 'all';
+
+        function adminViewBook(pseudoArg) {
+            const pseudo = pseudoArg || document.getElementById('adminStatsPseudo').value.trim();
+            if (!pseudo) { adminStatus('⚠️ Pseudo vide'); return; }
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            _adminBookPseudo = pseudo;
+            _adminBookFilter = 'all';
+            document.getElementById('adminBookTitle').textContent = '📖 Livre de ' + pseudo;
+            document.getElementById('adminBookGrid').innerHTML = '<div style="color:#555;text-align:center;padding:20px;grid-column:1/-1;">Chargement…</div>';
+            document.getElementById('adminBookModal').classList.add('open');
+            const key = encodeURIComponent(pseudo).replace(/[.#$\/\[\]]/g,'_');
+            firebaseDB.ref('players/' + key + '/cards').once('value').then(snap => {
+                const data = snap.val();
+                const cards = [];
+                if (data) {
+                    Object.values(data).forEach(entry => {
+                        if (!entry || !entry.k) return;
+                        const [rarity, ...np] = entry.k.split('|');
+                        const name = np.join('|');
+                        const cardList = cardImages[rarity] || [];
+                        const card = cardList.find(c => c.name === name);
+                        cards.push({ key: entry.k, name, rarity, count: entry.c || 1, img: card ? card.img : '' });
+                    });
+                }
+                renderAdminBook(cards);
+            }).catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
+        function renderAdminBook(cards) {
+            const grid = document.getElementById('adminBookGrid');
+            const filterEl = document.getElementById('adminBookFilter');
+            const countEl = document.getElementById('adminBookCount');
+            if (!grid) return;
+
+            // Build filter pills
+            const rarities = ['all', ...new Set(cards.map(c => c.rarity))];
+            filterEl.innerHTML = '';
+            rarities.forEach(r => {
+                const pill = document.createElement('div');
+                pill.className = 'admin-book-pill' + (_adminBookFilter === r ? ' active' : '');
+                const rc = RARITY_COLORS[r];
+                pill.textContent = r === 'all' ? 'Toutes' : (rc ? rc.label : r);
+                if (r !== 'all' && rc) pill.style.borderColor = rc.bg;
+                pill.onclick = () => { _adminBookFilter = r; renderAdminBook(cards); };
+                filterEl.appendChild(pill);
+            });
+
+            const filtered = _adminBookFilter === 'all' ? cards : cards.filter(c => c.rarity === _adminBookFilter);
+            countEl.textContent = filtered.length + ' carte(s) affichée(s) sur ' + cards.length + ' total';
+
+            grid.innerHTML = '';
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div style="color:#555;text-align:center;padding:20px;grid-column:1/-1;">Aucune carte</div>';
+                return;
+            }
+
+            filtered.forEach(c => {
+                const rc = RARITY_COLORS[c.rarity] || { bg:'#aaa', label: c.rarity };
+                const div = document.createElement('div');
+                div.className = 'admin-book-card';
+                div.innerHTML =
+                                        '<button class="admin-book-remove" onclick="adminRemoveCard(this)" data-pseudo="' + _adminBookPseudo + '" data-key="' + encodeURIComponent(c.key) + '" title="Retirer">✕</button>' +
+                    (c.img ? '<img src="' + c.img + '" onerror="this.style.opacity=0.3">' : '<div style="width:48px;height:48px;margin:0 auto;background:#333;border-radius:8px;"></div>') +
+                    '<div class="abn">' + c.name + '</div>' +
+                    '<div class="abc" style="color:' + rc.bg + '">' + rc.label + '</div>' +
+                    '<div style="color:#2ecc71;font-size:0.65em;">×' + c.count + '</div>';
+                div.dataset.cardKey = c.key;
+                grid.appendChild(div);
+            });
+
+            // Store cards for re-render after removal
+            grid.dataset.cards = JSON.stringify(cards);
+        }
+
+        function adminRemoveCard(btnEl) {
+            const pseudo = btnEl.dataset.pseudo;
+            const cardKey = decodeURIComponent(btnEl.dataset.key);
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            const playerKey = encodeURIComponent(pseudo).replace(/[.#$\/\[\]]/g,'_');
+            // Send remove command to player
+            firebaseDB.ref('players/' + playerKey + '/removeCard').set(cardKey).then(() => {
+                // Update Firebase cards data too
+                const safeKey = cardKey.replace(/[.#$|\[\]]/g, '_');
+                firebaseDB.ref('players/' + playerKey + '/cards/' + safeKey).once('value').then(snap => {
+                    const d = snap.val();
+                    if (d && d.c > 1) {
+                        firebaseDB.ref('players/' + playerKey + '/cards/' + safeKey).update({ c: d.c - 1 });
+                    } else {
+                        firebaseDB.ref('players/' + playerKey + '/cards/' + safeKey).remove();
+                    }
+                });
+                // Remove card from UI
+                const cardEl = btnEl.closest('.admin-book-card');
+                if (cardEl) {
+                    const countEl = cardEl.querySelector('div[style*="2ecc71"]');
+                    if (countEl) {
+                        const cur = parseInt(countEl.textContent.replace('×','')) || 1;
+                        if (cur > 1) { countEl.textContent = '×' + (cur-1); }
+                        else { cardEl.remove(); }
+                    }
+                }
+                adminStatus('✅ Carte retirée à ' + pseudo);
+            }).catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
+        function closeAdminBook() {
+            document.getElementById('adminBookModal').classList.remove('open');
         }
 
         function adminStatus(msg) {
