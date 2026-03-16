@@ -2049,6 +2049,12 @@
         .admin-subtitle { color:#660020; font-size:0.78em; text-align:center; margin-bottom:20px; letter-spacing:2px; }
         .admin-close-btn { position:absolute; top:14px; right:18px; background:none; border:none; color:#ff0040; font-size:1.5em; cursor:pointer; }
         .admin-section { background:rgba(255,0,64,0.05); border:1px solid rgba(255,0,64,0.2); border-radius:16px; padding:14px 16px; margin-bottom:12px; }
+        .admin-tabs { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; border-bottom:2px solid rgba(255,0,64,0.15); padding-bottom:12px; }
+        .admin-tab-btn { flex:1; min-width:70px; padding:9px 6px; background:rgba(0,0,0,0.3); border:2px solid rgba(255,0,64,0.15); border-radius:12px; color:#555; font-size:0.7em; font-weight:900; cursor:pointer; text-align:center; transition:all 0.18s; font-family:'Arial Black',Arial,sans-serif; text-transform:uppercase; letter-spacing:1px; }
+        .admin-tab-btn:hover { border-color:rgba(255,0,64,0.4); color:#888; }
+        .admin-tab-btn.active { border-color:#ff0040; color:#ff4466; background:rgba(255,0,64,0.08); }
+        .admin-tab-panel { display:none; }
+        .admin-tab-panel.active { display:block; }
         .admin-section-title { color:#ff4466; font-size:0.8em; font-weight:900; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
         .admin-luck-grid { display:flex; gap:8px; flex-wrap:wrap; }
         .admin-luck-btn { flex:1; min-width:60px; padding:11px 6px; border:2px solid rgba(255,200,0,0.3); border-radius:12px; background:rgba(255,200,0,0.07); color:#ffd700; font-weight:900; font-size:0.92em; cursor:pointer; transition:all 0.18s; font-family:'Arial Black',Arial,sans-serif; text-align:center; }
@@ -2558,193 +2564,234 @@
             <div class="admin-title">⚡ ADMIN PANEL</div>
             <div class="admin-subtitle">ACCÈS RESTREINT</div>
 
-            <!-- Luck globale -->
-            <div class="admin-section">
-                <div class="admin-section-title">🍀 Chance globale pour TOUS</div>
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
-                    <span style="color:#7dffb3;font-size:0.78em;white-space:nowrap;">Durée :</span>
-                    <input class="admin-input" id="adminLuckMinutes" type="number" value="5" min="0" style="width:60px;padding:6px 8px;font-size:0.85em;">
-                    <span style="color:#7dffb3;font-size:0.75em;">min</span>
-                    <input class="admin-input" id="adminLuckSeconds" type="number" value="0" min="0" max="59" style="width:60px;padding:6px 8px;font-size:0.85em;">
-                    <span style="color:#7dffb3;font-size:0.75em;">sec</span>
-                </div>
-                <div class="admin-luck-grid">
-                    <button class="admin-luck-btn" onclick="adminSetLuck(2)">×2</button>
-                    <button class="admin-luck-btn" onclick="adminSetLuck(4)">×4</button>
-                    <button class="admin-luck-btn" onclick="adminSetLuck(8)">×8</button>
-                    <button class="admin-luck-btn" onclick="adminSetLuck(16)">×16</button>
-                    <button class="admin-luck-btn" onclick="adminSetLuck(32)">×32</button>
-                    <button class="admin-luck-btn x100" onclick="adminSetLuck(100)">🔥 ×100</button>
-                    <button class="admin-luck-btn" onclick="adminSetLuck(0)" style="color:#e74c3c;border-color:rgba(231,76,60,0.4)">OFF</button>
-                </div>
-                <div style="color:#555;font-size:0.75em;margin-top:8px;" id="adminLuckStatus">Aucune chance globale active</div>
+            <!-- Onglets de navigation -->
+            <div class="admin-tabs">
+                <div class="admin-tab-btn active" id="atab-events" onclick="adminTab('events')">🎮 Événements</div>
+                <div class="admin-tab-btn" id="atab-players" onclick="adminTab('players')">👥 Joueurs</div>
+                <div class="admin-tab-btn" id="atab-shop" onclick="adminTab('shop')">🏪 Boutique</div>
+                <div class="admin-tab-btn" id="atab-stats" onclick="adminTab('stats')">📊 Stats</div>
             </div>
 
-            <!-- Broadcast -->
-            <div class="admin-section">
-                <div class="admin-section-title">📢 Message à tous les joueurs</div>
-                <input class="admin-input" id="adminBroadcastMsg" placeholder="Ton message…" maxlength="120">
-                <button class="admin-btn purple" onclick="adminBroadcast()">📡 Envoyer à tous</button>
-            </div>
+            <!-- ONGLET ÉVÉNEMENTS -->
+            <div class="admin-tab-panel active" id="apanel-events">
 
-            <!-- Donner or -->
-            <div class="admin-section">
-                <div class="admin-section-title">💰 Donner de l'or à un joueur</div>
-                <div class="admin-player-list" id="adminPlayerListGold"></div>
-                <div class="admin-row" style="margin-top:8px;">
-                    <input class="admin-input" id="adminGoldPseudo" placeholder="Pseudo du joueur…">
-                    <input class="admin-input" id="adminGoldAmount" type="number" placeholder="Or…" min="1" style="max-width:100px;">
-                    <button class="admin-btn orange" onclick="adminGiveGold()">Donner</button>
-                </div>
-                <button class="admin-btn green" onclick="adminGiveGoldAll()" style="margin-top:8px;">🌍 Donner à TOUS les connectés</button>
-            </div>
-
-            <!-- Carte forcée globale -->
-            <div class="admin-section">
-                <div class="admin-section-title">🎴 Forcer une carte (joueurs connectés uniquement)</div>
-                <div class="admin-rarity-filter" id="adminRarityFilter"></div>
-                <div class="admin-card-grid" id="adminCardGrid"></div>
-                <div style="color:#aaa;font-size:0.78em;margin-bottom:8px;">Carte sélectionnée : <span id="adminSelectedCardName" style="color:#ffd700">Aucune</span></div>
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;">
-                    <span style="color:#7dffb3;font-size:0.78em;white-space:nowrap;">% de joueurs :</span>
-                    <input class="admin-input" id="adminForcePercent" type="number" value="100" min="1" max="100" style="width:70px;padding:6px 10px;font-size:0.85em;">
-                    <span style="color:#555;font-size:0.75em;">% des connectés recevront la carte (aléatoire)</span>
-                </div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                    <button class="admin-btn" onclick="adminForceCardAll()">🌍 Forcer (% défini)</button>
-                    <button class="admin-btn blue" onclick="adminForceCardPercent(50)" style="flex:1;">🎲 50% aléatoire</button>
-                    <button class="admin-btn purple" onclick="adminForceCardPercent(25)" style="flex:1;">🎲 25% aléatoire</button>
-                </div>
-                <div style="color:#555;font-size:0.72em;margin-top:6px;" id="adminForceStatus"></div>
-            </div>
-
-            <!-- Carte forcée joueur précis -->
-            <div class="admin-section">
-                <div class="admin-section-title">🎯 Forcer une carte pour UN joueur précis</div>
-                <div class="admin-player-list" id="adminPlayerListForce"></div>
-                <input class="admin-input" id="adminForcePseudo" placeholder="Pseudo du joueur…" style="margin-top:8px;">
-                <button class="admin-btn blue" onclick="adminForceCardOne()" style="margin-top:4px;">🎯 Forcer pour ce joueur</button>
-                <div style="color:#555;font-size:0.72em;margin-top:6px;">(Utilise la même carte sélectionnée ci-dessus)</div>
-            </div>
-
-            <!-- Ban joueur -->
-            <div class="admin-section">
-                <div class="admin-section-title">🚫 Bannir / Débannir un joueur (temporaire)</div>
-                <div class="admin-player-list" id="adminPlayerListBan"></div>
-                <div class="admin-row" style="margin-top:8px;">
-                    <input class="admin-input" id="adminBanPseudo" placeholder="Pseudo du joueur…">
-                    <button class="admin-btn" onclick="adminBanPlayer()">🚫 Bannir</button>
-                    <button class="admin-btn green" onclick="adminUnbanPlayer()">✅ Débannir</button>
-                </div>
-            </div>
-
-            <!-- Ban permanent -->
-            <div class="admin-section" style="border-color:rgba(200,0,0,0.5);background:rgba(200,0,0,0.05);">
-                <div class="admin-section-title" style="color:#ff4444;">💀 Ban DÉFINITIF</div>
-                <div style="color:#555;font-size:0.72em;margin-bottom:8px;">Le joueur verra un écran de bannissement et disparaîtra du classement et du panel.</div>
-                <div class="admin-player-list" id="adminPlayerListPermaBan"></div>
-                <div class="admin-row" style="margin-top:8px;">
-                    <input class="admin-input" id="adminPermaBanPseudo" placeholder="Pseudo du joueur…">
-                    <button class="admin-btn" onclick="adminPermaBan()" style="background:linear-gradient(180deg,#cc0000,#660000);box-shadow:0 4px 0 #330000;">💀 Ban définitif</button>
-                    <button class="admin-btn green" onclick="adminPermaBanUndo()">↩ Annuler</button>
-                </div>
-            </div>
-
-            <!-- Stats joueur -->
-            <div class="admin-section">
-                <div class="admin-section-title">📊 Stats d'un joueur</div>
-                <div class="admin-player-list" id="adminPlayerListStats"></div>
-                <div class="admin-row" style="margin-top:8px;">
-                    <input class="admin-input" id="adminStatsPseudo" placeholder="Pseudo du joueur…">
-                    <button class="admin-btn blue" onclick="adminViewStats()">📊 Stats</button>
-                    <button class="admin-btn purple" onclick="adminViewBook()">📖 Livre</button>
-                </div>
-                <div class="admin-stats-grid" id="adminStatsGrid" style="display:none;margin-top:10px;">
-                    <div class="admin-stat-box"><div class="admin-stat-val" id="asCoffres">—</div><div class="admin-stat-lbl">Coffres</div></div>
-                    <div class="admin-stat-box"><div class="admin-stat-val" id="asCartes">—</div><div class="admin-stat-lbl">Cartes</div></div>
-                    <div class="admin-stat-box"><div class="admin-stat-val" id="asOr">—</div><div class="admin-stat-lbl">Or</div></div>
-                    <div class="admin-stat-box"><div class="admin-stat-val" id="asSecrets">—</div><div class="admin-stat-lbl">Secrets</div></div>
-                    <div class="admin-stat-box"><div class="admin-stat-val" id="asUnlocked">—</div><div class="admin-stat-lbl">Débloquées</div></div>
-                    <div class="admin-stat-box"><div class="admin-stat-val" id="asBanned" style="color:#e74c3c">—</div><div class="admin-stat-lbl">Statut</div></div>
-                </div>
-            </div>
-
-            <!-- Prix boutique -->
-            <div class="admin-section">
-                <div class="admin-section-title">🏪 Prix de la boutique (temps réel)</div>
-                <div class="admin-shop-grid" id="adminShopGrid"></div>
-                <button class="admin-btn" onclick="adminResetShopPrices()" style="margin-top:10px;">↺ Réinitialiser les prix</button>
-            </div>
-
-            <!-- Stats globales -->
-            <div class="admin-section">
-                <div class="admin-section-title">🌍 Statistiques globales</div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
-                    <div style="flex:1;min-width:120px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,0,64,0.2);border-radius:12px;padding:12px;text-align:center;">
-                        <div style="color:#fff;font-size:1.2em;font-weight:900;" id="adminTotalCardsGlobal">—</div>
-                        <div style="color:#555;font-size:0.7em;text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Cartes obtenues</div>
+                <!-- Chance globale -->
+                <div class="admin-section">
+                    <div class="admin-section-title">🍀 Chance globale pour TOUS</div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+                        <span style="color:#7dffb3;font-size:0.78em;white-space:nowrap;">Durée :</span>
+                        <input class="admin-input" id="adminLuckMinutes" type="number" value="5" min="0" style="width:60px;padding:6px 8px;font-size:0.85em;">
+                        <span style="color:#7dffb3;font-size:0.75em;">min</span>
+                        <input class="admin-input" id="adminLuckSeconds" type="number" value="0" min="0" max="59" style="width:60px;padding:6px 8px;font-size:0.85em;">
+                        <span style="color:#7dffb3;font-size:0.75em;">sec</span>
                     </div>
-                    <div style="flex:1;min-width:120px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,0,64,0.2);border-radius:12px;padding:12px;text-align:center;">
-                        <div style="color:#fff;font-size:1.2em;font-weight:900;" id="adminTotalChestsGlobal">—</div>
-                        <div style="color:#555;font-size:0.7em;text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Coffres ouverts</div>
+                    <div class="admin-luck-grid">
+                        <button class="admin-luck-btn" onclick="adminSetLuck(2)">×2</button>
+                        <button class="admin-luck-btn" onclick="adminSetLuck(4)">×4</button>
+                        <button class="admin-luck-btn" onclick="adminSetLuck(8)">×8</button>
+                        <button class="admin-luck-btn" onclick="adminSetLuck(16)">×16</button>
+                        <button class="admin-luck-btn" onclick="adminSetLuck(32)">×32</button>
+                        <button class="admin-luck-btn x100" onclick="adminSetLuck(100)">🔥 ×100</button>
+                        <button class="admin-luck-btn" onclick="adminSetLuck(0)" style="color:#e74c3c;border-color:rgba(231,76,60,0.4)">OFF</button>
                     </div>
-                    <div style="flex:1;min-width:120px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,0,64,0.2);border-radius:12px;padding:12px;text-align:center;">
-                        <div style="color:#fff;font-size:1.2em;font-weight:900;" id="adminTotalPlayersGlobal">—</div>
-                        <div style="color:#555;font-size:0.7em;text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Joueurs inscrits</div>
+                    <div style="color:#555;font-size:0.75em;margin-top:8px;" id="adminLuckStatus">Aucune chance globale active</div>
+                </div>
+
+                <!-- Double or -->
+                <div class="admin-section">
+                    <div class="admin-section-title">💰 Double or pour TOUS</div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+                        <span style="color:#ffd700;font-size:0.78em;white-space:nowrap;">Multiplicateur :</span>
+                        <input class="admin-input" id="adminDoubleGoldMult" type="number" value="2" min="1" max="100" style="width:65px;padding:6px 8px;font-size:0.85em;">
+                        <span style="color:#ffd700;font-size:0.75em;">× or</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+                        <span style="color:#ffd700;font-size:0.78em;white-space:nowrap;">Durée :</span>
+                        <input class="admin-input" id="adminDoubleGoldMin" type="number" value="5" min="0" style="width:60px;padding:6px 8px;font-size:0.85em;">
+                        <span style="color:#ffd700;font-size:0.75em;">min</span>
+                        <input class="admin-input" id="adminDoubleGoldSec" type="number" value="0" min="0" max="59" style="width:60px;padding:6px 8px;font-size:0.85em;">
+                        <span style="color:#ffd700;font-size:0.75em;">sec</span>
+                    </div>
+                    <div style="display:flex;gap:8px;">
+                        <button class="admin-btn orange" onclick="adminSetDoubleGold(true)">💰 Activer Double Or</button>
+                        <button class="admin-btn" onclick="adminSetDoubleGold(false)" style="background:linear-gradient(180deg,#555,#333);box-shadow:0 4px 0 #111;">OFF</button>
+                    </div>
+                    <div style="color:#555;font-size:0.72em;margin-top:6px;" id="adminDoubleGoldStatus">Aucun double or actif</div>
+                </div>
+
+                <!-- Broadcast -->
+                <div class="admin-section">
+                    <div class="admin-section-title">📢 Message à tous les joueurs</div>
+                    <input class="admin-input" id="adminBroadcastMsg" placeholder="Ton message…" maxlength="120">
+                    <button class="admin-btn purple" onclick="adminBroadcast()">📡 Envoyer à tous</button>
+                </div>
+
+                <!-- Roue de la Fortune -->
+                <div class="admin-section" style="border-color:rgba(0,212,255,0.3);background:rgba(0,212,255,0.03);">
+                    <div class="admin-section-title" style="color:#00d4ff;">🎡 Roue de la Fortune</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:10px;">Modifie les segments en temps réel (total doit faire 100%)</div>
+                    <div id="wheelAdminItems"></div>
+                    <div class="wheel-admin-total" id="wheelAdminTotal">Total : 0%</div>
+                    <button class="admin-btn blue" onclick="adminSaveWheel()" style="margin-top:10px;">💾 Sauvegarder la roue</button>
+                    <button class="admin-btn" onclick="adminResetWheel()" style="margin-top:6px;background:linear-gradient(180deg,#444,#222);box-shadow:0 4px 0 #111;">↺ Réinitialiser</button>
+                </div>
+
+                <!-- Fuse Machine -->
+                <div class="admin-section">
+                    <div class="admin-section-title">⚗️ Fuse Machine</div>
+                    <div style="color:#555;font-size:0.75em;margin-bottom:8px;">Termine instantanément la fusion en cours pour TOUS les joueurs connectés</div>
+                    <button class="admin-btn orange" onclick="adminSkipFuse()">⚡ Skip le timer de fusion</button>
+                </div>
+
+            </div>
+
+            <!-- ONGLET JOUEURS -->
+            <div class="admin-tab-panel" id="apanel-players">
+
+                <!-- Donner or -->
+                <div class="admin-section">
+                    <div class="admin-section-title">💰 Donner de l'or</div>
+                    <div class="admin-player-list" id="adminPlayerListGold"></div>
+                    <div class="admin-row" style="margin-top:8px;">
+                        <input class="admin-input" id="adminGoldPseudo" placeholder="Pseudo du joueur…">
+                        <input class="admin-input" id="adminGoldAmount" type="number" placeholder="Or…" min="1">
+                        <button class="admin-btn orange" onclick="adminGiveGold()">Donner</button>
+                    </div>
+                    <button class="admin-btn green" onclick="adminGiveGoldAll()" style="margin-top:8px;">🌍 Donner à TOUS les connectés</button>
+                </div>
+
+                <!-- Forcer carte -->
+                <div class="admin-section">
+                    <div class="admin-section-title">🎴 Forcer une carte</div>
+                    <div class="admin-rarity-filter" id="adminRarityFilter"></div>
+                    <div class="admin-card-grid" id="adminCardGrid"></div>
+                    <div style="color:#aaa;font-size:0.78em;margin-bottom:8px;">Carte sélectionnée : <span id="adminSelectedCardName" style="color:#ffd700">Aucune</span></div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;">
+                        <span style="color:#7dffb3;font-size:0.78em;white-space:nowrap;">% de joueurs :</span>
+                        <input class="admin-input" id="adminForcePercent" type="number" value="100" min="1" max="100" style="width:70px;padding:6px 10px;font-size:0.85em;">
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="admin-btn" onclick="adminForceCardAll()">🌍 Forcer (% défini)</button>
+                        <button class="admin-btn blue" onclick="adminForceCardPercent(50)" style="flex:1;">🎲 50%</button>
+                        <button class="admin-btn purple" onclick="adminForceCardPercent(25)" style="flex:1;">🎲 25%</button>
+                    </div>
+                    <div style="color:#555;font-size:0.72em;margin-top:6px;" id="adminForceStatus"></div>
+                </div>
+
+                <!-- Forcer carte joueur précis -->
+                <div class="admin-section">
+                    <div class="admin-section-title">🎯 Forcer une carte — joueur précis</div>
+                    <div class="admin-player-list" id="adminPlayerListForce"></div>
+                    <input class="admin-input" id="adminForcePseudo" placeholder="Pseudo du joueur…" style="margin-top:8px;">
+                    <button class="admin-btn blue" onclick="adminForceCardOne()" style="margin-top:4px;">🎯 Forcer pour ce joueur</button>
+                </div>
+
+                <!-- Carte ADMIN EXCLUSIVE -->
+                <div class="admin-section" style="border-color:rgba(255,0,64,0.5);background:rgba(255,0,64,0.05);">
+                    <div class="admin-section-title" style="color:#ff4466;">⚡ Donner une carte ADMIN EXCLUSIVE</div>
+                    <div class="admin-player-list" id="adminPlayerListAdminCard"></div>
+                    <div class="admin-row" style="margin-top:8px;">
+                        <input class="admin-input" id="adminCardPseudo" placeholder="Pseudo du joueur…">
+                        <input class="admin-input" id="adminCardName" placeholder="Nom de la carte…">
+                        <input class="admin-input" id="adminCardImg" placeholder="URL image…" style="max-width:120px;">
+                    </div>
+                    <button class="admin-btn" onclick="adminGiveAdminCard()" style="margin-top:8px;background:linear-gradient(180deg,#ff0040,#0040ff);">⚡ Donner la carte ADMIN</button>
+                </div>
+
+                <!-- Malédiction -->
+                <div class="admin-section" style="border-color:rgba(100,0,150,0.5);background:rgba(80,0,120,0.05);">
+                    <div class="admin-section-title" style="color:#cc44ff;">🪄 Malédiction</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:8px;">Le joueur maudit n'obtient que des Communes, peu importe la chance active.</div>
+                    <div class="admin-player-list" id="adminPlayerListCurse"></div>
+                    <div class="admin-row" style="margin-top:8px;">
+                        <input class="admin-input" id="adminCursePseudo" placeholder="Pseudo du joueur…">
+                        <input class="admin-input" id="adminCurseDuration" type="number" value="5" min="1" style="max-width:70px;">
+                        <span style="color:#cc44ff;font-size:0.75em;white-space:nowrap;">min</span>
+                        <button class="admin-btn" onclick="adminCursePlayer()" style="background:linear-gradient(180deg,#8800cc,#440066);box-shadow:0 4px 0 #220033;">🪄 Maudire</button>
+                        <button class="admin-btn green" onclick="adminUncursePlayer()">✅ Lever</button>
                     </div>
                 </div>
-                <button class="admin-btn blue" onclick="adminRefreshGlobalStats()" style="margin-top:10px;font-size:0.8em;padding:9px;">🔄 Actualiser</button>
-            </div>
 
-            <!-- Double or -->
-            <div class="admin-section">
-                <div class="admin-section-title">💰 Double or pour TOUS</div>
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
-                    <span style="color:#ffd700;font-size:0.78em;white-space:nowrap;">Durée :</span>
-                    <input class="admin-input" id="adminDoubleGoldMin" type="number" value="5" min="0" style="width:60px;padding:6px 8px;font-size:0.85em;">
-                    <span style="color:#ffd700;font-size:0.75em;">min</span>
-                    <input class="admin-input" id="adminDoubleGoldSec" type="number" value="0" min="0" max="59" style="width:60px;padding:6px 8px;font-size:0.85em;">
-                    <span style="color:#ffd700;font-size:0.75em;">sec</span>
+                <!-- Ban temporaire -->
+                <div class="admin-section">
+                    <div class="admin-section-title">🚫 Ban temporaire</div>
+                    <div class="admin-player-list" id="adminPlayerListBan"></div>
+                    <div class="admin-row" style="margin-top:8px;">
+                        <input class="admin-input" id="adminBanPseudo" placeholder="Pseudo du joueur…">
+                        <button class="admin-btn" onclick="adminBanPlayer()">🚫 Bannir</button>
+                        <button class="admin-btn green" onclick="adminUnbanPlayer()">✅ Débannir</button>
+                    </div>
                 </div>
-                <div style="display:flex;gap:8px;">
-                    <button class="admin-btn orange" onclick="adminSetDoubleGold(true)">💰 Activer Double Or</button>
-                    <button class="admin-btn" onclick="adminSetDoubleGold(false)" style="background:linear-gradient(180deg,#555,#333);box-shadow:0 4px 0 #111;">OFF</button>
+
+                <!-- Ban permanent -->
+                <div class="admin-section" style="border-color:rgba(200,0,0,0.5);background:rgba(200,0,0,0.05);">
+                    <div class="admin-section-title" style="color:#ff4444;">💀 Ban DÉFINITIF</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:8px;">Le joueur verra un écran de bannissement et disparaîtra du classement.</div>
+                    <div class="admin-player-list" id="adminPlayerListPermaBan"></div>
+                    <div class="admin-row" style="margin-top:8px;">
+                        <input class="admin-input" id="adminPermaBanPseudo" placeholder="Pseudo du joueur…">
+                        <button class="admin-btn" onclick="adminPermaBan()" style="background:linear-gradient(180deg,#cc0000,#660000);box-shadow:0 4px 0 #330000;">💀 Ban définitif</button>
+                        <button class="admin-btn green" onclick="adminPermaBanUndo()">↩ Annuler</button>
+                    </div>
                 </div>
-                <div style="color:#555;font-size:0.72em;margin-top:6px;" id="adminDoubleGoldStatus">Aucun double or actif</div>
-            </div>
 
-            <!-- Skip Fuse Machine -->
-            <div class="admin-section">
-                <div class="admin-section-title">⚗️ Fuse Machine — Passer le timer</div>
-                <div style="color:#555;font-size:0.75em;margin-bottom:8px;">Termine instantanément la fusion en cours pour TOUS les joueurs connectés</div>
-                <button class="admin-btn orange" onclick="adminSkipFuse()">⚡ Skip le timer de fusion</button>
-            </div>
-
-            <!-- Roue de la Fortune admin -->
-            <div class="admin-section" style="border-color:rgba(0,212,255,0.3);background:rgba(0,212,255,0.03);">
-                <div class="admin-section-title" style="color:#00d4ff;">🎡 Roue de la Fortune</div>
-                <div style="color:#555;font-size:0.72em;margin-bottom:10px;">Modifie les segments en temps réel (total doit faire 100%)</div>
-                <div id="wheelAdminItems"></div>
-                <div class="wheel-admin-total" id="wheelAdminTotal">Total : 0%</div>
-                <button class="admin-btn blue" onclick="adminSaveWheel()" style="margin-top:10px;">💾 Sauvegarder la roue</button>
-                <button class="admin-btn" onclick="adminResetWheel()" style="margin-top:6px;background:linear-gradient(180deg,#444,#222);box-shadow:0 4px 0 #111;">↺ Réinitialiser</button>
-            </div>
-
-            <!-- Malédiction -->
-            <div class="admin-section" style="border-color:rgba(100,0,150,0.5);background:rgba(80,0,120,0.05);">
-                <div class="admin-section-title" style="color:#cc44ff;">🪄 Malédiction</div>
-                <div style="color:#555;font-size:0.72em;margin-bottom:8px;">Le joueur maudit n'obtient que des Communes dans ses coffres, peu importe la chance active.</div>
-                <div class="admin-player-list" id="adminPlayerListCurse"></div>
-                <div class="admin-row" style="margin-top:8px;">
-                    <input class="admin-input" id="adminCursePseudo" placeholder="Pseudo du joueur…">
-                    <input class="admin-input" id="adminCurseDuration" type="number" value="5" min="1" style="max-width:70px;" placeholder="min">
-                    <span style="color:#cc44ff;font-size:0.75em;white-space:nowrap;">min</span>
-                    <button class="admin-btn" onclick="adminCursePlayer()" style="background:linear-gradient(180deg,#8800cc,#440066);box-shadow:0 4px 0 #220033;">🪄 Maudire</button>
-                    <button class="admin-btn green" onclick="adminUncursePlayer()">✅ Lever</button>
+                <!-- Stats joueur -->
+                <div class="admin-section">
+                    <div class="admin-section-title">📊 Stats et livre d'un joueur</div>
+                    <div class="admin-player-list" id="adminPlayerListStats"></div>
+                    <div class="admin-row" style="margin-top:8px;">
+                        <input class="admin-input" id="adminStatsPseudo" placeholder="Pseudo du joueur…">
+                        <button class="admin-btn blue" onclick="adminViewStats()">📊 Stats</button>
+                        <button class="admin-btn purple" onclick="adminViewBook()">📖 Livre</button>
+                    </div>
+                    <div class="admin-stats-grid" id="adminStatsGrid" style="display:none;margin-top:10px;">
+                        <div class="admin-stat-box"><div class="admin-stat-val" id="asCoffres">—</div><div class="admin-stat-label">Coffres</div></div>
+                        <div class="admin-stat-box"><div class="admin-stat-val" id="asCartes">—</div><div class="admin-stat-label">Cartes</div></div>
+                        <div class="admin-stat-box"><div class="admin-stat-val" id="asOr">—</div><div class="admin-stat-label">Or total</div></div>
+                        <div class="admin-stat-box"><div class="admin-stat-val" id="asSecrets">—</div><div class="admin-stat-label">Secrets</div></div>
+                        <div class="admin-stat-box"><div class="admin-stat-val" id="asUnlocked">—</div><div class="admin-stat-label">Débloquées</div></div>
+                        <div class="admin-stat-box"><div class="admin-stat-val" id="asBanned" style="color:#2ecc71">—</div><div class="admin-stat-label">Statut</div></div>
+                    </div>
                 </div>
+
             </div>
 
-            <!-- Status -->
+            <!-- ONGLET BOUTIQUE -->
+            <div class="admin-tab-panel" id="apanel-shop">
+
+                <div class="admin-section">
+                    <div class="admin-section-title">🏪 Prix de la boutique (temps réel)</div>
+                    <div class="admin-shop-grid" id="adminShopGrid"></div>
+                    <button class="admin-btn" onclick="adminResetShopPrices()" style="margin-top:10px;">↺ Réinitialiser les prix</button>
+                </div>
+
+            </div>
+
+            <!-- ONGLET STATS -->
+            <div class="admin-tab-panel" id="apanel-stats">
+
+                <div class="admin-section">
+                    <div class="admin-section-title">🌍 Statistiques globales</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+                        <div style="flex:1;min-width:120px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,0,64,0.2);border-radius:12px;padding:12px;text-align:center;">
+                            <div style="color:#fff;font-size:1.2em;font-weight:900;" id="adminTotalCardsGlobal">—</div>
+                            <div style="color:#555;font-size:0.7em;text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Cartes obtenues</div>
+                        </div>
+                        <div style="flex:1;min-width:120px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,0,64,0.2);border-radius:12px;padding:12px;text-align:center;">
+                            <div style="color:#fff;font-size:1.2em;font-weight:900;" id="adminTotalChestsGlobal">—</div>
+                            <div style="color:#555;font-size:0.7em;text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Coffres ouverts</div>
+                        </div>
+                        <div style="flex:1;min-width:120px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,0,64,0.2);border-radius:12px;padding:12px;text-align:center;">
+                            <div style="color:#fff;font-size:1.2em;font-weight:900;" id="adminTotalPlayersGlobal">—</div>
+                            <div style="color:#555;font-size:0.7em;text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Joueurs inscrits</div>
+                        </div>
+                    </div>
+                    <button class="admin-btn blue" onclick="adminRefreshGlobalStats()" style="margin-top:10px;font-size:0.8em;padding:9px;">🔄 Actualiser</button>
+                </div>
+
+            </div>
+
+                        <!-- Status -->
             <div style="text-align:center;color:#330010;font-size:0.72em;margin-top:8px;" id="adminStatusMsg"></div>
         </div>
     </div>
@@ -3627,7 +3674,7 @@
             const rewards = generateRewards(currentStars);
             // Appliquer le double or avant affichage et stats
             if (globalDoubleGold && globalDoubleGoldExpiry > Date.now()) {
-                rewards.forEach(r => { if (r.type === 'gold') r.quantity *= 2; });
+                rewards.forEach(r => { if (r.type === 'gold') r.quantity *= (globalDoubleGoldMultiplier || 2); });
             }
             displayRewards(rewards);
             updateStats(rewards);
@@ -3862,6 +3909,8 @@
                     goldEarned += reward.quantity;
                 } else if (reward.type === 'card') {
                     const cardKey = reward.rarity + '|' + reward.name;
+                    // Les cartes admin_exclusive ne comptent pas dans le classement
+                    if (reward.rarity === 'admin_exclusive') return;
                     const isNewCard = !unlockedCards.has(cardKey);
                     if (isNewCard) {
                         unlockedCards.set(cardKey, 0);
@@ -4964,6 +5013,7 @@
         let globalLuckMultiplier = 1;
         let globalDoubleGold = false;
         let globalDoubleGoldExpiry = 0;
+        let globalDoubleGoldMultiplier = 2;
         let globalDoubleGoldInterval = null;
         let globalLuckExpiry = 0;
         let globalLuckInterval = null;
@@ -5110,8 +5160,8 @@
             // Double or
             firebaseDB.ref('admin/doubleGold').on('value', snap => {
                 const d = snap.val();
-                if (!d) { applyDoubleGold(false, 0); return; }
-                applyDoubleGold(d.active || false, d.expiry || 0);
+                if (!d) { applyDoubleGold(false, 0, 2); return; }
+                applyDoubleGold(d.active || false, d.expiry || 0, d.multiplier || 2);
             });
 
             // Broadcast — ignorer les messages antérieurs à la connexion
@@ -5226,9 +5276,10 @@
             banner._hide = setTimeout(() => banner.classList.remove('show'), 8000);
         }
 
-        function applyDoubleGold(active, expiry) {
+        function applyDoubleGold(active, expiry, multiplier) {
             if (globalDoubleGoldInterval) { clearInterval(globalDoubleGoldInterval); globalDoubleGoldInterval = null; }
             globalDoubleGold = false;
+            globalDoubleGoldMultiplier = multiplier || 2;
             const banner = document.getElementById('doubleGoldBanner');
             if (!banner) return;
             if (!active || (expiry && expiry < Date.now())) {
@@ -5238,6 +5289,7 @@
             globalDoubleGold = true;
             globalDoubleGoldExpiry = expiry;
             banner.style.display = 'block';
+            const mult = globalDoubleGoldMultiplier;
             function updateDGBanner() {
                 const remaining = Math.max(0, Math.ceil((globalDoubleGoldExpiry - Date.now()) / 1000));
                 if (remaining <= 0) {
@@ -5248,7 +5300,7 @@
                 }
                 const m = String(Math.floor(remaining/60)).padStart(2,'0');
                 const s = String(remaining%60).padStart(2,'0');
-                banner.textContent = '💰 DOUBLE OR ACTIF — ' + m + ':' + s;
+                banner.textContent = '💰 OR ×' + mult + ' ACTIF — ' + m + ':' + s;
             }
             updateDGBanner();
             globalDoubleGoldInterval = setInterval(updateDGBanner, 1000);
@@ -5311,6 +5363,7 @@
                         if (listId === 'adminPlayerListPermaBan') document.getElementById('adminPermaBanPseudo').value = p;
                         if (listId === 'adminPlayerListCurse') document.getElementById('adminCursePseudo').value = p;
                         if (listId === 'adminPlayerListStats') { document.getElementById('adminStatsPseudo').value = p; }
+                        if (listId === 'adminPlayerListAdminCard') document.getElementById('adminCardPseudo').value = p;
                     };
                     el.appendChild(pill);
                 });
@@ -5589,13 +5642,14 @@
             }
             const minVal = Math.max(0, parseInt(document.getElementById('adminDoubleGoldMin').value) || 0);
             const secVal = Math.min(59, Math.max(0, parseInt(document.getElementById('adminDoubleGoldSec').value) || 0));
+            const multVal = Math.max(1, parseInt(document.getElementById('adminDoubleGoldMult').value) || 2);
             const totalMs = (minVal * 60 + secVal) * 1000;
             if (totalMs <= 0) { adminStatus('⚠️ Définis une durée'); return; }
             const expiry = Date.now() + totalMs;
             const durLabel = minVal > 0 && secVal > 0 ? minVal + 'min ' + secVal + 's' : minVal > 0 ? minVal + ' min' : secVal + 's';
-            firebaseDB.ref('admin/doubleGold').set({ active: true, expiry, ts: Date.now() })
+            firebaseDB.ref('admin/doubleGold').set({ active: true, expiry, multiplier: multVal, ts: Date.now() })
                 .then(() => {
-                    const msg = '✅ Double or activé pour ' + durLabel + ' !';
+                    const msg = '✅ Or ×' + multVal + ' activé pour ' + durLabel + ' !';
                     adminStatus(msg);
                     document.getElementById('adminDoubleGoldStatus').textContent = msg;
                 })
@@ -5761,6 +5815,32 @@
 
         function closeAdminBook() {
             document.getElementById('adminBookModal').classList.remove('open');
+        }
+
+        function adminTab(tab) {
+            ['events','players','shop','stats'].forEach(t => {
+                document.getElementById('atab-' + t).className = 'admin-tab-btn' + (t===tab?' active':'');
+                document.getElementById('apanel-' + t).className = 'admin-tab-panel' + (t===tab?' active':'');
+            });
+        }
+
+        function adminGiveAdminCard() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            const pseudo = document.getElementById('adminCardPseudo').value.trim();
+            const name = document.getElementById('adminCardName').value.trim();
+            const img = document.getElementById('adminCardImg').value.trim() || 'https://i.imgur.com/8Km9tLL.png';
+            if (!pseudo || !name) { adminStatus('⚠️ Pseudo et nom de carte requis'); return; }
+            const online = window._adminPlayerList || [];
+            if (!online.includes(pseudo)) { adminStatus('⚠️ ' + pseudo + ' n\'est pas connecté'); return; }
+            if (!cardImages.admin_exclusive) cardImages.admin_exclusive = [];
+            if (!cardImages.admin_exclusive.find(c => c.name === name)) {
+                cardImages.admin_exclusive.push({ name, img });
+            }
+            const cardKey = 'admin_exclusive|' + name;
+            const playerKey = encodeURIComponent(pseudo).replace(/[.#$\/\[\]]/g,'_');
+            firebaseDB.ref('players/' + playerKey + '/forcedCard').set(cardKey)
+                .then(() => adminStatus('⚡ Carte ADMIN \'' + name + '\' envoyée à ' + pseudo + ' !'))
+                .catch(e => adminStatus('Erreur : ' + e.message));
         }
 
         function adminStatus(msg) {
@@ -6115,15 +6195,15 @@
 
         // Segments par défaut
         const WHEEL_DEFAULT_SEGMENTS = [
-            { label: 'Rien',        type: 'nothing', value: 0,      color: '#333333', pct: 25 },
-            { label: '1 000 💰',    type: 'gold',    value: 1000,   color: '#b8860b', pct: 20 },
-            { label: '5 000 💰',    type: 'gold',    value: 5000,   color: '#daa520', pct: 15 },
-            { label: '10 000 💰',   type: 'gold',    value: 10000,  color: '#ffd700', pct: 10 },
-            { label: '50 000 💰',   type: 'gold',    value: 50000,  color: '#ffec6e', pct: 5  },
+            { label: 'Chance X32',  type: 'luck',    value: 32,     color: '#ff0040', pct: 1  },
+            { label: '10 000 💰',   type: 'gold',    value: 10000,  color: '#b8860b', pct: 20 },
+            { label: '50 000 💰',   type: 'gold',    value: 50000,  color: '#daa520', pct: 15 },
+            { label: '100 000 💰',  type: 'gold',    value: 100000, color: '#ffd700', pct: 10 },
+            { label: '500 000 💰',  type: 'gold',    value: 500000, color: '#ffec6e', pct: 5  },
             { label: 'Chance ×2',   type: 'luck',    value: 2,      color: '#2ecc71', pct: 10 },
             { label: 'Chance ×4',   type: 'luck',    value: 4,      color: '#3498db', pct: 7  },
             { label: 'Chance ×8',   type: 'luck',    value: 8,      color: '#9b59b6', pct: 4  },
-            { label: 'Brainrot !',  type: 'card',    value: 0,      color: '#e74c3c', pct: 4  },
+            { label: 'Brainrot !',  type: 'card',    value: 0,      color: '#e74c3c', pct: 28 },
         ];
 
         let wheelSegments = JSON.parse(JSON.stringify(WHEEL_DEFAULT_SEGMENTS));
@@ -6132,16 +6212,20 @@
         let wheelAnimFrame = null;
 
         function initWheel() {
-            // Écouter les changements Firebase
             if (firebaseDB) {
                 firebaseDB.ref('admin/wheel').on('value', snap => {
                     const d = snap.val();
                     if (d && Array.isArray(d)) {
                         wheelSegments = d;
-                        drawWheel();
-                        if (document.getElementById('wheelAdminItems').children.length > 0) buildAdminWheelItems();
+                    } else {
+                        // Aucune config dans Firebase : utiliser les défauts
+                        wheelSegments = JSON.parse(JSON.stringify(WHEEL_DEFAULT_SEGMENTS));
                     }
+                    drawWheel();
+                    if (document.getElementById('wheelAdminItems') && document.getElementById('wheelAdminItems').children.length > 0) buildAdminWheelItems();
                 });
+            } else {
+                wheelSegments = JSON.parse(JSON.stringify(WHEEL_DEFAULT_SEGMENTS));
             }
             drawWheel();
         }
