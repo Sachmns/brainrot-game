@@ -2164,6 +2164,10 @@
         .lb-score { color:#1a8fff; font-weight:900; font-size:1em; text-align:right; white-space:nowrap; }
         .lb-score span { color:#7db8ff; font-size:0.72em; font-weight:400; margin-left:4px; }
         .lb-status { text-align:center; color:#1a3a6a; font-size:0.88em; padding:24px 0; }
+        .lb-tabs { display:flex; gap:6px; margin-bottom:14px; }
+        .lb-tab { flex:1; padding:9px 6px; background:rgba(0,0,0,0.3); border:2px solid rgba(26,143,255,0.15); border-radius:11px; color:#1a3a6a; font-size:0.75em; font-weight:900; cursor:pointer; text-align:center; transition:all 0.18s; font-family:'Arial Black',Arial,sans-serif; text-transform:uppercase; letter-spacing:1px; }
+        .lb-tab:hover { border-color:rgba(26,143,255,0.4); color:#5599ff; }
+        .lb-tab.active { border-color:#1a8fff; color:#1a8fff; background:rgba(26,143,255,0.08); }
         .lb-live-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#2ecc71; margin-right:6px; animation:livePulse 1.5s infinite; }
         @keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
         /* Modal mot de passe admin */
@@ -2655,7 +2659,8 @@
                     <div class="admin-row" style="margin-top:8px;">
                         <input class="admin-input" id="adminGoldPseudo" placeholder="Pseudo du joueur…">
                         <input class="admin-input" id="adminGoldAmount" type="number" placeholder="Or…" min="1">
-                        <button class="admin-btn orange" onclick="adminGiveGold()">Donner</button>
+                        <button class="admin-btn orange" onclick="adminGiveGold()">➕ Donner</button>
+                        <button class="admin-btn" onclick="adminRemoveGold()" style="background:linear-gradient(180deg,#c0392b,#7b241c);box-shadow:0 4px 0 #3a0f0a;">➖ Retirer</button>
                     </div>
                     <button class="admin-btn green" onclick="adminGiveGoldAll()" style="margin-top:8px;">🌍 Donner à TOUS les connectés</button>
                 </div>
@@ -2875,7 +2880,11 @@
         <div class="lb-panel">
             <button class="lb-close-btn" onclick="closeLeaderboard()">✕</button>
             <div class="lb-title">🏆 CLASSEMENT</div>
-            <div class="lb-subtitle"><span class="lb-live-dot"></span>TEMPS RÉEL — CARTES DIFFÉRENTES</div>
+            <div class="lb-subtitle"><span class="lb-live-dot"></span>TEMPS RÉEL</div>
+            <div class="lb-tabs">
+                <div class="lb-tab active" id="lbTabCards" onclick="lbSwitchTab('cards')">🃏 Cartes</div>
+                <div class="lb-tab" id="lbTabGold" onclick="lbSwitchTab('gold')">💰 Or</div>
+            </div>
             <div class="lb-list" id="lbList">
                 <div class="lb-status">Chargement…</div>
             </div>
@@ -5188,6 +5197,18 @@
                     firebaseDB.ref('players/' + encodeURIComponent(myPseudo).replace(/[.#$/\[\]]/g,'_') + '/goldGift').set(0);
                 });
 
+                // Retrait d'or par l'admin
+                firebaseDB.ref('players/' + encodeURIComponent(myPseudo).replace(/[.#$/\[\]]/g,'_') + '/goldRemove').on('value', snap => {
+                    const amount = snap.val();
+                    if (!amount || amount <= 0) return;
+                    stats.totalGold = Math.max(0, stats.totalGold - amount);
+                    document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
+                    const sg = document.getElementById('shopGoldDisplay');
+                    if (sg) sg.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
+                    autoSave();
+                    firebaseDB.ref('players/' + encodeURIComponent(myPseudo).replace(/[.#$/\[\]]/g,'_') + '/goldRemove').set(0);
+                });
+
                 // Carte forcée pour ce joueur
                 firebaseDB.ref('players/' + encodeURIComponent(myPseudo).replace(/[.#$/\[\]]/g,'_') + '/forcedCard').on('value', snap => {
                     const cardKey = snap.val();
@@ -5458,6 +5479,19 @@
             if (!msg) { adminStatus('⚠️ Message vide'); return; }
             firebaseDB.ref('admin/broadcast').set({ msg, ts: Date.now() })
                 .then(() => { adminStatus('✅ Message envoyé !'); document.getElementById('adminBroadcastMsg').value = ''; })
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
+        function adminRemoveGold() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            const pseudo = document.getElementById('adminGoldPseudo').value.trim();
+            const amount = parseInt(document.getElementById('adminGoldAmount').value);
+            if (!pseudo || !amount || amount <= 0) { adminStatus('⚠️ Pseudo ou montant invalide'); return; }
+            const online = window._adminPlayerList || [];
+            if (!online.includes(pseudo)) { adminStatus('⚠️ ' + pseudo + ' n\'est pas connecté en ce moment'); return; }
+            const key = encodeURIComponent(pseudo).replace(/[.#$\/\[\]]/g,'_');
+            firebaseDB.ref('players/' + key + '/goldRemove').set(amount)
+                .then(() => adminStatus('✅ ' + amount.toLocaleString() + ' 💰 retirés à ' + pseudo))
                 .catch(e => adminStatus('Erreur : ' + e.message));
         }
 
@@ -5798,6 +5832,10 @@
                     } else {
                         firebaseDB.ref('players/' + playerKey + '/cards/' + safeKey).remove();
                     }
+                    // Mettre à jour le compteur unlockedCards dans les stats (utilisé par le classement)
+                    firebaseDB.ref('players/' + playerKey + '/stats/unlockedCards').transaction(cur => {
+                        return Math.max(0, (cur || 1) - 1);
+                    });
                 });
                 // Remove card from UI
                 const cardEl = btnEl.closest('.admin-book-card');
@@ -5878,12 +5916,54 @@
             }
         }
 
+        let _lbTab = 'cards';
+        let _lbEntries = [];
+
+        function lbSwitchTab(tab) {
+            _lbTab = tab;
+            document.getElementById('lbTabCards').className = 'lb-tab' + (tab === 'cards' ? ' active' : '');
+            document.getElementById('lbTabGold').className  = 'lb-tab' + (tab === 'gold'  ? ' active' : '');
+            renderLbList();
+        }
+
+        function renderLbList() {
+            const list = document.getElementById('lbList');
+            const myPseudo = localStorage.getItem('tradePseudo') || '';
+            if (_lbEntries.length === 0) {
+                list.innerHTML = '<div class="lb-status">Aucun joueur enregistré.</div>';
+                return;
+            }
+            const sorted = [..._lbEntries].sort((a, b) =>
+                _lbTab === 'gold' ? b.gold - a.gold : b.unlocked - a.unlocked
+            );
+            list.innerHTML = '';
+            sorted.forEach((e, idx) => {
+                const rank = idx + 1;
+                const isMe = e.pseudo === myPseudo;
+                const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+                const rankClass = rank === 1 ? 'r1' : rank === 2 ? 'r2' : rank === 3 ? 'r3' : 'other';
+                const row = document.createElement('div');
+                row.className = 'lb-row' + (isMe ? ' me' : '');
+                if (_lbTab === 'gold') {
+                    row.innerHTML =
+                        '<div class="lb-rank ' + rankClass + '">' + rankEmoji + '</div>' +
+                        '<div class="lb-pseudo">' + e.pseudo + (isMe ? '<span class="lb-me-tag">⭐ TOI</span>' : '') + '</div>' +
+                        '<div class="lb-score" style="color:#ffd700">' + (e.gold || 0).toLocaleString() + '<span>💰</span></div>';
+                } else {
+                    row.innerHTML =
+                        '<div class="lb-rank ' + rankClass + '">' + rankEmoji + '</div>' +
+                        '<div class="lb-pseudo">' + e.pseudo + (isMe ? '<span class="lb-me-tag">⭐ TOI</span>' : '') + '</div>' +
+                        '<div class="lb-score">' + (e.unlocked || 0).toLocaleString() + '<span>cartes</span></div>';
+                }
+                list.appendChild(row);
+            });
+        }
+
         function startLeaderboardListener() {
             if (!firebaseDB) {
                 document.getElementById('lbList').innerHTML = '<div class="lb-status">⚠️ Firebase non disponible.</div>';
                 return;
             }
-            const myPseudo = localStorage.getItem('tradePseudo') || '';
             if (lbListener) { firebaseDB.ref('players').off('value', lbListener); }
             lbListener = firebaseDB.ref('players').on('value', snap => {
                 const list = document.getElementById('lbList');
@@ -5891,33 +5971,15 @@
                     list.innerHTML = '<div class="lb-status">Aucun joueur enregistré.</div>';
                     return;
                 }
-                const entries = [];
+                _lbEntries = [];
                 snap.forEach(child => {
                     const d = child.val();
                     const pseudo = d?.info?.pseudo;
                     const unlocked = d?.stats?.unlockedCards || 0;
-                    if (pseudo && !d.perma_banned) entries.push({ pseudo, unlocked });
+                    const gold = d?.stats?.totalGold || 0;
+                    if (pseudo && !d.perma_banned) _lbEntries.push({ pseudo, unlocked, gold });
                 });
-                // Trier par cartes débloquées décroissant
-                entries.sort((a, b) => b.unlocked - a.unlocked);
-                list.innerHTML = '';
-                if (entries.length === 0) {
-                    list.innerHTML = '<div class="lb-status">Aucun joueur enregistré.</div>';
-                    return;
-                }
-                entries.forEach((e, idx) => {
-                    const rank = idx + 1;
-                    const isMe = e.pseudo === myPseudo;
-                    const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
-                    const rankClass = rank === 1 ? 'r1' : rank === 2 ? 'r2' : rank === 3 ? 'r3' : 'other';
-                    const row = document.createElement('div');
-                    row.className = 'lb-row' + (isMe ? ' me' : '');
-                    row.innerHTML =
-                        '<div class="lb-rank ' + rankClass + '">' + rankEmoji + '</div>' +
-                        '<div class="lb-pseudo">' + e.pseudo + (isMe ? '<span class="lb-me-tag">⭐ TOI</span>' : '') + '</div>' +
-                        '<div class="lb-score">' + e.unlocked.toLocaleString() + '<span>cartes</span></div>';
-                    list.appendChild(row);
-                });
+                renderLbList();
             });
         }
 
@@ -6211,15 +6273,22 @@
         let wheelAngle = 0;
         let wheelAnimFrame = null;
 
+        const WHEEL_VERSION = 'v2'; // Incrémenter si les défauts changent
+
         function initWheel() {
             if (firebaseDB) {
                 firebaseDB.ref('admin/wheel').on('value', snap => {
                     const d = snap.val();
-                    if (d && Array.isArray(d)) {
+                    // Si pas de config, ou config ancienne (sans version ou mauvaise version) → forcer les défauts
+                    if (d && Array.isArray(d) && d._version === WHEEL_VERSION) {
                         wheelSegments = d;
+                    } else if (d && typeof d === 'object' && !Array.isArray(d) && d.segments && d.version === WHEEL_VERSION) {
+                        wheelSegments = d.segments;
                     } else {
-                        // Aucune config dans Firebase : utiliser les défauts
+                        // Config absente ou obsolète : pousser les nouveaux défauts
                         wheelSegments = JSON.parse(JSON.stringify(WHEEL_DEFAULT_SEGMENTS));
+                        // Écrire les nouveaux défauts dans Firebase avec la version
+                        firebaseDB.ref('admin/wheel').set(Object.assign([], WHEEL_DEFAULT_SEGMENTS, { _version: WHEEL_VERSION }));
                     }
                     drawWheel();
                     if (document.getElementById('wheelAdminItems') && document.getElementById('wheelAdminItems').children.length > 0) buildAdminWheelItems();
