@@ -1020,6 +1020,19 @@
         @keyframes luckX8ItemGlow { 0%,100%{box-shadow:0 6px 0 #280040,0 8px 30px rgba(155,89,182,0.7);} 50%{box-shadow:0 6px 0 #280040,0 8px 50px rgba(155,89,182,1),0 0 60px rgba(180,0,255,0.4);} }
 
         /* Bouton fermer boutique */
+        /* Écran reveal x10 */
+        .x10-reveal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.97); z-index:9000; justify-content:center; align-items:center; flex-direction:column; }
+        .x10-reveal-overlay.open { display:flex; }
+        .x10-reveal-title { color:#2ecc71; font-size:1.3em; font-weight:900; letter-spacing:3px; margin-bottom:18px; text-align:center; }
+        .x10-reveal-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; width:96%; max-width:600px; margin-bottom:20px; }
+        .x10-reveal-card { background:rgba(0,0,0,0.5); border:2px solid rgba(255,255,255,0.1); border-radius:14px; padding:10px 6px; text-align:center; opacity:0; transform:scale(0.5); transition:all 0.3s ease; }
+        .x10-reveal-card.show { opacity:1; transform:scale(1); }
+        .x10-reveal-card img { width:52px; height:52px; object-fit:contain; }
+        .x10-reveal-card .xrn { color:#ccc; font-size:0.6em; font-weight:700; margin-top:4px; line-height:1.2; }
+        .x10-reveal-card .xrr { font-size:0.62em; font-weight:900; margin-top:2px; }
+        .x10-reveal-card .xrnew { color:#4ecb71; font-size:0.58em; font-weight:900; }
+        .shop-x10-btn { display:block; width:calc(100% - 0px); margin:10px 0 0 0; padding:13px 16px; background:linear-gradient(180deg,#1a4a1a,#0d2a0d); border:2px solid rgba(46,204,113,0.4); border-radius:14px; color:#2ecc71; font-size:0.82em; font-weight:900; cursor:pointer; text-align:center; font-family:'Arial Black',Arial,sans-serif; letter-spacing:1px; transition:all 0.2s; box-shadow:0 4px 0 #051505; }
+        .shop-x10-btn:hover { border-color:#2ecc71; background:linear-gradient(180deg,#1f5a1f,#0f330f); transform:translateY(-1px); }
         .shop-close-btn {
             background: linear-gradient(180deg, #c0392b 0%, #922b21 100%);
             color: white;
@@ -2982,8 +2995,29 @@
                     </div>
                 </div>
             </div>
+            <button class="shop-x10-btn" onclick="openBuyTenModal()">🎲 ACHAT ×10 — Réduction 10% sur toutes les raretés</button>
             <button class="shop-close-btn" onclick="closeShop()"><span>✕ Fermer</span></button>
         </div>
+    </div>
+
+    <!-- Modal achat x10 -->
+    <div class="auth-overlay" id="buyTenModal" style="z-index:8500;">
+        <div class="auth-box" style="max-width:460px;">
+            <button class="auth-x" onclick="closeBuyTenModal()">✕</button>
+            <div style="text-align:center;font-size:1.8em;margin-bottom:6px;">🎲</div>
+            <div class="auth-title" style="color:#2ecc71;">ACHAT ×10</div>
+            <div class="auth-sub" style="color:#1a4a1a;">10 cartes aléatoires avec 10% de réduction</div>
+            <div id="buyTenGrid" style="display:flex;flex-direction:column;gap:8px;margin:16px 0;max-height:55vh;overflow-y:auto;"></div>
+            <button class="auth-submit" style="background:linear-gradient(180deg,#2ecc71,#1a7a40);box-shadow:0 5px 0 #0a3a18;" onclick="confirmBuyTen()">🎲 CONFIRMER L'ACHAT</button>
+            <div class="auth-msg err" id="buyTenErr" style="margin-top:8px;"></div>
+        </div>
+    </div>
+
+    <!-- Écran reveal x10 -->
+    <div class="x10-reveal-overlay" id="x10RevealOverlay">
+        <div class="x10-reveal-title">🎲 TES 10 CARTES !</div>
+        <div class="x10-reveal-grid" id="x10RevealGrid"></div>
+        <button onclick="closeX10Reveal()" style="padding:13px 32px;background:linear-gradient(180deg,#2ecc71,#1a7a40);color:#fff;border:none;border-radius:14px;font-size:0.9em;font-weight:900;cursor:pointer;font-family:'Arial Black',Arial,sans-serif;box-shadow:0 5px 0 #0a3a18;">✅ OK</button>
     </div>
 
     <!-- Overlay suspense achat -->
@@ -3562,6 +3596,7 @@
         function clickChest() {
             if (clickCount >= maxClicks) return;
             
+            playSound('click');
             clickCount++;
             const clicksCounter = document.getElementById('clicksCounter');
             clicksCounter.textContent = `Clics : ${clickCount}/${maxClicks}`;
@@ -3698,6 +3733,7 @@
             if (globalDoubleGold && globalDoubleGoldExpiry > Date.now()) {
                 rewards.forEach(r => { if (r.type === 'gold') r.quantity *= (globalDoubleGoldMultiplier || 2); });
             }
+            playSound('open');
             displayRewards(rewards);
             updateStats(rewards);
         }
@@ -3727,7 +3763,7 @@
             };
             
             const starFactor = (1 + (boostPercentage[starBoost] || 0));
-            const luckMult = (globalLuckMultiplier > 1 && globalLuckMultiplier < 100) ? globalLuckMultiplier : 1;
+            const luckMult = (globalLuckMultiplier > 1 && globalLuckMultiplier < 100 && globalLuckExpiry - 3000 > Date.now()) ? globalLuckMultiplier : 1;
             // personalLuck : 2, 4 ou 8 acheté en boutique
             const personalMult = personalLuck > 0 ? personalLuck : 1;
 
@@ -3773,7 +3809,7 @@
 
                         // Mode ×100 : minimum brainrot_god garanti
             const ultraRarities = ['brainrot_god','secret','og','limited','no'];
-            if (globalLuckMultiplier >= 100) {
+            if (globalLuckMultiplier >= 100 && globalLuckExpiry - 3000 > Date.now()) {
                 // Recalculer uniquement sur les raretés >= brainrot_god
                 const ultraOnly = {};
                 let ultraTotal = 0;
@@ -4114,6 +4150,7 @@
         function buyCard(rarity) {
             const price = shopPrices[rarity];
             if (stats.totalGold < price) {
+                playSound('error');
                 alert('❌ Pas assez d\'or ! Il te faut ' + price.toLocaleString() + ' or.');
                 return;
             }
@@ -4139,6 +4176,7 @@
             document.getElementById('totalCards').textContent = stats.totalCards;
             document.getElementById('totalSecrets').textContent = stats.secretCount;
             
+            playSound('buy');
             autoSave();
 
             // Hook quêtes d'achat
@@ -6008,8 +6046,8 @@
         //  FUSE MACHINE
         // ═══════════════════════════════════════════════════════
         const FUSE_DURATION = 5 * 60 * 1000; // 5 minutes
-        const FUSE_EXCLUDED = ['og','limited','no','admin_exclusive'];
-        const FUSE_RARITY_WEIGHT = { common:1, rare:3, epic:6, legendary:12, mythic:18, brainrot_god:24, secret:35 };
+        const FUSE_EXCLUDED = ['limited','no','admin_exclusive'];
+        const FUSE_RARITY_WEIGHT = { common:1, rare:3, epic:6, legendary:12, mythic:18, brainrot_god:24, secret:35, og:50 };
 
         let fuseSlots = [null, null, null]; // { key, name, img, rarity }
         let fusePickSlotIndex = -1;
@@ -6166,7 +6204,7 @@
                 mythic:       Math.max(0, score < 15 ? 0 : score < 80 ? score * 0.5 - 5 : 30),
                 brainrot_god: Math.max(0, score < 30 ? 0 : score < 95 ? score * 0.4 - 8 : 40),
                 secret:       Math.max(0, score < 50 ? 0 : score < 100 ? (score - 50) * 0.6 : 30),
-                og:           Math.max(0, score < 100 ? 0 : (score - 100) * 0.008),
+                og:           Math.max(0, score < 100 ? 0 : (score - 100) * 0.07),
                 limited:      Math.max(0, score < 103 ? 0 : (score - 103) * 0.003),
                 no:           Math.max(0, score < 105 ? 0 : (score - 105) * 0.001),
             };
@@ -6695,6 +6733,71 @@
                 .catch(e => adminStatus('Erreur : ' + e.message));
         }
 
+        // ═══════════════════════════════════════════
+        //  SONS DU JEU
+        // ═══════════════════════════════════════════
+        let _audioCtx = null;
+        function getAudioCtx() {
+            if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            return _audioCtx;
+        }
+        function playSound(type) {
+            try {
+                const ctx = getAudioCtx();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                gain.gain.setValueAtTime(0, ctx.currentTime);
+                if (type === 'click') {
+                    // Clic sur coffre : petit bip discret
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.08);
+                    gain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.08);
+                } else if (type === 'open') {
+                    // Ouverture coffre : son magique montant
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(300, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.3);
+                    gain.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.35);
+                } else if (type === 'buy') {
+                    // Achat boutique : son court positif
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(659, ctx.currentTime + 0.1);
+                    gain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.15);
+                } else if (type === 'rare') {
+                    // Carte rare : son plus impressionnant
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.2);
+                    gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.4);
+                } else if (type === 'error') {
+                    // Erreur : son grave court
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(200, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.15);
+                    gain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.15);
+                }
+            } catch(e) {}
+        }
+
         // Initialisation
         createStars();
 
@@ -6856,6 +6959,106 @@
                 _onLoggedIn(data.pseudo || saved);
             }).catch(()=>{});
         }, 1500);
+
+        // ═══ ACHAT ×10 ═══
+        let _buyTenSelected = null;
+
+        function openBuyTenModal() {
+            const grid = document.getElementById('buyTenGrid');
+            grid.innerHTML = '';
+            document.getElementById('buyTenErr').textContent = '';
+            _buyTenSelected = null;
+            const RARITY_LABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret' };
+            const RARITY_COLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff' };
+            Object.entries(shopPrices).forEach(function(entry) {
+                const rarity = entry[0], price = entry[1];
+                if (!RARITY_LABELS[rarity]) return;
+                const discounted = Math.floor(price * 10 * 0.9);
+                const normal = price * 10;
+                const row = document.createElement('div');
+                row.dataset.rarity = rarity;
+                const col = RARITY_COLS[rarity] || '#aaa';
+                row.style.cssText = 'display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.3);border:2px solid rgba(46,204,113,0.12);border-radius:12px;padding:10px 14px;cursor:pointer;transition:all 0.18s;';
+                row.innerHTML = '<div style="width:12px;height:12px;border-radius:3px;background:' + col + ';flex-shrink:0;"></div>' +
+                    '<div style="flex:1;color:' + col + ';font-size:0.85em;font-weight:900;">' + RARITY_LABELS[rarity] + ' ×10</div>' +
+                    '<div style="text-align:right;"><div style="color:#555;font-size:0.65em;text-decoration:line-through;">' + normal.toLocaleString() + ' 💰</div>' +
+                    '<div style="color:#2ecc71;font-size:0.88em;font-weight:900;">' + discounted.toLocaleString() + ' 💰</div></div>';
+                row.onclick = function() {
+                    grid.querySelectorAll('[data-rarity]').forEach(function(r){ r.style.borderColor = 'rgba(46,204,113,0.12)'; });
+                    row.style.borderColor = '#2ecc71';
+                    _buyTenSelected = rarity;
+                };
+                grid.appendChild(row);
+            });
+            document.getElementById('buyTenModal').classList.add('open');
+        }
+
+        function closeBuyTenModal() {
+            document.getElementById('buyTenModal').classList.remove('open');
+        }
+
+        function confirmBuyTen() {
+            const errEl = document.getElementById('buyTenErr');
+            if (!_buyTenSelected) { errEl.textContent = 'Sélectionne une rareté !'; return; }
+            const price = shopPrices[_buyTenSelected];
+            if (!price) return;
+            const total = Math.floor(price * 10 * 0.9);
+            if (stats.totalGold < total) {
+                playSound('error');
+                errEl.textContent = "Pas assez d'or ! Il te faut " + total.toLocaleString() + ' 💰';
+                return;
+            }
+            stats.totalGold -= total;
+            const cards10 = [];
+            for (let i = 0; i < 10; i++) {
+                const card = getRandomCard(_buyTenSelected);
+                const cardKey = _buyTenSelected + '|' + card.name;
+                const wasNew = !unlockedCards.has(cardKey);
+                if (wasNew) { unlockedCards.set(cardKey, 0); stats.totalCards++; }
+                unlockedCards.set(cardKey, unlockedCards.get(cardKey) + 1);
+                if (_buyTenSelected === 'secret') {
+                    if (!stats.secretsUnlocked) stats.secretsUnlocked = new Set();
+                    if (!stats.secretsUnlocked.has(cardKey)) { stats.secretsUnlocked.add(cardKey); stats.secretCount++; }
+                }
+                cards10.push({ card: card, rarity: _buyTenSelected, isNew: wasNew });
+            }
+            document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
+            document.getElementById('shopGoldDisplay').textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
+            document.getElementById('totalCards').textContent = stats.totalCards;
+            document.getElementById('totalSecrets').textContent = stats.secretCount;
+            playSound('buy');
+            autoSave();
+            closeBuyTenModal();
+            showX10Reveal(cards10);
+        }
+
+        function showX10Reveal(cards) {
+            const RARITY_COLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff' };
+            const RARITY_LABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret' };
+            const grid = document.getElementById('x10RevealGrid');
+            grid.innerHTML = '';
+            cards.forEach(function(item) {
+                const col = RARITY_COLS[item.rarity] || '#aaa';
+                const lbl = RARITY_LABELS[item.rarity] || item.rarity;
+                const div = document.createElement('div');
+                div.className = 'x10-reveal-card';
+                div.style.borderColor = col + '55';
+                div.innerHTML = '<img src="' + item.card.img + '" onerror="this.style.opacity=0.3">' +
+                    '<div class="xrn">' + item.card.name + '</div>' +
+                    '<div class="xrr" style="color:' + col + '">' + lbl + '</div>' +
+                    (item.isNew ? '<div class="xrnew">✨ NEW</div>' : '');
+                grid.appendChild(div);
+            });
+            document.getElementById('x10RevealOverlay').classList.add('open');
+            const cardEls = grid.querySelectorAll('.x10-reveal-card');
+            cardEls.forEach(function(el, i) {
+                setTimeout(function(){ el.classList.add('show'); playSound('click'); }, i * 150);
+            });
+        }
+
+        function closeX10Reveal() {
+            document.getElementById('x10RevealOverlay').classList.remove('open');
+        }
     </script>
 </body>
 </html>
