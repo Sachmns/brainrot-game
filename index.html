@@ -1640,6 +1640,13 @@
         .fuse-pick-panel { background:linear-gradient(145deg,#1a0a00,#2a1200); border:3px solid #ff9500; border-radius:24px; padding:22px 18px; width:92%; max-width:480px; max-height:80vh; overflow-y:auto; }
         .fuse-pick-title { color:#ff9500; font-size:1.1em; font-weight:900; text-align:center; margin-bottom:14px; }
         .fuse-pick-close { display:block; width:100%; margin-top:12px; padding:10px; background:rgba(255,149,0,0.15); border:1px solid #ff9500; color:#ff9500; border-radius:12px; font-weight:900; cursor:pointer; font-family:'Arial Black',Arial,sans-serif; font-size:0.85em; }
+        .fuse-preview { background:rgba(0,0,0,0.3); border:1px solid rgba(255,149,0,0.2); border-radius:14px; padding:12px 14px; margin-bottom:12px; }
+        .fuse-preview-title { color:#ff9500; font-size:0.72em; font-weight:900; letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; text-align:center; }
+        .fuse-preview-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+        .fuse-preview-bar-wrap { flex:1; height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
+        .fuse-preview-bar { height:100%; border-radius:4px; transition:width 0.4s ease; }
+        .fuse-preview-label { color:#ccc; font-size:0.68em; font-weight:700; min-width:80px; }
+        .fuse-preview-pct { color:#ff9500; font-size:0.7em; font-weight:900; min-width:38px; text-align:right; }
         /* ═══ FIN FUSE MACHINE ═══ */
 
         /* Modal Quiz */
@@ -2445,6 +2452,12 @@
             </div>
 
             <div style="color:#7a4a00;font-size:0.75em;text-align:center;margin-bottom:12px;">Plus tes cartes sont rares, plus tu as de chances d'obtenir des cartes que tu n'as pas encore !</div>
+
+            <!-- Preview des chances -->
+            <div class="fuse-preview" id="fusePreview" style="display:none;">
+                <div class="fuse-preview-title">🎯 Chances possibles</div>
+                <div id="fusePreviewRows"></div>
+            </div>
 
             <!-- Timer (visible si fusion en cours) -->
             <div class="fuse-timer-box" id="fuseTimerBox" style="display:none;">
@@ -5341,7 +5354,14 @@
             } else { konamiIdx = 0; }
         });
 
+        const ADMIN_PSEUDO = 'Sachmns';
+
         function openAdminPasswordModal() {
+            const currentPseudo = localStorage.getItem('tradePseudo') || '';
+            if (currentPseudo !== ADMIN_PSEUDO) {
+                // Pas le bon pseudo, on ignore silencieusement
+                return;
+            }
             document.getElementById('adminPwdOverlay').classList.add('open');
             document.getElementById('adminPwdInput').value = '';
             document.getElementById('adminPwdErr').textContent = '';
@@ -6049,6 +6069,7 @@
                         const allFilled = fuseSlots.every(s => s !== null);
             const btn = document.getElementById('fuseLaunchBtn');
             if (btn) btn.disabled = !allFilled || (fuseState && !fuseState.claimed);
+            updateFusePreview();
         }
 
         function removeFuseSlot(i) {
@@ -6133,36 +6154,107 @@
             return pool[Math.floor(Math.random() * pool.length)];
         }
 
-        function buildFusePool(score) {
-            // Construire un pool de cartes pondéré selon le score
-            // score min=3 (3x common), max=105 (3x secret)
-            let allowedRarities;
-            if (score < 10)       allowedRarities = ['common','rare'];
-            else if (score < 18)  allowedRarities = ['common','rare','epic'];
-            else if (score < 28)  allowedRarities = ['rare','epic','legendary'];
-            else if (score < 45)  allowedRarities = ['epic','legendary','mythic'];
-            else if (score < 65)  allowedRarities = ['legendary','mythic','brainrot_god'];
-            else if (score < 90)  allowedRarities = ['mythic','brainrot_god','secret'];
-            else                   allowedRarities = ['brainrot_god','secret'];
+        // Poids de raretés selon le score (score min=3, max=105+)
+        function getFuseRarityWeights(score) {
+            // Chaque rareté a un poids selon le score total
+            // score 3 (3x common) → max rare ; score 105 (3x secret) → og/limited possible
+            const w = {
+                common:       Math.max(0, 20 - score * 0.5),
+                rare:         Math.max(0, score < 30 ? 40 - score : 0),
+                epic:         Math.max(0, score < 55 ? 30 : score < 70 ? 10 : 0),
+                legendary:    Math.max(0, score < 10 ? 0 : score < 60 ? 35 - score * 0.2 : 5),
+                mythic:       Math.max(0, score < 15 ? 0 : score < 80 ? score * 0.5 - 5 : 30),
+                brainrot_god: Math.max(0, score < 30 ? 0 : score < 95 ? score * 0.4 - 8 : 40),
+                secret:       Math.max(0, score < 50 ? 0 : score < 100 ? (score - 50) * 0.6 : 30),
+                og:           Math.max(0, score < 100 ? 0 : (score - 100) * 0.008),
+                limited:      Math.max(0, score < 103 ? 0 : (score - 103) * 0.003),
+                no:           Math.max(0, score < 105 ? 0 : (score - 105) * 0.001),
+            };
+            return w;
+        }
 
-            // Privilégier les cartes non encore obtenues
+        function buildFusePool(score) {
+            const rarityWeights = getFuseRarityWeights(score);
             const pool = [];
-            allowedRarities.forEach(rarity => {
+            Object.entries(rarityWeights).forEach(([rarity, rarityWeight]) => {
+                if (rarityWeight <= 0) return;
                 const cards = cardImages[rarity] || [];
+                if (cards.length === 0) return;
                 cards.forEach(card => {
                     const key = rarity + '|' + card.name;
                     const owned = unlockedCards.get(key) || 0;
-                    // Cartes non possédées = 3x plus de chances
-                    const weight = owned === 0 ? 3 : 1;
-                    for (let w = 0; w < weight; w++) pool.push({ key, name: card.name, img: card.img, rarity });
+                    // Cartes non possédées = 4x plus de chances
+                    const cardMult = owned === 0 ? 4 : 1;
+                    const totalWeight = Math.ceil(rarityWeight * cardMult);
+                    for (let w = 0; w < totalWeight; w++) pool.push({ key, name: card.name, img: card.img, rarity });
                 });
             });
             if (pool.length === 0) {
-                // Fallback
                 const fallback = cardImages['rare'] || [];
                 if (fallback.length) return [{ key:'rare|'+fallback[0].name, name:fallback[0].name, img:fallback[0].img, rarity:'rare' }];
             }
             return pool;
+        }
+
+        // Calcule les % de chance par rareté pour l'aperçu
+        function getFusePreviewData(score) {
+            const rarityWeights = getFuseRarityWeights(score);
+            let totalWeight = 0;
+            // Simuler le pool avec carte moyenne (moitié possédées, moitié non)
+            const effectiveWeights = {};
+            Object.entries(rarityWeights).forEach(([rarity, w]) => {
+                const cards = cardImages[rarity] || [];
+                if (w <= 0 || cards.length === 0) return;
+                // Estimer: 60% des cartes non possédées
+                const avgMult = 0.4 * 1 + 0.6 * 4; // 2.8
+                effectiveWeights[rarity] = w * avgMult;
+                totalWeight += effectiveWeights[rarity];
+            });
+            if (totalWeight === 0) return [];
+            const result = [];
+            const order = ['no','limited','og','secret','brainrot_god','mythic','legendary','epic','rare','common'];
+            order.forEach(rarity => {
+                if (!effectiveWeights[rarity]) return;
+                const pct = (effectiveWeights[rarity] / totalWeight * 100);
+                if (pct < 0.01) return;
+                result.push({ rarity, pct });
+            });
+            return result;
+        }
+
+        function updateFusePreview() {
+            const preview = document.getElementById('fusePreview');
+            const rows = document.getElementById('fusePreviewRows');
+            if (!preview || !rows) return;
+            const filled = fuseSlots.filter(s => s !== null);
+            if (filled.length === 0) { preview.style.display = 'none'; return; }
+            const score = fuseSlots.reduce((s, c) => s + (c ? (FUSE_RARITY_WEIGHT[c.rarity] || 1) : 0), 0);
+            const data = getFusePreviewData(score);
+            if (data.length === 0) { preview.style.display = 'none'; return; }
+            preview.style.display = 'block';
+            const RARITY_COLORS_LOCAL = {
+                common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700',
+                mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#ffffff',
+                og:'#ffd700', limited:'#ff59e7', no:'#ff0000'
+            };
+            const RARITY_LABELS = {
+                common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire',
+                mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret',
+                og:'OG', limited:'Limitée', no:'Impossible'
+            };
+            rows.innerHTML = '';
+            data.forEach(({ rarity, pct }) => {
+                const color = RARITY_COLORS_LOCAL[rarity] || '#aaa';
+                const label = RARITY_LABELS[rarity] || rarity;
+                const pctStr = pct >= 1 ? pct.toFixed(1) + '%' : pct.toFixed(2) + '%';
+                const row = document.createElement('div');
+                row.className = 'fuse-preview-row';
+                row.innerHTML =
+                    '<div class="fuse-preview-label" style="color:' + color + '">' + label + '</div>' +
+                    '<div class="fuse-preview-bar-wrap"><div class="fuse-preview-bar" style="width:' + Math.min(100, pct * 2) + '%;background:' + color + '"></div></div>' +
+                    '<div class="fuse-preview-pct">' + pctStr + '</div>';
+                rows.appendChild(row);
+            });
         }
 
         // ── Timer ───────────────────────────────────────
