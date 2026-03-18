@@ -7814,6 +7814,72 @@
         function closeX10Reveal() {
             document.getElementById('x10RevealOverlay').classList.remove('open');
         }
+
+        // ═══ SYSTÈME AFK ═══
+        const AFK_DELAY       = 60 * 1000;      // 1 minute avant d'être considéré AFK
+        const AFK_GAIN        = 500;             // pièces gagnées toutes les 30s
+        const AFK_INTERVAL    = 30 * 1000;       // intervalle de gain (30 secondes)
+        const AFK_CAP         = 100000;          // plafond total AFK par session
+
+        let afkTimeout        = null;
+        let afkGainInterval   = null;
+        let afkTotalEarned    = 0;
+        let afkActive         = false;
+
+        function resetAfkTimer() {
+            // Si le joueur était AFK, il revient → reset du compteur
+            if (afkActive) {
+                afkActive = false;
+                clearInterval(afkGainInterval);
+                afkGainInterval = null;
+                afkTotalEarned = 0;
+                const badge = document.getElementById('afkBadge');
+                if (badge) badge.style.display = 'none';
+            }
+            clearTimeout(afkTimeout);
+            afkTimeout = setTimeout(startAfk, AFK_DELAY);
+        }
+
+        function startAfk() {
+            afkActive = true;
+            afkGainInterval = setInterval(function() {
+                if (afkTotalEarned >= AFK_CAP) {
+                    clearInterval(afkGainInterval);
+                    afkGainInterval = null;
+                    return;
+                }
+                const gain = Math.min(AFK_GAIN, AFK_CAP - afkTotalEarned);
+                afkTotalEarned += gain;
+                stats.totalGold += gain;
+                document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
+                const sg = document.getElementById('shopGoldDisplay');
+                if (sg) sg.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
+                autoSave();
+                // Badge AFK
+                const badge = document.getElementById('afkBadge');
+                if (badge) {
+                    badge.textContent = '💤 AFK +' + gain + ' 💰 (total: ' + afkTotalEarned.toLocaleString() + ' / ' + AFK_CAP.toLocaleString() + ')';
+                    badge.style.display = 'block';
+                }
+            }, AFK_INTERVAL);
+        }
+
+        // Injection du badge AFK dans le header
+        (function() {
+            const badge = document.createElement('div');
+            badge.id = 'afkBadge';
+            badge.style.cssText = 'display:none;position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#1a3d6f,#2a5298);color:#ffd700;font-family:Arial Black,Arial,sans-serif;font-size:0.85em;font-weight:900;padding:10px 22px;border-radius:50px;border:2px solid #ffd700;box-shadow:0 4px 18px rgba(255,215,0,0.4);z-index:9999;letter-spacing:1px;pointer-events:none;';
+            document.body.appendChild(badge);
+        })();
+
+        // Écoute des interactions utilisateur
+        ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function(evt) {
+            document.addEventListener(evt, resetAfkTimer, { passive: true });
+        });
+
+        // Démarrage initial
+        resetAfkTimer();
+        // ═══ FIN SYSTÈME AFK ═══
     </script>
 </body>
 </html>
