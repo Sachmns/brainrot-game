@@ -2338,6 +2338,31 @@
         .dash-filter-row { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
         .dash-filter-pill { padding:3px 9px; border-radius:20px; border:1px solid rgba(255,0,64,0.2); background:rgba(255,0,64,0.04); color:#555; font-size:0.65em; font-weight:900; cursor:pointer; transition:all 0.15s; }
         .dash-filter-pill.on { border-color:#ff0040; color:#ff4466; background:rgba(255,0,64,0.1); }
+        /* Vente doublons */
+        .sell-btn-shop { display:block; width:100%; margin:8px 0 0; padding:13px 16px; background:linear-gradient(180deg,#1a2a0a,#0d1a05); border:2px solid rgba(46,204,113,0.3); border-radius:14px; color:#2ecc71; font-size:0.82em; font-weight:900; cursor:pointer; text-align:center; font-family:'Arial Black',Arial,sans-serif; letter-spacing:1px; transition:all 0.2s; box-shadow:0 4px 0 #050d02; }
+        .sell-btn-shop:hover { border-color:#2ecc71; background:linear-gradient(180deg,#1f3a0f,#0f220a); transform:translateY(-1px); }
+        .sell-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:8800; justify-content:center; align-items:center; }
+        .sell-modal-overlay.open { display:flex; }
+        .sell-modal-box { background:linear-gradient(145deg,#050f02,#0a1a05); border:3px solid rgba(46,204,113,0.4); border-radius:26px; padding:28px 22px; width:96%; max-width:520px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 0 60px rgba(46,204,113,0.12); position:relative; }
+        .sell-modal-close { position:absolute; top:13px; right:17px; background:none; border:none; color:#2ecc71; font-size:1.3em; cursor:pointer; }
+        .sell-modal-title { color:#2ecc71; font-size:1.25em; font-weight:900; letter-spacing:3px; text-align:center; margin-bottom:4px; }
+        .sell-modal-sub { color:#1a4a1a; font-size:0.76em; text-align:center; margin-bottom:14px; }
+        .sell-total-bar { background:rgba(46,204,113,0.08); border:1px solid rgba(46,204,113,0.2); border-radius:12px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+        .sell-total-label { color:#555; font-size:0.75em; font-weight:700; }
+        .sell-total-value { color:#2ecc71; font-size:1.1em; font-weight:900; }
+        .sell-list { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:7px; }
+        .sell-item { display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.35); border:1px solid rgba(46,204,113,0.1); border-radius:12px; padding:8px 12px; }
+        .sell-item img { width:40px; height:40px; object-fit:contain; flex-shrink:0; }
+        .sell-item-info { flex:1; }
+        .sell-item-name { color:#ccc; font-size:0.78em; font-weight:700; }
+        .sell-item-rarity { font-size:0.65em; font-weight:900; }
+        .sell-item-count { color:#555; font-size:0.68em; }
+        .sell-item-gold { color:#ffd700; font-size:0.8em; font-weight:900; text-align:right; white-space:nowrap; }
+        .sell-one-btn { padding:5px 10px; background:linear-gradient(180deg,#1a4a1a,#0d2a0d); border:1px solid rgba(46,204,113,0.35); border-radius:8px; color:#2ecc71; font-size:0.68em; font-weight:900; cursor:pointer; margin-top:4px; font-family:'Arial Black',Arial,sans-serif; transition:all 0.15s; white-space:nowrap; }
+        .sell-one-btn:hover { border-color:#2ecc71; background:linear-gradient(180deg,#1f5a1f,#0f330f); }
+        .sell-confirm-btn { margin-top:14px; padding:14px; background:linear-gradient(180deg,#2ecc71,#1a7a40); color:#fff; border:none; border-radius:14px; font-size:0.92em; font-weight:900; cursor:pointer; font-family:'Arial Black',Arial,sans-serif; box-shadow:0 5px 0 #0a3a18; transition:all 0.18s; }
+        .sell-confirm-btn:hover { transform:translateY(-2px); }
+        .sell-confirm-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
         /* ═══════════════ FIN ADMIN ═══════════════ */
     </style>
 </head>
@@ -3033,12 +3058,28 @@
                     </div>
                 </div>
             </div>
+            <button class="sell-btn-shop" onclick="openSellDuplicates()">💸 VENDRE MES DOUBLONS</button>
             <button class="shop-x10-btn" onclick="openBuyTenModal()">🎲 ACHAT ×10 — Réduction 10% sur toutes les raretés</button>
             <button class="shop-close-btn" onclick="closeShop()"><span>✕ Fermer</span></button>
         </div>
     </div>
 
     <!-- Modal achat x10 -->
+    <!-- Modal vente doublons -->
+    <div class="sell-modal-overlay" id="sellModal">
+        <div class="sell-modal-box">
+            <button class="sell-modal-close" onclick="closeSellDuplicates()">✕</button>
+            <div class="sell-modal-title">💸 VENDRE LES DOUBLONS</div>
+            <div class="sell-modal-sub">20% du prix boutique par doublon</div>
+            <div class="sell-total-bar">
+                <span class="sell-total-label">Total à recevoir :</span>
+                <span class="sell-total-value" id="sellTotalGold">0 💰</span>
+            </div>
+            <div class="sell-list" id="sellList"></div>
+            <button class="sell-confirm-btn" id="sellConfirmBtn" onclick="confirmSellAll()" disabled>💸 Vendre tous les doublons</button>
+        </div>
+    </div>
+
     <div class="auth-overlay" id="buyTenModal" style="z-index:8500;">
         <div class="auth-box" style="max-width:460px;">
             <button class="auth-x" onclick="closeBuyTenModal()">✕</button>
@@ -7065,6 +7106,104 @@
         }
 
         // Initialisation
+        // ═══ VENTE DOUBLONS ═══
+        const SELL_RATE = 0.20; // 20% du prix boutique
+
+        function openSellDuplicates() {
+            const list = document.getElementById('sellList');
+            const totalEl = document.getElementById('sellTotalGold');
+            const btn = document.getElementById('sellConfirmBtn');
+            list.innerHTML = '';
+            let totalGold = 0;
+            const RCOLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff', og:'#ffd700', limited:'#ff59e7', no:'#ff0000', admin_exclusive:'#ff0040' };
+            const RLABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limitée', no:'Impossible', admin_exclusive:'ADMIN' };
+            const duplicates = [];
+            unlockedCards.forEach(function(count, cardKey) {
+                if (count <= 1) return;
+                const extras = count - 1;
+                const parts = cardKey.split('|');
+                const rarity = parts[0];
+                const name = parts.slice(1).join('|');
+                const price = shopPrices[rarity] || 0;
+                if (price === 0) return; // OG/limitée pas revendables
+                const sellPrice = Math.floor(price * SELL_RATE) * extras;
+                const cards = cardImages[rarity] || [];
+                const card = cards.find(function(c){ return c.name === name; });
+                duplicates.push({ cardKey, name, rarity, count, extras, sellPrice, img: card ? card.img : '' });
+                totalGold += sellPrice;
+            });
+            // Trier par valeur décroissante
+            duplicates.sort(function(a,b){ return b.sellPrice - a.sellPrice; });
+            if (duplicates.length === 0) {
+                list.innerHTML = '<div style="color:#1a4a1a;text-align:center;padding:24px;font-size:0.85em;">Aucun doublon à vendre</div>';
+                totalEl.textContent = '0 💰';
+                btn.disabled = true;
+            } else {
+                duplicates.forEach(function(d) {
+                    const col = RCOLS[d.rarity] || '#aaa';
+                    const lbl = RLABELS[d.rarity] || d.rarity;
+                    const row = document.createElement('div');
+                    row.className = 'sell-item';
+                    const singlePrice = Math.floor(shopPrices[d.rarity] * SELL_RATE);
+                        row.innerHTML =
+                        (d.img ? '<img src="' + d.img + '" onerror="this.style.opacity=0.3">' : '<div style="width:40px;height:40px;background:#111;border-radius:8px;flex-shrink:0;"></div>') +
+                        '<div class="sell-item-info">' +
+                            '<div class="sell-item-name">' + d.name + '</div>' +
+                            '<div class="sell-item-rarity" style="color:' + col + '">' + lbl + '</div>' +
+                            '<div class="sell-item-count">×' + d.count + ' → ' + d.extras + ' doublon(s)</div>' +
+                        '</div>' +
+                        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">' +
+                            '<div class="sell-item-gold">+' + d.sellPrice.toLocaleString() + ' 💰</div>' +
+                            '<button class="sell-one-btn" data-key="' + d.cardKey + '" data-price="' + singlePrice + '" onclick="sellOneCard(this)">Vendre 1 (+' + singlePrice.toLocaleString() + ' 💰)</button>' +
+                        '</div>';
+                    list.appendChild(row);
+                });
+                totalEl.textContent = totalGold.toLocaleString() + ' 💰';
+                btn.disabled = false;
+                btn.textContent = '💸 Vendre ' + duplicates.length + ' doublon(s) — +' + totalGold.toLocaleString() + ' 💰';
+            }
+            document.getElementById('sellModal').classList.add('open');
+        }
+
+        function sellOneCard(btn) {
+            const cardKey = btn.dataset.key;
+            const price = parseInt(btn.dataset.price) || 0;
+            const cur = unlockedCards.get(cardKey) || 0;
+            if (cur <= 1) { openSellDuplicates(); return; } // plus de doublon
+            unlockedCards.set(cardKey, cur - 1);
+            stats.totalGold += price;
+            document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
+            document.getElementById('shopGoldDisplay').textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
+            playSound('buy');
+            autoSave();
+            // Rafraîchir la liste
+            openSellDuplicates();
+        }
+
+        function closeSellDuplicates() {
+            document.getElementById('sellModal').classList.remove('open');
+        }
+
+        function confirmSellAll() {
+            let totalGold = 0;
+            unlockedCards.forEach(function(count, cardKey) {
+                if (count <= 1) return;
+                const extras = count - 1;
+                const rarity = cardKey.split('|')[0];
+                const price = shopPrices[rarity] || 0;
+                if (price === 0) return;
+                totalGold += Math.floor(price * SELL_RATE) * extras;
+                unlockedCards.set(cardKey, 1);
+            });
+            stats.totalGold += totalGold;
+            document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
+            document.getElementById('shopGoldDisplay').textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
+            playSound('buy');
+            autoSave();
+            closeSellDuplicates();
+            showBroadcast('💸 Tu as vendu tes doublons et gagné ' + totalGold.toLocaleString() + ' 💰 !', Date.now());
+        }
+
         createStars();
 
         // ═══════════════════════════════════════════
