@@ -2363,6 +2363,17 @@
         .sell-confirm-btn { margin-top:14px; padding:14px; background:linear-gradient(180deg,#2ecc71,#1a7a40); color:#fff; border:none; border-radius:14px; font-size:0.92em; font-weight:900; cursor:pointer; font-family:'Arial Black',Arial,sans-serif; box-shadow:0 5px 0 #0a3a18; transition:all 0.18s; }
         .sell-confirm-btn:hover { transform:translateY(-2px); }
         .sell-confirm-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+        /* ═══ NOTE PAD ═══ */
+        .notepad-overlay { display:none; position:fixed; inset:0; background:#000; z-index:80000; flex-direction:column; }
+        .notepad-overlay.open { display:flex; }
+        .notepad-box { flex:1; display:flex; flex-direction:column; padding:28px 32px; overflow-y:auto; }
+        .notepad-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-shrink:0; }
+        .notepad-title { color:rgba(255,255,255,0.35); font-size:0.72em; letter-spacing:3px; text-transform:uppercase; font-family:'Arial Black',Arial,sans-serif; }
+        .notepad-close { background:none; border:none; color:rgba(255,255,255,0.25); font-size:1.1em; cursor:pointer; transition:color 0.2s; }
+        .notepad-close:hover { color:rgba(255,255,255,0.7); }
+        .notepad-content { flex:1; color:rgba(255,255,255,0.88); font-size:1.05em; line-height:1.8; font-family:'Courier New',monospace; white-space:pre-wrap; word-break:break-word; }
+        .notepad-empty { color:rgba(255,255,255,0.1); font-style:italic; font-size:0.9em; }
+        .notepad-footer { flex-shrink:0; margin-top:20px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.05); color:rgba(255,255,255,0.12); font-size:0.65em; letter-spacing:2px; text-align:center; }
         /* ═══════════════ FIN ADMIN ═══════════════ */
     </style>
 </head>
@@ -2427,6 +2438,18 @@
             </div>
 
             <div class="auth-msg" id="authMsg"></div>
+        </div>
+    </div>
+
+    <!-- Notepad (lecture seule pour joueurs, éditable par admin) -->
+    <div class="notepad-overlay" id="notepadOverlay">
+        <div class="notepad-box">
+            <div class="notepad-header">
+                <span class="notepad-title">📝 MESSAGE DE L'ADMIN</span>
+                <button class="notepad-close" onclick="closeNotepad()">✕</button>
+            </div>
+            <div class="notepad-content" id="notepadContent"><span class="notepad-empty">Aucun message pour le moment.</span></div>
+            <div class="notepad-footer">Appuie sur A pour fermer</div>
         </div>
     </div>
 
@@ -2561,7 +2584,7 @@
                         <div class="qmb-name">Devine le Nom</div>
                         <div class="qmb-desc">Une image s'affiche — trouve le bon nom parmi 4 propositions</div>
                     </div>
-                    <span class="qmb-reward">+5 000 💰</span>
+                    <span class="qmb-reward">+25 000 💰</span>
                 </button>
                 <button class="quiz-mode-btn" onclick="startQuiz('rarity')">
                     <span class="qmb-icon">⭐</span>
@@ -2569,7 +2592,7 @@
                         <div class="qmb-name">Devine la Rareté</div>
                         <div class="qmb-desc">Une image s'affiche — trouve la bonne rareté parmi 4 propositions</div>
                     </div>
-                    <span class="qmb-reward">+10 000 💰</span>
+                    <span class="qmb-reward">+50 000 💰</span>
                 </button>
             </div>
 
@@ -2885,7 +2908,17 @@
 
             </div>
 
-                        <!-- Status -->
+                        <!-- Notepad admin -->
+            <div class="admin-section" style="border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);">
+                <div class="admin-section-title" style="color:#aaa;">📝 Message affiché (touche A)</div>
+                <textarea id="adminNotepadText" style="width:100%;box-sizing:border-box;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:#fff;padding:12px;font-size:0.82em;font-family:'Courier New',monospace;line-height:1.6;resize:vertical;min-height:120px;outline:none;" placeholder="Écris un message visible par tous les joueurs quand ils appuient sur A…" maxlength="5000"></textarea>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                    <button class="admin-btn blue" onclick="adminSaveNotepad()">💾 Sauvegarder</button>
+                    <button class="admin-btn" onclick="adminClearNotepad()" style="background:linear-gradient(180deg,#444,#222);box-shadow:0 4px 0 #111;">🗑 Effacer</button>
+                </div>
+            </div>
+
+            <!-- Status -->
             <div style="text-align:center;color:#330010;font-size:0.72em;margin-top:8px;" id="adminStatusMsg"></div>
         </div>
     </div>
@@ -5087,7 +5120,7 @@
             if (chosen === correctAnswer) {
                 btn.classList.add('correct');
                 quizStreak++;
-                quizGold += currentQuizMode === 'rarity' ? 10000 : 5000;
+                quizGold += currentQuizMode === 'rarity' ? 50000 : 25000;
                 renderStreakDots();
                 setTimeout(() => loadQuizQuestion(), 900);
             } else {
@@ -5549,6 +5582,7 @@
             adminRefreshGlobalStats();
             buildAdminWheelItems();
             adminRefreshDashboard();
+            loadAdminNotepad();
         }
 
         function closeAdmin() {
@@ -7203,6 +7237,53 @@
             closeSellDuplicates();
             showBroadcast('💸 Tu as vendu tes doublons et gagné ' + totalGold.toLocaleString() + ' 💰 !', Date.now());
         }
+
+        // ═══ NOTEPAD ═══
+        function openNotepad() {
+            // Charger le contenu depuis Firebase
+            const el = document.getElementById('notepadContent');
+            if (firebaseDB) {
+                firebaseDB.ref('admin/notepad').once('value').then(snap => {
+                    const txt = snap.val();
+                    if (txt) { el.textContent = txt; el.querySelector && el.querySelector('.notepad-empty') && (el.innerHTML = txt.replace(/\n/g,'<br>')); }
+                    else { el.innerHTML = '<span class="notepad-empty">Aucun message pour le moment.</span>'; }
+                });
+            }
+            document.getElementById('notepadOverlay').classList.add('open');
+        }
+        function closeNotepad() {
+            document.getElementById('notepadOverlay').classList.remove('open');
+        }
+        function adminSaveNotepad() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            const txt = document.getElementById('adminNotepadText').value.trim();
+            firebaseDB.ref('admin/notepad').set(txt || null)
+                .then(() => adminStatus('✅ Message sauvegardé !'))
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+        function adminClearNotepad() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            firebaseDB.ref('admin/notepad').set(null)
+                .then(() => { adminStatus('✅ Message effacé'); document.getElementById('adminNotepadText').value = ''; })
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+        // Charger le texte dans l'admin panel à l'ouverture
+        function loadAdminNotepad() {
+            if (!firebaseDB) return;
+            firebaseDB.ref('admin/notepad').once('value').then(snap => {
+                const ta = document.getElementById('adminNotepadText');
+                if (ta) ta.value = snap.val() || '';
+            });
+        }
+        document.addEventListener('keydown', function(e) {
+            const tag = document.activeElement.tagName.toLowerCase();
+            if (tag === 'input' || tag === 'textarea') return;
+            if (e.key === 'a' || e.key === 'A') {
+                const overlay = document.getElementById('notepadOverlay');
+                if (overlay.classList.contains('open')) { closeNotepad(); }
+                else { openNotepad(); }
+            }
+        });
 
         createStars();
 
