@@ -2322,6 +2322,22 @@
         .auth-profile-info { color:#2ecc71; font-size:0.75em; margin-bottom:20px; }
         .auth-logout { width:100%; padding:13px; background:linear-gradient(180deg,#c0392b,#7b241c); color:#fff; border:none; border-radius:13px; font-size:0.88em; font-weight:900; cursor:pointer; font-family:'Arial Black',Arial,sans-serif; box-shadow:0 4px 0 #3a0f0a; transition:all 0.18s; }
         .auth-logout:hover { transform:translateY(-2px); }
+        /* Dashboard stats */
+        .dash-rarity-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+        .dash-rarity-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+        .dash-rarity-label { color:#ccc; font-size:0.75em; font-weight:700; min-width:90px; }
+        .dash-bar-wrap { flex:1; height:7px; background:rgba(255,255,255,0.05); border-radius:4px; overflow:hidden; }
+        .dash-bar-fill { height:100%; border-radius:4px; transition:width 0.5s ease; }
+        .dash-rarity-pct { color:#ff4466; font-size:0.72em; font-weight:900; min-width:42px; text-align:right; }
+        .dash-rarity-count { color:#555; font-size:0.68em; min-width:38px; text-align:right; }
+        .dash-card-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; max-height:280px; overflow-y:auto; margin-top:10px; }
+        .dash-card-item { background:rgba(0,0,0,0.3); border:1px solid rgba(255,0,64,0.1); border-radius:10px; padding:8px 6px; text-align:center; }
+        .dash-card-item img { width:40px; height:40px; object-fit:contain; }
+        .dash-card-name { color:#ccc; font-size:0.58em; margin-top:3px; line-height:1.2; }
+        .dash-card-owners { color:#ff4466; font-size:0.65em; font-weight:900; }
+        .dash-filter-row { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
+        .dash-filter-pill { padding:3px 9px; border-radius:20px; border:1px solid rgba(255,0,64,0.2); background:rgba(255,0,64,0.04); color:#555; font-size:0.65em; font-weight:900; cursor:pointer; transition:all 0.15s; }
+        .dash-filter-pill.on { border-color:#ff0040; color:#ff4466; background:rgba(255,0,64,0.1); }
         /* ═══════════════ FIN ADMIN ═══════════════ */
     </style>
 </head>
@@ -2819,6 +2835,28 @@
                     </div>
                     <button class="admin-btn blue" onclick="adminRefreshGlobalStats()" style="margin-top:10px;font-size:0.8em;padding:9px;">🔄 Actualiser</button>
                 </div>
+
+                <!-- Dashboard drop rates -->
+                <div class="admin-section">
+                    <div class="admin-section-title">📉 Taux de drop théoriques</div>
+                    <div id="dashDropRates"></div>
+                </div>
+
+                <!-- Dashboard cartes possédées par rareté -->
+                <div class="admin-section">
+                    <div class="admin-section-title">🃏 Cartes dans le jeu par rareté</div>
+                    <div id="dashCardCounts"></div>
+                </div>
+
+                <!-- Dashboard top cartes possédées -->
+                <div class="admin-section">
+                    <div class="admin-section-title">🏆 Top cartes possédées par les joueurs</div>
+                    <div class="dash-filter-row" id="dashTopFilter"></div>
+                    <div class="dash-card-grid" id="dashTopCards"></div>
+                    <div style="color:#555;font-size:0.72em;margin-top:8px;" id="dashTopStatus">Cliquez sur Actualiser pour charger</div>
+                </div>
+
+                <button class="admin-btn blue" onclick="adminRefreshDashboard()" style="margin-top:4px;font-size:0.8em;padding:9px;">🔄 Actualiser tout</button>
 
             </div>
 
@@ -3488,7 +3526,9 @@
                 { name: 'Snailo Clovero', img: 'https://static.wikia.nocookie.net/stealabr/images/a/ae/Snailo_Clovero.png/revision/latest?cb=20260314070330' },
                 { name: 'Gold Gold Gold', img: 'https://static.wikia.nocookie.net/stealabr/images/c/cd/GoldGoldGold.png/revision/latest?cb=20260314015404' },
                 { name: 'Noo My Gold', img: 'https://static.wikia.nocookie.net/stealabr/images/e/e2/NooMyGold.png/revision/latest/thumbnail/width/360/height/450?cb=20260314015403' },
-                { name: 'Fortunu and Coinuru', img: 'https://static.wikia.nocookie.net/stealabr/images/e/ed/Fortunu_and_Coinuru.png/revision/latest?cb=20260314070348' }
+                { name: 'Fortunu and Coinuru', img: 'https://static.wikia.nocookie.net/stealabr/images/e/ed/Fortunu_and_Coinuru.png/revision/latest?cb=20260314070348' },
+                { name: 'La Lucky Grande', img: 'https://www.lolga.com/uploads/images/goods/steal-a-brainrot/all-server-la-lucky-grande.png' },
+                { name: 'Cloverat Clapat', img: 'https://static.wikia.nocookie.net/stealabr/images/f/fd/Cloverat_Clapat.png/revision/latest?cb=20260315011545' }
              ],
               og: [
                 { name: "Strawberry Elephant", img: 'https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest/scale-to-width-down/144?cb=20250830235735' },
@@ -3916,7 +3956,14 @@
         function displayRewards(rewards) {
             const grid = document.getElementById('rewardsGrid');
             grid.innerHTML = '';
-            
+
+            // Son et flash selon la meilleure carte obtenue
+            const _rRank = { common:0, rare:1, epic:2, legendary:3, mythic:4, brainrot_god:5, secret:6, og:7, limited:8, no:9, admin_exclusive:10 };
+            let _best = 'common';
+            rewards.forEach(function(r) { if (r.type === 'card' && (_rRank[r.rarity]||0) > (_rRank[_best]||0)) _best = r.rarity; });
+            if (_rRank[_best] >= 4) { playSound('secret'); flashGoodCard(_best); }
+            else if (_rRank[_best] >= 2) { playSound('epic'); flashGoodCard(_best); }
+
             rewards.forEach((reward, index) => {
                 const card = document.createElement('div');
                 card.className = `reward-card ${reward.rarity}`;
@@ -4122,6 +4169,7 @@
         }
 
         function openShop() {
+            playSound('nav');
             document.getElementById('shopModal').style.display = 'block';
             document.getElementById('shopGoldDisplay').textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
             refreshShopLuckItem();
@@ -5459,6 +5507,7 @@
             buildAdminShopGrid();
             adminRefreshGlobalStats();
             buildAdminWheelItems();
+            adminRefreshDashboard();
         }
 
         function closeAdmin() {
@@ -5939,6 +5988,139 @@
                 .catch(e => adminStatus('Erreur : ' + e.message));
         }
 
+        let _dashTopRarity = 'all';
+        let _dashTopData = {}; // { cardKey: ownerCount }
+
+        function adminBuildDropRates() {
+            const el = document.getElementById('dashDropRates');
+            if (!el) return;
+            const rarities = chestRewards.rarity;
+            const RCOLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff', og:'#ffd700', limited:'#ff59e7', no:'#ff0000' };
+            const RLABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limitée', no:'Impossible' };
+            const order = ['common','rare','epic','legendary','mythic','brainrot_god','secret','og','limited','no'];
+            el.innerHTML = '';
+            order.forEach(r => {
+                const prob = rarities[r];
+                if (!prob && prob !== 0) return;
+                const pct = (prob * 100);
+                const pctStr = pct >= 1 ? pct.toFixed(1) + '%' : pct.toFixed(4) + '%';
+                const col = RCOLS[r] || '#aaa';
+                const lbl = RLABELS[r] || r;
+                const cardsCount = (cardImages[r] || []).length;
+                const row = document.createElement('div');
+                row.className = 'dash-rarity-row';
+                row.innerHTML =
+                    '<div class="dash-rarity-dot" style="background:' + col + '"></div>' +
+                    '<div class="dash-rarity-label" style="color:' + col + '">' + lbl + '</div>' +
+                    '<div class="dash-bar-wrap"><div class="dash-bar-fill" style="width:' + Math.min(100, pct * 1.5) + '%;background:' + col + '"></div></div>' +
+                    '<div class="dash-rarity-pct">' + pctStr + '</div>' +
+                    '<div class="dash-rarity-count" title="Nombre de cartes">' + cardsCount + ' cartes</div>';
+                el.appendChild(row);
+            });
+        }
+
+        function adminBuildCardCounts() {
+            const el = document.getElementById('dashCardCounts');
+            if (!el) return;
+            const RCOLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff', og:'#ffd700', limited:'#ff59e7', no:'#ff0000', admin_exclusive:'#ff0040' };
+            const RLABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limitée', no:'Impossible', admin_exclusive:'ADMIN' };
+            const order = ['common','rare','epic','legendary','mythic','brainrot_god','secret','og','limited','no','admin_exclusive'];
+            let total = 0;
+            order.forEach(r => { total += (cardImages[r] || []).length; });
+            el.innerHTML = '';
+            order.forEach(r => {
+                const count = (cardImages[r] || []).length;
+                if (count === 0) return;
+                const col = RCOLS[r] || '#aaa';
+                const lbl = RLABELS[r] || r;
+                const pct = total > 0 ? (count / total * 100) : 0;
+                const row = document.createElement('div');
+                row.className = 'dash-rarity-row';
+                row.innerHTML =
+                    '<div class="dash-rarity-dot" style="background:' + col + '"></div>' +
+                    '<div class="dash-rarity-label" style="color:' + col + '">' + lbl + '</div>' +
+                    '<div class="dash-bar-wrap"><div class="dash-bar-fill" style="width:' + Math.min(100, pct * 3) + '%;background:' + col + '"></div></div>' +
+                    '<div class="dash-rarity-pct" style="color:#00d4ff;">' + count + '</div>' +
+                    '<div class="dash-rarity-count">' + pct.toFixed(1) + '%</div>';
+                el.appendChild(row);
+            });
+            const totalDiv = document.createElement('div');
+            totalDiv.style.cssText = 'color:#555;font-size:0.72em;margin-top:8px;text-align:right;';
+            totalDiv.textContent = 'Total : ' + total + ' cartes dans le jeu';
+            el.appendChild(totalDiv);
+        }
+
+        function adminLoadTopCards(snap) {
+            const cardOwners = {};
+            if (snap && snap.exists()) {
+                snap.forEach(child => {
+                    const cards = child.val()?.cards;
+                    if (!cards) return;
+                    Object.values(cards).forEach(entry => {
+                        if (!entry || !entry.k) return;
+                        cardOwners[entry.k] = (cardOwners[entry.k] || 0) + 1;
+                    });
+                });
+            }
+            _dashTopData = cardOwners;
+            adminRenderTopCards();
+        }
+
+        function adminRenderTopCards() {
+            const RCOLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff', og:'#ffd700', limited:'#ff59e7', no:'#ff0000', admin_exclusive:'#ff0040' };
+            const RLABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limitée', no:'Impossible', admin_exclusive:'ADMIN' };
+            const filterEl = document.getElementById('dashTopFilter');
+            const grid = document.getElementById('dashTopCards');
+            const status = document.getElementById('dashTopStatus');
+            if (!grid) return;
+            // Build filter pills
+            const allRarities = [...new Set(Object.keys(_dashTopData).map(k => k.split('|')[0]))];
+            filterEl.innerHTML = '';
+            ['all', ...allRarities].forEach(r => {
+                const pill = document.createElement('div');
+                pill.className = 'dash-filter-pill' + (_dashTopRarity === r ? ' on' : '');
+                const lbl = r === 'all' ? 'Toutes' : (RLABELS[r] || r);
+                pill.textContent = lbl;
+                if (r !== 'all' && RCOLS[r]) pill.style.borderColor = RCOLS[r] + '66';
+                pill.onclick = () => { _dashTopRarity = r; adminRenderTopCards(); };
+                filterEl.appendChild(pill);
+            });
+            // Filter and sort
+            let entries = Object.entries(_dashTopData)
+                .filter(([k]) => _dashTopRarity === 'all' || k.startsWith(_dashTopRarity + '|'))
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 30);
+            grid.innerHTML = '';
+            if (entries.length === 0) { status.textContent = 'Aucune donnée'; return; }
+            status.textContent = entries.length + ' cartes affichées';
+            entries.forEach(([key, owners]) => {
+                const [rarity, ...np] = key.split('|');
+                const name = np.join('|');
+                const col = RCOLS[rarity] || '#aaa';
+                const cards = cardImages[rarity] || [];
+                const card = cards.find(c => c.name === name);
+                const div = document.createElement('div');
+                div.className = 'dash-card-item';
+                div.style.borderColor = col + '33';
+                div.innerHTML =
+                    (card ? '<img src="' + card.img + '" onerror="this.style.opacity=0.3">' : '<div style="width:40px;height:40px;margin:0 auto;background:#222;border-radius:6px;"></div>') +
+                    '<div class="dash-card-name">' + name + '</div>' +
+                    '<div class="dash-card-owners" style="color:' + col + '">' + owners + ' joueur(s)</div>';
+                grid.appendChild(div);
+            });
+        }
+
+        function adminRefreshDashboard() {
+            adminBuildDropRates();
+            adminBuildCardCounts();
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            document.getElementById('dashTopStatus').textContent = 'Chargement…';
+            adminRefreshGlobalStats();
+            firebaseDB.ref('players').once('value').then(snap => {
+                adminLoadTopCards(snap);
+            }).catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
         function adminStatus(msg) {
             const el = document.getElementById('adminStatusMsg');
             if (!el) return;
@@ -5962,6 +6144,7 @@
         let lbListener = null;
 
         function openLeaderboard() {
+            playSound('nav');
             document.getElementById('lbModal').classList.add('open');
             startLeaderboardListener();
         }
@@ -6164,6 +6347,7 @@
         // ── Launch fusion ────────────────────────────────
         function launchFuse() {
             if (!fuseSlots.every(s => s !== null)) return;
+            playSound('fuse');
             // Consommer les cartes
             fuseSlots.forEach(c => {
                 const cur = unlockedCards.get(c.key) || 0;
@@ -6345,6 +6529,7 @@
 
         function claimFuseResult() {
             if (!fuseState || !fuseState.done || fuseState.claimed) return;
+            playSound('buy');
             const r = fuseState.result;
             const cur = unlockedCards.get(r.key) || 0;
             if (cur === 0) { unlockedCards.set(r.key, 0); stats.totalCards++; }
@@ -6474,6 +6659,7 @@
 
         function spinWheel() {
             if (wheelSpinning) return;
+            playSound('wheel');
             const SPIN_COST = 50000;
             if (stats.totalGold < SPIN_COST) {
                 document.getElementById('wheelResult').style.borderColor = '#e74c3c';
@@ -6786,16 +6972,96 @@
                     osc.start(ctx.currentTime);
                     osc.stop(ctx.currentTime + 0.4);
                 } else if (type === 'error') {
-                    // Erreur : son grave court
                     osc.type = 'sawtooth';
                     osc.frequency.setValueAtTime(200, ctx.currentTime);
                     osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.15);
                     gain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.01);
                     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
-                    osc.start(ctx.currentTime);
-                    osc.stop(ctx.currentTime + 0.15);
+                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.15);
+                } else if (type === 'nav') {
+                    // Navigation modale : clic discret
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.06);
+                    gain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.06);
+                } else if (type === 'star') {
+                    // Étoile gagnée : petit ding montant
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(700, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(1100, ctx.currentTime + 0.12);
+                    gain.gain.linearRampToValueAtTime(0.09, ctx.currentTime + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.18);
+                } else if (type === 'epic') {
+                    // Épique / Légendaire : fanfare courte
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523, ctx.currentTime);
+                    osc.frequency.setValueAtTime(659, ctx.currentTime + 0.12);
+                    osc.frequency.setValueAtTime(784, ctx.currentTime + 0.24);
+                    gain.gain.linearRampToValueAtTime(0.13, ctx.currentTime + 0.02);
+                    gain.gain.setValueAtTime(0.13, ctx.currentTime + 0.28);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.45);
+                } else if (type === 'secret') {
+                    // Secret / Brainrot God : son wow impressionnant
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(400, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(1600, ctx.currentTime + 0.5);
+                    gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 0.05);
+                    gain.gain.setValueAtTime(0.18, ctx.currentTime + 0.55);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.9);
+                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.9);
+                } else if (type === 'quest') {
+                    // Quête complétée : son de succès
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523, ctx.currentTime);
+                    osc.frequency.setValueAtTime(784, ctx.currentTime + 0.1);
+                    osc.frequency.setValueAtTime(1047, ctx.currentTime + 0.2);
+                    gain.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 0.02);
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime + 0.28);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.5);
+                } else if (type === 'wheel') {
+                    // Roue qui tourne : petit whoosh
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.2);
+                    gain.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.2);
+                } else if (type === 'fuse') {
+                    // Fusion lancée : son chimique
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(300, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.3);
+                    gain.gain.linearRampToValueAtTime(0.07, ctx.currentTime + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.35);
                 }
             } catch(e) {}
+        }
+
+        // Flash lumineux pour bonnes cartes
+        function flashGoodCard(rarity) {
+            const GOOD = ['epic','legendary','mythic','brainrot_god','secret','og','limited','no','admin_exclusive'];
+            const GREAT = ['mythic','brainrot_god','secret','og','limited','no','admin_exclusive'];
+            if (!GOOD.includes(rarity)) return;
+            const overlay = document.createElement('div');
+            const color = GREAT.includes(rarity) ? 'rgba(255,215,0,0.18)' : 'rgba(163,73,164,0.12)';
+            overlay.style.cssText = 'position:fixed;inset:0;background:' + color + ';z-index:9999;pointer-events:none;animation:cardFlash 0.8s ease forwards;';
+            if (!document.getElementById('cardFlashStyle')) {
+                const st = document.createElement('style');
+                st.id = 'cardFlashStyle';
+                st.textContent = '@keyframes cardFlash{0%{opacity:0}15%{opacity:1}100%{opacity:0}}';
+                document.head.appendChild(st);
+            }
+            document.body.appendChild(overlay);
+            setTimeout(() => overlay.remove(), 800);
+            // Vibration mobile (si supporté)
+            if (GREAT.includes(rarity) && navigator.vibrate) navigator.vibrate([60, 30, 60]);
+            else if (navigator.vibrate) navigator.vibrate(40);
         }
 
         // Initialisation
