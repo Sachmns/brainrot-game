@@ -7406,7 +7406,7 @@
         document.addEventListener('keydown', function(e) {
             const tag = document.activeElement.tagName.toLowerCase();
             if (tag === 'input' || tag === 'textarea') return;
-            if (e.key === 'a' || e.key === 'A') {
+            if (e.key === 'z' || e.key === 'Z') {
                 const overlay = document.getElementById('notepadOverlay');
                 if (overlay.classList.contains('open')) { closeNotepad(); }
                 else { openNotepad(); }
