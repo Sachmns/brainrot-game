@@ -3006,6 +3006,17 @@
                 </div>
             </div>
 
+            <!-- Image du coffre -->
+            <div class="admin-section">
+                <div class="admin-section-title">🎁 Image du coffre</div>
+                <div style="color:#555;font-size:0.72em;margin-bottom:8px;">Change l'image du coffre pour tous les joueurs (même hors ligne).</div>
+                <input class="admin-input" id="adminChestUrl" placeholder="URL de l'image…" style="margin-bottom:8px;">
+                <div style="display:flex;gap:8px;">
+                    <button class="admin-btn blue" onclick="adminSetChestImg()">💾 Sauvegarder</button>
+                    <button class="admin-btn" onclick="adminResetChestImg()" style="background:linear-gradient(180deg,#444,#222);box-shadow:0 4px 0 #111;">↺ Réinitialiser</button>
+                </div>
+            </div>
+
             <!-- Status -->
             <div style="text-align:center;color:#330010;font-size:0.72em;margin-top:8px;" id="adminStatusMsg"></div>
         </div>
@@ -3046,7 +3057,7 @@
     <div class="container">
         <div class="chest-main" onclick="openChest()">
             <div class="chest-image-container">
-                <img src="https://static.wikia.nocookie.net/stealabr/images/3/3a/SecretLuckyBlock.png/revision/latest?cb=20251125192757" alt="Magical Chest" class="chest-image" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:150px;\'>✨</div>'">
+                <img id="mainChestImg" src="https://static.wikia.nocookie.net/stealabr/images/3/3a/SecretLuckyBlock.png/revision/latest?cb=20251125192757" alt="Magical Chest" class="chest-image" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:150px;\'>✨</div>'">
             </div>
             <div class="chest-name">Coffre Magique</div>
             <div class="chest-description">🌟 CLIQUE POUR OUVRIR !</div>
@@ -5435,6 +5446,13 @@
                 applyDoubleGold(d.active || false, d.expiry || 0, d.multiplier || 2);
             });
 
+            // Image du coffre
+            firebaseDB.ref('admin/chestImg').on('value', snap => {
+                const url = snap.val();
+                const img = document.getElementById('mainChestImg');
+                if (img) img.src = url || 'https://static.wikia.nocookie.net/stealabr/images/3/3a/SecretLuckyBlock.png/revision/latest?cb=20251125192757';
+            });
+
             // Broadcast — ignorer les messages antérieurs à la connexion
             const _joinTs = Date.now();
             firebaseDB.ref('admin/broadcast').on('value', snap => {
@@ -5672,6 +5690,11 @@
             buildAdminWheelItems();
             adminRefreshDashboard();
             loadAdminNotepad();
+            // Charger l'URL actuelle du coffre dans le champ
+            if (firebaseDB) firebaseDB.ref('admin/chestImg').once('value').then(s => {
+                const el = document.getElementById('adminChestUrl');
+                if (el && s.val()) el.value = s.val();
+            });
         }
 
         function closeAdmin() {
@@ -6283,6 +6306,22 @@
             firebaseDB.ref('players').once('value').then(snap => {
                 adminLoadTopCards(snap);
             }).catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
+        function adminSetChestImg() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            const url = document.getElementById('adminChestUrl').value.trim();
+            if (!url) { adminStatus('⚠️ Entre une URL'); return; }
+            firebaseDB.ref('admin/chestImg').set(url)
+                .then(() => adminStatus('✅ Image du coffre mise à jour !'))
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
+        function adminResetChestImg() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            firebaseDB.ref('admin/chestImg').set(null)
+                .then(() => adminStatus('✅ Image du coffre réinitialisée'))
+                .catch(e => adminStatus('Erreur : ' + e.message));
         }
 
         function adminStatus(msg) {
@@ -7815,71 +7854,7 @@
             document.getElementById('x10RevealOverlay').classList.remove('open');
         }
 
-        // ═══ SYSTÈME AFK ═══
-        const AFK_DELAY       = 60 * 1000;      // 1 minute avant d'être considéré AFK
-        const AFK_GAIN        = 500;             // pièces gagnées toutes les 30s
-        const AFK_INTERVAL    = 30 * 1000;       // intervalle de gain (30 secondes)
-        const AFK_CAP         = 100000;          // plafond total AFK par session
 
-        let afkTimeout        = null;
-        let afkGainInterval   = null;
-        let afkTotalEarned    = 0;
-        let afkActive         = false;
-
-        function resetAfkTimer() {
-            // Si le joueur était AFK, il revient → reset du compteur
-            if (afkActive) {
-                afkActive = false;
-                clearInterval(afkGainInterval);
-                afkGainInterval = null;
-                afkTotalEarned = 0;
-                const badge = document.getElementById('afkBadge');
-                if (badge) badge.style.display = 'none';
-            }
-            clearTimeout(afkTimeout);
-            afkTimeout = setTimeout(startAfk, AFK_DELAY);
-        }
-
-        function startAfk() {
-            afkActive = true;
-            afkGainInterval = setInterval(function() {
-                if (afkTotalEarned >= AFK_CAP) {
-                    clearInterval(afkGainInterval);
-                    afkGainInterval = null;
-                    return;
-                }
-                const gain = Math.min(AFK_GAIN, AFK_CAP - afkTotalEarned);
-                afkTotalEarned += gain;
-                stats.totalGold += gain;
-                document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
-                const sg = document.getElementById('shopGoldDisplay');
-                if (sg) sg.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
-                autoSave();
-                // Badge AFK
-                const badge = document.getElementById('afkBadge');
-                if (badge) {
-                    badge.textContent = '💤 AFK +' + gain + ' 💰 (total: ' + afkTotalEarned.toLocaleString() + ' / ' + AFK_CAP.toLocaleString() + ')';
-                    badge.style.display = 'block';
-                }
-            }, AFK_INTERVAL);
-        }
-
-        // Injection du badge AFK dans le header
-        (function() {
-            const badge = document.createElement('div');
-            badge.id = 'afkBadge';
-            badge.style.cssText = 'display:none;position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#1a3d6f,#2a5298);color:#ffd700;font-family:Arial Black,Arial,sans-serif;font-size:0.85em;font-weight:900;padding:10px 22px;border-radius:50px;border:2px solid #ffd700;box-shadow:0 4px 18px rgba(255,215,0,0.4);z-index:9999;letter-spacing:1px;pointer-events:none;';
-            document.body.appendChild(badge);
-        })();
-
-        // Écoute des interactions utilisateur
-        ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function(evt) {
-            document.addEventListener(evt, resetAfkTimer, { passive: true });
-        });
-
-        // Démarrage initial
-        resetAfkTimer();
-        // ═══ FIN SYSTÈME AFK ═══
     </script>
 </body>
 </html>
