@@ -1560,107 +1560,7 @@
             text-align: center;
         }
 
-        /* ═══ FUSE MACHINE ═══ */
-        .fuse-sidebar-btn {
-            position: fixed; left: 15px; top: calc(50% + 265px); z-index: 1000;
-            display: flex; flex-direction: column; align-items: center; gap: 6px;
-            cursor: pointer;
-            background: linear-gradient(180deg, #b85e00 0%, #7a3a00 100%);
-            border: 3px solid #ff9500; border-radius: 16px; padding: 14px 10px;
-            box-shadow: 0 6px 0 #3a1a00, 0 8px 20px rgba(0,0,0,0.6);
-            transition: all 0.2s; width: 75px;
-        }
-        .fuse-sidebar-btn:hover { transform: scale(1.07); box-shadow: 0 6px 0 #3a1a00, 0 8px 30px rgba(255,149,0,0.5); border-color: #ffd700; }
-        .fuse-sidebar-btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #3a1a00; }
-        .fuse-sidebar-btn span { color: #ffd700; font-size: 0.68em; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); text-align: center; }
 
-        .fuse-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.96); z-index:7000; justify-content:center; align-items:center; }
-        .fuse-modal.open { display:flex; }
-        .fuse-panel {
-            background: linear-gradient(145deg,#1a0a00,#2a1200,#1a0a00);
-            border: 3px solid #ff9500; border-radius: 28px;
-            padding: 28px 22px; width: 96%; max-width: 580px;
-            box-shadow: 0 0 60px rgba(255,149,0,0.3), 0 0 120px rgba(255,80,0,0.15);
-            position: relative; max-height: 92vh; overflow-y: auto;
-        }
-        .fuse-close-btn { position:absolute; top:14px; right:18px; background:none; border:none; color:#ff9500; font-size:1.5em; cursor:pointer; }
-        .fuse-close-btn:hover { color:#ffd700; }
-        .fuse-title { color:#ff9500; font-size:1.5em; font-weight:900; letter-spacing:3px; text-align:center; text-shadow:0 0 20px rgba(255,149,0,0.8); margin-bottom:4px; }
-        .fuse-subtitle { color:#7a4a00; font-size:0.78em; text-align:center; margin-bottom:20px; letter-spacing:1px; }
-
-        /* Slots */
-        .fuse-slots { display:flex; gap:12px; justify-content:center; align-items:center; margin-bottom:18px; flex-wrap:wrap; }
-        .fuse-slot {
-            width: 100px; height: 120px;
-            background: rgba(255,149,0,0.05); border: 2px dashed #7a4a00;
-            border-radius: 16px; display:flex; flex-direction:column; align-items:center; justify-content:center;
-            cursor: pointer; transition: all 0.2s; gap: 6px; position: relative;
-        }
-        .fuse-slot:hover { border-color:#ff9500; background:rgba(255,149,0,0.1); transform:translateY(-2px); }
-        .fuse-slot.filled { border: 2px solid #ff9500; background:rgba(255,149,0,0.08); }
-        .fuse-slot.filled:hover { border-color:#ffd700; }
-        .fuse-slot img { width:60px; height:60px; object-fit:contain; }
-        .fuse-slot-label { color:#7a4a00; font-size:0.7em; font-weight:900; text-transform:uppercase; text-align:center; }
-        .fuse-slot-name { color:#ccc; font-size:0.62em; text-align:center; line-height:1.2; padding:0 4px; }
-        .fuse-slot-remove { position:absolute; top:4px; right:4px; background:rgba(231,76,60,0.8); color:#fff; border:none; border-radius:50%; width:18px; height:18px; font-size:0.65em; cursor:pointer; display:none; align-items:center; justify-content:center; }
-        .fuse-slot.filled .fuse-slot-remove { display:flex; }
-        .fuse-arrow { color:#ff9500; font-size:1.8em; font-weight:900; }
-
-        /* Bouton fuse */
-        .fuse-btn {
-            width: 100%; padding: 15px; margin-bottom: 14px;
-            background: linear-gradient(180deg, #ff9500, #b85e00);
-            color: #fff; border: none; border-radius: 16px;
-            font-size: 1em; font-weight: 900; cursor: pointer;
-            letter-spacing: 2px; text-transform: uppercase;
-            font-family: 'Arial Black', Arial, sans-serif;
-            box-shadow: 0 6px 0 #5a2a00; transition: all 0.2s;
-        }
-        .fuse-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #5a2a00; }
-        .fuse-btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #5a2a00; }
-        .fuse-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
-
-        /* Timer */
-        .fuse-timer-box {
-            background: rgba(0,0,0,0.4); border: 2px solid #ff9500;
-            border-radius: 16px; padding: 18px; text-align: center; margin-bottom: 14px;
-        }
-        .fuse-timer-title { color:#ff9500; font-size:0.82em; font-weight:900; letter-spacing:2px; margin-bottom:8px; }
-        .fuse-timer-display { color:#ffd700; font-size:2.5em; font-weight:900; letter-spacing:4px; font-family:'Arial Black',Arial,sans-serif; text-shadow:0 0 20px rgba(255,215,0,0.6); }
-        .fuse-timer-sub { color:#7a4a00; font-size:0.72em; margin-top:6px; }
-        .fuse-timer-bar { height:6px; background:rgba(255,149,0,0.15); border-radius:3px; margin-top:10px; overflow:hidden; }
-        .fuse-timer-bar-fill { height:100%; background:linear-gradient(90deg,#b85e00,#ff9500,#ffd700); border-radius:3px; transition:width 1s linear; }
-
-        /* Résultat */
-        .fuse-result-box { display:none; background:rgba(0,0,0,0.4); border:2px solid #ffd700; border-radius:16px; padding:20px; text-align:center; margin-bottom:14px; animation:fuseResultPop 0.4s ease; }
-        .fuse-result-box.show { display:block; }
-        @keyframes fuseResultPop { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
-        .fuse-result-img { width:80px; height:80px; object-fit:contain; margin-bottom:8px; }
-        .fuse-result-name { color:#fff; font-size:1em; font-weight:900; margin-bottom:4px; }
-        .fuse-result-rarity { font-size:0.78em; font-weight:700; padding:3px 12px; border-radius:20px; display:inline-block; margin-bottom:8px; }
-        .fuse-result-new { color:#4ecb71; font-size:0.8em; font-weight:900; }
-
-        /* Grille sélection */
-        .fuse-pick-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; max-height:240px; overflow-y:auto; margin-top:10px; }
-        .fuse-pick-item { background:rgba(0,0,0,0.4); border:2px solid rgba(255,149,0,0.15); border-radius:12px; padding:8px 5px; cursor:pointer; text-align:center; transition:all 0.15s; }
-        .fuse-pick-item:hover { border-color:#ff9500; transform:translateY(-2px); }
-        .fuse-pick-item img { width:48px; height:48px; object-fit:contain; }
-        .fuse-pick-item .fpn { color:#ccc; font-size:0.62em; font-weight:700; margin-top:3px; line-height:1.2; }
-        .fuse-pick-item .fpc { color:#ff9500; font-size:0.65em; font-weight:900; }
-        .fuse-section-label { color:#ff9500; font-size:0.78em; font-weight:900; text-transform:uppercase; letter-spacing:2px; margin-bottom:8px; }
-        .fuse-pick-overlay { display:none; position:absolute; inset:0; background:rgba(0,0,0,0.85); z-index:8000; justify-content:center; align-items:center; }
-        .fuse-pick-overlay.open { display:flex; }
-        .fuse-pick-panel { background:linear-gradient(145deg,#1a0a00,#2a1200); border:3px solid #ff9500; border-radius:24px; padding:22px 18px; width:92%; max-width:480px; max-height:80vh; overflow-y:auto; }
-        .fuse-pick-title { color:#ff9500; font-size:1.1em; font-weight:900; text-align:center; margin-bottom:14px; }
-        .fuse-pick-close { display:block; width:100%; margin-top:12px; padding:10px; background:rgba(255,149,0,0.15); border:1px solid #ff9500; color:#ff9500; border-radius:12px; font-weight:900; cursor:pointer; font-family:'Arial Black',Arial,sans-serif; font-size:0.85em; }
-        .fuse-preview { background:rgba(0,0,0,0.3); border:1px solid rgba(255,149,0,0.2); border-radius:14px; padding:12px 14px; margin-bottom:12px; }
-        .fuse-preview-title { color:#ff9500; font-size:0.72em; font-weight:900; letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; text-align:center; }
-        .fuse-preview-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
-        .fuse-preview-bar-wrap { flex:1; height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
-        .fuse-preview-bar { height:100%; border-radius:4px; transition:width 0.4s ease; }
-        .fuse-preview-label { color:#ccc; font-size:0.68em; font-weight:700; min-width:80px; }
-        .fuse-preview-pct { color:#ff9500; font-size:0.7em; font-weight:900; min-width:38px; text-align:right; }
-        /* ═══ FIN FUSE MACHINE ═══ */
 
         /* Modal Quiz */
         .quiz-modal {
@@ -2414,6 +2314,43 @@
         .notepad-content { flex:1; color:rgba(255,255,255,0.88); font-size:1.05em; line-height:1.8; font-family:'Courier New',monospace; white-space:pre-wrap; word-break:break-word; }
         .notepad-empty { color:rgba(255,255,255,0.1); font-style:italic; font-size:0.9em; }
         .notepad-footer { flex-shrink:0; margin-top:20px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.05); color:rgba(255,255,255,0.12); font-size:0.65em; letter-spacing:2px; text-align:center; }
+        /* ═══ CRAFT MACHINE ═══ */
+        .craft-sidebar-btn {
+            position:fixed; left:15px; top:calc(50% + 265px); z-index:1000;
+            display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;
+            background:linear-gradient(180deg,#004a30,#002a18); border:3px solid #00ff88;
+            border-radius:16px; padding:14px 10px; box-shadow:0 6px 0 #001008,0 8px 20px rgba(0,0,0,0.6);
+            transition:all 0.2s; width:75px;
+        }
+        .craft-sidebar-btn:hover { transform:scale(1.07); box-shadow:0 6px 0 #001008,0 8px 30px rgba(0,255,136,0.4); }
+        .craft-sidebar-btn > span { color:#00ff88; font-size:0.68em; font-weight:900; text-transform:uppercase; letter-spacing:1px; text-align:center; }
+        .craft-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.96); z-index:7700; justify-content:center; align-items:center; }
+        .craft-modal.open { display:flex; }
+        .craft-panel { background:linear-gradient(145deg,#000d06,#001a0c); border:3px solid rgba(0,255,136,0.4); border-radius:28px; padding:28px 22px; width:96%; max-width:520px; box-shadow:0 0 60px rgba(0,255,136,0.12); position:relative; max-height:90vh; overflow-y:auto; text-align:center; }
+        .craft-close { position:absolute; top:14px; right:18px; background:none; border:none; color:#00ff88; font-size:1.5em; cursor:pointer; }
+        .craft-title { color:#00ff88; font-size:1.4em; font-weight:900; letter-spacing:3px; text-shadow:0 0 20px rgba(0,255,136,0.6); margin-bottom:4px; }
+        .craft-sub { color:#004a20; font-size:0.76em; margin-bottom:18px; letter-spacing:1px; }
+        .craft-recipes-list { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+        .craft-recipe-card { background:rgba(0,0,0,0.4); border:2px solid rgba(0,255,136,0.12); border-radius:16px; padding:14px; cursor:pointer; transition:all 0.18s; text-align:left; }
+        .craft-recipe-card:hover { border-color:rgba(0,255,136,0.35); }
+        .craft-recipe-card.selected { border-color:#00ff88; background:rgba(0,255,136,0.06); }
+        .craft-recipe-header { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+        .craft-recipe-img { width:44px; height:44px; object-fit:contain; border-radius:8px; }
+        .craft-recipe-name { color:#fff; font-size:0.88em; font-weight:900; }
+        .craft-recipe-rarity { font-size:0.65em; font-weight:900; margin-top:2px; }
+        .craft-ingredients-row { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
+        .craft-ing-tag { padding:3px 9px; border-radius:20px; font-size:0.65em; font-weight:900; }
+        .craft-ing-tag.ok { border:1px solid rgba(0,255,136,0.4); color:#00ff88; background:rgba(0,255,136,0.06); }
+        .craft-ing-tag.nope { border:1px solid rgba(231,76,60,0.4); color:#e74c3c; background:rgba(231,76,60,0.06); }
+        .craft-btn-main { width:100%; padding:14px; background:linear-gradient(180deg,#00ff88,#006630); color:#000; border:none; border-radius:14px; font-size:0.95em; font-weight:900; cursor:pointer; font-family:'Arial Black',Arial,sans-serif; letter-spacing:2px; box-shadow:0 5px 0 #002a10; transition:all 0.18s; }
+        .craft-btn-main:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 7px 0 #002a10; }
+        .craft-btn-main:disabled { opacity:0.35; cursor:not-allowed; }
+        .craft-empty { color:#004a20; font-size:0.85em; padding:24px 0; }
+        .craft-status-msg { font-size:0.78em; min-height:18px; margin-top:8px; font-weight:700; }
+        /* Admin craft */
+        .craft-adm-recipe { background:rgba(0,0,0,0.3); border:1px solid rgba(0,255,136,0.12); border-radius:12px; padding:12px; margin-bottom:10px; }
+        .craft-adm-row { display:flex; gap:6px; align-items:center; margin-bottom:5px; flex-wrap:wrap; }
+        .craft-adm-input { background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:8px; color:#fff; padding:5px 8px; font-size:0.75em; outline:none; }
         /* ═══════════════ FIN ADMIN ═══════════════ */
     </style>
 </head>
@@ -2515,11 +2452,30 @@
         <span>Roue</span>
     </div>
 
-    <!-- Bouton Fuse Machine -->
+    <!-- Bouton Craft Machine -->
+    <div class="craft-sidebar-btn" onclick="openCraft()" title="Craft Machine">
+        <span style="font-size:2em;">⚒️</span>
+        <span>Craft</span>
+    </div>
+
     <!-- Bouton Machine à sous -->
     <div class="slots-sidebar-btn" onclick="openSlots()" title="Machine à sous">
         <span style="font-size:2em;">🎰</span>
         <span>Slots</span>
+    </div>
+
+    <!-- Modal Craft Machine -->
+    <div class="craft-modal" id="craftModal">
+        <div class="craft-panel">
+            <button class="craft-close" onclick="closeCraft()">✕</button>
+            <div class="craft-title">⚒️ CRAFT MACHINE</div>
+            <div class="craft-sub">Choisis une recette et craft ta carte</div>
+            <div class="craft-recipes-list" id="craftRecipesList">
+                <div class="craft-empty">Chargement…</div>
+            </div>
+            <button class="craft-btn-main" id="craftBtnMain" onclick="doCraft()" disabled>⚒️ CRAFTER</button>
+            <div class="craft-status-msg" id="craftStatusMsg"></div>
+        </div>
     </div>
 
     <!-- Modal Machine à sous -->
@@ -2564,11 +2520,6 @@
         </div>
     </div>
 
-    <div class="fuse-sidebar-btn" onclick="openFuse()" title="Fuse Machine">
-        <span style="font-size:2em;">⚗️</span>
-        <span>Fuse</span>
-    </div>
-
     <!-- Modal Roue de la Fortune -->
     <div class="wheel-modal" id="wheelModal">
         <div class="wheel-panel">
@@ -2587,76 +2538,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal Fuse Machine -->
-    <div class="fuse-modal" id="fuseModal">
-        <div class="fuse-panel">
-            <button class="fuse-close-btn" onclick="closeFuse()">✕</button>
-            <div class="fuse-title">⚗️ FUSE MACHINE</div>
-            <div class="fuse-subtitle">Fusionne 3 brainrots → obtiens un brainrot aléatoire</div>
-
-            <!-- Slots -->
-            <div class="fuse-slots" id="fuseSlots">
-                <div class="fuse-slot" id="fuseSlot0" onclick="openFusePick(0)">
-                    <div class="fuse-slot-label">Slot 1</div>
-                    <div style="font-size:2em;color:#7a4a00;">+</div>
-                    <button class="fuse-slot-remove" onclick="event.stopPropagation();removeFuseSlot(0)">✕</button>
-                </div>
-                <div class="fuse-arrow">+</div>
-                <div class="fuse-slot" id="fuseSlot1" onclick="openFusePick(1)">
-                    <div class="fuse-slot-label">Slot 2</div>
-                    <div style="font-size:2em;color:#7a4a00;">+</div>
-                    <button class="fuse-slot-remove" onclick="event.stopPropagation();removeFuseSlot(1)">✕</button>
-                </div>
-                <div class="fuse-arrow">+</div>
-                <div class="fuse-slot" id="fuseSlot2" onclick="openFusePick(2)">
-                    <div class="fuse-slot-label">Slot 3</div>
-                    <div style="font-size:2em;color:#7a4a00;">+</div>
-                    <button class="fuse-slot-remove" onclick="event.stopPropagation();removeFuseSlot(2)">✕</button>
-                </div>
-            </div>
-
-            <div style="color:#7a4a00;font-size:0.75em;text-align:center;margin-bottom:12px;">Plus tes cartes sont rares, plus tu as de chances d'obtenir des cartes que tu n'as pas encore !</div>
-
-            <!-- Preview des chances -->
-            <div class="fuse-preview" id="fusePreview" style="display:none;">
-                <div class="fuse-preview-title">🎯 Chances possibles</div>
-                <div id="fusePreviewRows"></div>
-            </div>
-
-            <!-- Timer (visible si fusion en cours) -->
-            <div class="fuse-timer-box" id="fuseTimerBox" style="display:none;">
-                <div class="fuse-timer-title">⏳ FUSION EN COURS…</div>
-                <div class="fuse-timer-display" id="fuseTimerDisplay">05:00</div>
-                <div class="fuse-timer-sub">Ta carte apparaîtra quand le timer sera terminé</div>
-                <div class="fuse-timer-bar"><div class="fuse-timer-bar-fill" id="fuseTimerBarFill" style="width:100%"></div></div>
-            </div>
-
-            <!-- Résultat -->
-            <div class="fuse-result-box" id="fuseResultBox">
-                <div style="color:#ffd700;font-size:0.82em;font-weight:900;letter-spacing:2px;margin-bottom:10px;">✨ FUSION TERMINÉE !</div>
-                <img class="fuse-result-img" id="fuseResultImg" src="">
-                <div class="fuse-result-name" id="fuseResultName"></div>
-                <div class="fuse-result-rarity" id="fuseResultRarity"></div>
-                <div class="fuse-result-new" id="fuseResultNew"></div>
-                <button class="fuse-btn" onclick="claimFuseResult()" style="margin-top:12px;width:auto;padding:12px 30px;">🎁 Récupérer la carte</button>
-            </div>
-
-            <!-- Bouton lancer -->
-            <button class="fuse-btn" id="fuseLaunchBtn" onclick="launchFuse()" disabled>⚗️ LANCER LA FUSION (5 min)</button>
-            <div style="color:#7a4a00;font-size:0.7em;text-align:center;">Les 3 cartes seront consommées</div>
-        </div>
-    </div>
-
-    <!-- Overlay sélection carte pour fuse -->
-    <div class="fuse-pick-overlay" id="fusePickOverlay">
-        <div class="fuse-pick-panel">
-            <div class="fuse-pick-title">Choisir une carte</div>
-            <div class="fuse-pick-grid" id="fusePickGrid"></div>
-            <button class="fuse-pick-close" onclick="closeFusePick()">✕ Annuler</button>
-        </div>
-    </div>
-
     <!-- Modal Quiz -->
     <div class="quiz-modal" id="quizModal">
         <div class="quiz-panel">
@@ -2818,12 +2699,6 @@
                     <button class="admin-btn" onclick="adminResetWheel()" style="margin-top:6px;background:linear-gradient(180deg,#444,#222);box-shadow:0 4px 0 #111;">↺ Réinitialiser</button>
                 </div>
 
-                <!-- Fuse Machine -->
-                <div class="admin-section">
-                    <div class="admin-section-title">⚗️ Fuse Machine</div>
-                    <div style="color:#555;font-size:0.75em;margin-bottom:8px;">Termine instantanément la fusion en cours pour TOUS les joueurs connectés</div>
-                    <button class="admin-btn orange" onclick="adminSkipFuse()">⚡ Skip le timer de fusion</button>
-                </div>
 
             </div>
 
@@ -3018,6 +2893,17 @@
             </div>
 
             <!-- Status -->
+            <!-- Craft Machine recettes -->
+            <div class="admin-section" style="border-color:rgba(0,255,136,0.25);background:rgba(0,255,136,0.02);">
+                <div class="admin-section-title" style="color:#00ff88;">⚒️ Craft Machine — Recettes</div>
+                <div style="color:#555;font-size:0.72em;margin-bottom:10px;">Définis les recettes craftables par les joueurs</div>
+                <div id="craftAdminList"></div>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                    <button class="admin-btn" onclick="craftAdminAddRecipe()" style="background:linear-gradient(180deg,#004a30,#002a18);border:2px solid rgba(0,255,136,0.3);color:#00ff88;">➕ Nouvelle recette</button>
+                    <button class="admin-btn blue" onclick="craftAdminSave()">💾 Sauvegarder</button>
+                </div>
+            </div>
+
             <div style="text-align:center;color:#330010;font-size:0.72em;margin-top:8px;" id="adminStatusMsg"></div>
         </div>
     </div>
@@ -3423,7 +3309,7 @@
                 { name: 'Tree Tree Tree Sahur', img: 'https://static.wikia.nocookie.net/stealabr/images/3/35/TreeTreeTreeSahur.png/revision/latest/scale-to-width-down/105?cb=20251207004205' },
                 { name: 'Fizzy Soda', img: 'https://static.wikia.nocookie.net/stealabr/images/f/f3/Fizzy_Soda.png/revision/latest/scale-to-width-down/97?cb=20260125102651' },
                 { name: 'Berenjello Angello', img: 'https://static.wikia.nocookie.net/stealabr/images/4/4e/Eggplanti_Angel.png/revision/latest/scale-to-width-down/70?cb=20260306163210' },
-                { name: 'Harpuccino', img: 'https://static.wikia.nocookie.net/stealabr/images/f/f2/Screenshot_2026-03-07_171830.png/revision/latest/scale-to-width-down/70?cb=20260308003846' }
+                { name: 'Harpuccino', img: 'https://static.wikia.nocookie.net/stealabr/images/d/d4/X3t5ywjmmsrmr0cwtrgtd1p3cr-removebg-preview.png/revision/latest?cb=20260310050516' }
             ],
             brainrot_god: [
                 { name: 'Cocofanto Elefanto', img: 'https://static.wikia.nocookie.net/stealabr/images/d/d9/Cocofanto.png/revision/latest/scale-to-width-down/150?cb=20251006202715' },
@@ -5516,8 +5402,6 @@
             // Carte forcée globale : écrite directement par joueur depuis adminForceCardAll
             // (plus de listener global nécessaire)
 
-            // Skip Fuse Machine timer
-            listenFuseSkip();
         }
 
         // ── Luck globale ────────────────────────────────
@@ -5690,6 +5574,7 @@
             buildAdminWheelItems();
             adminRefreshDashboard();
             loadAdminNotepad();
+            craftAdminLoad();
             // Charger l'URL actuelle du coffre dans le champ
             if (firebaseDB) firebaseDB.ref('admin/chestImg').once('value').then(s => {
                 const el = document.getElementById('adminChestUrl');
@@ -6003,326 +5888,7 @@
             }).catch(e => adminStatus('Erreur : ' + e.message));
         }
 
-        function adminSkipFuse() {
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            firebaseDB.ref('admin/fuseSkip').set({ ts: Date.now() })
-                .then(() => adminStatus('✅ Timer de fusion passé pour tous !'))
-                .catch(e => adminStatus('Erreur : ' + e.message));
-        }
 
-        function adminCursePlayer() {
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            const pseudo = document.getElementById('adminCursePseudo').value.trim();
-            const minutes = Math.max(1, parseInt(document.getElementById('adminCurseDuration').value) || 5);
-            if (!pseudo) { adminStatus('⚠️ Pseudo vide'); return; }
-            const online = window._adminPlayerList || [];
-            if (!online.includes(pseudo)) { adminStatus('⚠️ ' + pseudo + ' n\'est pas connecté'); return; }
-            const key = encodeURIComponent(pseudo).replace(/[.#$\/\[\]]/g,'_');
-            const expiry = Date.now() + minutes * 60 * 1000;
-            firebaseDB.ref('players/' + key + '/cursed').set({ expiry, ts: Date.now() })
-                .then(() => adminStatus('🪄 ' + pseudo + ' maudit(e) pendant ' + minutes + ' min !'))
-                .catch(e => adminStatus('Erreur : ' + e.message));
-        }
-
-        function adminUncursePlayer() {
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            const pseudo = document.getElementById('adminCursePseudo').value.trim();
-            if (!pseudo) { adminStatus('⚠️ Pseudo vide'); return; }
-            const key = encodeURIComponent(pseudo).replace(/[.#$\/\[\]]/g,'_');
-            firebaseDB.ref('players/' + key + '/cursed').set({ expiry: 0 })
-                .then(() => adminStatus('✅ Malédiction levée pour ' + pseudo))
-                .catch(e => adminStatus('Erreur : ' + e.message));
-        }
-
-        let _adminBookPseudo = '';
-        let _adminBookFilter = 'all';
-
-        function adminViewBook(pseudoArg) {
-            const pseudo = pseudoArg || document.getElementById('adminStatsPseudo').value.trim();
-            if (!pseudo) { adminStatus('⚠️ Pseudo vide'); return; }
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            _adminBookPseudo = pseudo;
-            _adminBookFilter = 'all';
-            document.getElementById('adminBookTitle').textContent = '📖 Livre de ' + pseudo;
-            document.getElementById('adminBookGrid').innerHTML = '<div style="color:#555;text-align:center;padding:20px;grid-column:1/-1;">Chargement…</div>';
-            document.getElementById('adminBookModal').classList.add('open');
-            const key = encodeURIComponent(pseudo).replace(/[.#$\/\[\]]/g,'_');
-            firebaseDB.ref('players/' + key + '/cards').once('value').then(snap => {
-                const data = snap.val();
-                const cards = [];
-                if (data) {
-                    Object.values(data).forEach(entry => {
-                        if (!entry || !entry.k) return;
-                        const [rarity, ...np] = entry.k.split('|');
-                        const name = np.join('|');
-                        const cardList = cardImages[rarity] || [];
-                        const card = cardList.find(c => c.name === name);
-                        cards.push({ key: entry.k, name, rarity, count: entry.c || 1, img: card ? card.img : '' });
-                    });
-                }
-                renderAdminBook(cards);
-            }).catch(e => adminStatus('Erreur : ' + e.message));
-        }
-
-        function renderAdminBook(cards) {
-            const grid = document.getElementById('adminBookGrid');
-            const filterEl = document.getElementById('adminBookFilter');
-            const countEl = document.getElementById('adminBookCount');
-            if (!grid) return;
-
-            // Build filter pills
-            const rarities = ['all', ...new Set(cards.map(c => c.rarity))];
-            filterEl.innerHTML = '';
-            rarities.forEach(r => {
-                const pill = document.createElement('div');
-                pill.className = 'admin-book-pill' + (_adminBookFilter === r ? ' active' : '');
-                const rc = RARITY_COLORS[r];
-                pill.textContent = r === 'all' ? 'Toutes' : (rc ? rc.label : r);
-                if (r !== 'all' && rc) pill.style.borderColor = rc.bg;
-                pill.onclick = () => { _adminBookFilter = r; renderAdminBook(cards); };
-                filterEl.appendChild(pill);
-            });
-
-            const filtered = _adminBookFilter === 'all' ? cards : cards.filter(c => c.rarity === _adminBookFilter);
-            countEl.textContent = filtered.length + ' carte(s) affichée(s) sur ' + cards.length + ' total';
-
-            grid.innerHTML = '';
-            if (filtered.length === 0) {
-                grid.innerHTML = '<div style="color:#555;text-align:center;padding:20px;grid-column:1/-1;">Aucune carte</div>';
-                return;
-            }
-
-            filtered.forEach(c => {
-                const rc = RARITY_COLORS[c.rarity] || { bg:'#aaa', label: c.rarity };
-                const div = document.createElement('div');
-                div.className = 'admin-book-card';
-                div.innerHTML =
-                                        '<button class="admin-book-remove" onclick="adminRemoveCard(this)" data-pseudo="' + _adminBookPseudo + '" data-key="' + encodeURIComponent(c.key) + '" title="Retirer">✕</button>' +
-                    (c.img ? '<img src="' + c.img + '" onerror="this.style.opacity=0.3">' : '<div style="width:48px;height:48px;margin:0 auto;background:#333;border-radius:8px;"></div>') +
-                    '<div class="abn">' + c.name + '</div>' +
-                    '<div class="abc" style="color:' + rc.bg + '">' + rc.label + '</div>' +
-                    '<div style="color:#2ecc71;font-size:0.65em;">×' + c.count + '</div>';
-                div.dataset.cardKey = c.key;
-                grid.appendChild(div);
-            });
-
-            // Store cards for re-render after removal
-            grid.dataset.cards = JSON.stringify(cards);
-        }
-
-        function adminRemoveCard(btnEl) {
-            const pseudo = btnEl.dataset.pseudo;
-            const cardKey = decodeURIComponent(btnEl.dataset.key);
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            const playerKey = encodeURIComponent(pseudo).replace(/[.#$\/\[\]]/g,'_');
-            // Send remove command to player
-            firebaseDB.ref('players/' + playerKey + '/removeCard').set(cardKey).then(() => {
-                // Update Firebase cards data too
-                const safeKey = cardKey.replace(/[.#$|\[\]]/g, '_');
-                firebaseDB.ref('players/' + playerKey + '/cards/' + safeKey).once('value').then(snap => {
-                    const d = snap.val();
-                    if (d && d.c > 1) {
-                        firebaseDB.ref('players/' + playerKey + '/cards/' + safeKey).update({ c: d.c - 1 });
-                    } else {
-                        firebaseDB.ref('players/' + playerKey + '/cards/' + safeKey).remove();
-                    }
-                    // Mettre à jour le compteur unlockedCards dans les stats (utilisé par le classement)
-                    firebaseDB.ref('players/' + playerKey + '/stats/unlockedCards').transaction(cur => {
-                        return Math.max(0, (cur || 1) - 1);
-                    });
-                });
-                // Remove card from UI
-                const cardEl = btnEl.closest('.admin-book-card');
-                if (cardEl) {
-                    const countEl = cardEl.querySelector('div[style*="2ecc71"]');
-                    if (countEl) {
-                        const cur = parseInt(countEl.textContent.replace('×','')) || 1;
-                        if (cur > 1) { countEl.textContent = '×' + (cur-1); }
-                        else { cardEl.remove(); }
-                    }
-                }
-                adminStatus('✅ Carte retirée à ' + pseudo);
-            }).catch(e => adminStatus('Erreur : ' + e.message));
-        }
-
-        function closeAdminBook() {
-            document.getElementById('adminBookModal').classList.remove('open');
-        }
-
-        function adminTab(tab) {
-            ['events','players','shop','stats'].forEach(t => {
-                document.getElementById('atab-' + t).className = 'admin-tab-btn' + (t===tab?' active':'');
-                document.getElementById('apanel-' + t).className = 'admin-tab-panel' + (t===tab?' active':'');
-            });
-        }
-
-        function adminGiveAdminCard() {
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            const pseudo = document.getElementById('adminCardPseudo').value.trim();
-            const name = document.getElementById('adminCardName').value.trim();
-            const img = document.getElementById('adminCardImg').value.trim() || 'https://i.imgur.com/8Km9tLL.png';
-            if (!pseudo || !name) { adminStatus('⚠️ Pseudo et nom de carte requis'); return; }
-            const online = window._adminPlayerList || [];
-            if (!online.includes(pseudo)) { adminStatus('⚠️ ' + pseudo + ' n\'est pas connecté'); return; }
-            if (!cardImages.admin_exclusive) cardImages.admin_exclusive = [];
-            if (!cardImages.admin_exclusive.find(c => c.name === name)) {
-                cardImages.admin_exclusive.push({ name, img });
-            }
-            const cardKey = 'admin_exclusive|' + name;
-            const playerKey = encodeURIComponent(pseudo).replace(/[.#$\/\[\]]/g,'_');
-            firebaseDB.ref('players/' + playerKey + '/forcedCard').set(cardKey)
-                .then(() => adminStatus('⚡ Carte ADMIN \'' + name + '\' envoyée à ' + pseudo + ' !'))
-                .catch(e => adminStatus('Erreur : ' + e.message));
-        }
-
-        let _dashTopRarity = 'all';
-        let _dashTopData = {}; // { cardKey: ownerCount }
-
-        function adminBuildDropRates() {
-            const el = document.getElementById('dashDropRates');
-            if (!el) return;
-            const rarities = chestRewards.rarity;
-            const RCOLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff', og:'#ffd700', limited:'#ff59e7', no:'#ff0000' };
-            const RLABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limitée', no:'Impossible' };
-            const order = ['common','rare','epic','legendary','mythic','brainrot_god','secret','og','limited','no'];
-            el.innerHTML = '';
-            order.forEach(r => {
-                const prob = rarities[r];
-                if (!prob && prob !== 0) return;
-                const pct = (prob * 100);
-                const pctStr = pct >= 1 ? pct.toFixed(1) + '%' : pct.toFixed(4) + '%';
-                const col = RCOLS[r] || '#aaa';
-                const lbl = RLABELS[r] || r;
-                const cardsCount = (cardImages[r] || []).length;
-                const row = document.createElement('div');
-                row.className = 'dash-rarity-row';
-                row.innerHTML =
-                    '<div class="dash-rarity-dot" style="background:' + col + '"></div>' +
-                    '<div class="dash-rarity-label" style="color:' + col + '">' + lbl + '</div>' +
-                    '<div class="dash-bar-wrap"><div class="dash-bar-fill" style="width:' + Math.min(100, pct * 1.5) + '%;background:' + col + '"></div></div>' +
-                    '<div class="dash-rarity-pct">' + pctStr + '</div>' +
-                    '<div class="dash-rarity-count" title="Nombre de cartes">' + cardsCount + ' cartes</div>';
-                el.appendChild(row);
-            });
-        }
-
-        function adminBuildCardCounts() {
-            const el = document.getElementById('dashCardCounts');
-            if (!el) return;
-            const RCOLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff', og:'#ffd700', limited:'#ff59e7', no:'#ff0000', admin_exclusive:'#ff0040' };
-            const RLABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limitée', no:'Impossible', admin_exclusive:'ADMIN' };
-            const order = ['common','rare','epic','legendary','mythic','brainrot_god','secret','og','limited','no','admin_exclusive'];
-            let total = 0;
-            order.forEach(r => { total += (cardImages[r] || []).length; });
-            el.innerHTML = '';
-            order.forEach(r => {
-                const count = (cardImages[r] || []).length;
-                if (count === 0) return;
-                const col = RCOLS[r] || '#aaa';
-                const lbl = RLABELS[r] || r;
-                const pct = total > 0 ? (count / total * 100) : 0;
-                const row = document.createElement('div');
-                row.className = 'dash-rarity-row';
-                row.innerHTML =
-                    '<div class="dash-rarity-dot" style="background:' + col + '"></div>' +
-                    '<div class="dash-rarity-label" style="color:' + col + '">' + lbl + '</div>' +
-                    '<div class="dash-bar-wrap"><div class="dash-bar-fill" style="width:' + Math.min(100, pct * 3) + '%;background:' + col + '"></div></div>' +
-                    '<div class="dash-rarity-pct" style="color:#00d4ff;">' + count + '</div>' +
-                    '<div class="dash-rarity-count">' + pct.toFixed(1) + '%</div>';
-                el.appendChild(row);
-            });
-            const totalDiv = document.createElement('div');
-            totalDiv.style.cssText = 'color:#555;font-size:0.72em;margin-top:8px;text-align:right;';
-            totalDiv.textContent = 'Total : ' + total + ' cartes dans le jeu';
-            el.appendChild(totalDiv);
-        }
-
-        function adminLoadTopCards(snap) {
-            const cardOwners = {};
-            if (snap && snap.exists()) {
-                snap.forEach(child => {
-                    const cards = child.val()?.cards;
-                    if (!cards) return;
-                    Object.values(cards).forEach(entry => {
-                        if (!entry || !entry.k) return;
-                        cardOwners[entry.k] = (cardOwners[entry.k] || 0) + 1;
-                    });
-                });
-            }
-            _dashTopData = cardOwners;
-            adminRenderTopCards();
-        }
-
-        function adminRenderTopCards() {
-            const RCOLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff', og:'#ffd700', limited:'#ff59e7', no:'#ff0000', admin_exclusive:'#ff0040' };
-            const RLABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limitée', no:'Impossible', admin_exclusive:'ADMIN' };
-            const filterEl = document.getElementById('dashTopFilter');
-            const grid = document.getElementById('dashTopCards');
-            const status = document.getElementById('dashTopStatus');
-            if (!grid) return;
-            // Build filter pills
-            const allRarities = [...new Set(Object.keys(_dashTopData).map(k => k.split('|')[0]))];
-            filterEl.innerHTML = '';
-            ['all', ...allRarities].forEach(r => {
-                const pill = document.createElement('div');
-                pill.className = 'dash-filter-pill' + (_dashTopRarity === r ? ' on' : '');
-                const lbl = r === 'all' ? 'Toutes' : (RLABELS[r] || r);
-                pill.textContent = lbl;
-                if (r !== 'all' && RCOLS[r]) pill.style.borderColor = RCOLS[r] + '66';
-                pill.onclick = () => { _dashTopRarity = r; adminRenderTopCards(); };
-                filterEl.appendChild(pill);
-            });
-            // Filter and sort
-            let entries = Object.entries(_dashTopData)
-                .filter(([k]) => _dashTopRarity === 'all' || k.startsWith(_dashTopRarity + '|'))
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 30);
-            grid.innerHTML = '';
-            if (entries.length === 0) { status.textContent = 'Aucune donnée'; return; }
-            status.textContent = entries.length + ' cartes affichées';
-            entries.forEach(([key, owners]) => {
-                const [rarity, ...np] = key.split('|');
-                const name = np.join('|');
-                const col = RCOLS[rarity] || '#aaa';
-                const cards = cardImages[rarity] || [];
-                const card = cards.find(c => c.name === name);
-                const div = document.createElement('div');
-                div.className = 'dash-card-item';
-                div.style.borderColor = col + '33';
-                div.innerHTML =
-                    (card ? '<img src="' + card.img + '" onerror="this.style.opacity=0.3">' : '<div style="width:40px;height:40px;margin:0 auto;background:#222;border-radius:6px;"></div>') +
-                    '<div class="dash-card-name">' + name + '</div>' +
-                    '<div class="dash-card-owners" style="color:' + col + '">' + owners + ' joueur(s)</div>';
-                grid.appendChild(div);
-            });
-        }
-
-        function adminRefreshDashboard() {
-            adminBuildDropRates();
-            adminBuildCardCounts();
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            document.getElementById('dashTopStatus').textContent = 'Chargement…';
-            adminRefreshGlobalStats();
-            firebaseDB.ref('players').once('value').then(snap => {
-                adminLoadTopCards(snap);
-            }).catch(e => adminStatus('Erreur : ' + e.message));
-        }
-
-        function adminSetChestImg() {
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            const url = document.getElementById('adminChestUrl').value.trim();
-            if (!url) { adminStatus('⚠️ Entre une URL'); return; }
-            firebaseDB.ref('admin/chestImg').set(url)
-                .then(() => adminStatus('✅ Image du coffre mise à jour !'))
-                .catch(e => adminStatus('Erreur : ' + e.message));
-        }
-
-        function adminResetChestImg() {
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            firebaseDB.ref('admin/chestImg').set(null)
-                .then(() => adminStatus('✅ Image du coffre réinitialisée'))
-                .catch(e => adminStatus('Erreur : ' + e.message));
-        }
 
         function adminStatus(msg) {
             const el = document.getElementById('adminStatusMsg');
@@ -6430,844 +5996,7 @@
         // ── STATS BRAINROTS ─────────────────────────────
         // ═══════════════════════════════════════════════════════
         //  FUSE MACHINE
-        // ═══════════════════════════════════════════════════════
-        const FUSE_DURATION = 5 * 60 * 1000; // 5 minutes
-        const FUSE_EXCLUDED = ['limited','no','admin_exclusive'];
-        const FUSE_RARITY_WEIGHT = { common:1, rare:3, epic:6, legendary:12, mythic:18, brainrot_god:24, secret:35, og:50 };
 
-        let fuseSlots = [null, null, null]; // { key, name, img, rarity }
-        let fusePickSlotIndex = -1;
-        let fuseTimerInterval = null;
-        let fuseState = null; // { startTs, duration, result } stored in localStorage
-
-        function openFuse() {
-            document.getElementById('fuseModal').classList.add('open');
-            loadFuseState();
-            renderFuseSlots();
-        }
-
-        function closeFuse() {
-            document.getElementById('fuseModal').classList.remove('open');
-        }
-
-        // ── Save/Load fuse state ────────────────────────
-        function saveFuseState() {
-            localStorage.setItem('fuseState', JSON.stringify(fuseState));
-        }
-
-        function loadFuseState() {
-            try {
-                const raw = localStorage.getItem('fuseState');
-                fuseState = raw ? JSON.parse(raw) : null;
-            } catch(e) { fuseState = null; }
-            if (fuseState) {
-                if (fuseState.done && !fuseState.claimed) {
-                    showFuseResult(fuseState.result);
-                } else if (!fuseState.done) {
-                    showFuseTimer();
-                }
-            }
-        }
-
-        // ── Render slots ────────────────────────────────
-        function renderFuseSlots() {
-            for (let i = 0; i < 3; i++) {
-                const slot = document.getElementById('fuseSlot' + i);
-                const c = fuseSlots[i];
-                if (c) {
-                    slot.classList.add('filled');
-                    const col = (window.MARKET_RARITY_COLORS||{})[c.rarity] || '#aaa';
-                    slot.innerHTML = '<img src="' + c.img + '" onerror="this.style.opacity=0.3" style="width:56px;height:56px;object-fit:contain;">' +
-                        '<div class="fuse-slot-name">' + c.name + '</div>' +
-                        '<div style="color:' + col + ';font-size:0.6em;font-weight:900;">' + c.rarity + '</div>' +
-                        '<button class="fuse-slot-remove" onclick="event.stopPropagation();removeFuseSlot(' + i + ')">\u2715</button>';
-                    slot.onclick = null;
-                } else {
-                    slot.classList.remove('filled');
-                    slot.innerHTML = '<div class="fuse-slot-label">Slot ' + (i+1) + '</div>' +
-                        '<div style="font-size:2em;color:#7a4a00;">+</div>' +
-                        '<button class="fuse-slot-remove" style="display:none">\u2715</button>';
-                    (function(idx){ slot.onclick = function(){ openFusePick(idx); }; })(i);
-                }
-            }
-                        const allFilled = fuseSlots.every(s => s !== null);
-            const btn = document.getElementById('fuseLaunchBtn');
-            if (btn) btn.disabled = !allFilled || (fuseState && !fuseState.claimed);
-            updateFusePreview();
-        }
-
-        function removeFuseSlot(i) {
-            fuseSlots[i] = null;
-            renderFuseSlots();
-        }
-
-        // ── Pick overlay ────────────────────────────────
-        function openFusePick(slotIndex) {
-            if (fuseState && !fuseState.claimed) return;
-            fusePickSlotIndex = slotIndex;
-            const grid = document.getElementById('fusePickGrid');
-            grid.innerHTML = '';
-            const used = fuseSlots.filter((s,i) => s && i !== slotIndex).map(s => s.key);
-            const ownedCards = [];
-            unlockedCards.forEach((count, key) => {
-                if (count < 1) return;
-                const [rarity, ...np] = key.split('|');
-                if (FUSE_EXCLUDED.includes(rarity)) return;
-                const name = np.join('|');
-                const cards = cardImages[rarity] || [];
-                const card = cards.find(c => c.name === name);
-                if (!card) return;
-                // Vérifier qu'il reste assez de copies (1 par slot)
-                const usedCount = fuseSlots.filter((s,i) => s && s.key === key && i !== slotIndex).length;
-                if (count - usedCount < 1) return;
-                ownedCards.push({ key, name, img: card.img, rarity, count });
-            });
-
-            ownedCards.sort((a,b) => {
-                const ro = ['secret','brainrot_god','mythic','legendary','epic','rare','common'];
-                return ro.indexOf(a.rarity) - ro.indexOf(b.rarity);
-            });
-
-            if (ownedCards.length === 0) {
-                grid.innerHTML = '<div style="color:#7a4a00;text-align:center;padding:20px;grid-column:1/-1;">Aucune carte disponible</div>';
-            } else {
-                ownedCards.forEach(c => {
-                    const col = (window.MARKET_RARITY_COLORS||{})[c.rarity] || '#aaa';
-                    const div = document.createElement('div');
-                    div.className = 'fuse-pick-item';
-                                        div.innerHTML = '<img src="' + c.img + '" onerror="this.style.opacity=0.3"><div class="fpn">' + c.name + '</div><div class="fpc" style="color:' + col + '">\u00d7' + c.count + '</div>';
-                    div.onclick = () => { fuseSlots[fusePickSlotIndex] = c; closeFusePick(); renderFuseSlots(); };
-                    grid.appendChild(div);
-                });
-            }
-            document.getElementById('fusePickOverlay').classList.add('open');
-        }
-
-        function closeFusePick() {
-            document.getElementById('fusePickOverlay').classList.remove('open');
-        }
-
-        // ── Launch fusion ────────────────────────────────
-        function launchFuse() {
-            if (!fuseSlots.every(s => s !== null)) return;
-            playSound('fuse');
-            // Consommer les cartes
-            fuseSlots.forEach(c => {
-                const cur = unlockedCards.get(c.key) || 0;
-                if (cur <= 1) unlockedCards.delete(c.key);
-                else unlockedCards.set(c.key, cur - 1);
-            });
-            autoSave();
-
-            // Calculer la rareté du résultat selon les cartes mises
-            const result = computeFuseResult();
-            const duration = FUSE_DURATION;
-            fuseState = { startTs: Date.now(), duration, done: false, claimed: false, result };
-            saveFuseState();
-
-            // Vider les slots
-            fuseSlots = [null, null, null];
-            renderFuseSlots();
-            showFuseTimer();
-        }
-
-        function computeFuseResult() {
-            // Score basé sur les raretés des 3 cartes
-            const score = fuseSlots.reduce((s, c) => s + (FUSE_RARITY_WEIGHT[c.rarity] || 1), 0);
-            // Plus le score est élevé, plus on peut obtenir des raretés hautes
-            const pool = buildFusePool(score);
-            return pool[Math.floor(Math.random() * pool.length)];
-        }
-
-        // Poids de raretés selon le score (score min=3, max=105+)
-        function getFuseRarityWeights(score) {
-            // Chaque rareté a un poids selon le score total
-            // score 3 (3x common) → max rare ; score 105 (3x secret) → og/limited possible
-            const w = {
-                common:       Math.max(0, 20 - score * 0.5),
-                rare:         Math.max(0, score < 30 ? 40 - score : 0),
-                epic:         Math.max(0, score < 55 ? 30 : score < 70 ? 10 : 0),
-                legendary:    Math.max(0, score < 10 ? 0 : score < 60 ? 35 - score * 0.2 : 5),
-                mythic:       Math.max(0, score < 15 ? 0 : score < 80 ? score * 0.5 - 5 : 30),
-                brainrot_god: Math.max(0, score < 30 ? 0 : score < 95 ? score * 0.4 - 8 : 40),
-                secret:       Math.max(0, score < 50 ? 0 : score < 100 ? (score - 50) * 0.6 : 30),
-                og:           Math.max(0, score < 100 ? 0 : (score - 100) * 0.07),
-                limited:      Math.max(0, score < 103 ? 0 : (score - 103) * 0.003),
-                no:           Math.max(0, score < 105 ? 0 : (score - 105) * 0.001),
-            };
-            return w;
-        }
-
-        function buildFusePool(score) {
-            const rarityWeights = getFuseRarityWeights(score);
-            const pool = [];
-            Object.entries(rarityWeights).forEach(([rarity, rarityWeight]) => {
-                if (rarityWeight <= 0) return;
-                const cards = cardImages[rarity] || [];
-                if (cards.length === 0) return;
-                cards.forEach(card => {
-                    const key = rarity + '|' + card.name;
-                    const owned = unlockedCards.get(key) || 0;
-                    // Cartes non possédées = 4x plus de chances
-                    const cardMult = owned === 0 ? 4 : 1;
-                    const totalWeight = Math.ceil(rarityWeight * cardMult);
-                    for (let w = 0; w < totalWeight; w++) pool.push({ key, name: card.name, img: card.img, rarity });
-                });
-            });
-            if (pool.length === 0) {
-                const fallback = cardImages['rare'] || [];
-                if (fallback.length) return [{ key:'rare|'+fallback[0].name, name:fallback[0].name, img:fallback[0].img, rarity:'rare' }];
-            }
-            return pool;
-        }
-
-        // Calcule les % de chance par rareté pour l'aperçu
-        function getFusePreviewData(score) {
-            const rarityWeights = getFuseRarityWeights(score);
-            let totalWeight = 0;
-            // Simuler le pool avec carte moyenne (moitié possédées, moitié non)
-            const effectiveWeights = {};
-            Object.entries(rarityWeights).forEach(([rarity, w]) => {
-                const cards = cardImages[rarity] || [];
-                if (w <= 0 || cards.length === 0) return;
-                // Estimer: 60% des cartes non possédées
-                const avgMult = 0.4 * 1 + 0.6 * 4; // 2.8
-                effectiveWeights[rarity] = w * avgMult;
-                totalWeight += effectiveWeights[rarity];
-            });
-            if (totalWeight === 0) return [];
-            const result = [];
-            const order = ['no','limited','og','secret','brainrot_god','mythic','legendary','epic','rare','common'];
-            order.forEach(rarity => {
-                if (!effectiveWeights[rarity]) return;
-                const pct = (effectiveWeights[rarity] / totalWeight * 100);
-                if (pct < 0.01) return;
-                result.push({ rarity, pct });
-            });
-            return result;
-        }
-
-        function updateFusePreview() {
-            const preview = document.getElementById('fusePreview');
-            const rows = document.getElementById('fusePreviewRows');
-            if (!preview || !rows) return;
-            const filled = fuseSlots.filter(s => s !== null);
-            if (filled.length === 0) { preview.style.display = 'none'; return; }
-            const score = fuseSlots.reduce((s, c) => s + (c ? (FUSE_RARITY_WEIGHT[c.rarity] || 1) : 0), 0);
-            const data = getFusePreviewData(score);
-            if (data.length === 0) { preview.style.display = 'none'; return; }
-            preview.style.display = 'block';
-            const RARITY_COLORS_LOCAL = {
-                common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700',
-                mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#ffffff',
-                og:'#ffd700', limited:'#ff59e7', no:'#ff0000'
-            };
-            const RARITY_LABELS = {
-                common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire',
-                mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret',
-                og:'OG', limited:'Limitée', no:'Impossible'
-            };
-            rows.innerHTML = '';
-            data.forEach(({ rarity, pct }) => {
-                const color = RARITY_COLORS_LOCAL[rarity] || '#aaa';
-                const label = RARITY_LABELS[rarity] || rarity;
-                const pctStr = pct >= 1 ? pct.toFixed(1) + '%' : pct.toFixed(2) + '%';
-                const row = document.createElement('div');
-                row.className = 'fuse-preview-row';
-                row.innerHTML =
-                    '<div class="fuse-preview-label" style="color:' + color + '">' + label + '</div>' +
-                    '<div class="fuse-preview-bar-wrap"><div class="fuse-preview-bar" style="width:' + Math.min(100, pct * 2) + '%;background:' + color + '"></div></div>' +
-                    '<div class="fuse-preview-pct">' + pctStr + '</div>';
-                rows.appendChild(row);
-            });
-        }
-
-        // ── Timer ───────────────────────────────────────
-        function showFuseTimer() {
-            document.getElementById('fuseTimerBox').style.display = 'block';
-            document.getElementById('fuseResultBox').classList.remove('show');
-            document.getElementById('fuseLaunchBtn').disabled = true;
-            if (fuseTimerInterval) clearInterval(fuseTimerInterval);
-            fuseTimerInterval = setInterval(tickFuseTimer, 1000);
-            tickFuseTimer();
-        }
-
-        function tickFuseTimer() {
-            if (!fuseState || fuseState.done) { clearInterval(fuseTimerInterval); return; }
-            const elapsed = Date.now() - fuseState.startTs;
-            const remaining = Math.max(0, fuseState.duration - elapsed);
-            const pct = Math.max(0, 100 - (elapsed / fuseState.duration * 100));
-
-            const m = String(Math.floor(remaining/1000/60)).padStart(2,'0');
-            const s = String(Math.floor((remaining/1000)%60)).padStart(2,'0');
-            const disp = document.getElementById('fuseTimerDisplay');
-            const bar = document.getElementById('fuseTimerBarFill');
-            if (disp) disp.textContent = m + ':' + s;
-            if (bar) bar.style.width = pct + '%';
-
-            if (remaining <= 0) {
-                clearInterval(fuseTimerInterval);
-                fuseState.done = true;
-                saveFuseState();
-                document.getElementById('fuseTimerBox').style.display = 'none';
-                showFuseResult(fuseState.result);
-            }
-        }
-
-        // ── Résultat ────────────────────────────────────
-        function showFuseResult(result) {
-            if (!result) return;
-            const col = (window.MARKET_RARITY_COLORS||{})[result.rarity] || '#aaa';
-            const lbl = (window.MARKET_RARITY_LABELS||{})[result.rarity] || result.rarity;
-            const isNew = !(unlockedCards.get(result.key) > 0);
-            document.getElementById('fuseResultImg').src = result.img;
-            document.getElementById('fuseResultName').textContent = result.name;
-            document.getElementById('fuseResultRarity').textContent = lbl;
-            document.getElementById('fuseResultRarity').style.cssText = 'background:' + col + '22;color:' + col + ';border:1px solid ' + col + '44;font-size:0.78em;font-weight:900;padding:3px 12px;border-radius:20px;display:inline-block;margin-bottom:8px;';
-            document.getElementById('fuseResultNew').textContent = isNew ? '✨ NOUVELLE CARTE !' : '';
-            document.getElementById('fuseTimerBox').style.display = 'none';
-            document.getElementById('fuseResultBox').classList.add('show');
-            document.getElementById('fuseLaunchBtn').disabled = true;
-        }
-
-        function claimFuseResult() {
-            if (!fuseState || !fuseState.done || fuseState.claimed) return;
-            playSound('buy');
-            const r = fuseState.result;
-            const cur = unlockedCards.get(r.key) || 0;
-            if (cur === 0) { unlockedCards.set(r.key, 0); stats.totalCards++; }
-            unlockedCards.set(r.key, cur + 1);
-            autoSave();
-            fuseState.claimed = true;
-            saveFuseState();
-            document.getElementById('fuseResultBox').classList.remove('show');
-            document.getElementById('fuseLaunchBtn').disabled = false;
-            fuseSlots = [null, null, null];
-            renderFuseSlots();
-            // Afficher un broadcast local
-            showBroadcast('\u2697\ufe0f Fusion termin\u00e9e ! Tu as obtenu : ' + r.name, Date.now());
-        }
-
-        // ── Skip timer (admin Firebase) ─────────────────
-        function listenFuseSkip() {
-            if (!firebaseDB) return;
-            const myPseudo = localStorage.getItem('tradePseudo') || '';
-            if (!myPseudo) return;
-            firebaseDB.ref('admin/fuseSkip').on('value', snap => {
-                const d = snap.val();
-                if (!d || !d.ts) return;
-                if (d.ts <= window._fusejoinTs) return; // ignorer si avant connexion
-                if (fuseState && !fuseState.done) {
-                    fuseState.done = true;
-                    saveFuseState();
-                    if (fuseTimerInterval) { clearInterval(fuseTimerInterval); fuseTimerInterval = null; }
-                    document.getElementById('fuseTimerBox').style.display = 'none';
-                    showFuseResult(fuseState.result);
-                    showBroadcast('\u26a1 L\'admin a acc\u00e9l\u00e9r\u00e9 la Fuse Machine !', Date.now());
-                }
-            });
-        }
-        window._fusejoinTs = Date.now();
-
-        // ═══════════════════════════════════════════
-        //  ROUE DE LA FORTUNE
-        // ═══════════════════════════════════════════
-
-        // Segments par défaut
-        const WHEEL_DEFAULT_SEGMENTS = [
-            { label: 'Chance X32',  type: 'luck',    value: 32,     color: '#ff0040', pct: 1  },
-            { label: '10 000 💰',   type: 'gold',    value: 10000,  color: '#b8860b', pct: 20 },
-            { label: '50 000 💰',   type: 'gold',    value: 50000,  color: '#daa520', pct: 15 },
-            { label: '100 000 💰',  type: 'gold',    value: 100000, color: '#ffd700', pct: 10 },
-            { label: '500 000 💰',  type: 'gold',    value: 500000, color: '#ffec6e', pct: 5  },
-            { label: 'Chance ×2',   type: 'luck',    value: 2,      color: '#2ecc71', pct: 10 },
-            { label: 'Chance ×4',   type: 'luck',    value: 4,      color: '#3498db', pct: 7  },
-            { label: 'Chance ×8',   type: 'luck',    value: 8,      color: '#9b59b6', pct: 4  },
-            { label: 'Brainrot !',  type: 'card',    value: 0,      color: '#e74c3c', pct: 28 },
-        ];
-
-        let wheelSegments = JSON.parse(JSON.stringify(WHEEL_DEFAULT_SEGMENTS));
-        let wheelSpinning = false;
-        let wheelAngle = 0;
-        let wheelAnimFrame = null;
-
-        const WHEEL_VERSION = 'v2'; // Incrémenter si les défauts changent
-
-        function initWheel() {
-            if (firebaseDB) {
-                firebaseDB.ref('admin/wheel').on('value', snap => {
-                    const d = snap.val();
-                    // Si pas de config, ou config ancienne (sans version ou mauvaise version) → forcer les défauts
-                    if (d && Array.isArray(d) && d._version === WHEEL_VERSION) {
-                        wheelSegments = d;
-                    } else if (d && typeof d === 'object' && !Array.isArray(d) && d.segments && d.version === WHEEL_VERSION) {
-                        wheelSegments = d.segments;
-                    } else {
-                        // Config absente ou obsolète : pousser les nouveaux défauts
-                        wheelSegments = JSON.parse(JSON.stringify(WHEEL_DEFAULT_SEGMENTS));
-                        // Écrire les nouveaux défauts dans Firebase avec la version
-                        firebaseDB.ref('admin/wheel').set(Object.assign([], WHEEL_DEFAULT_SEGMENTS, { _version: WHEEL_VERSION }));
-                    }
-                    drawWheel();
-                    if (document.getElementById('wheelAdminItems') && document.getElementById('wheelAdminItems').children.length > 0) buildAdminWheelItems();
-                });
-            } else {
-                wheelSegments = JSON.parse(JSON.stringify(WHEEL_DEFAULT_SEGMENTS));
-            }
-            drawWheel();
-        }
-
-        function drawWheel() {
-            const canvas = document.getElementById('wheelCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const cx = canvas.width / 2;
-            const cy = canvas.height / 2;
-            const r = cx - 4;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            const total = wheelSegments.reduce((s, seg) => s + seg.pct, 0);
-            if (total <= 0) return;
-
-            let startAngle = wheelAngle;
-            wheelSegments.forEach(seg => {
-                const sliceAngle = (seg.pct / total) * 2 * Math.PI;
-                // Segment
-                ctx.beginPath();
-                ctx.moveTo(cx, cy);
-                ctx.arc(cx, cy, r, startAngle, startAngle + sliceAngle);
-                ctx.closePath();
-                ctx.fillStyle = seg.color;
-                ctx.fill();
-                ctx.strokeStyle = 'rgba(0,0,0,0.4)';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-                // Texte
-                ctx.save();
-                ctx.translate(cx, cy);
-                ctx.rotate(startAngle + sliceAngle / 2);
-                ctx.textAlign = 'right';
-                ctx.fillStyle = '#fff';
-                ctx.font = 'bold 11px Arial';
-                ctx.shadowColor = 'rgba(0,0,0,0.8)';
-                ctx.shadowBlur = 3;
-                ctx.fillText(seg.label, r - 8, 4);
-                ctx.font = '9px Arial';
-                ctx.fillStyle = 'rgba(255,255,255,0.7)';
-                ctx.fillText(seg.pct + '%', r - 8, 16);
-                ctx.restore();
-                startAngle += sliceAngle;
-            });
-        }
-
-        function spinWheel() {
-            if (wheelSpinning) return;
-            playSound('wheel');
-            const SPIN_COST = 50000;
-            if (stats.totalGold < SPIN_COST) {
-                document.getElementById('wheelResult').style.borderColor = '#e74c3c';
-                document.getElementById('wheelResultValue').textContent = "Il faut 50 000 💰 pour tourner !";
-                document.getElementById('wheelResult').classList.add('show');
-                return;
-            }
-            // Déduire le coût
-            stats.totalGold -= SPIN_COST;
-            document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
-            const sg = document.getElementById('shopGoldDisplay');
-            if (sg) sg.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
-            autoSave();
-            wheelSpinning = true;
-            document.getElementById('wheelSpinBtn').disabled = true;
-            document.getElementById('wheelResult').classList.remove('show');
-
-            const totalSpins = 5 + Math.random() * 5; // 5-10 tours
-            const extraAngle = Math.random() * 2 * Math.PI;
-            const totalAngle = totalSpins * 2 * Math.PI + extraAngle;
-            const duration = 4000 + Math.random() * 1500;
-            const startTime = performance.now();
-            const startAngle = wheelAngle;
-
-            function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
-
-            function animate(now) {
-                const elapsed = now - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                wheelAngle = startAngle + totalAngle * easeOut(progress);
-                drawWheel();
-                if (progress < 1) {
-                    wheelAnimFrame = requestAnimationFrame(animate);
-                } else {
-                    wheelSpinning = false;
-                    document.getElementById('wheelSpinBtn').disabled = false;
-                    showWheelResult();
-                }
-            }
-            requestAnimationFrame(animate);
-        }
-
-        function getWheelWinner() {
-            // L'aiguille est en haut (angle -PI/2 dans le repère canvas)
-            const total = wheelSegments.reduce((s, seg) => s + seg.pct, 0);
-            // Angle normalisé de l'aiguille dans le repère de la roue
-            let normalizedAngle = ((-Math.PI / 2) - wheelAngle % (2 * Math.PI) + 2 * Math.PI * 10) % (2 * Math.PI);
-            let cumulative = 0;
-            for (const seg of wheelSegments) {
-                const sliceAngle = (seg.pct / total) * 2 * Math.PI;
-                cumulative += sliceAngle;
-                if (normalizedAngle <= cumulative) return seg;
-            }
-            return wheelSegments[0];
-        }
-
-        function showWheelResult() {
-            const winner = getWheelWinner();
-            const resultEl = document.getElementById('wheelResult');
-            const valueEl = document.getElementById('wheelResultValue');
-
-            let msg = '';
-            if (winner.type === 'nothing') {
-                msg = 'Pas de chance cette fois... 😢';
-                resultEl.style.borderColor = 'rgba(255,255,255,0.2)';
-            } else if (winner.type === 'gold') {
-                stats.totalGold += winner.value;
-                document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
-                const sg = document.getElementById('shopGoldDisplay');
-                if (sg) sg.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
-                autoSave();
-                msg = '+' + winner.value.toLocaleString() + ' 💰 ajoutés !';
-                resultEl.style.borderColor = '#ffd700';
-            } else if (winner.type === 'luck') {
-                // Chance roue = personnelle uniquement (comme la boutique), pas pour tous
-                // Si une chance admin plus forte est déjà active, ne pas l'écraser
-                const adminActive = globalLuckMultiplier > 1 && globalLuckExpiry > Date.now();
-                if (adminActive && globalLuckMultiplier >= winner.value) {
-                    // Chance admin déjà plus forte, on ignore
-                    msg = 'Chance ×' + winner.value + ' ignorée (chance ×' + globalLuckMultiplier + ' admin déjà active) 🍀';
-                } else {
-                    // Activer uniquement pour ce joueur via personalLuck
-                    const wheelLuckExpiry = Date.now() + 5 * 60 * 1000;
-                    // Prendre la valeur la plus forte entre ce qu'on a déjà et ce qu'on gagne
-                    if (winner.value > personalLuck || wheelLuckExpiry > luckExpiry) {
-                        personalLuck = Math.max(winner.value, personalLuck > 0 ? personalLuck : 0);
-                        luckExpiry = Math.max(wheelLuckExpiry, luckExpiry);
-                        startLuckTimer();
-                        autoSave();
-                    }
-                    msg = 'Chance ×' + winner.value + ' activée 5 min pour TOI ! 🍀';
-                }
-                resultEl.style.borderColor = '#2ecc71';
-            } else if (winner.type === 'card') {
-                let key, cardName, rarity;
-                if (winner.cardKey && winner.cardKey !== '') {
-                    // Carte spécifique choisie par l'admin
-                    key = winner.cardKey;
-                    const parts = key.split('|');
-                    rarity = parts[0];
-                    cardName = parts.slice(1).join('|');
-                } else {
-                    // Carte aléatoire épique ou plus
-                    const rarities = ['epic','legendary','mythic','brainrot_god','secret'];
-                    rarity = rarities[Math.floor(Math.random() * rarities.length)];
-                    const cards = cardImages[rarity] || [];
-                    if (cards.length === 0) { msg = 'Erreur carte'; resultEl.style.borderColor = '#e74c3c'; return; }
-                    const card = cards[Math.floor(Math.random() * cards.length)];
-                    cardName = card.name;
-                    key = rarity + '|' + cardName;
-                }
-                const cur = unlockedCards.get(key) || 0;
-                if (cur === 0) { unlockedCards.set(key, 0); stats.totalCards++; }
-                unlockedCards.set(key, cur + 1);
-                autoSave();
-                msg = cardName + ' (' + rarity + ') ajouté ! 🎴';
-                resultEl.style.borderColor = '#e74c3c';
-            }
-
-            valueEl.textContent = msg;
-            resultEl.classList.add('show');
-        }
-
-        function openWheel() {
-            document.getElementById('wheelModal').classList.add('open');
-            initWheel();
-        }
-
-        function closeWheel() {
-            document.getElementById('wheelModal').classList.remove('open');
-            if (wheelAnimFrame) { cancelAnimationFrame(wheelAnimFrame); wheelAnimFrame = null; }
-        }
-
-        // ── Admin wheel ──────────────────────────────────
-        function buildAdminWheelItems() {
-            const container = document.getElementById('wheelAdminItems');
-            if (!container) return;
-            container.innerHTML = '';
-            wheelSegments.forEach((seg, idx) => {
-                const row = document.createElement('div');
-                row.className = 'wheel-admin-item';
-                row.style.cssText = 'flex-direction:column;align-items:stretch;gap:6px;';
-
-                // Row 1: color + label + pct
-                const r1 = document.createElement('div');
-                r1.style.cssText = 'display:flex;align-items:center;gap:8px;';
-                r1.innerHTML =
-                    '<div class="wheel-admin-color" style="background:' + seg.color + ';cursor:pointer;" title="Changer couleur" onclick="pickWheelColor(' + idx + ', this)"></div>' +
-                    '<input type="text" value="' + seg.label + '" id="waLabel_' + idx + '" style="flex:1;background:rgba(0,0,0,0.4);border:1px solid rgba(0,212,255,0.3);border-radius:8px;color:#fff;padding:5px 8px;font-size:0.8em;outline:none;" placeholder="Nom du segment">' +
-                    '<input class="wheel-admin-pct" id="waPct_' + idx + '" type="number" value="' + seg.pct + '" min="0" max="100" onchange="updateWheelAdminTotal()">' +
-                    '<span style="color:#555;font-size:0.75em;">%</span>';
-
-                // Row 2: type + value
-                const r2 = document.createElement('div');
-                r2.style.cssText = 'display:flex;align-items:center;gap:8px;';
-                const typeOpts = ['nothing','gold','luck','card'].map(t =>
-                    '<option value="' + t + '"' + (seg.type === t ? ' selected' : '') + '>' +
-                    (t==='nothing'?'Rien':t==='gold'?'Or':t==='luck'?'Chance':t==='card'?'Brainrot':'') + '</option>'
-                ).join('');
-                const typeSelect = '<select id="waType_' + idx + '" onchange="updateWheelTypeRow(' + idx + ')" style="background:rgba(0,0,0,0.5);border:1px solid rgba(0,212,255,0.3);border-radius:8px;color:#00d4ff;padding:5px 8px;font-size:0.8em;outline:none;cursor:pointer;">' + typeOpts + '</select>';
-
-                let valueHtml = '';
-                if (seg.type === 'gold') {
-                    valueHtml = '<input type="number" id="waValue_' + idx + '" value="' + seg.value + '" min="0" style="width:90px;background:rgba(0,0,0,0.4);border:1px solid rgba(0,212,255,0.3);border-radius:8px;color:#ffd700;padding:5px 8px;font-size:0.8em;outline:none;" placeholder="Montant 💰">';
-                } else if (seg.type === 'luck') {
-                    const luckOpts = [2,4,8,16,32].map(v =>
-                        '<option value="' + v + '"' + (seg.value == v ? ' selected' : '') + '>×' + v + '</option>'
-                    ).join('');
-                    valueHtml = '<select id="waValue_' + idx + '" style="background:rgba(0,0,0,0.5);border:1px solid rgba(0,212,255,0.3);border-radius:8px;color:#2ecc71;padding:5px 8px;font-size:0.8em;outline:none;">' + luckOpts + '</select>';
-                } else if (seg.type === 'card') {
-                    // Card picker
-                    const allCards = [];
-                    Object.entries(cardImages).forEach(([rarity, cards]) => {
-                        if (['og','limited','no'].includes(rarity)) return;
-                        cards.forEach(c => allCards.push(rarity + '|' + c.name));
-                    });
-                    const cardOpts = allCards.map(k => {
-                        const [r,...np] = k.split('|');
-                        const n = np.join('|');
-                        return '<option value="' + k + '"' + (seg.cardKey === k ? ' selected' : '') + '>' + n + ' (' + r + ')</option>';
-                    }).join('');
-                    valueHtml = '<select id="waValue_' + idx + '" style="flex:1;background:rgba(0,0,0,0.5);border:1px solid rgba(0,212,255,0.3);border-radius:8px;color:#e74c3c;padding:5px 8px;font-size:0.75em;outline:none;">' +
-                        '<option value="">Brainrot aléatoire</option>' + cardOpts + '</select>';
-                } else {
-                    valueHtml = '<span id="waValue_' + idx + '" style="color:#555;font-size:0.75em;">—</span>';
-                }
-                r2.innerHTML = typeSelect + valueHtml;
-
-                row.appendChild(r1);
-                row.appendChild(r2);
-                container.appendChild(row);
-            });
-            updateWheelAdminTotal();
-        }
-
-        function updateWheelTypeRow(idx) {
-            // Rebuild items to refresh value field
-            const seg = wheelSegments[idx];
-            const typeEl = document.getElementById('waType_' + idx);
-            if (typeEl) seg.type = typeEl.value;
-            buildAdminWheelItems();
-        }
-
-        function pickWheelColor(idx, el) {
-            const input = document.createElement('input');
-            input.type = 'color';
-            input.value = wheelSegments[idx].color;
-            input.oninput = () => { el.style.background = input.value; };
-            input.onchange = () => { wheelSegments[idx].color = input.value; el.style.background = input.value; };
-            input.click();
-        }
-
-        function updateWheelAdminTotal() {
-            let total = 0;
-            wheelSegments.forEach((seg, idx) => {
-                const el = document.getElementById('waPct_' + idx);
-                if (el) total += parseFloat(el.value) || 0;
-            });
-            const el = document.getElementById('wheelAdminTotal');
-            if (el) {
-                el.textContent = 'Total : ' + total.toFixed(1) + '%';
-                el.className = 'wheel-admin-total ' + (Math.abs(total - 100) < 0.1 ? 'ok' : 'err');
-            }
-        }
-
-        function adminSaveWheel() {
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            let total = 0;
-            const newSegs = wheelSegments.map((seg, idx) => {
-                const pctEl = document.getElementById('waPct_' + idx);
-                const labelEl = document.getElementById('waLabel_' + idx);
-                const typeEl = document.getElementById('waType_' + idx);
-                const valueEl = document.getElementById('waValue_' + idx);
-                const pct = pctEl ? (parseFloat(pctEl.value) || 0) : seg.pct;
-                const label = labelEl ? labelEl.value : seg.label;
-                const type = typeEl ? typeEl.value : seg.type;
-                let value = seg.value;
-                let cardKey = seg.cardKey || '';
-                if (valueEl) {
-                    if (type === 'gold') value = parseInt(valueEl.value) || 0;
-                    else if (type === 'luck') value = parseInt(valueEl.value) || 2;
-                    else if (type === 'card') { cardKey = valueEl.value; value = 0; }
-                }
-                total += pct;
-                return { label, type, value, cardKey, color: seg.color, pct };
-            });
-            if (Math.abs(total - 100) > 0.5) { adminStatus('⚠️ Le total doit faire 100% (actuellement ' + total.toFixed(1) + '%)'); return; }
-            firebaseDB.ref('admin/wheel').set(newSegs)
-                .then(() => adminStatus('✅ Roue sauvegardée !'))
-                .catch(e => adminStatus('Erreur : ' + e.message));
-        }
-
-        function adminResetWheel() {
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            firebaseDB.ref('admin/wheel').set(WHEEL_DEFAULT_SEGMENTS)
-                .then(() => { adminStatus('✅ Roue réinitialisée !'); buildAdminWheelItems(); })
-                .catch(e => adminStatus('Erreur : ' + e.message));
-        }
-
-        // ═══════════════════════════════════════════
-        //  SONS DU JEU
-        // ═══════════════════════════════════════════
-        let _audioCtx = null;
-        function getAudioCtx() {
-            if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            return _audioCtx;
-        }
-        function playSound(type) {
-            try {
-                const ctx = getAudioCtx();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                gain.gain.setValueAtTime(0, ctx.currentTime);
-                if (type === 'click') {
-                    // Clic sur coffre : petit bip discret
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(440, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.08);
-                    gain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.01);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
-                    osc.start(ctx.currentTime);
-                    osc.stop(ctx.currentTime + 0.08);
-                } else if (type === 'open') {
-                    // Ouverture coffre : son magique montant
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(300, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.3);
-                    gain.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 0.05);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
-                    osc.start(ctx.currentTime);
-                    osc.stop(ctx.currentTime + 0.35);
-                } else if (type === 'buy') {
-                    // Achat boutique : son court positif
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(523, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(659, ctx.currentTime + 0.1);
-                    gain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.02);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
-                    osc.start(ctx.currentTime);
-                    osc.stop(ctx.currentTime + 0.15);
-                } else if (type === 'rare') {
-                    // Carte rare : son plus impressionnant
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(440, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.2);
-                    gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.02);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-                    osc.start(ctx.currentTime);
-                    osc.stop(ctx.currentTime + 0.4);
-                } else if (type === 'error') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(200, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.15);
-                    gain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.01);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
-                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.15);
-                } else if (type === 'nav') {
-                    // Navigation modale : clic discret
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(600, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.06);
-                    gain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.01);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
-                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.06);
-                } else if (type === 'star') {
-                    // Étoile gagnée : petit ding montant
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(700, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(1100, ctx.currentTime + 0.12);
-                    gain.gain.linearRampToValueAtTime(0.09, ctx.currentTime + 0.01);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
-                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.18);
-                } else if (type === 'epic') {
-                    // Épique / Légendaire : fanfare courte
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(523, ctx.currentTime);
-                    osc.frequency.setValueAtTime(659, ctx.currentTime + 0.12);
-                    osc.frequency.setValueAtTime(784, ctx.currentTime + 0.24);
-                    gain.gain.linearRampToValueAtTime(0.13, ctx.currentTime + 0.02);
-                    gain.gain.setValueAtTime(0.13, ctx.currentTime + 0.28);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
-                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.45);
-                } else if (type === 'secret') {
-                    // Secret / Brainrot God : son wow impressionnant
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(400, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(1600, ctx.currentTime + 0.5);
-                    gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 0.05);
-                    gain.gain.setValueAtTime(0.18, ctx.currentTime + 0.55);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.9);
-                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.9);
-                } else if (type === 'quest') {
-                    // Quête complétée : son de succès
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(523, ctx.currentTime);
-                    osc.frequency.setValueAtTime(784, ctx.currentTime + 0.1);
-                    osc.frequency.setValueAtTime(1047, ctx.currentTime + 0.2);
-                    gain.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 0.02);
-                    gain.gain.setValueAtTime(0.12, ctx.currentTime + 0.28);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.5);
-                } else if (type === 'wheel') {
-                    // Roue qui tourne : petit whoosh
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(150, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.2);
-                    gain.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.02);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
-                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.2);
-                } else if (type === 'fuse') {
-                    // Fusion lancée : son chimique
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(300, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.3);
-                    gain.gain.linearRampToValueAtTime(0.07, ctx.currentTime + 0.05);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
-                    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.35);
-                }
-            } catch(e) {}
-        }
-
-        // Flash lumineux pour bonnes cartes
-        function flashGoodCard(rarity) {
-            const GOOD = ['epic','legendary','mythic','brainrot_god','secret','og','limited','no','admin_exclusive'];
-            const GREAT = ['mythic','brainrot_god','secret','og','limited','no','admin_exclusive'];
-            if (!GOOD.includes(rarity)) return;
-            const overlay = document.createElement('div');
-            const color = GREAT.includes(rarity) ? 'rgba(255,215,0,0.18)' : 'rgba(163,73,164,0.12)';
-            overlay.style.cssText = 'position:fixed;inset:0;background:' + color + ';z-index:9999;pointer-events:none;animation:cardFlash 0.8s ease forwards;';
-            if (!document.getElementById('cardFlashStyle')) {
-                const st = document.createElement('style');
-                st.id = 'cardFlashStyle';
-                st.textContent = '@keyframes cardFlash{0%{opacity:0}15%{opacity:1}100%{opacity:0}}';
-                document.head.appendChild(st);
-            }
-            document.body.appendChild(overlay);
-            setTimeout(() => overlay.remove(), 800);
-            // Vibration mobile (si supporté)
-            if (GREAT.includes(rarity) && navigator.vibrate) navigator.vibrate([60, 30, 60]);
-            else if (navigator.vibrate) navigator.vibrate(40);
-        }
-
-        // Initialisation
         // ═══ VENTE DOUBLONS ═══
         const SELL_RATE = 0.30; // 30% du prix boutique
 
@@ -7592,6 +6321,232 @@
             const sg = document.getElementById('shopGoldDisplay');
             if (sg) sg.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
         }
+
+        // ═══════════════════════════════════════════
+        //  CRAFT MACHINE
+        // ═══════════════════════════════════════════
+        const CRAFT_RCOLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff', og:'#ffd700', limited:'#ff59e7', no:'#ff0000', admin_exclusive:'#ff0040' };
+        let _craftRecipes = [];   // chargés depuis Firebase
+        let _craftSelected = null;
+
+        function openCraft() {
+            _craftSelected = null;
+            document.getElementById('craftBtnMain').disabled = true;
+            document.getElementById('craftStatusMsg').textContent = '';
+            document.getElementById('craftModal').classList.add('open');
+            if (firebaseDB) {
+                firebaseDB.ref('admin/craftRecipes').once('value').then(function(snap) {
+                    const val = snap.val();
+                    _craftRecipes = val ? Object.values(val) : [];
+                    _renderCraftRecipes();
+                });
+            } else {
+                _craftRecipes = [];
+                _renderCraftRecipes();
+            }
+        }
+
+        function closeCraft() {
+            document.getElementById('craftModal').classList.remove('open');
+        }
+
+        function _craftCanMake(recipe) {
+            if (!recipe || !recipe.ingredients || !recipe.ingredients.length) return false;
+            return recipe.ingredients.every(function(ing) {
+                return (unlockedCards.get(ing.key) || 0) >= (ing.qty || 1);
+            });
+        }
+
+        function _renderCraftRecipes() {
+            const list = document.getElementById('craftRecipesList');
+            if (!_craftRecipes.length) {
+                list.innerHTML = '<div class="craft-empty">Aucune recette disponible.</div>';
+                return;
+            }
+            list.innerHTML = '';
+            _craftRecipes.forEach(function(recipe, idx) {
+                if (!recipe || !recipe.result || !recipe.result.name) return;
+                const col = CRAFT_RCOLS[recipe.result.rarity] || '#aaa';
+                const canMake = _craftCanMake(recipe);
+                const div = document.createElement('div');
+                div.className = 'craft-recipe-card' + (_craftSelected === idx ? ' selected' : '');
+                div.innerHTML =
+                    '<div class="craft-recipe-header">' +
+                        (recipe.result.img ? '<img class="craft-recipe-img" src="' + recipe.result.img + '" onerror="this.style.opacity=0.3">' : '') +
+                        '<div style="flex:1">' +
+                            '<div class="craft-recipe-name">\u2192 ' + recipe.result.name + '</div>' +
+                            '<div class="craft-recipe-rarity" style="color:' + col + '">' + (recipe.result.rarity || '') + '</div>' +
+                        '</div>' +
+                        '<div style="font-size:0.72em;font-weight:900;color:' + (canMake ? '#00ff88' : '#e74c3c') + '">' + (canMake ? '\u2705 Craftable' : '\u274c Manque') + '</div>' +
+                    '</div>' +
+                    '<div class="craft-ingredients-row">' +
+                        (recipe.ingredients || []).map(function(ing) {
+                            const has = (unlockedCards.get(ing.key) || 0) >= (ing.qty || 1);
+                            return '<span class="craft-ing-tag ' + (has ? 'ok' : 'nope') + '">' + ing.name + ' \u00d7' + (ing.qty || 1) + '</span>';
+                        }).join('') +
+                    '</div>';
+                div.onclick = function() {
+                    _craftSelected = idx;
+                    document.getElementById('craftBtnMain').disabled = !canMake;
+                    document.getElementById('craftStatusMsg').textContent = '';
+                    _renderCraftRecipes();
+                };
+                list.appendChild(div);
+            });
+        }
+
+        function doCraft() {
+            if (_craftSelected === null) return;
+            const recipe = _craftRecipes[_craftSelected];
+            const statusEl = document.getElementById('craftStatusMsg');
+            if (!_craftCanMake(recipe)) {
+                statusEl.style.color = '#e74c3c';
+                statusEl.textContent = 'Ingr\u00e9dients manquants !';
+                return;
+            }
+            // Consommer les ingrédients
+            recipe.ingredients.forEach(function(ing) {
+                const cur = unlockedCards.get(ing.key) || 0;
+                const after = cur - (ing.qty || 1);
+                if (after <= 0) unlockedCards.delete(ing.key);
+                else unlockedCards.set(ing.key, after);
+            });
+            // Ajouter la carte craftée
+            const rkey = recipe.result.key || (recipe.result.rarity + '|' + recipe.result.name);
+            const curR = unlockedCards.get(rkey) || 0;
+            if (curR === 0) {
+                stats.totalCards++;
+                // Enregistrer dans cardImages si absente
+                const rar = recipe.result.rarity;
+                if (cardImages[rar] && !cardImages[rar].find(function(c){ return c.name === recipe.result.name; })) {
+                    cardImages[rar].push({ name: recipe.result.name, img: recipe.result.img || '' });
+                }
+            }
+            unlockedCards.set(rkey, curR + 1);
+            document.getElementById('totalCards').textContent = stats.totalCards;
+            autoSave();
+            playSound('epic');
+            flashGoodCard(recipe.result.rarity);
+            statusEl.style.color = '#00ff88';
+            statusEl.textContent = '\u2705 ' + recipe.result.name + ' craft\u00e9 avec succ\u00e8s !';
+            document.getElementById('craftBtnMain').disabled = true;
+            _craftSelected = null;
+            _renderCraftRecipes();
+        }
+
+        // ── Admin ─────────────────────────────────────
+        const CRAFT_RARITY_OPTIONS = ['common','rare','epic','legendary','mythic','brainrot_god','secret','og','limited','no','admin_exclusive'];
+        let _craftAdminData = [];
+
+        function craftAdminLoad() {
+            if (!firebaseDB) return;
+            firebaseDB.ref('admin/craftRecipes').once('value').then(function(snap) {
+                const val = snap.val();
+                _craftAdminData = val ? Object.values(val) : [];
+                _renderCraftAdmin();
+            });
+        }
+
+        function craftAdminAddRecipe() {
+            _craftAdminData.push({ result:{ name:'', rarity:'epic', img:'', key:'' }, ingredients:[] });
+            _renderCraftAdmin();
+        }
+
+        function craftAdminRemoveRecipe(ri) {
+            _craftAdminData.splice(ri, 1);
+            _renderCraftAdmin();
+        }
+
+        function craftAdminAddIng(ri) {
+            if (!_craftAdminData[ri].ingredients) _craftAdminData[ri].ingredients = [];
+            _craftAdminData[ri].ingredients.push({ name:'', rarity:'common', qty:1, key:'' });
+            _renderCraftAdmin();
+        }
+
+        function craftAdminRemoveIng(ri, ii) {
+            _craftAdminData[ri].ingredients.splice(ii, 1);
+            _renderCraftAdmin();
+        }
+
+        // Construit un <select> avec toutes les cartes de cardImages, groupées par rareté
+        function _buildCardSelect(id, selectedKey, style) {
+            const RARITY_ORDER = ['common','rare','epic','legendary','mythic','brainrot_god','secret','og','limited','no','admin_exclusive'];
+            const RARITY_LABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limitée', no:'Impossible', admin_exclusive:'ADMIN' };
+            let opts = '<option value="">-- Choisir une carte --</option>';
+            RARITY_ORDER.forEach(function(rar) {
+                const cards = cardImages[rar] || [];
+                if (!cards.length) return;
+                opts += '<optgroup label="' + (RARITY_LABELS[rar]||rar) + '">';
+                cards.forEach(function(c) {
+                    const key = rar + '|' + c.name;
+                    opts += '<option value="' + key + '"' + (selectedKey === key ? ' selected' : '') + '>' + c.name + '</option>';
+                });
+                opts += '</optgroup>';
+            });
+            return '<select id="' + id + '" class="craft-adm-input" style="' + (style||'flex:1;') + '">' + opts + '</select>';
+        }
+
+        function _renderCraftAdmin() {
+            const container = document.getElementById('craftAdminList');
+            if (!container) return;
+            container.innerHTML = '';
+            _craftAdminData.forEach(function(recipe, ri) {
+                const box = document.createElement('div');
+                box.className = 'craft-adm-recipe';
+                const resKey = recipe.result.key || (recipe.result.rarity + '|' + recipe.result.name);
+                let html =
+                    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+                        '<span style="color:#00ff88;font-size:0.72em;font-weight:900;">→ Résultat</span>' +
+                        '<button onclick="craftAdminRemoveRecipe(' + ri + ')" style="background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.3);border-radius:7px;color:#e74c3c;padding:2px 9px;cursor:pointer;font-size:0.7em;">✕ Supprimer</button>' +
+                    '</div>' +
+                    '<div class="craft-adm-row">' +
+                        _buildCardSelect('cr_key_' + ri, resKey, 'flex:1;') +
+                    '</div>' +
+                    '<div style="color:#555;font-size:0.65em;font-weight:900;letter-spacing:2px;margin:8px 0 4px;">INGRÉDIENTS</div>';
+
+                (recipe.ingredients||[]).forEach(function(ing, ii) {
+                    const ingKey = ing.key || (ing.rarity + '|' + ing.name);
+                    html +=
+                        '<div class="craft-adm-row">' +
+                            _buildCardSelect('ci_key_' + ri + '_' + ii, ingKey, 'flex:1;') +
+                            '<input id="ci_qty_' + ri + '_' + ii + '" class="craft-adm-input" type="number" min="1" value="' + (ing.qty||1) + '" style="width:42px;text-align:center;" placeholder="Qté">' +
+                            '<button onclick="craftAdminRemoveIng(' + ri + ',' + ii + ')" style="background:none;border:none;color:rgba(231,76,60,0.6);cursor:pointer;font-size:1em;">✕</button>' +
+                        '</div>';
+                });
+                html += '<button onclick="craftAdminAddIng(' + ri + ')" style="margin-top:4px;padding:3px 11px;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.18);border-radius:7px;color:#00ff88;font-size:0.7em;cursor:pointer;">➕ Ingrédient</button>';
+                box.innerHTML = html;
+                container.appendChild(box);
+            });
+        }
+        function craftAdminSave() {
+            if (!firebaseDB) { adminStatus('\u26a0\ufe0f Firebase non connect\u00e9'); return; }
+            const saved = _craftAdminData.map(function(recipe, ri) {
+                // Lire la carte résultat depuis le select (valeur = "rarity|name")
+                const resKey  = document.getElementById('cr_key_' + ri)?.value || '';
+                const resParts = resKey.split('|');
+                const rar  = resParts[0] || recipe.result.rarity;
+                const name = resParts.slice(1).join('|') || recipe.result.name;
+                // Retrouver l'image depuis cardImages
+                const imgCard = (cardImages[rar]||[]).find(function(c){ return c.name === name; });
+                const img = imgCard ? imgCard.img : (recipe.result.img || '');
+                const ingredients = (recipe.ingredients||[]).map(function(ing, ii) {
+                    const ingKey   = document.getElementById('ci_key_' + ri + '_' + ii)?.value || '';
+                    const ingParts = ingKey.split('|');
+                    const ir    = ingParts[0] || ing.rarity;
+                    const iname = ingParts.slice(1).join('|') || ing.name;
+                    const iqty  = parseInt(document.getElementById('ci_qty_' + ri + '_' + ii)?.value) || 1;
+                    return { rarity:ir, name:iname, qty:iqty, key: ir + '|' + iname };
+                }).filter(function(i){ return i.name; });
+                return { result:{ rarity:rar, name, img, key: rar + '|' + name }, ingredients };
+            }).filter(function(r){ return r.result.name; });
+
+            const obj = {};
+            saved.forEach(function(r, i){ obj['r' + i] = r; });
+            firebaseDB.ref('admin/craftRecipes').set(Object.keys(obj).length ? obj : null)
+                .then(function(){ adminStatus('\u2705 Recettes sauv\u00e9es !'); _craftAdminData = saved; })
+                .catch(function(e){ adminStatus('Erreur : ' + e.message); });
+        }
+        // ═══ FIN CRAFT MACHINE ═══
 
         createStars();
 
