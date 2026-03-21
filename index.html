@@ -3842,7 +3842,18 @@
         }
 
         function getRandomCard(rarity) {
-            const cardList = cardImages[rarity];
+            let cardList = cardImages[rarity];
+            // Si la rareté n'existe pas ou est vide, fallback vers common
+            if (!cardList || cardList.length === 0) {
+                const fallbackRarities = ['common','rare','epic','legendary','mythic'];
+                for (const fr of fallbackRarities) {
+                    if (cardImages[fr] && cardImages[fr].length > 0) {
+                        cardList = cardImages[fr];
+                        break;
+                    }
+                }
+            }
+            if (!cardList || cardList.length === 0) return null;
             return cardList[Math.floor(Math.random() * cardList.length)];
         }
 
@@ -3988,6 +3999,7 @@
             for (let i = 0; i < totalCards; i++) {
                 const rarity = getRarity(stars);
                 const card = getRandomCard(rarity);
+                if (!card) continue;
                 const key = card.name;
                 
                 if (!cardCounts[key]) {
@@ -4014,6 +4026,17 @@
             }
             
             return rewards;
+        }
+
+        function flashGoodCard(rarity) {
+            const RARITY_COLORS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#ffffff', og:'#c8a000', limited:'#ff59e7', no:'#ff0000', admin_exclusive:'#ff0040' };
+            const color = RARITY_COLORS[rarity] || '#ffd700';
+            const flash = document.createElement('div');
+            flash.style.cssText = 'position:fixed;inset:0;background:' + color + ';opacity:0;pointer-events:none;z-index:99999;transition:opacity 0.15s ease';
+            document.body.appendChild(flash);
+            setTimeout(() => { flash.style.opacity = '0.35'; }, 10);
+            setTimeout(() => { flash.style.opacity = '0'; }, 250);
+            setTimeout(() => { flash.remove(); }, 500);
         }
 
         function displayRewards(rewards) {
