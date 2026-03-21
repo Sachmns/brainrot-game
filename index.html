@@ -2351,6 +2351,163 @@
         .craft-adm-recipe { background:rgba(0,0,0,0.3); border:1px solid rgba(0,255,136,0.12); border-radius:12px; padding:12px; margin-bottom:10px; }
         .craft-adm-row { display:flex; gap:6px; align-items:center; margin-bottom:5px; flex-wrap:wrap; }
         .craft-adm-input { background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:8px; color:#fff; padding:5px 8px; font-size:0.75em; outline:none; }
+
+        /* ═══ CRAFT ANIMATION OVERLAY ═══ */
+        .craft-anim-overlay {
+            display:none; position:fixed; inset:0; z-index:99998;
+            background:radial-gradient(ellipse at center, #000e05 0%, #000400 100%);
+            justify-content:center; align-items:center; flex-direction:column;
+            overflow:hidden;
+        }
+        .craft-anim-overlay.show { display:flex; }
+
+        /* Orb central */
+        .craft-anim-orb {
+            position:relative; width:180px; height:180px;
+            display:flex; align-items:center; justify-content:center;
+        }
+        .craft-anim-img {
+            width:110px; height:110px; object-fit:contain; border-radius:16px;
+            position:relative; z-index:3;
+            animation: craftImgFloat 1s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 20px rgba(0,255,136,0.8));
+        }
+        @keyframes craftImgFloat {
+            from { transform:translateY(0) scale(1); filter:drop-shadow(0 0 18px rgba(0,255,136,0.7)); }
+            to   { transform:translateY(-12px) scale(1.06); filter:drop-shadow(0 0 36px rgba(0,255,136,1)); }
+        }
+
+        /* Anneaux tournants */
+        .craft-ring {
+            position:absolute; border-radius:50%; border:3px solid transparent;
+            animation: craftRingRotate linear infinite;
+        }
+        .craft-ring-1 { width:150px; height:150px; border-top-color:#00ff88; border-right-color:#00ff88; animation-duration:1.4s; }
+        .craft-ring-2 { width:190px; height:190px; border-bottom-color:#00cc66; border-left-color:#00cc66; animation-duration:2s; animation-direction:reverse; }
+        .craft-ring-3 { width:230px; height:230px; border-top-color:rgba(0,255,136,0.3); border-right-color:rgba(0,255,136,0.3); animation-duration:3s; }
+        @keyframes craftRingRotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+        /* Particules orbitales */
+        .craft-particle {
+            position:absolute; width:8px; height:8px; border-radius:50%;
+            background:radial-gradient(circle, #00ff88, #00aa55);
+            animation: craftOrbit linear infinite;
+            box-shadow:0 0 8px #00ff88;
+        }
+        @keyframes craftOrbit {
+            from { transform:rotate(var(--start)) translateX(var(--r)) scale(1); opacity:1; }
+            to   { transform:rotate(calc(var(--start) + 360deg)) translateX(var(--r)) scale(0.4); opacity:0.3; }
+        }
+
+        /* Rayons de lumière */
+        .craft-ray {
+            position:absolute; top:50%; left:50%;
+            height:2px; transform-origin:0 50%;
+            background:linear-gradient(90deg, rgba(0,255,136,0.8), transparent);
+            border-radius:2px;
+            animation: craftRayPulse 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes craftRayPulse {
+            from { opacity:0.15; }
+            to   { opacity:0.55; }
+        }
+
+        /* Texte central */
+        .craft-anim-text {
+            margin-top:40px; color:#00ff88; font-size:1.1em; font-weight:900;
+            letter-spacing:4px; text-transform:uppercase;
+            text-shadow:0 0 20px rgba(0,255,136,0.8);
+            animation: craftTextPulse 0.7s ease-in-out infinite alternate;
+            z-index:3;
+        }
+        @keyframes craftTextPulse {
+            from { opacity:0.6; letter-spacing:4px; }
+            to   { opacity:1;   letter-spacing:6px; }
+        }
+
+        /* Barre de progression */
+        .craft-anim-bar-wrap {
+            width:240px; height:6px; background:rgba(0,255,136,0.1);
+            border-radius:3px; margin-top:20px; overflow:hidden;
+            border:1px solid rgba(0,255,136,0.2); z-index:3;
+        }
+        .craft-anim-bar {
+            height:100%; width:0%; border-radius:3px;
+            background:linear-gradient(90deg, #00aa55, #00ff88, #afffcf, #00ff88, #00aa55);
+            background-size:200% 100%;
+            animation: craftBarFill 4.8s cubic-bezier(0.4,0,0.6,1) forwards,
+                       craftBarShimmer 0.5s linear infinite;
+        }
+        @keyframes craftBarFill {
+            0%  { width:0%; }
+            15% { width:18%; }
+            35% { width:42%; }
+            55% { width:62%; }
+            75% { width:82%; }
+            100%{ width:100%; }
+        }
+        @keyframes craftBarShimmer {
+            0%   { background-position:200% 0; }
+            100% { background-position:-200% 0; }
+        }
+
+        /* Éclairs */
+        .craft-lightning {
+            position:absolute; width:2px; border-radius:2px;
+            background:linear-gradient(180deg, transparent, #00ff88, #fff, #00ff88, transparent);
+            pointer-events:none;
+            animation:craftLightningFlash 0.25s ease-out forwards;
+        }
+        @keyframes craftLightningFlash {
+            0%  { opacity:0; transform:scaleY(0); }
+            20% { opacity:1; transform:scaleY(1); }
+            80% { opacity:0.7; }
+            100%{ opacity:0; }
+        }
+
+        /* Révélation finale */
+        .craft-anim-reveal {
+            display:none; flex-direction:column; align-items:center;
+            animation:craftRevealPop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+        }
+        .craft-anim-reveal.show { display:flex; }
+        @keyframes craftRevealPop {
+            from { transform:scale(0.3) rotate(-10deg); opacity:0; }
+            to   { transform:scale(1)   rotate(0deg);   opacity:1; }
+        }
+        .craft-reveal-img {
+            width:140px; height:140px; object-fit:contain;
+            filter:drop-shadow(0 0 30px rgba(0,255,136,0.9)) drop-shadow(0 0 60px rgba(0,255,136,0.5));
+            animation:craftRevealFloat 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes craftRevealFloat {
+            from { transform:translateY(0) scale(1); }
+            to   { transform:translateY(-10px) scale(1.04); }
+        }
+        .craft-reveal-name {
+            color:#fff; font-size:1.4em; font-weight:900; margin-top:18px;
+            text-shadow:2px 2px 0 #002a10, 0 0 20px rgba(0,255,136,0.6);
+            letter-spacing:1px;
+        }
+        .craft-reveal-rarity {
+            font-size:0.85em; font-weight:900; margin-top:6px;
+            text-transform:uppercase; letter-spacing:2px;
+        }
+        .craft-reveal-new {
+            color:#ffe066; font-size:0.78em; font-weight:900;
+            background:rgba(255,220,0,0.13); border:1px solid rgba(255,220,0,0.35);
+            border-radius:6px; padding:3px 10px; margin-top:6px;
+        }
+        .craft-reveal-close {
+            margin-top:28px; padding:13px 50px;
+            background:linear-gradient(180deg,#00ff88,#006630);
+            color:#000; border:none; border-radius:14px;
+            font-size:0.92em; font-weight:900; cursor:pointer;
+            font-family:'Arial Black',Arial,sans-serif; letter-spacing:2px;
+            box-shadow:0 5px 0 #002a10; transition:all 0.18s;
+        }
+        .craft-reveal-close:hover { transform:translateY(-2px); box-shadow:0 7px 0 #002a10; }
+
         /* ═══════════════ FIN ADMIN ═══════════════ */
     </style>
 </head>
@@ -2475,6 +2632,32 @@
             </div>
             <button class="craft-btn-main" id="craftBtnMain" onclick="doCraft()" disabled>⚒️ CRAFTER</button>
             <div class="craft-status-msg" id="craftStatusMsg"></div>
+        </div>
+    </div>
+
+
+    <!-- Craft Animation Overlay -->
+    <div class="craft-anim-overlay" id="craftAnimOverlay">
+        <!-- Phase craft (spinning) -->
+        <div id="craftAnimPhase" style="display:flex;flex-direction:column;align-items:center;">
+            <div class="craft-anim-orb" id="craftAnimOrb">
+                <img class="craft-anim-img" id="craftAnimCardImg" src="" alt="">
+                <div class="craft-ring craft-ring-1"></div>
+                <div class="craft-ring craft-ring-2"></div>
+                <div class="craft-ring craft-ring-3"></div>
+            </div>
+            <div class="craft-anim-text" id="craftAnimText">⚒️ CRAFT EN COURS…</div>
+            <div class="craft-anim-bar-wrap">
+                <div class="craft-anim-bar" id="craftAnimBar"></div>
+            </div>
+        </div>
+        <!-- Phase révélation -->
+        <div class="craft-anim-reveal" id="craftRevealPhase">
+            <img class="craft-reveal-img" id="craftRevealImg" src="" alt="">
+            <div class="craft-reveal-name" id="craftRevealName"></div>
+            <div class="craft-reveal-rarity" id="craftRevealRarity"></div>
+            <div class="craft-reveal-new" id="craftRevealNew" style="display:none;">NOUVEAU ✨</div>
+            <button class="craft-reveal-close" onclick="closeCraftAnim()">✅ CONTINUER</button>
         </div>
     </div>
 
@@ -5849,14 +6032,12 @@
             firebaseDB.ref('players/' + key).once('value').then(snap => {
                 const data = snap.val();
                 if (!data) { adminStatus('⚠️ Joueur introuvable'); return; }
-                const savedCards = data.unlockedCards || {};
-                // unlockedCards peut être un array de paires ou un objet
+                // Les cartes sont stockées dans data.cards sous forme { safeKey: { k: cardKey, c: count } }
+                const cardsData = data.cards || {};
                 let playerCards = new Map();
-                if (Array.isArray(savedCards)) {
-                    savedCards.forEach(function(pair) { if (pair && pair[0]) playerCards.set(pair[0], pair[1] || 0); });
-                } else if (typeof savedCards === 'object') {
-                    Object.entries(savedCards).forEach(([k,v]) => playerCards.set(k, v));
-                }
+                Object.values(cardsData).forEach(function(entry) {
+                    if (entry && entry.k) playerCards.set(entry.k, entry.c || 0);
+                });
                 _adminBookFilter = 'all';
                 _renderAdminBook(pseudo, playerCards);
                 document.getElementById('adminBookModal').classList.add('open');
@@ -5989,12 +6170,11 @@
                     snap.forEach(child => {
                         const d = child.val();
                         if (!d) return;
-                        const uc = d.unlockedCards;
-                        if (!uc) return;
-                        const pairs = Array.isArray(uc) ? uc : Object.entries(uc);
-                        pairs.forEach(pair => {
-                            const k = Array.isArray(pair) ? pair[0] : pair;
-                            if (k) cardOwners[k] = (cardOwners[k] || 0) + 1;
+                        // Les cartes sont dans d.cards : { safeKey: { k: cardKey, c: count } }
+                        const cardsData = d.cards;
+                        if (!cardsData) return;
+                        Object.values(cardsData).forEach(function(entry) {
+                            if (entry && entry.k) cardOwners[entry.k] = (cardOwners[entry.k] || 0) + 1;
                         });
                     });
                 }
@@ -6648,9 +6828,9 @@
             // Ajouter la carte craftée
             const rkey = recipe.result.key || (recipe.result.rarity + '|' + recipe.result.name);
             const curR = unlockedCards.get(rkey) || 0;
-            if (curR === 0) {
+            const isNewCard = (curR === 0);
+            if (isNewCard) {
                 stats.totalCards++;
-                // Enregistrer dans cardImages si absente
                 const rar = recipe.result.rarity;
                 if (cardImages[rar] && !cardImages[rar].find(function(c){ return c.name === recipe.result.name; })) {
                     cardImages[rar].push({ name: recipe.result.name, img: recipe.result.img || '' });
@@ -6660,11 +6840,115 @@
             document.getElementById('totalCards').textContent = stats.totalCards;
             autoSave();
             playSound('epic');
-            flashGoodCard(recipe.result.rarity);
-            statusEl.style.color = '#00ff88';
-            statusEl.textContent = '\u2705 ' + recipe.result.name + ' craft\u00e9 avec succ\u00e8s !';
+            startCraftAnimation(recipe, isNewCard);
             document.getElementById('craftBtnMain').disabled = true;
             _craftSelected = null;
+        }
+
+        var _craftAnimLightningInterval = null;
+
+        function startCraftAnimation(recipe, isNew) {
+            var overlay = document.getElementById('craftAnimOverlay');
+            var phase   = document.getElementById('craftAnimPhase');
+            var reveal  = document.getElementById('craftRevealPhase');
+            var bar     = document.getElementById('craftAnimBar');
+            var cardImg = document.getElementById('craftAnimCardImg');
+            var orb     = document.getElementById('craftAnimOrb');
+
+            reveal.classList.remove('show');
+            reveal.style.display = 'none';
+            phase.style.display  = 'flex';
+            bar.style.animation  = 'none';
+            bar.style.width      = '0%';
+            cardImg.src = recipe.result.img || '';
+
+            // Particules orbitales
+            orb.querySelectorAll('.craft-particle').forEach(function(p){ p.remove(); });
+            for (var i = 0; i < 8; i++) {
+                var p = document.createElement('div');
+                p.className = 'craft-particle';
+                p.style.setProperty('--start', (i * 45) + 'deg');
+                p.style.setProperty('--r', (100 + Math.floor(Math.random() * 30)) + 'px');
+                p.style.animationDuration = (1.5 + Math.random()).toFixed(2) + 's';
+                p.style.animationDelay    = (i * 0.15).toFixed(2) + 's';
+                orb.appendChild(p);
+            }
+
+            // Rayons
+            orb.querySelectorAll('.craft-ray').forEach(function(r){ r.remove(); });
+            for (var j = 0; j < 12; j++) {
+                var ray = document.createElement('div');
+                ray.className = 'craft-ray';
+                ray.style.width  = (80 + Math.floor(Math.random() * 80)) + 'px';
+                ray.style.transform = 'rotate(' + (j * 30) + 'deg)';
+                ray.style.animationDelay = (j * 0.12).toFixed(2) + 's';
+                orb.appendChild(ray);
+            }
+
+            // Éclairs
+            if (_craftAnimLightningInterval) clearInterval(_craftAnimLightningInterval);
+            _craftAnimLightningInterval = setInterval(function() {
+                var l = document.createElement('div');
+                l.className = 'craft-lightning';
+                l.style.height    = (60 + Math.floor(Math.random() * 120)) + 'px';
+                l.style.left      = (20 + Math.floor(Math.random() * 60)) + '%';
+                l.style.top       = (20 + Math.floor(Math.random() * 60)) + '%';
+                l.style.transform = 'rotate(' + Math.floor(Math.random() * 360) + 'deg)';
+                overlay.appendChild(l);
+                setTimeout(function(){ if (l.parentNode) l.remove(); }, 300);
+            }, 400);
+
+            // Textes rotatifs
+            var texts = ['\u26a1 CRAFT EN COURS\u2026', '\u2728 FUSION DES \u00c9L\u00c9MENTS\u2026', '\ud83d\udd25 PRESQUE PR\u00caT\u2026', '\u26a1 FINALISATION\u2026'];
+            var ti = 0;
+            var textInterval = setInterval(function() {
+                ti = (ti + 1) % texts.length;
+                var el = document.getElementById('craftAnimText');
+                if (el) el.textContent = texts[ti];
+            }, 1200);
+
+            // Reflow pour relancer la barre CSS
+            void bar.offsetWidth;
+            bar.style.animation = '';
+
+            overlay.classList.add('show');
+
+            setTimeout(function() {
+                clearInterval(_craftAnimLightningInterval);
+                clearInterval(textInterval);
+                _craftAnimLightningInterval = null;
+                overlay.querySelectorAll('.craft-lightning').forEach(function(l){ l.remove(); });
+                showCraftReveal(recipe, isNew);
+            }, 4800);
+        }
+
+        function showCraftReveal(recipe, isNew) {
+            var RCOLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#ffffff', og:'#c8a000', limited:'#ff59e7', hero:'#ffca18', evolution:'#6a00ff', champions:'#f1fc74', no:'#ff0000', admin_exclusive:'#ff0040' };
+            var RLABELS = { common:'Commune', rare:'Rare', epic:'\u00c9pique', legendary:'L\u00e9gendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limit\u00e9e', hero:'H\u00e9ros', evolution:'\u00c9volution', champions:'Champions', no:'Impossible', admin_exclusive:'ADMIN' };
+
+            document.getElementById('craftAnimPhase').style.display = 'none';
+
+            var col = RCOLS[recipe.result.rarity] || '#00ff88';
+            document.getElementById('craftRevealImg').src = recipe.result.img || '';
+            document.getElementById('craftRevealImg').style.filter = 'drop-shadow(0 0 30px ' + col + ') drop-shadow(0 0 60px ' + col + '88)';
+            document.getElementById('craftRevealName').textContent   = recipe.result.name;
+            document.getElementById('craftRevealRarity').textContent = RLABELS[recipe.result.rarity] || recipe.result.rarity;
+            document.getElementById('craftRevealRarity').style.color = col;
+            document.getElementById('craftRevealNew').style.display  = isNew ? 'block' : 'none';
+
+            var rev = document.getElementById('craftRevealPhase');
+            rev.style.display = 'flex';
+            rev.classList.add('show');
+
+            flashGoodCard(recipe.result.rarity);
+        }
+
+        function closeCraftAnim() {
+            document.getElementById('craftAnimOverlay').classList.remove('show');
+            document.getElementById('craftRevealPhase').classList.remove('show');
+            if (_craftAnimLightningInterval) { clearInterval(_craftAnimLightningInterval); _craftAnimLightningInterval = null; }
+            var statusEl = document.getElementById('craftStatusMsg');
+            if (statusEl) { statusEl.style.color = '#00ff88'; statusEl.textContent = '\u2705 Carte craft\u00e9e avec succ\u00e8s !'; }
             _renderCraftRecipes();
         }
 
@@ -7227,9 +7511,11 @@
                 var mult = parseInt(val.multiplier) || 2;
                 var durMs = (parseInt(val.minutes) || 0) * 60000 + (parseInt(val.seconds) || 0) * 1000;
                 if (durMs <= 0) durMs = 300000; // 5 min par défaut
-                if (firebaseDB) {
-                    firebaseDB.ref('admin/luck').set({ multiplier: mult, expiry: Date.now() + durMs, ts: Date.now() });
-                }
+                // Appliquer uniquement en local (personalLuck) — pas de firebase/admin/luck global
+                personalLuck = mult;
+                luckExpiry = Date.now() + durMs;
+                autoSave();
+                startLuckTimer();
                 var durLabel = Math.floor(durMs/60000) > 0 ? Math.floor(durMs/60000) + 'min' : Math.floor(durMs/1000) + 's';
                 msg = '🍀 Chance ×' + mult + ' pendant ' + durLabel + ' !';
             } else {
