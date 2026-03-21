@@ -2583,7 +2583,7 @@
                 <button class="notepad-close" onclick="closeNotepad()">✕</button>
             </div>
             <div class="notepad-content" id="notepadContent"><span class="notepad-empty">Aucun message pour le moment.</span></div>
-            <div class="notepad-footer">Appuie sur A pour fermer</div>
+            <div class="notepad-footer">Appuie sur Z pour fermer</div>
         </div>
     </div>
 
@@ -4021,7 +4021,6 @@
             playSound('open');
             displayRewards(rewards);
             updateStats(rewards);
-            resolveChestBet(rewards);
         }
 
         function getRandomCard(rarity) {
@@ -4322,21 +4321,28 @@
             const openingChestImage = document.getElementById('openingChestImage');
             const tapText = document.getElementById('tapText');
             const clicksCounter = document.getElementById('clicksCounter');
-            
+            const chestAnimation = document.getElementById('chestAnimation');
+            const rewardsScreen = document.getElementById('rewardsScreen');
+
             modal.style.display = 'none';
-            
-            // Réinitialiser l'animation
+
+            // Remettre l'animation d'ouverture visible et les récompenses cachées
+            chestAnimation.style.display = 'flex';
+            rewardsScreen.style.display = 'none';
+
+            // Réinitialiser l'image du coffre
             openingChestImage.style.transition = 'none';
             openingChestImage.style.transform = 'scale(1) rotate(0)';
             openingChestImage.style.opacity = '1';
             openingChestImage.style.animation = 'chestShake 0.8s infinite, chestGlow 1.5s infinite';
-            
+
+            // Remettre le texte et le compteur visibles
             tapText.style.display = 'block';
             clicksCounter.style.display = 'block';
-            
+
             // Nettoyer l'explosion
             document.getElementById('explosion').innerHTML = '';
-            
+
             clickCount = 0;
             currentStars = 0;
         }
@@ -5141,6 +5147,14 @@
             updateQuestProgress();
         }
 
+        // Push save vers Firebase si connecté (appelé depuis autoSave)
+        function _pushSaveToFirebase() {
+            if (_authUser && firebaseDB) {
+                const s = _getSave();
+                if (s) firebaseDB.ref(_authUser.key + '/save').set(s);
+            }
+        }
+
         function autoSave() {
             const save = {
                 stats: {
@@ -5158,6 +5172,7 @@
             localStorage.setItem('crSave_' + currentSaveCode, JSON.stringify(save));
             const _sp = localStorage.getItem('tradePseudo');
             if (_sp) syncStatsToFirebase(_sp);
+            _pushSaveToFirebase();
         }
 
         // Charger automatiquement au démarrage
@@ -5544,8 +5559,11 @@
             // Image du coffre
             firebaseDB.ref('admin/chestImg').on('value', snap => {
                 const url = snap.val();
-                const img = document.getElementById('mainChestImg');
-                if (img) img.src = url || 'https://static.wikia.nocookie.net/stealabr/images/3/3a/SecretLuckyBlock.png/revision/latest?cb=20251125192757';
+                const chestUrl = url || 'https://static.wikia.nocookie.net/stealabr/images/3/3a/SecretLuckyBlock.png/revision/latest?cb=20251125192757';
+                const img1 = document.getElementById('mainChestImg');
+                if (img1) img1.src = chestUrl;
+                const img2 = document.getElementById('openingChestImage');
+                if (img2) img2.src = chestUrl;
             });
 
             // Broadcast — ignorer les messages antérieurs à la connexion
@@ -6302,6 +6320,25 @@
 
 
 
+        function adminSetChestImg() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            const url = document.getElementById('adminChestUrl').value.trim();
+            if (!url) { adminStatus('⚠️ URL vide'); return; }
+            firebaseDB.ref('admin/chestImg').set(url)
+                .then(() => adminStatus('✅ Image du coffre mise à jour !'))
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
+        function adminResetChestImg() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            firebaseDB.ref('admin/chestImg').set(null)
+                .then(() => {
+                    adminStatus('✅ Image réinitialisée');
+                    document.getElementById('adminChestUrl').value = '';
+                })
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
         function adminStatus(msg) {
             const el = document.getElementById('adminStatusMsg');
             if (!el) return;
@@ -6657,76 +6694,6 @@
             el.className = 'slots-result-msg ' + (type || '');
         }
 
-        // ═══════════════════════════════════════════
-        //  PARI SUR COFFRE
-        // ═══════════════════════════════════════════
-        // Multiplicateurs selon rareté visée
-        const BET_MULTIPLIERS = { epic:3, legendary:6, mythic:12, brainrot_god:20, secret:40 };
-        let _chestBetAmount = 0;
-        let _chestBetRarity = '';
-        let _chestBetActive = false;
-
-        function toggleChestBet() {
-            if (_chestBetActive) {
-                // Annuler le pari
-                stats.totalGold += _chestBetAmount;
-                updateGoldDisplay();
-                autoSave();
-                _chestBetActive = false;
-                _chestBetAmount = 0;
-                _chestBetRarity = '';
-                document.getElementById('betChestBtn').textContent = '💰 Parier';
-                document.getElementById('betChestBtn').classList.remove('active');
-                document.getElementById('betChestStatus').textContent = 'Pari annulé.';
-                return;
-            }
-            const amount = parseInt(document.getElementById('betAmount').value) || 0;
-            const rarity = document.getElementById('betRarity').value;
-            if (amount < 100) { document.getElementById('betChestStatus').textContent = 'Mise minimum : 100 💰'; return; }
-            if (stats.totalGold < amount) { document.getElementById('betChestStatus').textContent = "Pas assez d'or !"; return; }
-            const mult = BET_MULTIPLIERS[rarity] || 1;
-            stats.totalGold -= amount;
-            updateGoldDisplay();
-            autoSave();
-            _chestBetActive = true;
-            _chestBetAmount = amount;
-            _chestBetRarity = rarity;
-            document.getElementById('betChestBtn').textContent = '✕ Annuler pari';
-            document.getElementById('betChestBtn').classList.add('active');
-            document.getElementById('betChestStatus').textContent =
-                'Pari actif : ' + amount.toLocaleString() + ' 💰 sur ' + rarity + ' (×' + mult + ')';
-        }
-
-        function resolveChestBet(rewards) {
-            if (!_chestBetActive || !_chestBetRarity) return;
-            const RANK = { common:0, rare:1, epic:2, legendary:3, mythic:4, brainrot_god:5, secret:6, og:7, limited:8, no:9 };
-            // targetRank doit être >= 1 sinon le pari est invalide
-            const targetRank = (RANK[_chestBetRarity] !== undefined) ? RANK[_chestBetRarity] : -1;
-            if (targetRank < 1) return; // sécurité
-            let bestRank = -1;
-            rewards.forEach(function(r) {
-                if (r.type === 'card' && RANK[r.rarity] !== undefined && RANK[r.rarity] > bestRank) {
-                    bestRank = RANK[r.rarity];
-                }
-            });
-            const mult = BET_MULTIPLIERS[_chestBetRarity] || 1;
-            if (bestRank >= targetRank) {
-                const gain = _chestBetAmount * mult;
-                stats.totalGold += gain;
-                updateGoldDisplay();
-                autoSave();
-                showBroadcast('🎲 Pari gagné ! +' + gain.toLocaleString() + ' 💰 (×' + mult + ') !', Date.now());
-                playSound('epic');
-            } else {
-                showBroadcast('🎲 Pari perdu... -' + _chestBetAmount.toLocaleString() + ' 💰', Date.now());
-            }
-            _chestBetActive = false;
-            _chestBetAmount = 0;
-            _chestBetRarity = '';
-            document.getElementById('betChestBtn').textContent = '💰 Parier';
-            document.getElementById('betChestBtn').classList.remove('active');
-            document.getElementById('betChestStatus').textContent = '';
-        }
 
         function updateGoldDisplay() {
             document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
@@ -6759,7 +6726,18 @@
         }
 
         function closeCraft() {
+            _craftSelected = null;
             document.getElementById('craftModal').classList.remove('open');
+            // Fermer l'animation de craft si elle tourne encore
+            const animOverlay = document.getElementById('craftAnimOverlay');
+            if (animOverlay && animOverlay.classList.contains('show')) {
+                animOverlay.classList.remove('show');
+                document.getElementById('craftRevealPhase').classList.remove('show');
+                if (typeof _craftAnimLightningInterval !== 'undefined' && _craftAnimLightningInterval) {
+                    clearInterval(_craftAnimLightningInterval);
+                    _craftAnimLightningInterval = null;
+                }
+            }
         }
 
         function _craftCanMake(recipe) {
@@ -7140,13 +7118,15 @@
             } catch(e) {}
         }
         function _bestSave(a, b) {
-            // Retourne la save avec le plus de coffres
+            // Retourne la save la plus avancée (score = coffres + cartes + or/10000)
             try {
                 const sa = a ? JSON.parse(a) : null;
                 const sb = b ? JSON.parse(b) : null;
-                const ca = sa?.stats?.totalChests || 0;
-                const cb = sb?.stats?.totalChests || 0;
-                return ca >= cb ? a : b;
+                const score = function(s) {
+                    if (!s || !s.stats) return 0;
+                    return (s.stats.totalChests || 0) + (s.stats.totalCards || 0) + Math.floor((s.stats.totalGold || 0) / 10000);
+                };
+                return score(sa) >= score(sb) ? a : b;
             } catch(e) { return a || b; }
         }
         function _onLoggedIn(pseudo) {
@@ -7235,15 +7215,7 @@
             closeAuth();
         }
 
-        // Override autoSave pour pousser vers Firebase si connecté
-        const _baseAutoSave = autoSave;
-        autoSave = function() {
-            _baseAutoSave();
-            if (_authUser && firebaseDB) {
-                const s = _getSave();
-                if (s) firebaseDB.ref(_authUser.key + '/save').set(s);
-            }
-        };
+
 
         // Auto-reconnexion au chargement
         setTimeout(function() {
