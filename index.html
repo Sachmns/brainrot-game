@@ -13,6 +13,247 @@
             box-sizing: border-box;
         }
 
+        /* ═══════════════ SYSTÈME DE THÈMES ═══════════════ */
+        :root {
+            --theme-bg-from:     #1a4d8f;
+            --theme-bg-to:       #0a2647;
+            --theme-header-from: #2d5aa0;
+            --theme-header-to:   #1a4d8f;
+            --theme-border:      #ffd700;
+            --theme-accent:      #ffd700;
+            --theme-particle:    #ffffff;
+            --theme-glow:        rgba(255,215,0,0.0);
+        }
+
+        body { background: linear-gradient(135deg, var(--theme-bg-from) 0%, var(--theme-bg-to) 100%) !important; }
+        header {
+            background: linear-gradient(180deg, var(--theme-header-from) 0%, var(--theme-header-to) 100%) !important;
+            border-bottom-color: var(--theme-border) !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 40px var(--theme-glow) !important;
+        }
+        .star { background: var(--theme-particle) !important; }
+        .chest-main { border-color: var(--theme-accent) !important; }
+        .open-btn { background: linear-gradient(180deg, var(--theme-accent) 0%, color-mix(in srgb, var(--theme-accent) 70%, #000) 100%) !important; }
+
+        /* ── Thème Saint Patrick ── */
+        body.theme-saint-patrick {
+            --theme-bg-from:     #1ddb00;
+            --theme-bg-to:       #0dbd18;
+            --theme-header-from: #b5ffb5;
+            --theme-header-to:   #2bff44;
+            --theme-border:      #00ff66;
+            --theme-accent:      #00e85a;
+            --theme-particle:    #2ecc71;
+            --theme-glow:        rgba(0,255,102,0.35);
+        }
+        body.theme-saint-patrick header {
+            animation: spGlowPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes spGlowPulse {
+            0%,100% { box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 30px rgba(0,255,102,0.3); }
+            50%      { box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 70px rgba(0,255,102,0.7), 0 0 120px rgba(0,200,80,0.3); }
+        }
+        body.theme-saint-patrick .chest-main {
+            border-color: #00ff66 !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 40px rgba(0,255,102,0.4) !important;
+        }
+        body.theme-saint-patrick .stat-card {
+            border-color: rgba(0,255,102,0.4) !important;
+            background: linear-gradient(145deg, #0d3d0d 0%, #061806 100%) !important;
+        }
+        body.theme-saint-patrick .open-btn {
+            background: linear-gradient(180deg, #00ff66 0%, #007a30 100%) !important;
+            color: #002210 !important;
+            box-shadow: 0 8px 25px rgba(0,255,102,0.7) !important;
+        }
+        body.theme-saint-patrick h1 { text-shadow: 3px 3px 0 #023a02, 0 0 30px rgba(0,255,102,0.6) !important; }
+        body.theme-saint-patrick .subtitle { color: #00ff66 !important; }
+
+        /* ── Thème Printemps ── */
+        body.theme-printemps {
+            --theme-bg-from:     #1a0030;
+            --theme-bg-to:       #08001a;
+            --theme-header-from: #5c0070;
+            --theme-header-to:   #2a0040;
+            --theme-border:      #ff60c8;
+            --theme-accent:      #ff80d0;
+            --theme-particle:    #ffb3e8;
+            --theme-glow:        rgba(255,96,200,0.35);
+        }
+        body.theme-printemps header {
+            animation: prGlowPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes prGlowPulse {
+            0%,100% { box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 30px rgba(255,96,200,0.3); }
+            50%      { box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 70px rgba(255,96,200,0.7), 0 0 120px rgba(200,0,150,0.3); }
+        }
+        body.theme-printemps .chest-main {
+            border-color: #ff60c8 !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 40px rgba(255,96,200,0.4) !important;
+        }
+        body.theme-printemps .stat-card {
+            border-color: rgba(255,96,200,0.4) !important;
+            background: linear-gradient(145deg, #300040 0%, #150020 100%) !important;
+        }
+        body.theme-printemps .open-btn {
+            background: linear-gradient(180deg, #ff80d0 0%, #8b006b 100%) !important;
+            color: #1a0015 !important;
+            box-shadow: 0 8px 25px rgba(255,96,200,0.7) !important;
+        }
+        body.theme-printemps h1 { text-shadow: 3px 3px 0 #3a0040, 0 0 30px rgba(255,96,200,0.6) !important; }
+        body.theme-printemps .subtitle { color: #ff80d0 !important; }
+
+        /* ── Thème Minecraft ── */
+        body.theme-minecraft {
+            --theme-bg-from:     #1a3a0a;
+            --theme-bg-to:       #0d1f05;
+            --theme-header-from: #3d6b14;
+            --theme-header-to:   #1a3a0a;
+            --theme-border:      #5acd1e;
+            --theme-accent:      #5acd1e;
+            --theme-particle:    #5acd1e;
+            --theme-glow:        rgba(90,205,30,0.35);
+        }
+        body.theme-minecraft header {
+            animation: mcGlowPulse 3s ease-in-out infinite;
+            image-rendering: pixelated;
+        }
+        @keyframes mcGlowPulse {
+            0%,100% { box-shadow: 0 4px 0 rgba(0,0,0,0.8), 0 0 20px rgba(90,205,30,0.2), inset 0 1px 0 rgba(255,255,255,0.1); }
+            50%      { box-shadow: 0 4px 0 rgba(0,0,0,0.8), 0 0 50px rgba(90,205,30,0.5), 0 0 100px rgba(34,139,0,0.2); }
+        }
+        body.theme-minecraft .chest-main {
+            border-color: #5acd1e !important;
+            border-width: 4px !important;
+            border-radius: 8px !important;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.8), 0 0 30px rgba(90,205,30,0.3), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+        }
+        body.theme-minecraft .stat-card {
+            border-color: rgba(90,205,30,0.5) !important;
+            border-radius: 4px !important;
+            background: linear-gradient(145deg, #1e3d08 0%, #0d1f04 100%) !important;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.6) !important;
+        }
+        body.theme-minecraft .open-btn {
+            background: linear-gradient(180deg, #5acd1e 0%, #2e6b00 100%) !important;
+            color: #0a1f00 !important;
+            border-radius: 4px !important;
+            box-shadow: 0 6px 0 #1a3d00, 0 8px 20px rgba(90,205,30,0.4) !important;
+            border: 3px solid #8aff3e !important;
+        }
+        body.theme-minecraft h1 {
+            text-shadow: 3px 3px 0 #1a3d00, -1px -1px 0 #1a3d00, 1px -1px 0 #1a3d00, -1px 1px 0 #1a3d00,
+                         0 0 25px rgba(90,205,30,0.5) !important;
+            color: #8aff3e !important;
+        }
+        body.theme-minecraft .subtitle { color: #5acd1e !important; }
+        .theme-banner.minecraft {
+            background: linear-gradient(90deg, #0d1f05, #1e4d0a, #3d8a14, #5acd1e, #3d8a14, #1e4d0a, #0d1f05);
+            background-size: 300% 100%;
+            color: #c8ff88;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.8), 0 4px 25px rgba(90,205,30,0.5);
+            animation: bannerShift 4s linear infinite;
+            text-shadow: 2px 2px 0 #0a1f00, 0 0 12px rgba(90,205,30,0.9);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 4px;
+            border-bottom: 3px solid #5acd1e;
+        }
+
+        /* ── Thème Unchained ── */
+        body.theme-unchained {
+            --theme-bg-from:     #23007a;
+            --theme-bg-to:       #16004d;
+            --theme-header-from: #3a007a;
+            --theme-header-to:   #1a0040;
+            --theme-border:      #aa44ff;
+            --theme-accent:      #cc66ff;
+            --theme-particle:    #cc66ff;
+            --theme-glow:        rgba(170,68,255,0.4);
+        }
+        body.theme-unchained header {
+            animation: ucGlowPulse 2s ease-in-out infinite;
+        }
+        @keyframes ucGlowPulse {
+            0%,100% { box-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 0 30px rgba(170,68,255,0.3); }
+            50%      { box-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 0 80px rgba(170,68,255,0.8), 0 0 140px rgba(120,0,255,0.3); }
+        }
+        body.theme-unchained .chest-main {
+            border-color: #aa44ff !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8), 0 0 50px rgba(170,68,255,0.5) !important;
+        }
+        body.theme-unchained .stat-card {
+            border-color: rgba(170,68,255,0.5) !important;
+            background: linear-gradient(145deg, #1a0035 0%, #0a0020 100%) !important;
+            box-shadow: 0 0 15px rgba(170,68,255,0.15) !important;
+        }
+        body.theme-unchained .open-btn {
+            background: linear-gradient(180deg, #cc66ff 0%, #6600cc 100%) !important;
+            color: #0d0020 !important;
+            box-shadow: 0 8px 30px rgba(170,68,255,0.8) !important;
+            border: 3px solid #dd88ff !important;
+        }
+        body.theme-unchained h1 {
+            color: #dd88ff !important;
+            text-shadow: 3px 3px 0 #2d0060, -1px -1px 0 #2d0060, 1px -1px 0 #2d0060, -1px 1px 0 #2d0060,
+                         0 0 40px rgba(170,68,255,0.9), 0 0 80px rgba(120,0,255,0.4) !important;
+        }
+        body.theme-unchained .subtitle { color: #cc66ff !important; text-shadow: 0 0 15px rgba(170,68,255,0.8); }
+        .theme-banner.unchained {
+            background: linear-gradient(90deg, #04000e, #1a0040, #3a007a, #aa44ff, #3a007a, #1a0040, #04000e);
+            background-size: 300% 100%;
+            color: #f0c8ff;
+            box-shadow: 0 3px 30px rgba(170,68,255,0.8);
+            animation: bannerShift 2.5s linear infinite;
+            text-shadow: 0 0 20px rgba(200,100,255,1), 0 0 40px rgba(170,68,255,0.6);
+            letter-spacing: 5px;
+            border-bottom: 3px solid #aa44ff;
+        }
+
+        /* Bannière de thème actif */
+        .theme-banner {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            z-index: 9001;
+            padding: 8px 20px;
+            text-align: center;
+            font-weight: 900;
+            font-size: 0.92em;
+            letter-spacing: 3px;
+            pointer-events: none;
+        }
+        .theme-banner.show { display: block; }
+        .theme-banner.saint-patrick {
+            background: linear-gradient(90deg, #023a02, #0d6b0d, #1db51d, #0d6b0d, #023a02);
+            background-size: 300% 100%;
+            color: #afffcf;
+            box-shadow: 0 3px 25px rgba(0,255,102,0.6);
+            animation: bannerShift 3s linear infinite;
+            text-shadow: 0 0 15px rgba(0,255,102,0.9);
+        }
+        .theme-banner.printemps {
+            background: linear-gradient(90deg, #2a0040, #7a00a0, #ff60c8, #7a00a0, #2a0040);
+            background-size: 300% 100%;
+            color: #ffe0f5;
+            box-shadow: 0 3px 25px rgba(255,96,200,0.6);
+            animation: bannerShift 3s linear infinite;
+            text-shadow: 0 0 15px rgba(255,96,200,0.9);
+        }
+        @keyframes bannerShift {
+            0%   { background-position: 0% 0; }
+            100% { background-position: 300% 0; }
+        }
+
+        /* Animation flottante pour particules emoji */
+        @keyframes floatDrift {
+            0%   { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+            25%  { transform: translateY(-15px) rotate(5deg); opacity: 1; }
+            50%  { transform: translateY(-8px) rotate(-3deg); opacity: 0.8; }
+            75%  { transform: translateY(-20px) rotate(4deg); opacity: 1; }
+            100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+        }
+
+
         body {
             font-family: 'Arial Black', Arial, sans-serif;
             background: linear-gradient(135deg, #1a4d8f 0%, #0a2647 100%);
@@ -2587,6 +2828,9 @@
         </div>
     </div>
 
+    <!-- Bannière de thème -->
+    <div class="theme-banner" id="themeBanner"></div>
+
     <div class="stars-bg" id="starsBg"></div>
 
     <!-- Bouton Quêtes (gauche) -->
@@ -2872,14 +3116,18 @@
                     <button class="admin-btn purple" onclick="adminBroadcast()">📡 Envoyer à tous</button>
                 </div>
 
-                <!-- Cartes bannies des coffres -->
-                <div class="admin-section" style="border-color:rgba(255,80,0,0.4);background:rgba(255,80,0,0.03);">
-                    <div class="admin-section-title" style="color:#ff8040;">🚫 Cartes bannies des coffres</div>
-                    <div style="color:#555;font-size:0.72em;margin-bottom:8px;">Ces cartes ne peuvent plus tomber en ouvrant des coffres. Elles restent disponibles dans la Craft Machine, la boutique, etc.</div>
-                    <div id="adminBannedCardsList" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;min-height:24px;"></div>
-                    <div class="admin-rarity-filter" id="adminBanRarityFilter" style="margin-bottom:6px;"></div>
-                    <div class="admin-card-grid" id="adminBanCardGrid" style="max-height:160px;overflow-y:auto;"></div>
-                    <div style="color:#555;font-size:0.72em;margin-top:6px;" id="adminBanStatus">Clique sur une carte pour la bannir / débannir</div>
+                <!-- Thème visuel -->
+                <div class="admin-section" style="border-color:rgba(255,128,192,0.4);background:rgba(255,80,180,0.03);">
+                    <div class="admin-section-title" style="color:#ff80c0;">🎨 Thème visuel</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:10px;">Change l'ambiance visuelle du jeu pour tous les joueurs. Purement cosmétique.</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="admin-btn" onclick="adminSetTheme('')" style="background:linear-gradient(180deg,#2d5aa0,#1a4d8f);box-shadow:0 4px 0 #0a1e3d;border:2px solid #4a7bc8;">🔵 Défaut</button>
+                        <button class="admin-btn" onclick="adminSetTheme('saint-patrick')" style="background:linear-gradient(180deg,#1a6b1a,#0a3d0a);box-shadow:0 4px 0 #021402;border:2px solid #2ecc71;">🍀 Saint Patrick</button>
+                        <button class="admin-btn" onclick="adminSetTheme('printemps')" style="background:linear-gradient(180deg,#8b2fa8,#5c1a6b);box-shadow:0 4px 0 #1a0a2e;border:2px solid #ff80c0;">🌸 Printemps</button>
+                        <button class="admin-btn" onclick="adminSetTheme('minecraft')" style="background:linear-gradient(180deg,#3d8a14,#1e4d0a);box-shadow:0 4px 0 #0a1f00;border:2px solid #5acd1e;font-family:'Courier New',monospace;letter-spacing:1px;">⛏️ Minecraft</button>
+                        <button class="admin-btn" onclick="adminSetTheme('unchained')" style="background:linear-gradient(180deg,#3a007a,#1a0040);box-shadow:0 4px 0 #08001e;border:2px solid #aa44ff;letter-spacing:1px;">⛓️ Unchained</button>
+                    </div>
+                    <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminThemeStatus">Thème actuel : Défaut</div>
                 </div>
 
                 <!-- Roue de la Fortune -->
@@ -4038,18 +4286,14 @@
 
         function getRandomCard(rarity) {
             let cardList = cardImages[rarity];
-            // Filtrer les cartes bannies des coffres
-            const banned = window._bannedCards || new Set();
-            if (cardList && banned.size > 0) {
-                cardList = cardList.filter(c => !banned.has(rarity + '|' + c.name));
-            }
             // Si la rareté n'existe pas ou est vide, fallback vers common
             if (!cardList || cardList.length === 0) {
                 const fallbackRarities = ['common','rare','epic','legendary','mythic'];
                 for (const fr of fallbackRarities) {
-                    let fl = cardImages[fr] || [];
-                    if (banned.size > 0) fl = fl.filter(c => !banned.has(fr + '|' + c.name));
-                    if (fl.length > 0) { cardList = fl; break; }
+                    if (cardImages[fr] && cardImages[fr].length > 0) {
+                        cardList = cardImages[fr];
+                        break;
+                    }
                 }
             }
             if (!cardList || cardList.length === 0) return null;
@@ -5548,8 +5792,6 @@
             firebaseDB.ref('players/' + key + '/cards').set(Object.keys(cardsObj).length > 0 ? cardsObj : null);
         }
 
-        window._bannedCards = new Set(); // Cartes bannies des coffres (chargées depuis Firebase)
-
         function initFirebase() {
             try {
                 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
@@ -5586,10 +5828,9 @@
                 if (img2) img2.src = chestUrl;
             });
 
-            // Cartes bannies des coffres
-            firebaseDB.ref('admin/bannedCards').on('value', snap => {
-                const data = snap.val();
-                window._bannedCards = data ? new Set(Object.values(data)) : new Set();
+            // Thème visuel
+            firebaseDB.ref('admin/theme').on('value', snap => {
+                applyTheme(snap.val() || '');
             });
 
             // Broadcast — ignorer les messages antérieurs à la connexion
@@ -5636,23 +5877,6 @@
                     showBroadcast('🎴 Une carte spéciale apparaîtra dans ton prochain coffre !', Date.now());
                     firebaseDB.ref('players/' + encodeURIComponent(myPseudo).replace(/[.#$/\[\]]/g,'_') + '/forcedCard').set(null);
                 });
-
-                // Carte ADMIN EXCLUSIVE offerte directement
-                firebaseDB.ref('players/' + encodeURIComponent(myPseudo).replace(/[.#$/\[\]]/g,'_') + '/giftAdminCard').on('value', snap => {
-                    const d = snap.val();
-                    if (!d || !d.name) return;
-                    const ck = 'admin_exclusive|' + d.name;
-                    if (!unlockedCards.has(ck)) { unlockedCards.set(ck, 0); stats.totalCards++; }
-                    unlockedCards.set(ck, unlockedCards.get(ck) + 1);
-                    if (!cardImages.admin_exclusive) cardImages.admin_exclusive = [];
-                    if (!cardImages.admin_exclusive.find(c => c.name === d.name)) {
-                        cardImages.admin_exclusive.push({ name: d.name, img: d.img || '' });
-                    }
-                    document.getElementById('totalCards').textContent = stats.totalCards;
-                    autoSave();
-                    showBroadcast('⚡ Tu as reçu une carte ADMIN EXCLUSIVE : ' + d.name + ' !', Date.now());
-                    firebaseDB.ref('players/' + encodeURIComponent(myPseudo).replace(/[.#$/\[\]]/g,'_') + '/giftAdminCard').set(null);
-                });
             }
 
             // Liste des joueurs (pour admin panel)
@@ -5693,6 +5917,7 @@
 
             const lxClass = { 2:'lx2', 4:'lx4', 8:'lx8', 16:'lx16', 32:'lx32', 100:'lx100' }[multiplier] || 'lx2';
             banner.classList.add('show', lxClass);
+            _adjustLuckBannerPosition();
 
             // Capturer l'interval ID localement pour éviter les conflits
             const intervalId = setInterval(function() {
@@ -5842,7 +6067,6 @@
             buildAdminShopGrid();
             adminRefreshGlobalStats();
             buildAdminWheelItems();
-            buildAdminBanCardGrid();
             adminRefreshDashboard();
             loadAdminNotepad();
             craftAdminLoad();
@@ -6147,14 +6371,6 @@
                         '<img src="' + card.img + '" onerror="this.style.opacity=0.2">' +
                         '<div class="abn">' + card.name + '</div>' +
                         '<div class="abc" style="color:' + col + '">' + (hasCard ? '×' + count : '🔒') + '</div>';
-                    if (hasCard) {
-                        const removeBtn = document.createElement('button');
-                        removeBtn.className = 'admin-book-remove';
-                        removeBtn.title = 'Retirer une carte';
-                        removeBtn.textContent = '✕';
-                        removeBtn.onclick = (function(p, k) { return function() { adminRemoveCardFromBook(p, k); }; })(pseudo, cardKey);
-                        div.appendChild(removeBtn);
-                    }
                     grid.appendChild(div);
                 });
             });
@@ -6164,42 +6380,6 @@
 
         function closeAdminBook() {
             document.getElementById('adminBookModal').classList.remove('open');
-        }
-
-        function adminRemoveCardFromBook(pseudo, cardKey) {
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            const playerKey = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g,'_');
-            const safeKey   = cardKey.replace(/[.#$|\[\]]/g, '_');
-            const cardsRef  = firebaseDB.ref('players/' + playerKey + '/cards/' + safeKey);
-            const statsRef  = firebaseDB.ref('players/' + playerKey + '/stats');
-
-            // Lire la carte actuelle
-            cardsRef.once('value').then(snap => {
-                const entry = snap.val();
-                if (!entry) { adminStatus('⚠️ Carte introuvable'); return; }
-                const newCount = (entry.c || 1) - 1;
-
-                const doAfterCard = () => {
-                    // Mettre à jour le compteur stats.totalCards si la carte est complètement retirée
-                    if (newCount <= 0) {
-                        statsRef.once('value').then(sSnap => {
-                            const s = sSnap.val() || {};
-                            const newTotal = Math.max(0, (s.totalCards || 1) - 1);
-                            const newUnlocked = Math.max(0, (s.unlockedCards || 1) - 1);
-                            statsRef.update({ totalCards: newTotal, unlockedCards: newUnlocked });
-                        });
-                    }
-                    adminStatus('✅ Carte retirée : ' + cardKey.split('|').slice(1).join('|') + ' (' + pseudo + ')');
-                    // Rafraîchir le livre
-                    adminViewBook(pseudo);
-                };
-
-                if (newCount <= 0) {
-                    cardsRef.remove().then(doAfterCard).catch(e => adminStatus('Erreur : ' + e.message));
-                } else {
-                    cardsRef.set({ k: cardKey, c: newCount }).then(doAfterCard).catch(e => adminStatus('Erreur : ' + e.message));
-                }
-            }).catch(e => adminStatus('Erreur : ' + e.message));
         }
 
         // ── Dashboard stats ─────────────────────────────
@@ -6427,131 +6607,140 @@
                 .catch(e => adminStatus('Erreur : ' + e.message));
         }
 
-        // ── Cartes bannies des coffres ──────────────────
-        let _adminBanRarityFilter = 'all';
+        // ═══ SYSTÈME DE THÈMES ═══
+        const THEMES = {
+            '': {
+                label: 'Défaut',
+                banner: '',
+                particles: { color: '#ffffff', emoji: null, count: 100, glow: null }
+            },
+            'saint-patrick': {
+                label: '🍀 Saint Patrick',
+                banner: '🍀 ✨ SAINT PATRICK ✨ 🍀',
+                bannerClass: 'saint-patrick',
+                particles: { color: '#2ecc71', emoji: ['🍀','☘️','💰','💚'], count: 80, glow: 'rgba(0,255,102,0.7)' }
+            },
+            'printemps': {
+                label: '🌸 Printemps',
+                banner: "🌸 ✨ C'EST LE PRINTEMPS ✨ 🌸",
+                bannerClass: 'printemps',
+                particles: { color: '#ffb3d9', emoji: ['🌸','🌺','🦋','🌷','💐','🌼'], count: 80, glow: 'rgba(255,96,200,0.7)' }
+            },
+            'minecraft': {
+                label: '⛏️ Minecraft',
+                banner: '⛏️  MINECRAFT MODE  ⛏️',
+                bannerClass: 'minecraft',
+                particles: { color: '#5acd1e', emoji: ['🌿','🪨','🌲','💎','⛏️','🪵','🔥','❄️','🌾'], count: 70, glow: 'rgba(90,205,30,0.8)' }
+            },
+            'unchained': {
+                label: '⛓️ Unchained',
+                banner: '⛓️  UNCHAINED  ⛓️',
+                bannerClass: 'unchained',
+                particles: { color: '#cc66ff', emoji: ['⛓️','🎬','🔥','💜','▶️','🎥','⚡','👑','💫'], count: 75, glow: 'rgba(170,68,255,0.9)' }
+            }
+        };
 
-        function buildAdminBanCardGrid() {
-            if (!firebaseDB) return;
-            firebaseDB.ref('admin/bannedCards').once('value').then(snap => {
-                const data = snap.val() || {};
-                const bannedSet = new Set(Object.values(data));
-                _renderAdminBanCardGrid(bannedSet);
-                _renderAdminBannedList(bannedSet);
+        let _currentTheme = '';
+
+        function applyTheme(themeId) {
+            if (_currentTheme === themeId) return;
+            _currentTheme = themeId;
+            const theme = THEMES[themeId] || THEMES[''];
+            const body = document.body;
+
+            // Retirer toutes les classes de thème
+            Object.keys(THEMES).forEach(id => {
+                if (id) body.classList.remove('theme-' + id);
             });
-        }
 
-        function _renderAdminBanCardGrid(bannedSet) {
-            const RARITY_COLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff', og:'#c8a000', limited:'#ff59e7', hero:'#ffca18', evolution:'#6a00ff', champions:'#f1fc74', no:'#ff0000', admin_exclusive:'#ff0040' };
-            const RARITY_LABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limitée', hero:'Héros', evolution:'Évolution', champions:'Champions', no:'Impossible', admin_exclusive:'ADMIN' };
+            // Appliquer le nouveau thème
+            if (themeId) body.classList.add('theme-' + themeId);
 
-            // Filtre rareté
-            const filterEl = document.getElementById('adminBanRarityFilter');
-            if (filterEl) {
-                filterEl.innerHTML = '';
-                ['all', ...Object.keys(cardImages)].forEach(r => {
-                    const pill = document.createElement('div');
-                    pill.className = 'admin-rarity-pill' + (_adminBanRarityFilter === r ? ' active' : '');
-                    pill.textContent = r === 'all' ? 'Toutes' : (RARITY_LABELS[r] || r);
-                    pill.onclick = () => { _adminBanRarityFilter = r; _renderAdminBanCardGrid(bannedSet); };
-                    filterEl.appendChild(pill);
-                });
+            // Bannière thème
+            const banner = document.getElementById('themeBanner');
+            if (banner) {
+                banner.className = 'theme-banner' + (themeId && theme.bannerClass ? ' show ' + theme.bannerClass : '');
+                banner.textContent = theme.banner || '';
             }
 
-            const grid = document.getElementById('adminBanCardGrid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            Object.entries(cardImages).forEach(([rarity, cards]) => {
-                if (_adminBanRarityFilter !== 'all' && rarity !== _adminBanRarityFilter) return;
-                (cards || []).forEach(card => {
-                    const cardKey = rarity + '|' + card.name;
-                    const isBanned = bannedSet.has(cardKey);
-                    const col = RARITY_COLS[rarity] || '#aaa';
-                    const div = document.createElement('div');
-                    div.className = 'admin-card-item' + (isBanned ? ' selected' : '');
-                    div.style.border = isBanned ? '2px solid #ff4400' : '';
-                    div.style.opacity = isBanned ? '0.5' : '1';
-                    div.title = isBanned ? 'Clique pour débannir' : 'Clique pour bannir des coffres';
-                    div.innerHTML = '<img src="' + card.img + '" onerror="this.style.opacity=0.3">' +
-                        '<div class="acn">' + card.name + '</div>' +
-                        (isBanned ? '<div style="color:#ff4400;font-size:0.55em;font-weight:900;">🚫 BANNI</div>' : '');
-                    div.onclick = () => adminToggleBanCard(cardKey, isBanned, bannedSet);
-                    grid.appendChild(div);
-                });
-            });
+            // Décaler la bannière luck pour ne pas chevaucher la bannière thème
+            _adjustLuckBannerPosition();
+
+            // Particules de fond
+            _refreshThemeParticles(theme.particles);
+
+            // Mettre à jour le statut dans l'admin
+            const statusEl = document.getElementById('adminThemeStatus');
+            if (statusEl) statusEl.textContent = 'Thème actuel : ' + theme.label;
         }
 
-        function _renderAdminBannedList(bannedSet) {
-            const listEl = document.getElementById('adminBannedCardsList');
-            if (!listEl) return;
-            listEl.innerHTML = '';
-            if (bannedSet.size === 0) {
-                listEl.innerHTML = '<span style="color:#444;font-size:0.72em;">Aucune carte bannie</span>';
-                return;
-            }
-            bannedSet.forEach(cardKey => {
-                const parts = cardKey.split('|');
-                const name = parts.slice(1).join('|') || cardKey;
-                const tag = document.createElement('div');
-                tag.style.cssText = 'padding:3px 8px;background:rgba(255,68,0,0.15);border:1px solid rgba(255,68,0,0.4);border-radius:8px;color:#ff8040;font-size:0.68em;font-weight:900;display:flex;align-items:center;gap:5px;';
-                const spanEl = document.createElement('span');
-                spanEl.style.cssText = 'cursor:pointer;color:#ff4400;font-weight:900;margin-left:4px;';
-                spanEl.textContent = '✕';
-                spanEl.onclick = (function(k) { return function() { adminToggleBanCard(k, true, null); }; })(cardKey);
-                tag.textContent = '🚫 ' + name;
-                tag.appendChild(spanEl);
-                listEl.appendChild(tag);
-            });
+        function _adjustLuckBannerPosition() {
+            const themeBanner = document.getElementById('themeBanner');
+            const luckBanner  = document.getElementById('globalLuckBanner');
+            if (!luckBanner) return;
+            const themeVisible = themeBanner && themeBanner.classList.contains('show');
+            const offset = themeVisible ? (themeBanner.offsetHeight || 32) : 0;
+            luckBanner.style.top = offset + 'px';
         }
 
-        function adminToggleBanCard(cardKey, isBanned, currentSet) {
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            const safeKey = cardKey.replace(/[.#$|\[\]]/g, '_');
-            const ref = firebaseDB.ref('admin/bannedCards/' + safeKey);
-            if (isBanned) {
-                ref.remove().then(() => {
-                    adminStatus('✅ ' + cardKey.split('|').slice(1).join('|') + ' débannied des coffres');
-                    buildAdminBanCardGrid();
-                }).catch(e => adminStatus('Erreur : ' + e.message));
+        function _refreshThemeParticles(particles) {
+            const container = document.getElementById('starsBg');
+            if (!container) return;
+            container.innerHTML = '';
+            const count = particles.count || 100;
+
+            if (particles.emoji) {
+                // Particules emoji avec animation floatDrift + sizes variées
+                const emojis = Array.isArray(particles.emoji) ? particles.emoji : [particles.emoji];
+                for (let i = 0; i < count; i++) {
+                    const el = document.createElement('div');
+                    const size = Math.random() * 18 + 10;
+                    const dur  = (Math.random() * 5 + 4).toFixed(2);
+                    const delay = (Math.random() * 6).toFixed(2);
+                    const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                    el.style.cssText = [
+                        'position:absolute',
+                        'left:' + (Math.random() * 100) + '%',
+                        'top:' + (Math.random() * 110) + '%',
+                        'font-size:' + size + 'px',
+                        'opacity:0.8',
+                        'animation:floatDrift ' + dur + 's ease-in-out infinite',
+                        'animation-delay:-' + delay + 's',
+                        'pointer-events:none',
+                        'user-select:none',
+                        'filter:drop-shadow(0 0 6px ' + (particles.glow || 'rgba(255,255,255,0.5)') + ')'
+                    ].join(';');
+                    el.textContent = emoji;
+                    container.appendChild(el);
+                }
             } else {
-                ref.set(cardKey).then(() => {
-                    adminStatus('🚫 ' + cardKey.split('|').slice(1).join('|') + ' bannie des coffres');
-                    buildAdminBanCardGrid();
-                }).catch(e => adminStatus('Erreur : ' + e.message));
+                // Particules classiques (étoiles)
+                for (let i = 0; i < count; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.style.width = (Math.random() * 3 + 1) + 'px';
+                    star.style.height = star.style.width;
+                    star.style.animationDelay = Math.random() * 3 + 's';
+                    if (particles.color) star.style.background = particles.color;
+                    if (particles.glow) star.style.boxShadow = '0 0 6px ' + particles.glow;
+                    container.appendChild(star);
+                }
             }
         }
 
-        function adminGiveAdminCard() {
+        function adminSetTheme(themeId) {
             if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            const pseudo = document.getElementById('adminCardPseudo').value.trim();
-            const name   = document.getElementById('adminCardName').value.trim();
-            const img    = document.getElementById('adminCardImg').value.trim();
-            if (!pseudo) { adminStatus('⚠️ Pseudo vide'); return; }
-            if (!name)   { adminStatus('⚠️ Nom de carte vide'); return; }
-            const key = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g,'_');
-            firebaseDB.ref('players/' + key + '/giftAdminCard').set({ name, img, ts: Date.now() })
-                .then(() => adminStatus('✅ Carte ADMIN envoyée à ' + pseudo + ' !'))
-                .catch(e => adminStatus('Erreur : ' + e.message));
-        }
-
-        function adminCursePlayer() {
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            const pseudo = document.getElementById('adminCursePseudo').value.trim();
-            const mins   = Math.max(1, parseInt(document.getElementById('adminCurseDuration').value) || 5);
-            if (!pseudo) { adminStatus('⚠️ Pseudo vide'); return; }
-            const key    = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g,'_');
-            const expiry = Date.now() + mins * 60 * 1000;
-            firebaseDB.ref('players/' + key + '/cursed').set({ expiry, ts: Date.now() })
-                .then(() => adminStatus('🪄 ' + pseudo + ' est maudit pendant ' + mins + ' min !'))
-                .catch(e => adminStatus('Erreur : ' + e.message));
-        }
-
-        function adminUncursePlayer() {
-            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            const pseudo = document.getElementById('adminCursePseudo').value.trim();
-            if (!pseudo) { adminStatus('⚠️ Pseudo vide'); return; }
-            const key = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g,'_');
-            firebaseDB.ref('players/' + key + '/cursed').set(null)
-                .then(() => adminStatus('✅ Malédiction levée pour ' + pseudo))
+            const theme = THEMES[themeId];
+            if (themeId && !theme) { adminStatus('⚠️ Thème inconnu'); return; }
+            firebaseDB.ref('admin/theme').set(themeId || null)
+                .then(() => {
+                    const label = theme ? theme.label : 'Défaut';
+                    adminStatus('✅ Thème activé : ' + label);
+                    const statusEl = document.getElementById('adminThemeStatus');
+                    if (statusEl) statusEl.textContent = 'Thème actuel : ' + label;
+                })
                 .catch(e => adminStatus('Erreur : ' + e.message));
         }
 
