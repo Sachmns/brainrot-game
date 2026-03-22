@@ -3130,6 +3130,16 @@
                     <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminThemeStatus">Thème actuel : Défaut</div>
                 </div>
 
+                <!-- Cartes bannies des coffres -->
+                <div class="admin-section" style="border-color:rgba(255,100,0,0.4);background:rgba(255,80,0,0.03);">
+                    <div class="admin-section-title" style="color:#ff8040;">🚫 Cartes bannies des coffres</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:8px;">Ces cartes ne tombent plus en ouvrant des coffres. Elles restent disponibles en boutique, craft, etc.</div>
+                    <div id="adminBannedCardsList" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;min-height:22px;"></div>
+                    <div class="admin-rarity-filter" id="adminBanRarityFilter" style="margin-bottom:6px;"></div>
+                    <div class="admin-card-grid" id="adminBanCardGrid" style="max-height:160px;overflow-y:auto;"></div>
+                    <div style="color:#555;font-size:0.72em;margin-top:6px;" id="adminBanStatus">Clique sur une carte pour la bannir / débannir des coffres</div>
+                </div>
+
                 <!-- Roue de la Fortune -->
                 <div class="admin-section" style="border-color:rgba(0,212,255,0.3);background:rgba(0,212,255,0.03);">
                     <div class="admin-section-title" style="color:#00d4ff;">🎡 Roue de la Fortune</div>
@@ -4285,15 +4295,19 @@
         }
 
         function getRandomCard(rarity) {
+            const banned = window._bannedCards || new Set();
             let cardList = cardImages[rarity];
+            // Filtrer les cartes bannies
+            if (cardList && banned.size > 0) {
+                cardList = cardList.filter(c => !banned.has(rarity + '|' + c.name));
+            }
             // Si la rareté n'existe pas ou est vide, fallback vers common
             if (!cardList || cardList.length === 0) {
                 const fallbackRarities = ['common','rare','epic','legendary','mythic'];
                 for (const fr of fallbackRarities) {
-                    if (cardImages[fr] && cardImages[fr].length > 0) {
-                        cardList = cardImages[fr];
-                        break;
-                    }
+                    let fl = (cardImages[fr] || []);
+                    if (banned.size > 0) fl = fl.filter(c => !banned.has(fr + '|' + c.name));
+                    if (fl.length > 0) { cardList = fl; break; }
                 }
             }
             if (!cardList || cardList.length === 0) return null;
@@ -5792,6 +5806,8 @@
             firebaseDB.ref('players/' + key + '/cards').set(Object.keys(cardsObj).length > 0 ? cardsObj : null);
         }
 
+        window._bannedCards = new Set(); // Cartes bannies des coffres
+
         function initFirebase() {
             try {
                 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
@@ -5826,6 +5842,12 @@
                 if (img1) img1.src = chestUrl;
                 const img2 = document.getElementById('openingChestImage');
                 if (img2) img2.src = chestUrl;
+            });
+
+            // Cartes bannies des coffres
+            firebaseDB.ref('admin/bannedCards').on('value', snap => {
+                const data = snap.val();
+                window._bannedCards = data ? new Set(Object.values(data)) : new Set();
             });
 
             // Thème visuel
@@ -5876,6 +5898,23 @@
                     adminForcedCardByPlayer[myPseudo] = cardKey;
                     showBroadcast('🎴 Une carte spéciale apparaîtra dans ton prochain coffre !', Date.now());
                     firebaseDB.ref('players/' + encodeURIComponent(myPseudo).replace(/[.#$/\[\]]/g,'_') + '/forcedCard').set(null);
+                });
+
+                // Carte ADMIN EXCLUSIVE reçue en direct
+                firebaseDB.ref('players/' + encodeURIComponent(myPseudo).replace(/[.#$/\[\]]/g,'_') + '/giftAdminCard').on('value', snap => {
+                    const d = snap.val();
+                    if (!d || !d.name) return;
+                    const ck = 'admin_exclusive|' + d.name;
+                    if (!unlockedCards.has(ck)) { unlockedCards.set(ck, 0); stats.totalCards++; }
+                    unlockedCards.set(ck, unlockedCards.get(ck) + 1);
+                    if (!cardImages.admin_exclusive) cardImages.admin_exclusive = [];
+                    if (!cardImages.admin_exclusive.find(c => c.name === d.name)) {
+                        cardImages.admin_exclusive.push({ name: d.name, img: d.img || '' });
+                    }
+                    document.getElementById('totalCards').textContent = stats.totalCards;
+                    autoSave();
+                    showBroadcast('⚡ Tu as reçu une carte ADMIN EXCLUSIVE : ' + d.name + ' !', Date.now());
+                    firebaseDB.ref('players/' + encodeURIComponent(myPseudo).replace(/[.#$/\[\]]/g,'_') + '/giftAdminCard').set(null);
                 });
             }
 
@@ -6070,6 +6109,7 @@
             adminRefreshDashboard();
             loadAdminNotepad();
             craftAdminLoad();
+            buildAdminBanCardGrid();
             // Charger l'URL actuelle du coffre dans le champ
             if (firebaseDB) firebaseDB.ref('admin/chestImg').once('value').then(s => {
                 const el = document.getElementById('adminChestUrl');
@@ -6742,6 +6782,143 @@
                     if (statusEl) statusEl.textContent = 'Thème actuel : ' + label;
                 })
                 .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
+        function adminGiveAdminCard() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            const pseudo = document.getElementById('adminCardPseudo').value.trim();
+            const name   = document.getElementById('adminCardName').value.trim();
+            const img    = document.getElementById('adminCardImg').value.trim();
+            if (!pseudo) { adminStatus('⚠️ Pseudo vide'); return; }
+            if (!name)   { adminStatus('⚠️ Nom de carte vide'); return; }
+            const key = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g, '_');
+            firebaseDB.ref('players/' + key + '/giftAdminCard').set({ name, img: img || '', ts: Date.now() })
+                .then(() => adminStatus('✅ Carte ADMIN envoyée à ' + pseudo + ' !'))
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
+        function adminCursePlayer() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            const pseudo = document.getElementById('adminCursePseudo').value.trim();
+            const mins   = Math.max(1, parseInt(document.getElementById('adminCurseDuration').value) || 5);
+            if (!pseudo) { adminStatus('⚠️ Pseudo vide'); return; }
+            const key    = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g, '_');
+            const expiry = Date.now() + mins * 60 * 1000;
+            firebaseDB.ref('players/' + key + '/cursed').set({ expiry, ts: Date.now() })
+                .then(() => adminStatus('🪄 ' + pseudo + ' maudit pendant ' + mins + ' min !'))
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
+        function adminUncursePlayer() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            const pseudo = document.getElementById('adminCursePseudo').value.trim();
+            if (!pseudo) { adminStatus('⚠️ Pseudo vide'); return; }
+            const key = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g, '_');
+            firebaseDB.ref('players/' + key + '/cursed').set(null)
+                .then(() => adminStatus('✅ Malédiction levée pour ' + pseudo))
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
+        // ── Cartes bannies des coffres ──────────────────
+        let _adminBanRarityFilter = 'all';
+
+        function buildAdminBanCardGrid() {
+            if (!firebaseDB) return;
+            firebaseDB.ref('admin/bannedCards').once('value').then(snap => {
+                const data = snap.val() || {};
+                const bannedSet = new Set(Object.values(data));
+                _renderAdminBanGrid(bannedSet);
+                _renderAdminBannedList(bannedSet);
+            });
+        }
+
+        function _renderAdminBanGrid(bannedSet) {
+            const RCOLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700',
+                            mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff', og:'#c8a000',
+                            limited:'#ff59e7', hero:'#ffca18', evolution:'#6a00ff',
+                            champions:'#f1fc74', no:'#ff0000', admin_exclusive:'#ff0040' };
+            const RLABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire',
+                              mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret',
+                              og:'OG', limited:'Limitée', hero:'Héros', evolution:'Évolution',
+                              champions:'Champions', no:'Impossible', admin_exclusive:'ADMIN' };
+
+            // Filtre rareté
+            const filterEl = document.getElementById('adminBanRarityFilter');
+            if (filterEl) {
+                filterEl.innerHTML = '';
+                ['all', ...Object.keys(cardImages)].forEach(r => {
+                    const pill = document.createElement('div');
+                    pill.className = 'admin-rarity-pill' + (_adminBanRarityFilter === r ? ' active' : '');
+                    pill.textContent = r === 'all' ? 'Toutes' : (RLABELS[r] || r);
+                    pill.onclick = () => { _adminBanRarityFilter = r; _renderAdminBanGrid(bannedSet); };
+                    filterEl.appendChild(pill);
+                });
+            }
+
+            const grid = document.getElementById('adminBanCardGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            Object.entries(cardImages).forEach(([rarity, cards]) => {
+                if (_adminBanRarityFilter !== 'all' && rarity !== _adminBanRarityFilter) return;
+                (cards || []).forEach(card => {
+                    const cardKey = rarity + '|' + card.name;
+                    const isBanned = bannedSet.has(cardKey);
+                    const div = document.createElement('div');
+                    div.className = 'admin-card-item' + (isBanned ? ' selected' : '');
+                    div.style.border = isBanned ? '2px solid #ff4400' : '';
+                    div.style.opacity = isBanned ? '0.45' : '1';
+                    div.title = isBanned ? 'Clique pour débannir' : 'Clique pour bannir des coffres';
+                    div.innerHTML = '<img src="' + card.img + '" onerror="this.style.opacity=0.3">' +
+                        '<div class="acn">' + card.name + '</div>' +
+                        (isBanned ? '<div style="color:#ff4400;font-size:0.5em;font-weight:900;margin-top:1px;">🚫</div>' : '');
+                    div.onclick = (function(k, banned) {
+                        return function() { adminToggleBanCard(k, banned); };
+                    })(cardKey, isBanned);
+                    grid.appendChild(div);
+                });
+            });
+        }
+
+        function _renderAdminBannedList(bannedSet) {
+            const listEl = document.getElementById('adminBannedCardsList');
+            if (!listEl) return;
+            listEl.innerHTML = '';
+            if (bannedSet.size === 0) {
+                listEl.innerHTML = '<span style="color:#444;font-size:0.72em;">Aucune carte bannie</span>';
+                return;
+            }
+            bannedSet.forEach(cardKey => {
+                const name = cardKey.split('|').slice(1).join('|') || cardKey;
+                const tag = document.createElement('div');
+                tag.style.cssText = 'padding:3px 8px;background:rgba(255,68,0,0.15);border:1px solid rgba(255,68,0,0.4);border-radius:8px;color:#ff8040;font-size:0.68em;font-weight:900;display:flex;align-items:center;gap:5px;cursor:pointer;';
+                tag.title = 'Cliquer pour débannir';
+                const txt = document.createElement('span');
+                txt.textContent = '🚫 ' + name;
+                const x = document.createElement('span');
+                x.textContent = '✕';
+                x.style.cssText = 'color:#ff4400;font-weight:900;';
+                tag.appendChild(txt);
+                tag.appendChild(x);
+                tag.onclick = (function(k) { return function() { adminToggleBanCard(k, true); }; })(cardKey);
+                listEl.appendChild(tag);
+            });
+        }
+
+        function adminToggleBanCard(cardKey, isBanned) {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            const safeKey = cardKey.replace(/[.#$|\[\]]/g, '_');
+            const ref = firebaseDB.ref('admin/bannedCards/' + safeKey);
+            const name = cardKey.split('|').slice(1).join('|');
+            if (isBanned) {
+                ref.remove()
+                    .then(() => { adminStatus('✅ ' + name + ' débannied des coffres'); buildAdminBanCardGrid(); })
+                    .catch(e => adminStatus('Erreur : ' + e.message));
+            } else {
+                ref.set(cardKey)
+                    .then(() => { adminStatus('🚫 ' + name + ' bannie des coffres'); buildAdminBanCardGrid(); })
+                    .catch(e => adminStatus('Erreur : ' + e.message));
+            }
         }
 
         function adminStatus(msg) {
