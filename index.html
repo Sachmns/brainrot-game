@@ -4393,9 +4393,10 @@
             const secs = Math.floor((remaining % 60000) / 1000);
             count.textContent = String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
             badge.className = 'luck-timer-badge show';
-            if      (personalLuck === 2) { badge.classList.add('bx2'); label.textContent = '×2'; }
-            else if (personalLuck === 4) { badge.classList.add('bx4'); label.textContent = '×4'; }
-            else if (personalLuck === 8) { badge.classList.add('bx8'); label.textContent = '×8'; }
+            label.textContent = '×' + personalLuck;
+            if      (personalLuck <= 2) { badge.classList.add('bx2'); }
+            else if (personalLuck <= 4) { badge.classList.add('bx4'); }
+            else                        { badge.classList.add('bx8'); }
         }
 
         function hideLuckTimerBadge() {
