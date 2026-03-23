@@ -209,6 +209,96 @@
             border-bottom: 3px solid #aa44ff;
         }
 
+        /* ── Thème Inazuma Eleven ── */
+        body.theme-inazuma {
+            --theme-bg-from:     #ffed62;
+            --theme-bg-to:       #feb833;
+            --theme-header-from: #003a8c;
+            --theme-header-to:   #001850;
+            --theme-border:      #006cb5;
+            --theme-accent:      #33ccff;
+            --theme-particle:    #66ddff;
+            --theme-glow:        rgba(0,170,255,0.45);
+        }
+        body.theme-inazuma header {
+            animation: ieGlowPulse 2s ease-in-out infinite;
+            border-bottom-color: #00aaff !important;
+        }
+        @keyframes ieGlowPulse {
+            0%,100% {
+                box-shadow: 0 4px 20px rgba(0,0,0,0.8),
+                            0 0 30px rgba(0,170,255,0.4),
+                            0 0 0px rgba(255,215,0,0);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(0,0,0,0.8),
+                            0 0 70px rgba(0,170,255,0.8),
+                            0 0 120px rgba(0,100,255,0.3),
+                            0 0 50px rgba(255,215,0,0.15);
+            }
+        }
+        body.theme-inazuma .chest-main {
+            border-color: #00aaff !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8),
+                        0 0 40px rgba(0,170,255,0.5),
+                        0 0 80px rgba(0,100,255,0.2) !important;
+        }
+        body.theme-inazuma .stat-card {
+            border-color: rgba(0,170,255,0.5) !important;
+            background: linear-gradient(145deg, #001f4d 0%, #000c2a 100%) !important;
+            box-shadow: 0 0 15px rgba(0,170,255,0.15), 0 4px 0 rgba(0,0,0,0.6) !important;
+        }
+        body.theme-inazuma .open-btn {
+            background: linear-gradient(180deg, #33ccff 0%, #0055aa 100%) !important;
+            color: #000c1a !important;
+            border: 3px solid #80e8ff !important;
+            box-shadow: 0 8px 30px rgba(0,170,255,0.8), 0 0 50px rgba(0,100,255,0.3) !important;
+        }
+        body.theme-inazuma h1 {
+            color: #80e8ff !important;
+            text-shadow:
+                3px 3px 0 #001a4d,
+                -1px -1px 0 #001a4d,
+                1px -1px 0 #001a4d,
+                -1px 1px 0 #001a4d,
+                0 0 30px rgba(0,170,255,0.9),
+                0 0 60px rgba(0,120,255,0.5),
+                0 0 6px rgba(255,215,0,0.3) !important;
+        }
+        body.theme-inazuma .subtitle {
+            color: #33ccff !important;
+            text-shadow: 0 0 15px rgba(0,170,255,0.8) !important;
+        }
+        /* Éclairs dorés animés en arrière-plan */
+        @keyframes ieBolt {
+            0%   { opacity: 0; transform: scaleY(0) rotate(var(--r)); }
+            10%  { opacity: 1; transform: scaleY(1) rotate(var(--r)); }
+            30%  { opacity: 0.6; }
+            50%  { opacity: 0; transform: scaleY(1) rotate(var(--r)); }
+            100% { opacity: 0; }
+        }
+        .theme-inazuma-bolt {
+            position: absolute;
+            width: 2px;
+            border-radius: 2px;
+            background: linear-gradient(180deg, transparent, #ffd700, #fffde0, #ffd700, transparent);
+            pointer-events: none;
+            animation: ieBolt var(--dur) ease-out infinite;
+            animation-delay: var(--delay);
+            box-shadow: 0 0 8px #ffd700, 0 0 16px rgba(255,215,0,0.5);
+        }
+        .theme-banner.inazuma {
+            background: linear-gradient(90deg, #000814, #001850, #003a8c, #00aaff, #33ccff, #00aaff, #003a8c, #001850, #000814);
+            background-size: 300% 100%;
+            color: #e0f8ff;
+            box-shadow: 0 4px 30px rgba(0,170,255,0.9), 0 0 60px rgba(0,100,255,0.4);
+            animation: bannerShift 3s linear infinite;
+            text-shadow: 0 0 20px rgba(100,220,255,1), 0 0 40px rgba(0,170,255,0.7);
+            letter-spacing: 5px;
+            border-bottom: 3px solid #00aaff;
+            font-style: italic;
+        }
+
         /* Bannière de thème actif */
         .theme-banner {
             display: none;
@@ -3126,6 +3216,7 @@
                         <button class="admin-btn" onclick="adminSetTheme('printemps')" style="background:linear-gradient(180deg,#8b2fa8,#5c1a6b);box-shadow:0 4px 0 #1a0a2e;border:2px solid #ff80c0;">🌸 Printemps</button>
                         <button class="admin-btn" onclick="adminSetTheme('minecraft')" style="background:linear-gradient(180deg,#3d8a14,#1e4d0a);box-shadow:0 4px 0 #0a1f00;border:2px solid #5acd1e;font-family:'Courier New',monospace;letter-spacing:1px;">⛏️ Minecraft</button>
                         <button class="admin-btn" onclick="adminSetTheme('unchained')" style="background:linear-gradient(180deg,#3a007a,#1a0040);box-shadow:0 4px 0 #08001e;border:2px solid #aa44ff;letter-spacing:1px;">⛓️ Unchained</button>
+                        <button class="admin-btn" onclick="adminSetTheme('inazuma')" style="background:linear-gradient(180deg,#003a8c,#001850);box-shadow:0 4px 0 #000814;border:2px solid #00aaff;letter-spacing:1px;font-style:italic;">⚡ Inazuma Eleven</button>
                     </div>
                     <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminThemeStatus">Thème actuel : Défaut</div>
                 </div>
@@ -4724,6 +4815,37 @@
             document.getElementById('shopModal').style.display = 'block';
             document.getElementById('shopGoldDisplay').textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
             refreshShopLuckItem();
+            _updateShopBannedState();
+        }
+
+        function _updateShopBannedState() {
+            const banned = window._bannedCards || new Set();
+            const rarities = ['common','rare','epic','legendary','mythic','brainrot_god','secret'];
+            rarities.forEach(rarity => {
+                const cards = cardImages[rarity] || [];
+                // La rareté est totalement bannie si elle a des cartes ET toutes sont bannies
+                const allBanned = cards.length > 0 && cards.every(c => banned.has(rarity + '|' + c.name));
+                const el = document.querySelector('.shop-item.' + rarity);
+                if (!el) return;
+                if (allBanned) {
+                    el.classList.add('disabled');
+                    el.style.pointerEvents = 'none';
+                    // Ajouter badge "🚫 Indisponible" si pas déjà là
+                    if (!el.querySelector('.shop-ban-badge')) {
+                        const badge = document.createElement('div');
+                        badge.className = 'shop-ban-badge';
+                        badge.textContent = '🚫 Indisponible';
+                        badge.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.85);color:#ff4400;font-size:0.65em;font-weight:900;padding:4px 8px;border-radius:6px;border:1px solid #ff4400;white-space:nowrap;z-index:2;letter-spacing:1px;';
+                        el.style.position = 'relative';
+                        el.appendChild(badge);
+                    }
+                } else {
+                    el.classList.remove('disabled');
+                    el.style.pointerEvents = '';
+                    const badge = el.querySelector('.shop-ban-badge');
+                    if (badge) badge.remove();
+                }
+            });
         }
 
         function closeShop() {
@@ -4747,6 +4869,12 @@
         ];
 
         function buyCard(rarity) {
+            // Bloquer si toutes les cartes de cette rareté sont bannies
+            const _banned = window._bannedCards || new Set();
+            const _cards = cardImages[rarity] || [];
+            if (_cards.length > 0 && _cards.every(c => _banned.has(rarity + '|' + c.name))) {
+                playSound('error'); return;
+            }
             const price = shopPrices[rarity];
             if (stats.totalGold < price) {
                 playSound('error');
@@ -5848,6 +5976,11 @@
             firebaseDB.ref('admin/bannedCards').on('value', snap => {
                 const data = snap.val();
                 window._bannedCards = data ? new Set(Object.values(data)) : new Set();
+                // Mettre à jour la boutique si elle est ouverte
+                if (document.getElementById('shopModal') &&
+                    document.getElementById('shopModal').style.display !== 'none') {
+                    _updateShopBannedState();
+                }
             });
 
             // Thème visuel
@@ -6677,6 +6810,12 @@
                 banner: '⛓️  UNCHAINED  ⛓️',
                 bannerClass: 'unchained',
                 particles: { color: '#cc66ff', emoji: ['⛓️','🎬','🔥','💜','▶️','🎥','⚡','👑','💫'], count: 75, glow: 'rgba(170,68,255,0.9)' }
+            },
+            'inazuma': {
+                label: '⚡ Inazuma Eleven',
+                banner: '⚡ INAZUMA ELEVEN ⚡',
+                bannerClass: 'inazuma',
+                particles: { color: '#33ccff', emoji: ['⚽','🔥','⚡','💙','🥅','🏆','👑','🌟','🌀'], count: 80, glow: 'rgba(0,170,255,0.9)' }
             }
         };
 
@@ -6708,6 +6847,27 @@
 
             // Particules de fond
             _refreshThemeParticles(theme.particles);
+
+            // Éclairs spéciaux pour Inazuma Eleven
+            const oldBolts = document.querySelectorAll('.theme-inazuma-bolt');
+            oldBolts.forEach(b => b.remove());
+            if (themeId === 'inazuma') {
+                const starsBg = document.getElementById('starsBg');
+                if (starsBg) {
+                    for (let i = 0; i < 12; i++) {
+                        const bolt = document.createElement('div');
+                        bolt.className = 'theme-inazuma-bolt';
+                        const h = Math.floor(60 + Math.random() * 120);
+                        bolt.style.height = h + 'px';
+                        bolt.style.left   = Math.floor(Math.random() * 95) + '%';
+                        bolt.style.top    = Math.floor(Math.random() * 80) + '%';
+                        bolt.style.setProperty('--r', (Math.random() * 30 - 15) + 'deg');
+                        bolt.style.setProperty('--dur', (2 + Math.random() * 4).toFixed(2) + 's');
+                        bolt.style.setProperty('--delay', '-' + (Math.random() * 5).toFixed(2) + 's');
+                        starsBg.appendChild(bolt);
+                    }
+                }
+            }
 
             // Mettre à jour le statut dans l'admin
             const statusEl = document.getElementById('adminThemeStatus');
