@@ -1093,6 +1093,24 @@
         }
         .book-close-btn:hover { transform: scale(1.1); }
 
+        /* ═══ ONGLETS LIVRE ═══ */
+        .book-tabs { display:flex; gap:10px; justify-content:center; margin-bottom:24px; }
+        .book-tab-btn { padding:11px 28px; border-radius:30px; border:3px solid #4a7bc8; background:rgba(0,0,0,0.4); color:#b0c4de; font-family:'Arial Black',Arial,sans-serif; font-size:0.95em; font-weight:900; cursor:pointer; letter-spacing:1px; transition:all 0.2s; text-transform:uppercase; }
+        .book-tab-btn:hover { border-color:#ffd700; color:#ffd700; }
+        .book-tab-btn.active { border-color:#ffd700; background:rgba(255,215,0,0.12); color:#ffd700; box-shadow:0 0 14px rgba(255,215,0,0.4); }
+        .book-tab-btn.gold-tab { border-color:#b8860b; color:#b8860b; }
+        .book-tab-btn.gold-tab:hover { border-color:#ffd700; color:#ffd700; box-shadow:0 0 18px rgba(255,215,0,0.5); }
+        .book-tab-btn.gold-tab.active { border-color:#ffd700; background:linear-gradient(135deg,rgba(255,215,0,0.18),rgba(184,134,11,0.12)); color:#ffd700; box-shadow:0 0 20px rgba(255,215,0,0.6); }
+
+        /* ═══ CARTES GOLD ═══ */
+        .book-card.gold-card { background:linear-gradient(145deg,#2a1a00,#1a1000); border:3px solid #b8860b; }
+        .book-card.gold-card.unlocked { border-color:#ffd700; border-width:3px; box-shadow:0 0 22px rgba(255,215,0,0.8),0 0 45px rgba(255,165,0,0.4),inset 0 0 20px rgba(255,215,0,0.06); background:linear-gradient(145deg,#3a2800,#221800); animation:goldCardPulse 2.5s ease-in-out infinite; }
+        @keyframes goldCardPulse { 0%,100%{box-shadow:0 0 22px rgba(255,215,0,0.8),0 0 45px rgba(255,165,0,0.4);} 50%{box-shadow:0 0 35px rgba(255,215,0,1),0 0 65px rgba(255,165,0,0.7);} }
+        .book-card.gold-card.unlocked img { filter:drop-shadow(0 0 10px rgba(255,215,0,1)) drop-shadow(0 0 4px rgba(255,165,0,0.6)) sepia(0.4) saturate(2) brightness(1.1); }
+        .book-card.gold-card.locked img { filter:grayscale(100%) drop-shadow(0 0 4px rgba(100,80,0,0.5)); }
+        .gold-mutation-badge { display:inline-block; background:linear-gradient(90deg,#b8860b,#ffd700,#b8860b); background-size:200%; animation:goldBadgeShift 2s linear infinite; color:#1a0a00; font-size:0.65em; font-weight:900; padding:2px 7px; border-radius:8px; margin-top:4px; letter-spacing:1px; box-shadow:0 0 8px rgba(255,215,0,0.5); }
+        @keyframes goldBadgeShift { 0%{background-position:0%} 100%{background-position:200%} }
+
         /* ═══════════════════════════════════════════
            BOUTIQUE CLASH ROYALE - REFONTE COMPLÈTE
            ═══════════════════════════════════════════ */
@@ -3149,6 +3167,7 @@
                 <div class="admin-tab-btn active" id="atab-events" onclick="adminTab('events')">🎮 Événements</div>
                 <div class="admin-tab-btn" id="atab-players" onclick="adminTab('players')">👥 Joueurs</div>
                 <div class="admin-tab-btn" id="atab-shop" onclick="adminTab('shop')">🏪 Boutique</div>
+                <div class="admin-tab-btn" id="atab-mutations" onclick="adminTab('mutations')">🧬 Mutations</div>
                 <div class="admin-tab-btn" id="atab-stats" onclick="adminTab('stats')">📊 Stats</div>
             </div>
 
@@ -3363,6 +3382,31 @@
                     <div class="admin-section-title">🏪 Prix de la boutique (temps réel)</div>
                     <div class="admin-shop-grid" id="adminShopGrid"></div>
                     <button class="admin-btn" onclick="adminResetShopPrices()" style="margin-top:10px;">↺ Réinitialiser les prix</button>
+                </div>
+
+            </div>
+
+            <!-- ONGLET MUTATIONS -->
+            <div class="admin-tab-panel" id="apanel-mutations">
+
+                <div class="admin-section" style="border-color:rgba(255,215,0,0.4);background:rgba(255,215,0,0.03);">
+                    <div class="admin-section-title" style="color:#ffd700;">🧬 Taux de drop des Mutations</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:14px;">Modifie les taux en temps réel pour tous les joueurs. Le taux s'applique à chaque carte obtenue (coffre ou boutique).</div>
+
+                    <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,215,0,0.2);border-radius:14px;margin-bottom:10px;">
+                        <div style="font-size:1.4em;">✨</div>
+                        <div style="flex:1;">
+                            <div style="color:#ffd700;font-weight:900;font-size:0.9em;letter-spacing:1px;">MUTATION GOLD</div>
+                            <div style="color:#555;font-size:0.7em;margin-top:2px;">Taux actuel : <span id="adminMutationGoldCurrent" style="color:#ffd700;font-weight:900;">10%</span></div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                            <input class="admin-input" id="adminMutationGoldInput" type="number" value="10" min="0" max="100" step="0.1" style="width:70px;padding:6px 8px;font-size:0.9em;text-align:center;">
+                            <span style="color:#ffd700;font-size:0.8em;">%</span>
+                        </div>
+                    </div>
+
+                    <button class="admin-btn" onclick="adminSaveMutationRates()" style="background:linear-gradient(180deg,#b8860b,#7a5800);box-shadow:0 4px 0 #3a2800;border:2px solid rgba(255,215,0,0.4);margin-top:4px;">💾 Sauvegarder les taux</button>
+                    <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminMutationStatus"></div>
                 </div>
 
             </div>
@@ -3683,6 +3727,10 @@
         <div class="book-modal-content">
             <h2 class="book-title">📖 LIVRE DES CARTES</h2>
             <p class="book-subtitle" id="bookSubtitle">0 / 0 cartes débloquées</p>
+            <div class="book-tabs">
+                <button class="book-tab-btn active" id="bookTabNormal" onclick="switchBookTab('normal')">📋 Normal</button>
+                <button class="book-tab-btn gold-tab" id="bookTabGold" onclick="switchBookTab('gold')">✨ GOLD</button>
+            </div>
             <button class="book-close-btn" onclick="closeBook()">✕ Fermer le Livre</button>
             <div id="bookContent"></div>
             <button class="book-close-btn" onclick="closeBook()">✕ Fermer le Livre</button>
@@ -4380,6 +4428,14 @@
             if (globalDoubleGold && globalDoubleGoldExpiry > Date.now()) {
                 rewards.forEach(r => { if (r.type === 'gold') r.quantity *= (globalDoubleGoldMultiplier || 2); });
             }
+            // Mutation GOLD : chance configurable par l'admin — appliqué AVANT displayRewards
+            rewards.forEach(r => {
+                if (r.type === 'card' && r.rarity !== 'admin_exclusive' && Math.random() < window._mutationRates.gold) {
+                    r.isGold = true;
+                    const cardKey = r.rarity + '|' + r.name;
+                    r.isNewGold = !unlockedGoldCards.has(cardKey);
+                }
+            });
             playSound('open');
             displayRewards(rewards);
             updateStats(rewards);
@@ -4606,13 +4662,15 @@
                 }
                 
                 card.innerHTML = `
-                    <div class="reward-image-container">
-                        <img src="${reward.img}" alt="${reward.name}" class="reward-image" onerror="this.style.display='none'">
+                    <div class="reward-image-container" style="${reward.isGold ? 'background:radial-gradient(circle,rgba(255,215,0,0.15),transparent);border-radius:50%;' : ''}">
+                        <img src="${reward.img}" alt="${reward.name}" class="reward-image" onerror="this.style.display='none'" style="${reward.isGold ? 'filter:drop-shadow(0 0 16px rgba(255,215,0,1)) drop-shadow(0 0 6px rgba(255,165,0,0.7)) sepia(0.4) saturate(2) brightness(1.1);' : ''}">
                     </div>
-                    <div class="reward-name">${reward.name}</div>
-                    ${reward.isNew ? '<div style="color: #4ecb71; font-size: 0.9em; font-weight: bold; margin-top: 5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">✨ NOUVELLE CARTE ✨</div>' : ''}
+                    <div class="reward-name" style="${reward.isGold ? 'color:#ffd700;text-shadow:0 0 12px rgba(255,215,0,0.7);' : ''}">${reward.name}</div>
+                    ${reward.isGold ? '<div style="background:linear-gradient(90deg,#b8860b,#ffd700,#b8860b);background-size:200%;animation:goldBadgeShift 2s linear infinite;color:#1a0a00;font-size:0.78em;font-weight:900;padding:4px 12px;border-radius:10px;margin-top:4px;letter-spacing:1px;display:inline-block;box-shadow:0 0 10px rgba(255,215,0,0.5);">✨ MUTATION GOLD</div>' : ''}
+                    ${reward.isGold && reward.isNewGold ? '<div style="color:#ffd700;font-size:0.82em;font-weight:900;margin-top:4px;text-shadow:0 0 8px rgba(255,215,0,0.8);">⭐ NOUVELLE CARTE GOLD DÉBLOQUÉE ⭐</div>' : ''}
+                    ${reward.isNew ? '<div style="color: #4ecb71; font-size: 0.9em; font-weight: bold; margin-top: 5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">✨ NOUVELLE CARTE DÉBLOQUÉE ✨</div>' : ''}
                     <div class="reward-quantity">×${reward.quantity}</div>
-                    <span class="rarity-badge ${reward.rarity}">${getRarityText(reward.rarity)}</span>
+                    <span class="rarity-badge ${reward.rarity}" style="${reward.isGold ? 'background:linear-gradient(90deg,#b8860b,#ffd700,#b8860b);color:#1a0a00;font-weight:900;' : ''}">${reward.isGold ? '✨ GOLD — ' : ''}${getRarityText(reward.rarity)}</span>
                 `;
                 grid.appendChild(card);
             });
@@ -4637,6 +4695,11 @@
 
         // Suivi des cartes débloquées (par clé unique "rareté|nom")
         let unlockedCards = new Map(); // Map: cardKey -> count
+        // Suivi des cartes GOLD (même clé "rareté|nom")
+        let unlockedGoldCards = new Map();
+
+        // Taux de drop des mutations (modifiable par l'admin via Firebase)
+        window._mutationRates = { gold: 0.10 };
 
         function updateStats(rewards) {
             stats.totalChests++;
@@ -4666,6 +4729,16 @@
                     }
                     // Quête quotidienne débloquer
                     if (isNewCard) updateDailyProgress('unlock', 1, reward.rarity);
+
+                    // Enregistrer la mutation GOLD si elle a été tirée dans showRewards
+                    if (reward.isGold) {
+                        const isNewGold = !unlockedGoldCards.has(cardKey);
+                        if (isNewGold) {
+                            unlockedGoldCards.set(cardKey, 0);
+                            stats.totalCards++; // +1 au classement
+                        }
+                        unlockedGoldCards.set(cardKey, unlockedGoldCards.get(cardKey) + 1);
+                    }
                 }
             });
             
@@ -4897,7 +4970,21 @@
                 }
             }
             unlockedCards.set(cardKey, unlockedCards.get(cardKey) + 1);
+
+            // Mutation GOLD : chance configurable par l'admin
+            let isGold = false;
+            let isNewGold = false;
+            if (Math.random() < window._mutationRates.gold) {
+                isGold = true;
+                isNewGold = !unlockedGoldCards.has(cardKey);
+                if (isNewGold) {
+                    unlockedGoldCards.set(cardKey, 0);
+                    stats.totalCards++; // +1 au classement pour nouvelle carte gold
+                }
+                unlockedGoldCards.set(cardKey, unlockedGoldCards.get(cardKey) + 1);
+            }
             
+            // Mise à jour affichage APRÈS le tirage gold pour inclure le +1 éventuel
             document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
             document.getElementById('shopGoldDisplay').textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
             document.getElementById('totalCards').textContent = stats.totalCards;
@@ -4911,7 +4998,7 @@
 
             // Lancer l'animation de suspense
             showShopSuspense(rarity, () => {
-                showCardReveal(card, rarity, isNew);
+                showCardReveal(card, rarity, isNew, isGold, isNewGold);
             });
         }
 
@@ -5003,7 +5090,7 @@
             }, 5800);
         }
 
-        function showCardReveal(card, rarity, isNew) {
+        function showCardReveal(card, rarity, isNew, isGold, isNewGold) {
             const overlay = document.getElementById('cardRevealOverlay');
             const image = document.getElementById('revealCardImage');
             const name = document.getElementById('revealCardName');
@@ -5015,22 +5102,33 @@
             image.src = card.img;
             image.style.opacity = '0';
             image.style.transform = 'scale(0.5)';
+            image.style.filter = isGold ? 'drop-shadow(0 0 24px rgba(255,215,0,1)) drop-shadow(0 0 8px rgba(255,165,0,0.8)) sepia(0.4) saturate(2) brightness(1.1)' : '';
             name.textContent = card.name;
             name.style.opacity = '0';
-            newBadge.style.display = isNew ? 'block' : 'none';
+            name.style.color = isGold ? '#ffd700' : '';
+            name.style.textShadow = isGold ? '0 0 20px rgba(255,215,0,0.8)' : '';
+            // Badge "nouvelle carte" : s'affiche si nouvelle normale OU nouvelle gold
+            const showNewBadge = isNew || isNewGold;
+            newBadge.innerHTML = isNewGold && !isNew
+                ? '⭐ NOUVELLE CARTE GOLD DÉBLOQUÉE ⭐'
+                : '✨ NOUVELLE CARTE DÉBLOQUÉE ✨';
+            newBadge.style.color = isNewGold ? '#ffd700' : '#4ecb71';
+            newBadge.style.display = showNewBadge ? 'block' : 'none';
             newBadge.style.opacity = '0';
-            rarityBadge.textContent = getRarityText(rarity);
+            rarityBadge.textContent = isGold ? '✨ MUTATION GOLD — ' + getRarityText(rarity) : getRarityText(rarity);
             rarityBadge.className = 'card-reveal-rarity rarity-badge ' + rarity;
-            rarityBadge.style.opacity = '0';
+            rarityBadge.style.cssText = isGold ? 'background:linear-gradient(90deg,#b8860b,#ffd700,#b8860b);background-size:200%;animation:goldBadgeShift 2s linear infinite;color:#1a0a00;font-weight:900;opacity:0;' : 'opacity:0;';
+            overlay.style.background = isGold ? 'radial-gradient(ellipse at center,rgba(80,50,0,0.98) 0%,rgba(0,0,0,0.99) 100%)' : '';
             
             // Créer les particules
             particles.innerHTML = '';
-            for (let i = 0; i < 20; i++) {
+            const pCount = isGold ? 30 : 20;
+            for (let i = 0; i < pCount; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'reveal-particle';
-                particle.textContent = '✨';
-                const angle = (Math.PI * 2 * i) / 20;
-                const distance = 200 + Math.random() * 100;
+                particle.textContent = isGold ? (i % 2 === 0 ? '⭐' : '✨') : '✨';
+                const angle = (Math.PI * 2 * i) / pCount;
+                const distance = 200 + Math.random() * 120;
                 const x = Math.cos(angle) * distance;
                 const y = Math.sin(angle) * distance;
                 particle.style.setProperty('--x', x + 'px');
@@ -5056,7 +5154,7 @@
             }, 2200);
             
             setTimeout(() => {
-                if (isNew) {
+                if (showNewBadge) {
                     newBadge.style.transition = 'opacity 1s ease-out';
                     newBadge.style.opacity = '1';
                 }
@@ -5072,14 +5170,22 @@
             document.getElementById('cardRevealOverlay').style.display = 'none';
         }
 
+        let _currentBookTab = 'normal';
+
         function openBook() {
-            const modal = document.getElementById('bookModal');
-            modal.style.display = 'block';
+            document.getElementById('bookModal').style.display = 'block';
             renderBook();
         }
 
         function closeBook() {
             document.getElementById('bookModal').style.display = 'none';
+        }
+
+        function switchBookTab(tab) {
+            _currentBookTab = tab;
+            document.getElementById('bookTabNormal').classList.toggle('active', tab === 'normal');
+            document.getElementById('bookTabGold').classList.toggle('active', tab === 'gold');
+            renderBook();
         }
 
         function renderBook() {
@@ -5088,60 +5194,100 @@
             content.innerHTML = '';
 
             const sections = [
-                { key: 'common',    label: '⚪ Communes 49%',    color: '#8a8a8a' },
-                { key: 'rare',      label: '🟠 Rares 25%',       color: '#ff9500' },
-                { key: 'epic',      label: '🟣 Épiques 10%',     color: '#a349a4' },
-                { key: 'legendary', label: '⭐ Légendaires 6%', color: '#ffd700' },
-                { key: 'mythic',    label: '🔮 Mythiques 5%',    color: '#ff4dff' },
-                { key: 'brainrot_god', label: '🧠 Brainrot God 4%', color: '#9b59b6' },
-                { key: 'secret',    label: '🖤 Secret 3%',  color: '#ffffff' },
-                { key: 'og',        label: '⚡ OG 0.05%',    color: 'linear-gradient(90deg, #000000, #ffd700)' },
-                { key: 'limited',   label: '💎 Limitées 0.01%',    color: '#ff59e7' },
-                { key: 'no',   label: '❤ Impossible 0.001%',    color: '#ff0000' },
+                { key: 'common',       label: '⚪ Communes 49%',       color: '#8a8a8a' },
+                { key: 'rare',         label: '🟠 Rares 25%',          color: '#ff9500' },
+                { key: 'epic',         label: '🟣 Épiques 10%',        color: '#a349a4' },
+                { key: 'legendary',    label: '⭐ Légendaires 6%',     color: '#ffd700' },
+                { key: 'mythic',       label: '🔮 Mythiques 5%',       color: '#ff4dff' },
+                { key: 'brainrot_god', label: '🧠 Brainrot God 4%',    color: '#9b59b6' },
+                { key: 'secret',       label: '🖤 Secret 3%',          color: '#ffffff' },
+                { key: 'og',           label: '⚡ OG 0.05%',          color: 'linear-gradient(90deg, #000000, #ffd700)' },
+                { key: 'limited',      label: '💎 Limitées 0.01%',     color: '#ff59e7' },
+                { key: 'no',           label: '❤ Impossible 0.001%',   color: '#ff0000' },
                 { key: 'admin_exclusive', label: '⚡ ADMIN EXCLUSIVE', color: 'linear-gradient(90deg,#ff0040,#0040ff)' }
-
             ];
 
             let totalAll = 0;
             let totalUnlocked = 0;
 
-            sections.forEach(section => {
-                const cards = cardImages[section.key];
-                if (!cards || cards.length === 0) return;
+            if (_currentBookTab === 'normal') {
+                sections.forEach(section => {
+                    const cards = cardImages[section.key];
+                    if (!cards || cards.length === 0) return;
+                    totalAll += cards.length;
 
-                totalAll += cards.length;
+                    const title = document.createElement('div');
+                    title.className = 'book-section-title';
+                    title.style.color = section.color;
+                    title.textContent = section.label;
+                    content.appendChild(title);
 
-                const title = document.createElement('div');
-                title.className = 'book-section-title';
-                title.style.color = section.color;
-                title.textContent = section.label;
-                content.appendChild(title);
+                    const grid = document.createElement('div');
+                    grid.className = 'book-grid';
 
-                const grid = document.createElement('div');
-                grid.className = 'book-grid';
+                    cards.forEach(card => {
+                        const cardKey = section.key + '|' + card.name;
+                        const cardCount = unlockedCards.get(cardKey) || 0;
+                        const isUnlocked = cardCount > 0;
+                        if (isUnlocked) totalUnlocked++;
 
-                cards.forEach(card => {
-                    const cardKey = section.key + '|' + card.name;
-                    const cardCount = unlockedCards.get(cardKey) || 0;
-                    const isUnlocked = cardCount > 0;
-                    if (isUnlocked) totalUnlocked++;
-
-                    const div = document.createElement('div');
-                    div.className = `book-card ${isUnlocked ? 'unlocked ' + section.key : 'locked'}`;
-
-                    div.innerHTML = `
-                        <span class="lock-icon">${isUnlocked ? '✅' : '🔒'}</span>
-                        <img src="${card.img}" alt="${card.name}" onerror="this.style.display='none'">
-                        <div class="card-name">${card.name}</div>
-                        ${isUnlocked && cardCount > 1 ? `<div style="color: #ffd700; font-size: 0.9em; font-weight: bold; margin-top: 5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">x${cardCount}</div>` : ''}
-                    `;
-                    grid.appendChild(div);
+                        const div = document.createElement('div');
+                        div.className = `book-card ${isUnlocked ? 'unlocked ' + section.key : 'locked'}`;
+                        div.innerHTML = `
+                            <span class="lock-icon">${isUnlocked ? '✅' : '🔒'}</span>
+                            <img src="${card.img}" alt="${card.name}" onerror="this.style.display='none'">
+                            <div class="card-name">${card.name}</div>
+                            ${isUnlocked && cardCount > 1 ? `<div style="color:#ffd700;font-size:0.9em;font-weight:bold;margin-top:5px;text-shadow:1px 1px 2px rgba(0,0,0,0.8);">x${cardCount}</div>` : ''}
+                        `;
+                        grid.appendChild(div);
+                    });
+                    content.appendChild(grid);
                 });
+                subtitle.textContent = `${totalUnlocked} / ${totalAll} cartes débloquées`;
 
-                content.appendChild(grid);
-            });
+            } else {
+                // ── Onglet GOLD ──
+                const goldHeader = document.createElement('div');
+                goldHeader.style.cssText = 'text-align:center;margin-bottom:20px;padding:14px 20px;background:linear-gradient(135deg,rgba(80,50,0,0.5),rgba(184,134,11,0.15));border-radius:16px;border:2px solid rgba(255,215,0,0.3);';
+                goldHeader.innerHTML = '<div style="color:#ffd700;font-size:1.1em;font-weight:900;letter-spacing:2px;">✨ MUTATION GOLD</div><div style="color:#b8860b;font-size:0.85em;margin-top:6px;">Chaque carte a 10% de chance d\'apparaître en version GOLD dans les coffres ou à la boutique. Une carte GOLD débloquée = +1 au classement !</div>';
+                content.appendChild(goldHeader);
 
-            subtitle.textContent = `${totalUnlocked} / ${totalAll} cartes débloquées`;
+                sections.forEach(section => {
+                    const cards = cardImages[section.key];
+                    if (!cards || cards.length === 0) return;
+                    if (section.key === 'admin_exclusive') return;
+                    totalAll += cards.length;
+
+                    const title = document.createElement('div');
+                    title.className = 'book-section-title';
+                    title.style.cssText = 'background:linear-gradient(90deg,transparent,rgba(255,215,0,0.08),transparent);border-bottom:3px solid rgba(255,215,0,0.4);';
+                    title.innerHTML = `<span style="color:#ffd700;">✨ ${section.label}</span>`;
+                    content.appendChild(title);
+
+                    const grid = document.createElement('div');
+                    grid.className = 'book-grid';
+
+                    cards.forEach(card => {
+                        const cardKey = section.key + '|' + card.name;
+                        const goldCount = unlockedGoldCards.get(cardKey) || 0;
+                        const isUnlocked = goldCount > 0;
+                        if (isUnlocked) totalUnlocked++;
+
+                        const div = document.createElement('div');
+                        div.className = `book-card gold-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+                        div.innerHTML = `
+                            <span class="lock-icon">${isUnlocked ? '⭐' : '🔒'}</span>
+                            <img src="${card.img}" alt="${card.name}" onerror="this.style.display='none'">
+                            <div class="card-name" style="color:#ffd700;">${card.name}</div>
+                            ${isUnlocked ? '<span class="gold-mutation-badge">✨ GOLD</span>' : ''}
+                            ${isUnlocked && goldCount > 1 ? `<div style="color:#ffd700;font-size:0.9em;font-weight:bold;margin-top:3px;">x${goldCount}</div>` : ''}
+                        `;
+                        grid.appendChild(div);
+                    });
+                    content.appendChild(grid);
+                });
+                subtitle.textContent = `✨ ${totalUnlocked} / ${totalAll} cartes GOLD débloquées`;
+            }
         }
 
         let currentSaveCode = 'autoSave';
@@ -5568,6 +5714,7 @@
                     secretCount: stats.secretCount
                 },
                 unlockedCards: Array.from(unlockedCards.entries()),
+                unlockedGoldCards: Array.from(unlockedGoldCards.entries()),
                 questProgress: questProgress,
                 dailyState: dailyState,
                 personalLuck: personalLuck,
@@ -5589,6 +5736,7 @@
                 stats.totalGold = save.stats.totalGold || 0;
                 stats.secretCount = save.stats.secretCount || 0;
                 unlockedCards = new Map(save.unlockedCards || []);
+                if (save.unlockedGoldCards) unlockedGoldCards = new Map(save.unlockedGoldCards);
                 if (save.questProgress) questProgress = save.questProgress;
                 if (save.dailyState) dailyState = save.dailyState;
                 if (save.personalLuck) personalLuck = save.personalLuck;
@@ -5915,7 +6063,9 @@
         function syncStatsToFirebase(pseudo) {
             if (!firebaseDB || !pseudo) return;
             const key = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g,'_');
-            let unlocked = 0; unlockedCards.forEach(() => unlocked++);
+            let unlocked = 0;
+            unlockedCards.forEach(() => unlocked++);
+            unlockedGoldCards.forEach(() => unlocked++); // les cartes GOLD comptent aussi
             firebaseDB.ref('players/' + key + '/stats').set({
                 totalChests: stats.totalChests,
                 totalCards: stats.totalCards,
@@ -5995,6 +6145,20 @@
                 if (!d || !d.msg) return;
                 if (!d.ts || d.ts <= _joinTs) return; // message ancien, on ignore
                 showBroadcast(d.msg, d.ts);
+            });
+
+            // Taux de drop des mutations
+            firebaseDB.ref('admin/mutations').on('value', snap => {
+                const d = snap.val();
+                if (!d) return;
+                if (typeof d.gold === 'number') {
+                    window._mutationRates.gold = d.gold;
+                    // Mettre à jour l'affichage dans le panel admin si ouvert
+                    const el = document.getElementById('adminMutationGoldCurrent');
+                    if (el) el.textContent = (d.gold * 100).toFixed(1) + '%';
+                    const inp = document.getElementById('adminMutationGoldInput');
+                    if (inp) inp.value = (d.gold * 100).toFixed(1);
+                }
             });
 
             // Or pour ce joueur
@@ -7843,6 +8007,7 @@
                 stats.totalGold   = save.stats?.totalGold   || 0;
                 stats.secretCount = save.stats?.secretCount || 0;
                 unlockedCards = new Map(save.unlockedCards || []);
+                if (save.unlockedGoldCards) unlockedGoldCards = new Map(save.unlockedGoldCards);
                 if (save.questProgress) questProgress = save.questProgress;
                 if (save.dailyState)    dailyState    = save.dailyState;
                 personalLuck = save.personalLuck || 0;
@@ -8032,7 +8197,16 @@
                     if (!stats.secretsUnlocked) stats.secretsUnlocked = new Set();
                     if (!stats.secretsUnlocked.has(cardKey)) { stats.secretsUnlocked.add(cardKey); stats.secretCount++; }
                 }
-                cards10.push({ card: card, rarity: _buyTenSelected, isNew: wasNew });
+                // Mutation GOLD : chance configurable par l'admin
+                let isGold = false;
+                let isNewGold = false;
+                if (Math.random() < window._mutationRates.gold) {
+                    isGold = true;
+                    isNewGold = !unlockedGoldCards.has(cardKey);
+                    if (isNewGold) { unlockedGoldCards.set(cardKey, 0); stats.totalCards++; }
+                    unlockedGoldCards.set(cardKey, unlockedGoldCards.get(cardKey) + 1);
+                }
+                cards10.push({ card: card, rarity: _buyTenSelected, isNew: wasNew, isGold: isGold, isNewGold: isNewGold });
             }
             document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
             document.getElementById('shopGoldDisplay').textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
@@ -8050,14 +8224,16 @@
             const grid = document.getElementById('x10RevealGrid');
             grid.innerHTML = '';
             cards.forEach(function(item) {
-                const col = RARITY_COLS[item.rarity] || '#aaa';
+                const col = item.isGold ? '#ffd700' : (RARITY_COLS[item.rarity] || '#aaa');
                 const lbl = RARITY_LABELS[item.rarity] || item.rarity;
                 const div = document.createElement('div');
                 div.className = 'x10-reveal-card';
                 div.style.borderColor = col + '55';
-                div.innerHTML = '<img src="' + item.card.img + '" onerror="this.style.opacity=0.3">' +
-                    '<div class="xrn">' + item.card.name + '</div>' +
-                    '<div class="xrr" style="color:' + col + '">' + lbl + '</div>' +
+                if (item.isGold) div.style.cssText += ';box-shadow:0 0 18px rgba(255,215,0,0.8);background:linear-gradient(145deg,#2a1a00,#1a1000);';
+                div.innerHTML = '<img src="' + item.card.img + '" onerror="this.style.opacity=0.3"' + (item.isGold ? ' style="filter:drop-shadow(0 0 10px rgba(255,215,0,1)) sepia(0.4) saturate(2) brightness(1.1);"' : '') + '>' +
+                    '<div class="xrn" style="' + (item.isGold ? 'color:#ffd700;text-shadow:0 0 8px rgba(255,215,0,0.6);' : '') + '">' + item.card.name + '</div>' +
+                    '<div class="xrr" style="color:' + col + '">' + (item.isGold ? '✨ GOLD — ' : '') + lbl + '</div>' +
+                    (item.isGold && item.isNewGold ? '<div style="color:#ffd700;font-size:0.58em;font-weight:900;margin-top:2px;">⭐ NOUVELLE GOLD</div>' : '') +
                     (item.isNew ? '<div class="xrnew">✨ NEW</div>' : '');
                 grid.appendChild(div);
             });
@@ -8074,12 +8250,32 @@
 
         // ═══ ADMIN TABS ═══
         function adminTab(tab) {
-            ['events','players','shop','stats'].forEach(function(t) {
+            ['events','players','shop','mutations','stats'].forEach(function(t) {
                 var btn = document.getElementById('atab-' + t);
                 var panel = document.getElementById('apanel-' + t);
                 if (btn)   btn.classList.toggle('active', t === tab);
                 if (panel) panel.classList.toggle('active', t === tab);
             });
+        }
+
+        function adminSaveMutationRates() {
+            if (!firebaseDB) { adminMutationStatus('⚠️ Firebase non connecté'); return; }
+            const inp = document.getElementById('adminMutationGoldInput');
+            const val = parseFloat(inp.value);
+            if (isNaN(val) || val < 0 || val > 100) { adminMutationStatus('⚠️ Valeur invalide (0-100)'); return; }
+            const rate = val / 100;
+            firebaseDB.ref('admin/mutations').set({ gold: rate })
+                .then(() => { adminMutationStatus('✅ Taux GOLD mis à jour : ' + val.toFixed(1) + '%'); })
+                .catch(e => adminMutationStatus('Erreur : ' + e.message));
+        }
+
+        function adminMutationStatus(msg) {
+            const el = document.getElementById('adminMutationStatus');
+            if (!el) return;
+            el.textContent = msg;
+            el.style.color = msg.startsWith('✅') ? '#2ecc71' : '#e74c3c';
+            clearTimeout(el._t);
+            el._t = setTimeout(() => { el.textContent = ''; }, 4000);
         }
 
         // ═══ ROUE DE LA FORTUNE ═══
