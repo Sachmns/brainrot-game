@@ -8409,9 +8409,13 @@
             const mutMap = _miamGetMap(mut);
             const meta = MIAM_MUT_META[mut];
 
+            // Raretés autorisées — og, limited, no et admin_exclusive sont impossibles
+            const ALLOWED_RARITIES = new Set(['common','rare','epic','legendary','mythic','brainrot_god','secret']);
+
             // Trouver une carte que le joueur n'a PAS encore avec cette mutation
             const allPossible = [];
             Object.entries(cardImages).forEach(function([rarity, cards]) {
+                if (!ALLOWED_RARITIES.has(rarity)) return;
                 (cards || []).forEach(function(card) {
                     const ck = rarity + '|' + card.name;
                     if (!mutMap.has(ck) || mutMap.get(ck) <= 0) {
@@ -8427,6 +8431,7 @@
                 // Le joueur a tout : donner une carte aléatoire quand même
                 const all = [];
                 Object.entries(cardImages).forEach(function([rarity, cards]) {
+                    if (!ALLOWED_RARITIES.has(rarity)) return;
                     (cards || []).forEach(function(card) {
                         all.push({ rarity, name: card.name, img: card.img, cardKey: rarity + '|' + card.name });
                     });
