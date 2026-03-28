@@ -3642,7 +3642,7 @@
 
     <!-- Broadcast Banner -->
     <div class="broadcast-banner" id="broadcastBanner">
-        <div class="bb-from">📢 MESSAGE ADMIN</div>
+        <div class="bb-from">📢 MESSAGE DE SACHMNS</div>
         <div id="broadcastText"></div>
     </div>
 
@@ -4758,7 +4758,10 @@
                 { name: 'Cloverat Clapat', img: 'https://static.wikia.nocookie.net/stealabr/images/f/fd/Cloverat_Clapat.png/revision/latest?cb=20260315011545' },
                 { name: 'Eid Eid Eid Sahur', img: 'https://static.wikia.nocookie.net/stealabr/images/0/0a/Eid.png/revision/latest/scale-to-width-down/268?cb=20260322000303' },
                 { name: 'Foxini Lanternini', img: 'https://static.wikia.nocookie.net/stealabr/images/c/cf/Loi.png/revision/latest/scale-to-width-down/268?cb=20260322001602' },
-                { name: 'Granny', img: 'https://static.wikia.nocookie.net/stealabr/images/0/0f/Grante_Angelta.png/revision/latest/scale-to-width-down/268?cb=20260320005422' }
+                { name: 'Granny', img: 'https://static.wikia.nocookie.net/stealabr/images/0/0f/Grante_Angelta.png/revision/latest/scale-to-width-down/268?cb=20260320005422' },
+                { name: 'Buntteo', img: 'https://static.wikia.nocookie.net/stealabr/images/d/d1/Buntteo.png/revision/latest/scale-to-width-down/1000?cb=20260328193126' },
+                { name: 'Bunny Bunny Bunny Sahur', img: 'https://static.wikia.nocookie.net/stealabr/images/7/7f/Bunny_Bunny_Bunny_Sahur.png/revision/latest/scale-to-width-down/268?cb=20260328195310' },
+                { name: 'Noo my Eggs', img: 'https://static.wikia.nocookie.net/steal-a-brainnrot-fanon/images/9/9b/Noo_My_Eggs.png/revision/latest?cb=20260222003523' }
              ],
               og: [
                 { name: "Strawberry Elephant", img: 'https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest/scale-to-width-down/144?cb=20250830235735' },
@@ -5335,7 +5338,7 @@
                             stats.secretCount++;
                         }
                     }
-                    // Quête quotidienne débloquer
+                    // Quête quotidienne débloquer (carte normale OU nouvelle mutation)
                     if (isNewCard) updateDailyProgress('unlock', 1, reward.rarity);
 
                     // Enregistrer la mutation GOLD si elle a été tirée dans showRewards
@@ -5344,6 +5347,7 @@
                         if (isNewGold) {
                             unlockedGoldCards.set(cardKey, 0);
                             stats.totalCards++; // +1 au classement
+                            updateDailyProgress('unlock', 1, reward.rarity); // compte pour les quêtes quotidiennes
                         }
                         unlockedGoldCards.set(cardKey, unlockedGoldCards.get(cardKey) + 1);
                     }
@@ -5352,6 +5356,7 @@
                         if (isNewDiamond) {
                             unlockedDiamondCards.set(cardKey, 0);
                             stats.totalCards++;
+                            updateDailyProgress('unlock', 1, reward.rarity); // compte pour les quêtes quotidiennes
                         }
                         unlockedDiamondCards.set(cardKey, unlockedDiamondCards.get(cardKey) + 1);
                     }
@@ -5360,6 +5365,7 @@
                         if (isNewRainbow) {
                             unlockedRainbowCards.set(cardKey, 0);
                             stats.totalCards++;
+                            updateDailyProgress('unlock', 1, reward.rarity); // compte pour les quêtes quotidiennes
                         }
                         unlockedRainbowCards.set(cardKey, unlockedRainbowCards.get(cardKey) + 1);
                     }
@@ -5595,17 +5601,17 @@
             if (_roll < window._mutationRates.rainbow) {
                 isRainbow = true;
                 isNewRainbow = !unlockedRainbowCards.has(cardKey);
-                if (isNewRainbow) { unlockedRainbowCards.set(cardKey, 0); stats.totalCards++; }
+                if (isNewRainbow) { unlockedRainbowCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, rarity); }
                 unlockedRainbowCards.set(cardKey, unlockedRainbowCards.get(cardKey) + 1);
             } else if (_roll < window._mutationRates.rainbow + window._mutationRates.diamond) {
                 isDiamond = true;
                 isNewDiamond = !unlockedDiamondCards.has(cardKey);
-                if (isNewDiamond) { unlockedDiamondCards.set(cardKey, 0); stats.totalCards++; }
+                if (isNewDiamond) { unlockedDiamondCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, rarity); }
                 unlockedDiamondCards.set(cardKey, unlockedDiamondCards.get(cardKey) + 1);
             } else if (_roll < window._mutationRates.rainbow + window._mutationRates.diamond + window._mutationRates.gold) {
                 isGold = true;
                 isNewGold = !unlockedGoldCards.has(cardKey);
-                if (isNewGold) { unlockedGoldCards.set(cardKey, 0); stats.totalCards++; }
+                if (isNewGold) { unlockedGoldCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, rarity); }
                 unlockedGoldCards.set(cardKey, unlockedGoldCards.get(cardKey) + 1);
             }
 
@@ -6116,6 +6122,26 @@
             { id:'book_50',  cat:'livre', icon:'📖', name:'Lecteur confirmé',  desc:'Compléter 50% du livre des cartes',  type:'book_pct', target:50,  reward:1000000 },
             { id:'book_75',  cat:'livre', icon:'📚', name:'Grand lecteur',     desc:'Compléter 75% du livre des cartes',  type:'book_pct', target:75,  reward:2000000 },
             { id:'book_100', cat:'livre', icon:'🏆', name:'Livre complet !',   desc:'Compléter 100% du livre des cartes', type:'book_pct', target:100, reward:10000000000 },
+
+            // === MUTATIONS ===
+            { id:'mut_gold_1',      cat:'mutations', icon:'✨', name:'Première mutation',        desc:'Débloquer 1 carte avec une mutation GOLD',              type:'unlock_mut', mut:'gold',    target:1,   reward:15000 },
+            { id:'mut_gold_5',      cat:'mutations', icon:'✨', name:'Apprenti alchimiste',      desc:'Débloquer 5 cartes avec une mutation GOLD',             type:'unlock_mut', mut:'gold',    target:5,   reward:60000 },
+            { id:'mut_gold_10',     cat:'mutations', icon:'✨', name:'Chasseur de GOLD',         desc:'Débloquer 10 cartes avec une mutation GOLD',            type:'unlock_mut', mut:'gold',    target:10,  reward:120000 },
+            { id:'mut_gold_25',     cat:'mutations', icon:'✨', name:'Maître du GOLD',           desc:'Débloquer 25 cartes avec une mutation GOLD',            type:'unlock_mut', mut:'gold',    target:25,  reward:300000 },
+            { id:'mut_gold_50',     cat:'mutations', icon:'👑', name:'Légende du GOLD',          desc:'Débloquer 50 cartes avec une mutation GOLD',            type:'unlock_mut', mut:'gold',    target:50,  reward:750000 },
+            { id:'mut_gold_100',    cat:'mutations', icon:'🏆', name:'Collectionneur GOLD',      desc:'Débloquer 100 cartes avec une mutation GOLD',           type:'unlock_mut', mut:'gold',    target:100, reward:2000000 },
+            { id:'mut_diamond_1',   cat:'mutations', icon:'💎', name:'Éclat de diamant',         desc:'Débloquer 1 carte avec une mutation DIAMANT',           type:'unlock_mut', mut:'diamond', target:1,   reward:25000 },
+            { id:'mut_diamond_5',   cat:'mutations', icon:'💎', name:'Collectionneur de cristaux',desc:'Débloquer 5 cartes avec une mutation DIAMANT',          type:'unlock_mut', mut:'diamond', target:5,   reward:100000 },
+            { id:'mut_diamond_10',  cat:'mutations', icon:'💎', name:'Maître des cristaux',      desc:'Débloquer 10 cartes avec une mutation DIAMANT',         type:'unlock_mut', mut:'diamond', target:10,  reward:220000 },
+            { id:'mut_diamond_25',  cat:'mutations', icon:'💎', name:'Diamant pur',              desc:'Débloquer 25 cartes avec une mutation DIAMANT',         type:'unlock_mut', mut:'diamond', target:25,  reward:600000 },
+            { id:'mut_diamond_50',  cat:'mutations', icon:'💎', name:'Légende du DIAMANT',       desc:'Débloquer 50 cartes avec une mutation DIAMANT',         type:'unlock_mut', mut:'diamond', target:50,  reward:1500000 },
+            { id:'mut_rainbow_1',   cat:'mutations', icon:'🌈', name:'Arc-en-ciel',              desc:'Débloquer 1 carte avec une mutation RAINBOW',           type:'unlock_mut', mut:'rainbow', target:1,   reward:80000 },
+            { id:'mut_rainbow_5',   cat:'mutations', icon:'🌈', name:'Chasseur d\'arcs-en-ciel', desc:'Débloquer 5 cartes avec une mutation RAINBOW',          type:'unlock_mut', mut:'rainbow', target:5,   reward:400000 },
+            { id:'mut_rainbow_10',  cat:'mutations', icon:'🌈', name:'Maître Rainbow',           desc:'Débloquer 10 cartes avec une mutation RAINBOW',         type:'unlock_mut', mut:'rainbow', target:10,  reward:1000000 },
+            { id:'mut_rainbow_25',  cat:'mutations', icon:'🌈', name:'Légende Rainbow',          desc:'Débloquer 25 cartes avec une mutation RAINBOW',         type:'unlock_mut', mut:'rainbow', target:25,  reward:3000000 },
+            { id:'mut_any_1',       cat:'mutations', icon:'🧬', name:'Mutation découverte',      desc:'Débloquer 1 carte avec n\'importe quelle mutation',     type:'unlock_mut', mut:'any',     target:1,   reward:10000 },
+            { id:'mut_any_20',      cat:'mutations', icon:'🧬', name:'Mutant en herbe',          desc:'Débloquer 20 cartes avec des mutations (toutes)',       type:'unlock_mut', mut:'any',     target:20,  reward:150000 },
+            { id:'mut_any_50',      cat:'mutations', icon:'🧬', name:'Chercheur de mutations',   desc:'Débloquer 50 cartes avec des mutations (toutes)',       type:'unlock_mut', mut:'any',     target:50,  reward:500000 },
         ];
 
         // ═══════════════════════════════════════════════════════
@@ -6233,7 +6259,7 @@
         function getTotalBookCards() {
             let total = 0;
             ['common','rare','epic','legendary','mythic','brainrot_god','secret','og','limited','no'].forEach(k => {
-                if (cardImages[k]) total += cardImages[k].length;
+                if (cardImages[k]) total += cardImages[k].length * 4; // normale + GOLD + DIAMANT + RAINBOW
             });
             return total;
         }
@@ -6242,7 +6268,11 @@
             let unlocked = 0;
             ['common','rare','epic','legendary','mythic','brainrot_god','secret','og','limited','no'].forEach(k => {
                 if (cardImages[k]) cardImages[k].forEach(card => {
-                    if (unlockedCards.has(k + '|' + card.name)) unlocked++;
+                    const ck = k + '|' + card.name;
+                    if (unlockedCards.has(ck))        unlocked++; // normale
+                    if (unlockedGoldCards.has(ck))    unlocked++; // GOLD
+                    if (unlockedDiamondCards.has(ck)) unlocked++; // DIAMANT
+                    if (unlockedRainbowCards.has(ck)) unlocked++; // RAINBOW
                 });
             });
             return unlocked;
@@ -6258,6 +6288,11 @@
                 const rarity = key.split('|')[0];
                 unlockedPerRarity[rarity] = (unlockedPerRarity[rarity] || 0) + 1;
             });
+            // Compter les mutations débloquées
+            const goldCount    = unlockedGoldCards.size;
+            const diamondCount = unlockedDiamondCards.size;
+            const rainbowCount = unlockedRainbowCards.size;
+            const anyMutCount  = goldCount + diamondCount + rainbowCount;
             QUESTS.forEach(q => {
                 if (questProgress[q.id].claimed) return;
                 if (q.type === 'chests')
@@ -6268,6 +6303,12 @@
                     questProgress[q.id].progress = Math.min(bookPct, q.target);
                 else if (q.type === 'gold_total')
                     questProgress[q.id].progress = Math.min(stats.totalGold, q.target);
+                else if (q.type === 'unlock_mut') {
+                    if      (q.mut === 'gold')    questProgress[q.id].progress = Math.min(goldCount,    q.target);
+                    else if (q.mut === 'diamond') questProgress[q.id].progress = Math.min(diamondCount, q.target);
+                    else if (q.mut === 'rainbow') questProgress[q.id].progress = Math.min(rainbowCount, q.target);
+                    else if (q.mut === 'any')     questProgress[q.id].progress = Math.min(anyMutCount,  q.target);
+                }
                 // 'buy' updated manually via onCardBought
             });
             updateQuestBadge();
@@ -6403,6 +6444,7 @@
                 { key:'coffres',   label:'📦 Ouvrir des Coffres' },
                 { key:'boutique',  label:'🛒 Achats en Boutique' },
                 { key:'debloquer', label:'🃏 Débloquer des Cartes' },
+                { key:'mutations', label:'🧬 Mutations' },
                 { key:'or',        label:'💰 Or Accumulé' },
                 { key:'livre',     label:'📖 Livre des Cartes' },
             ];
@@ -6801,6 +6843,24 @@
                 firebaseDB.ref('players/' + key + '/removeCard').set(null);
             });
 
+            // Retrait d'une carte mutée par l'admin
+            firebaseDB.ref('players/' + key + '/removeMutedCard').on('value', snap => {
+                const d = snap.val();
+                if (!d || !d.k || !d.m) return;
+                const mutMaps = { gold: unlockedGoldCards, diamond: unlockedDiamondCards, rainbow: unlockedRainbowCards };
+                const targetMap = mutMaps[d.m];
+                if (targetMap) {
+                    const count = targetMap.get(d.k) || 0;
+                    if (count > 0) {
+                        if (count === 1) targetMap.delete(d.k);
+                        else targetMap.set(d.k, count - 1);
+                        autoSave();
+                    }
+                }
+                // Consommer la commande
+                firebaseDB.ref('players/' + key + '/removeMutedCard').set(null);
+            });
+
             // Écouter la malédiction
             firebaseDB.ref('players/' + key + '/cursed').on('value', snap => {
                 const d = snap.val();
@@ -6858,6 +6918,18 @@
                 }
             });
             firebaseDB.ref('players/' + key + '/cards').set(Object.keys(cardsObj).length > 0 ? cardsObj : null);
+            // Sync les cartes mutées pour le livre admin
+            const mutedObj = {};
+            const _mutMaps = { gold: unlockedGoldCards, diamond: unlockedDiamondCards, rainbow: unlockedRainbowCards };
+            Object.entries(_mutMaps).forEach(([mutType, map]) => {
+                map.forEach((count, cardKey) => {
+                    if (count > 0) {
+                        const safeKey = mutType + '_' + cardKey.replace(/[.#$|\[\]]/g, '_');
+                        mutedObj[safeKey] = { k: cardKey, c: count, m: mutType };
+                    }
+                });
+            });
+            firebaseDB.ref('players/' + key + '/mutedCards').set(Object.keys(mutedObj).length > 0 ? mutedObj : null);
         }
 
         window._bannedCards = new Set(); // Cartes bannies des coffres
@@ -6878,18 +6950,14 @@
             firebaseDB.ref('admin/luck').on('value', snap => {
                 const d = snap.val();
                 if (!d) { applyGlobalLuck(1, 0); return; }
-                // Compatibilité : ancienne structure avait "expiry" absolu,
-                // nouvelle structure stocke "durationMs" + "ts" (moment où l'admin a écrit).
-                // On calcule l'expiry localement pour éviter les dérives d'horloge.
                 let expiry = 0;
-                if (d.durationMs && d.ts) {
-                    // Nouvelle structure : recalculer l'expiry côté client
-                    // en tenant compte du temps déjà écoulé depuis que l'admin a activé
+                if (d.durationMs && d.ts && typeof d.ts === 'number') {
+                    // d.ts est un timestamp serveur Firebase (ms Unix) — fiable sur tous les appareils
                     const elapsed = Date.now() - d.ts;
-                    const remaining = d.durationMs - elapsed;
+                    // Si elapsed est négatif (horloge légèrement décalée), on le considère comme 0
+                    const remaining = d.durationMs - Math.max(0, elapsed);
                     expiry = remaining > 0 ? Date.now() + remaining : 0;
                 } else if (d.expiry) {
-                    // Ancienne structure (rétrocompat)
                     expiry = d.expiry;
                 }
                 applyGlobalLuck(d.multiplier || 1, expiry);
@@ -6899,11 +6967,10 @@
             firebaseDB.ref('admin/doubleGold').on('value', snap => {
                 const d = snap.val();
                 if (!d) { applyDoubleGold(false, 0, 2); return; }
-                // Même logique que la luck : recalculer l'expiry localement
                 let expiry = 0;
-                if (d.durationMs && d.ts) {
+                if (d.durationMs && d.ts && typeof d.ts === 'number') {
                     const elapsed = Date.now() - d.ts;
-                    const remaining = d.durationMs - elapsed;
+                    const remaining = d.durationMs - Math.max(0, elapsed);
                     expiry = remaining > 0 ? Date.now() + remaining : 0;
                 } else if (d.expiry) {
                     expiry = d.expiry;
@@ -7316,7 +7383,8 @@
             // Chaque client calcule son propre expiry = Date.now() + durationMs à la réception,
             // ce qui évite toute dérive liée aux horloges différentes entre appareils.
             const durationMs = multiplier > 0 ? totalMs : 0;
-            firebaseDB.ref('admin/luck').set({ multiplier, durationMs, ts: Date.now() })
+            // Utiliser le timestamp serveur Firebase pour éviter les décalages d'horloge entre appareils
+            firebaseDB.ref('admin/luck').set({ multiplier, durationMs, ts: firebase.database.ServerValue.TIMESTAMP })
                 .then(() => { adminStatus(multiplier > 0 ? '✅ Chance ×' + multiplier + ' activée pour ' + durLabel + ' !' : '✅ Chance désactivée'); updateAdminLuckStatus(); })
                 .catch(e => adminStatus('Erreur : ' + e.message));
         }
@@ -7524,31 +7592,21 @@
                 Object.values(cardsData).forEach(function(entry) {
                     if (entry && entry.k) playerCards.set(entry.k, entry.c || 0);
                 });
-                // Lire le save pour les cartes mutées
-                firebaseDB.ref(akey + '/save').once('value').then(saveSnap => {
-                    let goldCards = new Map(), diamondCards = new Map(), rainbowCards = new Map();
-                    try {
-                        const saveStr = saveSnap.val();
-                        if (saveStr) {
-                            const save = typeof saveStr === 'string' ? JSON.parse(saveStr) : saveStr;
-                            if (save.unlockedGoldCards) goldCards = new Map(save.unlockedGoldCards);
-                            if (save.unlockedDiamondCards) diamondCards = new Map(save.unlockedDiamondCards);
-                            if (save.unlockedRainbowCards) rainbowCards = new Map(save.unlockedRainbowCards);
-                        }
-                    } catch(e) {}
-                    _adminBookFilter = 'all';
-                    _adminBookMutTab = 'normal';
-                    adminBookSwitchTab('normal');
-                    window._adminBookCurrentData = { pseudo, playerCards, goldCards, diamondCards, rainbowCards };
-                    _renderAdminBook(pseudo, playerCards, goldCards, diamondCards, rainbowCards);
-                    document.getElementById('adminBookModal').classList.add('open');
-                }).catch(() => {
-                    _adminBookFilter = 'all';
-                    _adminBookMutTab = 'normal';
-                    window._adminBookCurrentData = { pseudo, playerCards, goldCards: new Map(), diamondCards: new Map(), rainbowCards: new Map() };
-                    _renderAdminBook(pseudo, playerCards, new Map(), new Map(), new Map());
-                    document.getElementById('adminBookModal').classList.add('open');
+                // Lire les cartes mutées depuis players/{key}/mutedCards (accessible par l'admin)
+                let goldCards = new Map(), diamondCards = new Map(), rainbowCards = new Map();
+                const mutedData = data.mutedCards || {};
+                Object.values(mutedData).forEach(function(entry) {
+                    if (!entry || !entry.k || !entry.m) return;
+                    if (entry.m === 'gold') goldCards.set(entry.k, entry.c || 0);
+                    else if (entry.m === 'diamond') diamondCards.set(entry.k, entry.c || 0);
+                    else if (entry.m === 'rainbow') rainbowCards.set(entry.k, entry.c || 0);
                 });
+                _adminBookFilter = 'all';
+                _adminBookMutTab = 'normal';
+                adminBookSwitchTab('normal');
+                window._adminBookCurrentData = { pseudo, playerCards, goldCards, diamondCards, rainbowCards };
+                _renderAdminBook(pseudo, playerCards, goldCards, diamondCards, rainbowCards);
+                document.getElementById('adminBookModal').classList.add('open');
             }).catch(e => adminStatus('Erreur : ' + e.message));
         }
 
@@ -7621,40 +7679,30 @@
         function adminBookRemoveCard(pseudo, cardKey, mutTab, playerCards, goldCards, diamondCards, rainbowCards) {
             if (!firebaseDB) return;
             const pkey = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g,'_');
-            const akey = 'accounts/' + encodeURIComponent(pseudo.trim().toLowerCase()).replace(/[.#$/\[\]]/g,'_');
             if (mutTab === 'normal') {
-                // Retirer depuis players/{key}/cards via Firebase
-                const cur = playerCards.get(cardKey) || 0;
-                if (cur <= 0) return;
-                const newCount = cur - 1;
-                if (newCount <= 0) playerCards.delete(cardKey);
-                else playerCards.set(cardKey, newCount);
-                // Reconstruire l'objet cards
-                const cardsObj = {};
-                playerCards.forEach(function(cnt, ck) {
-                    if (cnt > 0) { const sk = ck.replace(/[.#$|\[\]]/g,'_'); cardsObj[sk] = { k: ck, c: cnt }; }
-                });
-                firebaseDB.ref('players/' + pkey + '/cards').set(Object.keys(cardsObj).length > 0 ? cardsObj : null)
-                    .then(function() { _renderAdminBook(pseudo, playerCards, goldCards, diamondCards, rainbowCards); })
+                // Utiliser le listener removeCard existant — le client l'écoute et met à jour sa save
+                firebaseDB.ref('players/' + pkey + '/removeCard').set(cardKey)
+                    .then(function() {
+                        // Mettre à jour l'affichage local immédiatement
+                        const cur = playerCards.get(cardKey) || 0;
+                        if (cur <= 1) playerCards.delete(cardKey); else playerCards.set(cardKey, cur - 1);
+                        _renderAdminBook(pseudo, playerCards, goldCards, diamondCards, rainbowCards);
+                    })
                     .catch(function(e) { adminStatus('Erreur : ' + e.message); });
             } else {
-                // Retirer depuis le save JSON de l'account
-                const mutMapLocal = { gold: goldCards, diamond: diamondCards, rainbow: rainbowCards };
-                const targetMap = mutMapLocal[mutTab];
-                if (!targetMap) return;
-                const cur = targetMap.get(cardKey) || 0;
-                if (cur <= 0) return;
-                const newCount = cur - 1;
-                if (newCount <= 0) targetMap.delete(cardKey); else targetMap.set(cardKey, newCount);
-                // Lire le save, le modifier, le réécrire
-                firebaseDB.ref(akey + '/save').once('value').then(function(snap) {
-                    let save = {};
-                    try { const s = snap.val(); save = s ? (typeof s === 'string' ? JSON.parse(s) : s) : {}; } catch(e) {}
-                    const mapKey = { gold: 'unlockedGoldCards', diamond: 'unlockedDiamondCards', rainbow: 'unlockedRainbowCards' }[mutTab];
-                    save[mapKey] = Array.from(targetMap.entries());
-                    return firebaseDB.ref(akey + '/save').set(JSON.stringify(save));
-                }).then(function() { _renderAdminBook(pseudo, playerCards, goldCards, diamondCards, rainbowCards); })
-                  .catch(function(e) { adminStatus('Erreur retrait mutation : ' + e.message); });
+                // Utiliser le listener removeMutedCard — le client l'écoute et met à jour sa save
+                firebaseDB.ref('players/' + pkey + '/removeMutedCard').set({ k: cardKey, m: mutTab })
+                    .then(function() {
+                        // Mettre à jour l'affichage local immédiatement
+                        const mutMapLocal = { gold: goldCards, diamond: diamondCards, rainbow: rainbowCards };
+                        const targetMap = mutMapLocal[mutTab];
+                        if (targetMap) {
+                            const cur = targetMap.get(cardKey) || 0;
+                            if (cur <= 1) targetMap.delete(cardKey); else targetMap.set(cardKey, cur - 1);
+                        }
+                        _renderAdminBook(pseudo, playerCards, goldCards, diamondCards, rainbowCards);
+                    })
+                    .catch(function(e) { adminStatus('Erreur retrait mutation : ' + e.message); });
             }
         }
 
@@ -7839,7 +7887,7 @@
             // Stocker durationMs et ts plutôt qu'un expiry absolu (évite les dérives d'horloge)
             const durationMs = totalMs;
             const durLabel = minVal > 0 && secVal > 0 ? minVal + 'min ' + secVal + 's' : minVal > 0 ? minVal + ' min' : secVal + 's';
-            firebaseDB.ref('admin/doubleGold').set({ active: true, durationMs, multiplier: multVal, ts: Date.now() })
+            firebaseDB.ref('admin/doubleGold').set({ active: true, durationMs, multiplier: multVal, ts: firebase.database.ServerValue.TIMESTAMP })
                 .then(() => {
                     const msg = '✅ Or ×' + multVal + ' activé pour ' + durLabel + ' !';
                     adminStatus(msg);
@@ -9622,17 +9670,17 @@
                 if (_roll10 < window._mutationRates.rainbow) {
                     isRainbow = true;
                     isNewRainbow = !unlockedRainbowCards.has(cardKey);
-                    if (isNewRainbow) { unlockedRainbowCards.set(cardKey, 0); stats.totalCards++; }
+                    if (isNewRainbow) { unlockedRainbowCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, _buyTenSelected); }
                     unlockedRainbowCards.set(cardKey, unlockedRainbowCards.get(cardKey) + 1);
                 } else if (_roll10 < window._mutationRates.rainbow + window._mutationRates.diamond) {
                     isDiamond = true;
                     isNewDiamond = !unlockedDiamondCards.has(cardKey);
-                    if (isNewDiamond) { unlockedDiamondCards.set(cardKey, 0); stats.totalCards++; }
+                    if (isNewDiamond) { unlockedDiamondCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, _buyTenSelected); }
                     unlockedDiamondCards.set(cardKey, unlockedDiamondCards.get(cardKey) + 1);
                 } else if (_roll10 < window._mutationRates.rainbow + window._mutationRates.diamond + window._mutationRates.gold) {
                     isGold = true;
                     isNewGold = !unlockedGoldCards.has(cardKey);
-                    if (isNewGold) { unlockedGoldCards.set(cardKey, 0); stats.totalCards++; }
+                    if (isNewGold) { unlockedGoldCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, _buyTenSelected); }
                     unlockedGoldCards.set(cardKey, unlockedGoldCards.get(cardKey) + 1);
                 }
                 // Ajouter en normal SEULEMENT si pas de mutation
