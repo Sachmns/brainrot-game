@@ -8697,6 +8697,9 @@
                     if (pseudo && !d.perma_banned) _lbEntries.push({ pseudo, unlocked, gold });
                 });
                 renderLbList();
+            }, err => {
+                const list = document.getElementById('lbList');
+                if (list) list.innerHTML = '<div class="lb-status">⚠️ Accès refusé — vérifie les règles Firebase.</div>';
             });
         }
 
