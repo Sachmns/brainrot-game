@@ -8340,6 +8340,16 @@
             const st = document.getElementById('adminMiamStatus');
             if (st) st.textContent = 'MIAM inactif';
             closeMiam();
+            // Écrire dans Firebase pour désactiver pour tous les clients
+            if (firebaseDB) {
+                firebaseDB.ref('admin/miam').once('value').then(snap => {
+                    const d = snap.val();
+                    // Ne désactiver que si c'était vraiment encore actif (évite les boucles)
+                    if (d && d.active) {
+                        firebaseDB.ref('admin/miam').set({ active: false, durationMs: 0, ts: Date.now() });
+                    }
+                }).catch(() => {});
+            }
         }
 
         function openMiam() {
