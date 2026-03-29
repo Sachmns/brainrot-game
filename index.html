@@ -2608,7 +2608,7 @@
         .admin-rarity-filter { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:8px; }
         .admin-rarity-pill { padding:4px 10px; border-radius:20px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); color:#aaa; font-size:0.7em; cursor:pointer; transition:all 0.15s; font-weight:700; }
         .admin-rarity-pill.active { border-color:#ff0040; color:#fff; background:rgba(255,0,64,0.2); }
-        .global-luck-banner { position:fixed; top:0; left:0; width:100%; z-index:9000; padding:7px 20px; text-align:center; font-weight:900; font-size:0.95em; letter-spacing:3px; display:none; animation:luckBannerIn 0.5s ease; }
+        .global-luck-banner { position:fixed; top:0; left:0; width:100%; z-index:100000; padding:7px 20px; text-align:center; font-weight:900; font-size:0.95em; letter-spacing:3px; display:none; animation:luckBannerIn 0.5s ease; }
         .global-luck-banner.show { display:block; }
         @keyframes luckBannerIn { from{transform:translateY(-100%)} to{transform:translateY(0)} }
         .global-luck-banner.lx2  { background:linear-gradient(90deg,#1a5a1a,#2ecc71,#1a5a1a); color:#fff; box-shadow:0 4px 20px rgba(46,204,113,0.5); }
@@ -6946,17 +6946,27 @@
         function listenAdminCommands() {
             if (!firebaseDB) return;
 
+            // ── Listeners GLOBAUX — attachés une seule fois ──
+            if (!window._globalListenersAttached) {
+                window._globalListenersAttached = true;
+
             // Luck globale
             firebaseDB.ref('admin/luck').on('value', snap => {
                 const d = snap.val();
-                if (!d) { applyGlobalLuck(1, 0); return; }
+                if (!d || d.multiplier === 0 || d.multiplier === undefined) { applyGlobalLuck(1, 0); return; }
+                // Si ts n'est pas encore résolu (write optimiste Firebase avec ServerValue.TIMESTAMP),
+                // on utilise Date.now() comme base pour éviter de bloquer l'affichage
                 let expiry = 0;
-                if (d.durationMs && d.ts && typeof d.ts === 'number') {
-                    // d.ts est un timestamp serveur Firebase (ms Unix) — fiable sur tous les appareils
-                    const elapsed = Date.now() - d.ts;
-                    // Si elapsed est négatif (horloge légèrement décalée), on le considère comme 0
-                    const remaining = d.durationMs - Math.max(0, elapsed);
-                    expiry = remaining > 0 ? Date.now() + remaining : 0;
+                if (d.durationMs) {
+                    if (d.ts && typeof d.ts === 'number') {
+                        // ts résolu : calcul précis basé sur le timestamp serveur
+                        const elapsed = Date.now() - d.ts;
+                        const remaining = d.durationMs - Math.max(0, elapsed);
+                        expiry = remaining > 0 ? Date.now() + remaining : 0;
+                    } else {
+                        // ts pas encore résolu (objet sentinel ou null) : fallback sur Date.now()
+                        expiry = Date.now() + d.durationMs;
+                    }
                 } else if (d.expiry) {
                     expiry = d.expiry;
                 }
@@ -6966,7 +6976,9 @@
             // Double or
             firebaseDB.ref('admin/doubleGold').on('value', snap => {
                 const d = snap.val();
-                if (!d) { applyDoubleGold(false, 0, 2); return; }
+                if (!d || !d.active) { applyDoubleGold(false, 0, 2); return; }
+                // Ignorer le write optimiste Firebase (ts non résolu)
+                if (d.durationMs && d.ts === null) return;
                 let expiry = 0;
                 if (d.durationMs && d.ts && typeof d.ts === 'number') {
                     const elapsed = Date.now() - d.ts;
@@ -7053,6 +7065,10 @@
                     if (inp) inp.value = (d.rainbow * 100).toFixed(1);
                 }
             });
+
+            } // fin bloc _globalListenersAttached
+
+            // ── Listeners SPÉCIFIQUES AU JOUEUR — attachés à chaque appel (pseudo peut changer) ──
 
             // Or pour ce joueur
             const myPseudo = localStorage.getItem('tradePseudo') || '';
@@ -7146,6 +7162,7 @@
             banner.classList.remove('show');
 
             if (multiplier <= 1 || !expiry || expiry <= Date.now()) {
+                updateAdminLuckStatus();
                 return;
             }
 
@@ -7155,6 +7172,9 @@
             const lxClass = { 2:'lx2', 4:'lx4', 8:'lx8', 16:'lx16', 32:'lx32', 100:'lx100' }[multiplier] || 'lx2';
             banner.classList.add('show', lxClass);
             _adjustLuckBannerPosition();
+
+            // Mettre à jour le statut admin immédiatement après avoir positionné les variables
+            updateAdminLuckStatus();
 
             // Capturer l'interval ID localement pour éviter les conflits
             const intervalId = setInterval(function() {
@@ -7166,11 +7186,13 @@
                     banner.classList.remove('show');
                     clearInterval(intervalId);
                     globalLuckInterval = null;
+                    updateAdminLuckStatus();
                     return;
                 }
                 const m = String(Math.floor(remaining / 60)).padStart(2, '0');
                 const s = String(remaining % 60).padStart(2, '0');
                 banner.textContent = '🍀 CHANCE ×' + multiplier + ' ACTIVE — ' + m + ':' + s;
+                updateAdminLuckStatus();
             }, 500); // 500ms pour plus de précision
             globalLuckInterval = intervalId;
 
@@ -7384,8 +7406,8 @@
             // ce qui évite toute dérive liée aux horloges différentes entre appareils.
             const durationMs = multiplier > 0 ? totalMs : 0;
             // Utiliser le timestamp serveur Firebase pour éviter les décalages d'horloge entre appareils
-            firebaseDB.ref('admin/luck').set({ multiplier, durationMs, ts: firebase.database.ServerValue.TIMESTAMP })
-                .then(() => { adminStatus(multiplier > 0 ? '✅ Chance ×' + multiplier + ' activée pour ' + durLabel + ' !' : '✅ Chance désactivée'); updateAdminLuckStatus(); })
+            firebaseDB.ref('admin/luck').set({ multiplier, durationMs, ts: Date.now() })
+                .then(() => { adminStatus(multiplier > 0 ? '✅ Chance ×' + multiplier + ' activée pour ' + durLabel + ' !' : '✅ Chance désactivée'); })
                 .catch(e => adminStatus('Erreur : ' + e.message));
         }
 
@@ -9080,8 +9102,18 @@
         function _craftCanMake(recipe) {
             if (!recipe || !recipe.ingredients || !recipe.ingredients.length) return false;
             return recipe.ingredients.every(function(ing) {
-                return (unlockedCards.get(ing.key) || 0) >= (ing.qty || 1);
+                return (_craftGetIngCount(ing)) >= (ing.qty || 1);
             });
+        }
+
+        // Retourne le nombre d'exemplaires d'un ingrédient selon sa mutation (none/gold/diamond/rainbow)
+        function _craftGetIngCount(ing) {
+            const mut = ing.mutation || 'none';
+            const key = ing.key;
+            if (mut === 'gold')    return unlockedGoldCards.get(key)    || 0;
+            if (mut === 'diamond') return unlockedDiamondCards.get(key) || 0;
+            if (mut === 'rainbow') return unlockedRainbowCards.get(key) || 0;
+            return unlockedCards.get(key) || 0;
         }
 
         function _renderCraftRecipes() {
@@ -9110,8 +9142,9 @@
                     '</div>' +
                     '<div class="craft-ingredients-row">' +
                         (recipe.ingredients || []).map(function(ing) {
-                            const has = (unlockedCards.get(ing.key) || 0) >= (ing.qty || 1);
-                            return '<span class="craft-ing-tag ' + (has ? 'ok' : 'nope') + '">' + ing.name + ' \u00d7' + (ing.qty || 1) + '</span>';
+                            const has = (_craftGetIngCount(ing)) >= (ing.qty || 1);
+                            const mutLabel = ing.mutation && ing.mutation !== 'none' ? ' <span style="font-size:0.85em;">' + {gold:'✨',diamond:'💎',rainbow:'🌈'}[ing.mutation] + '</span>' : '';
+                            return '<span class="craft-ing-tag ' + (has ? 'ok' : 'nope') + '">' + ing.name + mutLabel + ' \u00d7' + (ing.qty || 1) + '</span>';
                         }).join('') +
                     '</div>';
                 div.onclick = function() {
@@ -9133,36 +9166,73 @@
                 statusEl.textContent = 'Ingr\u00e9dients manquants !';
                 return;
             }
-            // Consommer les ingrédients
+            // Consommer les ingrédients (selon leur mutation)
             recipe.ingredients.forEach(function(ing) {
-                const cur = unlockedCards.get(ing.key) || 0;
-                const after = cur - (ing.qty || 1);
-                if (after <= 0) unlockedCards.delete(ing.key);
-                else unlockedCards.set(ing.key, after);
+                const mut = ing.mutation || 'none';
+                const key = ing.key;
+                const qty = ing.qty || 1;
+                let targetMap;
+                if (mut === 'gold')    targetMap = unlockedGoldCards;
+                else if (mut === 'diamond') targetMap = unlockedDiamondCards;
+                else if (mut === 'rainbow') targetMap = unlockedRainbowCards;
+                else targetMap = unlockedCards;
+                const cur = targetMap.get(key) || 0;
+                const after = cur - qty;
+                if (after <= 0) targetMap.delete(key);
+                else targetMap.set(key, after);
             });
-            // Ajouter la carte craftée
+            // Tirer la mutation du résultat
             const rkey = recipe.result.key || (recipe.result.rarity + '|' + recipe.result.name);
-            const curR = unlockedCards.get(rkey) || 0;
-            const isNewCard = (curR === 0);
-            if (isNewCard) {
-                stats.totalCards++;
-                const rar = recipe.result.rarity;
-                if (cardImages[rar] && !cardImages[rar].find(function(c){ return c.name === recipe.result.name; })) {
-                    cardImages[rar].push({ name: recipe.result.name, img: recipe.result.img || '' });
-                }
+            let craftMutation = 'none';
+            // Si la recette impose une mutation, l'utiliser ; sinon tirer aléatoirement
+            if (recipe.result.mutation && recipe.result.mutation !== 'none') {
+                craftMutation = recipe.result.mutation;
+            } else {
+                const roll = Math.random();
+                if (roll < window._mutationRates.rainbow)                                                               craftMutation = 'rainbow';
+                else if (roll < window._mutationRates.rainbow + window._mutationRates.diamond)                          craftMutation = 'diamond';
+                else if (roll < window._mutationRates.rainbow + window._mutationRates.diamond + window._mutationRates.gold) craftMutation = 'gold';
             }
-            unlockedCards.set(rkey, curR + 1);
+            // Ajouter la carte craftée dans la bonne Map
+            let resultIsNew = false;
+            if (craftMutation === 'gold') {
+                const curG = unlockedGoldCards.get(rkey) || 0;
+                resultIsNew = (curG === 0) && !unlockedGoldCards.has(rkey);
+                if (resultIsNew) stats.totalCards++;
+                unlockedGoldCards.set(rkey, curG + 1);
+            } else if (craftMutation === 'diamond') {
+                const curD = unlockedDiamondCards.get(rkey) || 0;
+                resultIsNew = (curD === 0) && !unlockedDiamondCards.has(rkey);
+                if (resultIsNew) stats.totalCards++;
+                unlockedDiamondCards.set(rkey, curD + 1);
+            } else if (craftMutation === 'rainbow') {
+                const curR2 = unlockedRainbowCards.get(rkey) || 0;
+                resultIsNew = (curR2 === 0) && !unlockedRainbowCards.has(rkey);
+                if (resultIsNew) stats.totalCards++;
+                unlockedRainbowCards.set(rkey, curR2 + 1);
+            } else {
+                const curR = unlockedCards.get(rkey) || 0;
+                resultIsNew = (curR === 0);
+                if (resultIsNew) {
+                    stats.totalCards++;
+                    const rar = recipe.result.rarity;
+                    if (cardImages[rar] && !cardImages[rar].find(function(c){ return c.name === recipe.result.name; })) {
+                        cardImages[rar].push({ name: recipe.result.name, img: recipe.result.img || '' });
+                    }
+                }
+                unlockedCards.set(rkey, curR + 1);
+            }
             document.getElementById('totalCards').textContent = stats.totalCards;
             autoSave();
             playSound('epic');
-            startCraftAnimation(recipe, isNewCard);
+            startCraftAnimation(recipe, resultIsNew, craftMutation);
             document.getElementById('craftBtnMain').disabled = true;
             _craftSelected = null;
         }
 
         var _craftAnimLightningInterval = null;
 
-        function startCraftAnimation(recipe, isNew) {
+        function startCraftAnimation(recipe, isNew, craftMutation) {
             var overlay = document.getElementById('craftAnimOverlay');
             var phase   = document.getElementById('craftAnimPhase');
             var reveal  = document.getElementById('craftRevealPhase');
@@ -9233,21 +9303,36 @@
                 clearInterval(textInterval);
                 _craftAnimLightningInterval = null;
                 overlay.querySelectorAll('.craft-lightning').forEach(function(l){ l.remove(); });
-                showCraftReveal(recipe, isNew);
+                showCraftReveal(recipe, isNew, craftMutation);
             }, 4800);
         }
 
-        function showCraftReveal(recipe, isNew) {
+        function showCraftReveal(recipe, isNew, craftMutation) {
             var RCOLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#ffffff', og:'#c8a000', limited:'#ff59e7', hero:'#ffca18', evolution:'#6a00ff', champions:'#f1fc74', no:'#ff0000', admin_exclusive:'#ff0040' };
             var RLABELS = { common:'Commune', rare:'Rare', epic:'\u00c9pique', legendary:'L\u00e9gendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limit\u00e9e', hero:'H\u00e9ros', evolution:'\u00c9volution', champions:'Champions', no:'Impossible', admin_exclusive:'ADMIN' };
+            var MUT_ICONS = { gold:'✨', diamond:'💎', rainbow:'🌈' };
+            var MUT_COLS  = { gold:'#ffd700', diamond:'#00bfff', rainbow:'#cc44ff' };
+            var MUT_FILTERS = {
+                gold:    'drop-shadow(0 0 30px #ffd700) drop-shadow(0 0 60px #ffd70088) sepia(0.4) saturate(2) brightness(1.1)',
+                diamond: 'drop-shadow(0 0 30px #00bfff) drop-shadow(0 0 60px #00bfff88) hue-rotate(180deg) saturate(2) brightness(1.1)',
+                rainbow: 'drop-shadow(0 0 30px #cc44ff) drop-shadow(0 0 60px #cc44ff88) saturate(1.8) brightness(1.15)'
+            };
 
             document.getElementById('craftAnimPhase').style.display = 'none';
 
-            var col = RCOLS[recipe.result.rarity] || '#00ff88';
-            document.getElementById('craftRevealImg').src = recipe.result.img || '';
-            document.getElementById('craftRevealImg').style.filter = 'drop-shadow(0 0 30px ' + col + ') drop-shadow(0 0 60px ' + col + '88)';
+            var col = (craftMutation && craftMutation !== 'none') ? MUT_COLS[craftMutation] : (RCOLS[recipe.result.rarity] || '#00ff88');
+            var imgEl = document.getElementById('craftRevealImg');
+            imgEl.src = recipe.result.img || '';
+            imgEl.style.filter = (craftMutation && craftMutation !== 'none')
+                ? MUT_FILTERS[craftMutation]
+                : 'drop-shadow(0 0 30px ' + col + ') drop-shadow(0 0 60px ' + col + '88)';
+
             document.getElementById('craftRevealName').textContent   = recipe.result.name;
-            document.getElementById('craftRevealRarity').textContent = RLABELS[recipe.result.rarity] || recipe.result.rarity;
+            // Badge mutation sur la rareté
+            var rarLabel = (craftMutation && craftMutation !== 'none')
+                ? MUT_ICONS[craftMutation] + ' ' + craftMutation.toUpperCase() + ' — ' + (RLABELS[recipe.result.rarity] || recipe.result.rarity)
+                : (RLABELS[recipe.result.rarity] || recipe.result.rarity);
+            document.getElementById('craftRevealRarity').textContent = rarLabel;
             document.getElementById('craftRevealRarity').style.color = col;
             document.getElementById('craftRevealNew').style.display  = isNew ? 'block' : 'none';
 
@@ -9365,6 +9450,7 @@
                     '</div>' +
                     '<div class="craft-adm-row">' +
                         _buildCardSelect('cr_key_' + ri, resKey, 'flex:1;') +
+                        '<select id="cr_mut_' + ri + '" class="craft-adm-input" style="font-size:0.72em;background:#0a0015;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;padding:3px 5px;"><option value="none">— Mut.</option><option value="gold">✨ Gold</option><option value="diamond">💎 Dia.</option><option value="rainbow">🌈 Rain.</option></select>' +
                     '</div>' +
                     '<div style="color:#555;font-size:0.65em;font-weight:900;letter-spacing:2px;margin:8px 0 4px;">INGRÉDIENTS</div>';
 
@@ -9373,6 +9459,7 @@
                     html +=
                         '<div class="craft-adm-row">' +
                             _buildCardSelect('ci_key_' + ri + '_' + ii, ingKey, 'flex:1;') +
+                            '<select id="ci_mut_' + ri + '_' + ii + '" class="craft-adm-input" style="font-size:0.72em;background:#0a0015;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;padding:3px 5px;"><option value="none">— Mut.</option><option value="gold">✨ Gold</option><option value="diamond">💎 Dia.</option><option value="rainbow">🌈 Rain.</option></select>' +
                             '<input id="ci_qty_' + ri + '_' + ii + '" class="craft-adm-input" type="number" min="1" value="' + (ing.qty||1) + '" style="width:42px;text-align:center;" placeholder="Qté">' +
                             '<button onclick="craftAdminRemoveIng(' + ri + ',' + ii + ')" style="background:none;border:none;color:rgba(231,76,60,0.6);cursor:pointer;font-size:1em;">✕</button>' +
                         '</div>';
@@ -9380,6 +9467,13 @@
                 html += '<button onclick="craftAdminAddIng(' + ri + ')" style="margin-top:4px;padding:3px 11px;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.18);border-radius:7px;color:#00ff88;font-size:0.7em;cursor:pointer;">➕ Ingrédient</button>';
                 box.innerHTML = html;
                 container.appendChild(box);
+                // Restaurer les valeurs des selects de mutation après injection HTML
+                const crMutEl = document.getElementById('cr_mut_' + ri);
+                if (crMutEl) crMutEl.value = recipe.result.mutation || 'none';
+                (recipe.ingredients||[]).forEach(function(ing, ii) {
+                    const ciMutEl = document.getElementById('ci_mut_' + ri + '_' + ii);
+                    if (ciMutEl) ciMutEl.value = ing.mutation || 'none';
+                });
             });
         }
         function craftAdminSave() {
@@ -9393,15 +9487,17 @@
                 // Retrouver l'image depuis cardImages
                 const imgCard = (cardImages[rar]||[]).find(function(c){ return c.name === name; });
                 const img = imgCard ? imgCard.img : (recipe.result.img || '');
+                const resMut = document.getElementById('cr_mut_' + ri)?.value || 'none';
                 const ingredients = (recipe.ingredients||[]).map(function(ing, ii) {
                     const ingKey   = document.getElementById('ci_key_' + ri + '_' + ii)?.value || '';
                     const ingParts = ingKey.split('|');
                     const ir    = ingParts[0] || ing.rarity;
                     const iname = ingParts.slice(1).join('|') || ing.name;
                     const iqty  = parseInt(document.getElementById('ci_qty_' + ri + '_' + ii)?.value) || 1;
-                    return { rarity:ir, name:iname, qty:iqty, key: ir + '|' + iname };
+                    const imut  = document.getElementById('ci_mut_' + ri + '_' + ii)?.value || 'none';
+                    return { rarity:ir, name:iname, qty:iqty, key: ir + '|' + iname, mutation: imut };
                 }).filter(function(i){ return i.name; });
-                return { result:{ rarity:rar, name, img, key: rar + '|' + name }, ingredients };
+                return { result:{ rarity:rar, name, img, key: rar + '|' + name, mutation: resMut }, ingredients };
             }).filter(function(r){ return r.result.name; });
 
             const obj = {};
