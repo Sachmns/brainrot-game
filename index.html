@@ -9143,12 +9143,12 @@
 
         // Retourne le nombre d'exemplaires d'un ingrédient selon sa mutation (none/gold/diamond/rainbow)
         function _craftGetIngCount(ing) {
-            const mut = ing.mutation || 'none';
+            // On accepte la carte quelle que soit sa mutation : on additionne toutes les Maps
             const key = ing.key;
-            if (mut === 'gold')    return unlockedGoldCards.get(key)    || 0;
-            if (mut === 'diamond') return unlockedDiamondCards.get(key) || 0;
-            if (mut === 'rainbow') return unlockedRainbowCards.get(key) || 0;
-            return unlockedCards.get(key) || 0;
+            return (unlockedCards.get(key) || 0)
+                 + (unlockedGoldCards.get(key)    || 0)
+                 + (unlockedDiamondCards.get(key) || 0)
+                 + (unlockedRainbowCards.get(key) || 0);
         }
 
         function _renderCraftRecipes() {
@@ -9178,8 +9178,7 @@
                     '<div class="craft-ingredients-row">' +
                         (recipe.ingredients || []).map(function(ing) {
                             const has = (_craftGetIngCount(ing)) >= (ing.qty || 1);
-                            const mutLabel = ing.mutation && ing.mutation !== 'none' ? ' <span style="font-size:0.85em;">' + {gold:'✨',diamond:'💎',rainbow:'🌈'}[ing.mutation] + '</span>' : '';
-                            return '<span class="craft-ing-tag ' + (has ? 'ok' : 'nope') + '">' + ing.name + mutLabel + ' \u00d7' + (ing.qty || 1) + '</span>';
+                            return '<span class="craft-ing-tag ' + (has ? 'ok' : 'nope') + '">' + ing.name + ' \u00d7' + (ing.qty || 1) + '</span>';
                         }).join('') +
                     '</div>';
                 div.onclick = function() {
@@ -9201,20 +9200,21 @@
                 statusEl.textContent = 'Ingr\u00e9dients manquants !';
                 return;
             }
-            // Consommer les ingrédients (selon leur mutation)
+            // Consommer les ingrédients (toute mutation acceptée — on consomme dans l'ordre : normal, gold, diamond, rainbow)
             recipe.ingredients.forEach(function(ing) {
-                const mut = ing.mutation || 'none';
                 const key = ing.key;
-                const qty = ing.qty || 1;
-                let targetMap;
-                if (mut === 'gold')    targetMap = unlockedGoldCards;
-                else if (mut === 'diamond') targetMap = unlockedDiamondCards;
-                else if (mut === 'rainbow') targetMap = unlockedRainbowCards;
-                else targetMap = unlockedCards;
-                const cur = targetMap.get(key) || 0;
-                const after = cur - qty;
-                if (after <= 0) targetMap.delete(key);
-                else targetMap.set(key, after);
+                let remaining = ing.qty || 1;
+                const maps = [unlockedCards, unlockedGoldCards, unlockedDiamondCards, unlockedRainbowCards];
+                for (const map of maps) {
+                    if (remaining <= 0) break;
+                    const cur = map.get(key) || 0;
+                    if (cur <= 0) continue;
+                    const consume = Math.min(cur, remaining);
+                    remaining -= consume;
+                    const after = cur - consume;
+                    if (after <= 0) map.delete(key);
+                    else map.set(key, after);
+                }
             });
             // Tirer la mutation du résultat
             const rkey = recipe.result.key || (recipe.result.rarity + '|' + recipe.result.name);
