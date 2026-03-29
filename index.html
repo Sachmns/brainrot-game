@@ -3549,13 +3549,15 @@
             <div class="slots-paytable">
                 <div style="color:rgba(255,0,128,0.4);font-size:0.62em;font-weight:900;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">TABLE DES GAINS</div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;">
-                    <div style="display:flex;justify-content:space-between;"><span>⭐⭐⭐</span><span style="color:#ff80bf;font-weight:900;">×20</span></div>
-                    <div style="display:flex;justify-content:space-between;"><span>🔥🔥🔥</span><span style="color:#ff80bf;font-weight:900;">×35</span></div>
-                    <div style="display:flex;justify-content:space-between;"><span>💎💎💎</span><span style="color:#ff80bf;font-weight:900;">×75</span></div>
-                    <div style="display:flex;justify-content:space-between;"><span>🌟🌟🌟</span><span style="color:#ff80bf;font-weight:900;">×150</span></div>
-                    <div style="display:flex;justify-content:space-between;"><span>💰💰💰</span><span style="color:#ff80bf;font-weight:900;">×12</span></div>
-                    <div style="display:flex;justify-content:space-between;"><span>🃏🃏🃏</span><span style="color:#ff80bf;font-weight:900;">×8</span></div>
-                    <div style="display:flex;justify-content:space-between;grid-column:1/-1;"><span style="color:rgba(255,255,255,0.4);">2 identiques</span><span style="color:#ff80bf;font-weight:900;">×3</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>🌟🌟🌟</span><span style="color:#ff80bf;font-weight:900;">×50</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>💎💎💎</span><span style="color:#ff80bf;font-weight:900;">×25</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>🔥🔥🔥</span><span style="color:#ff80bf;font-weight:900;">×12</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>⭐⭐⭐</span><span style="color:#ff80bf;font-weight:900;">×7</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>🍀🍀🍀</span><span style="color:#ff80bf;font-weight:900;">×5</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>🎯🎯🎯</span><span style="color:#ff80bf;font-weight:900;">×5</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>💰💰💰</span><span style="color:#ff80bf;font-weight:900;">×4</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>🃏🃏🃏</span><span style="color:#ff80bf;font-weight:900;">×3</span></div>
+                    <div style="display:flex;justify-content:space-between;grid-column:1/-1;"><span style="color:rgba(255,255,255,0.4);">2 identiques</span><span style="color:#ff80bf;font-weight:900;">×1.5</span></div>
                 </div>
             </div>
         </div>
@@ -8966,10 +8968,31 @@
         // ═══════════════════════════════════════════
         //  MACHINE À SOUS
         // ═══════════════════════════════════════════
-        const SLOTS_SYMBOLS = ['⭐','🃏','💰','🔥','💎','🌟','🍀','🎯'];
-        // Multiplicateurs : 3 identiques
-        const SLOTS_MULT3 = { '⭐':20, '🃏':8, '💰':12, '🔥':35, '💎':75, '🌟':150, '🍀':15, '🎯':15 };
-        // Multiplicateur 2 identiques = ×2 sur n'importe quel symbole
+        // Symboles avec poids (plus le poids est bas, plus le symbole est rare sur les rouleaux)
+        // Poids total = 100. Symboles communs = hauts poids, symboles jackpot = très bas poids.
+        const SLOTS_WEIGHTED = [
+            { sym: '🃏', w: 30 },  // très commun
+            { sym: '⭐', w: 25 },  // commun
+            { sym: '🍀', w: 18 },  // commun
+            { sym: '🎯', w: 13 },  // peu commun
+            { sym: '💰', w:  7 },  // rare
+            { sym: '🔥', w:  4 },  // très rare
+            { sym: '💎', w:  2 },  // ultra rare
+            { sym: '🌟', w:  1 },  // jackpot quasi impossible
+        ];
+        const SLOTS_SYMBOLS = SLOTS_WEIGHTED.map(function(s){ return s.sym; });
+        const SLOTS_TOTAL_W = SLOTS_WEIGHTED.reduce(function(a,s){ return a + s.w; }, 0);
+        function _slotsPickSymbol() {
+            let r = Math.random() * SLOTS_TOTAL_W;
+            for (let i = 0; i < SLOTS_WEIGHTED.length; i++) {
+                r -= SLOTS_WEIGHTED[i].w;
+                if (r <= 0) return SLOTS_WEIGHTED[i].sym;
+            }
+            return SLOTS_WEIGHTED[SLOTS_WEIGHTED.length - 1].sym;
+        }
+        // Jackpots fortement réduits — seuls les rares valent encore beaucoup
+        const SLOTS_MULT3 = { '🃏':3, '⭐':7, '🍀':5, '🎯':5, '💰':4, '🔥':12, '💎':25, '🌟':50 };
+        // 2 identiques = ×1.5 (petits gains, ajustés pour que la maison soit rentable)
         let slotsSpinning = false;
 
         function openSlots() {
@@ -9008,12 +9031,11 @@
                 (function(idx) {
                     // Changer symbole rapidement pendant le spin
                     const interval = setInterval(function() {
-                        document.getElementById('slotReel' + idx).textContent =
-                            SLOTS_SYMBOLS[Math.floor(Math.random() * SLOTS_SYMBOLS.length)];
+                        document.getElementById('slotReel' + idx).textContent = _slotsPickSymbol();
                     }, 80);
                     setTimeout(function() {
                         clearInterval(interval);
-                        const sym = SLOTS_SYMBOLS[Math.floor(Math.random() * SLOTS_SYMBOLS.length)];
+                        const sym = _slotsPickSymbol();
                         const reel = document.getElementById('slotReel' + idx);
                         reel.textContent = sym;
                         reel.classList.remove('spin');
