@@ -3557,7 +3557,7 @@
                     <div style="display:flex;justify-content:space-between;"><span>🎯🎯🎯</span><span style="color:#ff80bf;font-weight:900;">×5</span></div>
                     <div style="display:flex;justify-content:space-between;"><span>💰💰💰</span><span style="color:#ff80bf;font-weight:900;">×4</span></div>
                     <div style="display:flex;justify-content:space-between;"><span>🃏🃏🃏</span><span style="color:#ff80bf;font-weight:900;">×3</span></div>
-                    <div style="display:flex;justify-content:space-between;grid-column:1/-1;"><span style="color:rgba(255,255,255,0.4);">2 identiques</span><span style="color:#ff80bf;font-weight:900;">×1.5</span></div>
+                    <div style="display:flex;justify-content:space-between;grid-column:1/-1;"><span style="color:rgba(255,255,255,0.4);">2 identiques</span><span style="color:#ff80bf;font-weight:900;">×2</span></div>
                 </div>
             </div>
         </div>
@@ -8992,7 +8992,7 @@
         }
         // Jackpots fortement réduits — seuls les rares valent encore beaucoup
         const SLOTS_MULT3 = { '🃏':3, '⭐':7, '🍀':5, '🎯':5, '💰':4, '🔥':12, '💎':25, '🌟':50 };
-        // 2 identiques = ×1.5 (petits gains, ajustés pour que la maison soit rentable)
+        // 2 identiques = ×2 (petits gains, ajustés pour que la maison soit rentable)
         let slotsSpinning = false;
 
         function openSlots() {
@@ -9064,8 +9064,8 @@
                 flashGoodCard('legendary');
             } else if (a === b || b === c || a === c) {
                 // 2 identiques
-                mult = 3;
-                msg = '✨ 2 identiques ! ×3 !';
+                mult = 2;
+                msg = '✨ 2 identiques ! ×2 !';
                 playSound('epic');
             } else {
                 msg = '😞 Perdu ! Aucune combinaison.';
