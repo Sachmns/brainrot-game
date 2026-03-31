@@ -2627,6 +2627,66 @@
         .broadcast-banner { position:fixed; bottom:-400px; left:50%; transform:translateX(-50%); background:linear-gradient(145deg,#1a0535,#0a0220); border:2px solid #7a2d8b; border-radius:16px; padding:14px 28px; z-index:9500; max-width:500px; width:90%; text-align:center; color:#fff; font-size:0.92em; font-weight:700; box-shadow:0 -4px 30px rgba(155,89,182,0.5); transition:bottom 0.5s cubic-bezier(0.175,0.885,0.32,1.275); word-break:break-word; }
         .broadcast-banner.show { bottom:30px; }
         .broadcast-banner .bb-from { color:#ff99cc; font-size:0.72em; font-weight:900; letter-spacing:2px; margin-bottom:4px; }
+
+        /* ═══ BANNIÈRE CARTE RARE BAS DROITE ═══ */
+        .rare-alert {
+            position: fixed;
+            bottom: -260px;
+            right: 20px;
+            z-index: 9600;
+            background: linear-gradient(145deg, #0d0500, #1a0a00, #0d0500);
+            border: 3px solid #ffd700;
+            border-radius: 24px;
+            padding: 22px 28px;
+            max-width: 420px;
+            min-width: 320px;
+            color: #fff;
+            font-size: 1.15em;
+            font-weight: 900;
+            word-break: break-word;
+            pointer-events: none;
+            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: rareAlertGlow 1.8s ease-in-out infinite;
+        }
+        .rare-alert.show { bottom: 20px; }
+        @keyframes rareAlertGlow {
+            0%,100% { box-shadow: 0 0 20px rgba(255,215,0,0.6), 0 0 50px rgba(255,215,0,0.3), 0 8px 30px rgba(0,0,0,0.8), inset 0 0 30px rgba(255,215,0,0.04); }
+            50%      { box-shadow: 0 0 40px rgba(255,215,0,1),   0 0 90px rgba(255,215,0,0.6), 0 8px 30px rgba(0,0,0,0.8), inset 0 0 50px rgba(255,215,0,0.10); }
+        }
+        .rare-alert .ra-header {
+            font-size: 0.72em;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #ffd700;
+            margin-bottom: 10px;
+            text-shadow: 0 0 12px rgba(255,215,0,0.9);
+            text-align: center;
+        }
+        .rare-alert .ra-body {
+            font-size: 1.05em;
+            line-height: 1.5;
+            text-align: center;
+        }
+        .rare-alert .ra-card {
+            font-size: 1.2em;
+            font-weight: 900;
+            display: block;
+            margin-top: 6px;
+            text-shadow: 0 0 14px currentColor;
+        }
+        .rare-alert .ra-rarity {
+            font-size: 0.82em;
+            font-weight: 900;
+            letter-spacing: 2px;
+            display: block;
+            margin-top: 8px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.08);
+            text-align: center;
+            text-transform: uppercase;
+        }
         /* Modal pseudo */
         .pseudo-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.97); z-index:999999; justify-content:center; align-items:center; }
         .pseudo-modal-overlay.open { display:flex; }
@@ -2771,6 +2831,46 @@
         .wheel-admin-total { color:#555; font-size:0.75em; margin-top:6px; }
         .wheel-admin-total.ok { color:#2ecc71; }
         .wheel-admin-total.err { color:#e74c3c; }
+        /* ═══ MACHINE À SOUS ═══ */
+        .slots-sidebar-btn {
+            position:fixed; left:15px; top:calc(35% + 370px); z-index:1000;
+            display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;
+            background:linear-gradient(180deg,#800040,#4a0025); border:3px solid #ff0080;
+            border-radius:16px; padding:14px 10px; box-shadow:0 6px 0 #200010,0 8px 20px rgba(0,0,0,0.6);
+            transition:all 0.2s; width:75px;
+        }
+        .slots-sidebar-btn:hover { transform:scale(1.07); box-shadow:0 6px 0 #200010,0 8px 30px rgba(255,0,128,0.5); }
+        .slots-sidebar-btn span { color:#ff80bf; font-size:0.68em; font-weight:900; text-transform:uppercase; letter-spacing:1px; text-align:center; }
+
+        .slots-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.96); z-index:7600; justify-content:center; align-items:center; }
+        .slots-modal.open { display:flex; }
+        .slots-panel { background:radial-gradient(ellipse at top,#2a0018 0%,#0d0008 60%); border:2px solid rgba(255,0,128,0.4); border-radius:28px; padding:28px 24px; width:96%; max-width:420px; box-shadow:0 0 80px rgba(255,0,128,0.15),inset 0 1px 0 rgba(255,255,255,0.05); position:relative; text-align:center; }
+        .slots-close { position:absolute; top:14px; right:18px; background:none; border:none; color:#ff0080; font-size:1.5em; cursor:pointer; }
+        .slots-title { color:#ff0080; font-size:1.5em; font-weight:900; letter-spacing:4px; text-shadow:0 0 30px rgba(255,0,128,0.7); margin-bottom:3px; }
+        .slots-sub { color:#660030; font-size:0.75em; margin-bottom:20px; }
+        .slots-machine { background:rgba(0,0,0,0.6); border:1px solid rgba(255,0,128,0.15); border-radius:20px; padding:22px 16px 14px; margin-bottom:20px; position:relative; }
+        .slots-reels { display:flex; gap:12px; justify-content:center; margin-bottom:14px; }
+        .slots-reel { width:80px; height:90px; background:linear-gradient(145deg,#0d0008,#1a000f); border:2px solid rgba(255,0,128,0.2); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:2.4em; transition:all 0.1s; overflow:hidden; position:relative; box-shadow:inset 0 2px 8px rgba(0,0,0,0.6); }
+        .slots-reel.spin { animation:slotSpin 0.08s infinite linear; }
+        @keyframes slotSpin { 0%{transform:translateY(0)} 50%{transform:translateY(-8px)} 100%{transform:translateY(0)} }
+        .slots-reel.winner { border-color:#ffd700; box-shadow:0 0 20px rgba(255,215,0,0.5),inset 0 0 15px rgba(255,215,0,0.08); }
+        .slots-result-msg { font-size:1em; font-weight:900; min-height:24px; letter-spacing:1px; margin-bottom:10px; padding:6px 10px; border-radius:8px; transition:all 0.3s; }
+        .slots-result-msg.win { color:#ffd700; }
+        .slots-result-msg.lose { color:#e74c3c; }
+        .slots-bet-row { display:flex; align-items:center; gap:8px; justify-content:center; margin-bottom:12px; flex-wrap:wrap; }
+        .slots-bet-label { color:#ff0080; font-size:0.78em; font-weight:900; }
+        .slots-bet-input { width:100px; background:rgba(0,0,0,0.6); border:2px solid rgba(255,0,128,0.25); border-radius:12px; color:#fff; padding:9px 12px; font-size:0.9em; text-align:center; outline:none; transition:border-color 0.2s; }
+        .slots-bet-presets { display:flex; gap:5px; flex-wrap:wrap; justify-content:center; margin-bottom:12px; }
+        .slots-preset { padding:4px 10px; background:rgba(255,0,128,0.08); border:1px solid rgba(255,0,128,0.25); border-radius:8px; color:#ff80bf; font-size:0.7em; font-weight:900; cursor:pointer; transition:all 0.15s; }
+        .slots-preset:hover { border-color:rgba(255,0,128,0.5); color:#ff80bf; background:rgba(255,0,128,0.1); transform:translateY(-1px); }
+        .slots-spin-btn { width:100%; padding:15px; background:linear-gradient(180deg,#ff0080,#800040); color:#fff; border:none; border-radius:16px; font-size:1em; font-weight:900; cursor:pointer; letter-spacing:2px; font-family:'Arial Black',Arial,sans-serif; box-shadow:0 6px 0 #300010,0 0 30px rgba(255,0,128,0.2); transition:all 0.18s; margin-bottom:18px; }
+        .slots-spin-btn:hover { transform:translateY(-2px); box-shadow:0 8px 0 #300010; }
+        .slots-spin-btn:active { transform:translateY(3px); box-shadow:0 3px 0 #300010; }
+        .slots-spin-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+        .slots-paytable { background:rgba(0,0,0,0.4); border:1px solid rgba(255,0,128,0.08); border-radius:16px; padding:14px 16px; }
+        .slots-paytable div { margin:3px 0; color:rgba(255,255,255,0.45); font-size:0.75em; }
+        .slots-paytable span { color:#ff80bf; font-weight:900; }
+
         /* ═══════════════ FIN ROUE ═══════════════ */
         /* Livre admin */
         .admin-book-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.97); z-index:200000; justify-content:center; align-items:center; }
@@ -3389,6 +3489,12 @@
         <span>Craft</span>
     </div>
 
+    <!-- Bouton Machine à sous -->
+    <div class="slots-sidebar-btn" onclick="openSlots()" title="Machine à sous">
+        <span style="font-size:2em;">🎰</span>
+        <span>Slots</span>
+    </div>
+
     <!-- Bouton MIAM (activé par admin) -->
     <div class="miam-sidebar-btn" id="miamSidebarBtn" onclick="openMiam()" title="TIMOTÉ - Fusion de mutations" style="display:none;">
         <span>🍖</span>
@@ -3473,6 +3579,49 @@
         </div>
     </div>
 
+    <!-- Modal Machine à sous -->
+    <div class="slots-modal" id="slotsModal">
+        <div class="slots-panel">
+            <button class="slots-close" onclick="closeSlots()">✕</button>
+            <div class="slots-title">🎰 MACHINE À SOUS</div>
+            <div class="slots-sub">3 symboles identiques = jackpot !</div>
+            <div class="slots-machine">
+                <div class="slots-reels">
+                    <div class="slots-reel" id="slotReel0">⭐</div>
+                    <div class="slots-reel" id="slotReel1">⭐</div>
+                    <div class="slots-reel" id="slotReel2">⭐</div>
+                </div>
+                <div class="slots-result-msg" id="slotsResultMsg"></div>
+            </div>
+            <div class="slots-bet-row">
+                <span class="slots-bet-label">Mise :</span>
+                <input class="slots-bet-input" id="slotsBetInput" type="number" value="1000" min="100">
+                <span style="color:#660030;font-size:0.75em;">💰</span>
+            </div>
+            <div class="slots-bet-presets">
+                <div class="slots-preset" onclick="document.getElementById('slotsBetInput').value=1000">1K</div>
+                <div class="slots-preset" onclick="document.getElementById('slotsBetInput').value=5000">5K</div>
+                <div class="slots-preset" onclick="document.getElementById('slotsBetInput').value=10000">10K</div>
+                <div class="slots-preset" onclick="document.getElementById('slotsBetInput').value=50000">50K</div>
+                <div class="slots-preset" onclick="document.getElementById('slotsBetInput').value=100000">100K</div>
+            </div>
+            <button class="slots-spin-btn" id="slotsSpinBtn" onclick="spinSlots()">🎰 TOURNER</button>
+            <div class="slots-paytable">
+                <div style="color:rgba(255,0,128,0.4);font-size:0.62em;font-weight:900;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">TABLE DES GAINS</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;">
+                    <div style="display:flex;justify-content:space-between;"><span>🌟🌟🌟</span><span style="color:#ff80bf;font-weight:900;">×50</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>💎💎💎</span><span style="color:#ff80bf;font-weight:900;">×25</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>🔥🔥🔥</span><span style="color:#ff80bf;font-weight:900;">×12</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>⭐⭐⭐</span><span style="color:#ff80bf;font-weight:900;">×7</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>🍀🍀🍀</span><span style="color:#ff80bf;font-weight:900;">×5</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>🎯🎯🎯</span><span style="color:#ff80bf;font-weight:900;">×5</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>💰💰💰</span><span style="color:#ff80bf;font-weight:900;">×4</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>🃏🃏🃏</span><span style="color:#ff80bf;font-weight:900;">×3</span></div>
+                    <div style="display:flex;justify-content:space-between;grid-column:1/-1;"><span style="color:rgba(255,255,255,0.4);">2 identiques</span><span style="color:#ff80bf;font-weight:900;">×2</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Roue de la Fortune -->
     <div class="wheel-modal" id="wheelModal">
@@ -3558,6 +3707,9 @@
         <div class="bb-from">📢 MESSAGE DE SACHMNS</div>
         <div id="broadcastText"></div>
     </div>
+
+    <!-- Bannière carte rare bas droite -->
+    <div class="rare-alert" id="rareAlertBanner"><span id="rareAlertText"></span></div>
 
     <!-- Global Luck Banner -->
     <div class="global-luck-banner" id="globalLuckBanner"></div>
@@ -4674,7 +4826,7 @@
                 { name: 'Granny', img: 'https://static.wikia.nocookie.net/stealabr/images/0/0f/Grante_Angelta.png/revision/latest/scale-to-width-down/268?cb=20260320005422' },
                 { name: 'Buntteo', img: 'https://static.wikia.nocookie.net/stealabr/images/d/d1/Buntteo.png/revision/latest/scale-to-width-down/1000?cb=20260328193126' },
                 { name: 'Bunny Bunny Bunny Sahur', img: 'https://static.wikia.nocookie.net/stealabr/images/7/7f/Bunny_Bunny_Bunny_Sahur.png/revision/latest/scale-to-width-down/268?cb=20260328195310' },
-                { name: 'Noo my Eggs', img: 'https://static.wikia.nocookie.net/stealabr/images/7/74/Noo_my_Eggs.png/revision/latest/scale-to-width-down/150?cb=20260329145400' }
+                { name: 'Noo my Eggs', img: 'https://static.wikia.nocookie.net/steal-a-brainnrot-fanon/images/9/9b/Noo_My_Eggs.png/revision/latest?cb=20260222003523' }
              ],
               og: [
                 { name: "Strawberry Elephant", img: 'https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest/scale-to-width-down/144?cb=20250830235735' },
@@ -5232,6 +5384,13 @@
                     goldEarned += reward.quantity;
                 } else if (reward.type === 'card') {
                     const cardKey = reward.rarity + '|' + reward.name;
+
+                    // Notification carte rare pour tous les joueurs connectés (avant tout return)
+                    if (_RARE_ALERT_RARITIES.has(reward.rarity)) {
+                        const _mut = reward.isRainbow ? 'rainbow' : reward.isDiamond ? 'diamond' : reward.isGold ? 'gold' : 'normal';
+                        broadcastRareCard(reward.name, reward.rarity, _mut);
+                    }
+
                     // Les cartes admin_exclusive ne comptent pas dans le classement
                     if (reward.rarity === 'admin_exclusive') return;
                     const hasMutation = reward.isGold || reward.isDiamond || reward.isRainbow;
@@ -5552,6 +5711,10 @@
             
             playSound('buy');
             autoSave();
+
+            // Notification carte rare pour tous les joueurs connectés
+            const _buyMut = isRainbow ? 'rainbow' : isDiamond ? 'diamond' : isGold ? 'gold' : 'normal';
+            broadcastRareCard(card.name, rarity, _buyMut);
 
             // Hook quêtes d'achat
             onCardBought(rarity);
@@ -6890,13 +7053,17 @@
             firebaseDB.ref('admin/doubleGold').on('value', snap => {
                 const d = snap.val();
                 if (!d || !d.active) { applyDoubleGold(false, 0, 2); return; }
-                // Ignorer le write optimiste Firebase (ts non résolu)
-                if (d.durationMs && d.ts === null) return;
                 let expiry = 0;
-                if (d.durationMs && d.ts && typeof d.ts === 'number') {
-                    const elapsed = Date.now() - d.ts;
-                    const remaining = d.durationMs - Math.max(0, elapsed);
-                    expiry = remaining > 0 ? Date.now() + remaining : 0;
+                if (d.durationMs) {
+                    if (d.ts && typeof d.ts === 'number') {
+                        // ts résolu : calcul précis basé sur le timestamp serveur
+                        const elapsed = Date.now() - d.ts;
+                        const remaining = d.durationMs - Math.max(0, elapsed);
+                        expiry = remaining > 0 ? Date.now() + remaining : 0;
+                    } else {
+                        // ts pas encore résolu (objet sentinel) : fallback sur Date.now()
+                        expiry = Date.now() + d.durationMs;
+                    }
                 } else if (d.expiry) {
                     expiry = d.expiry;
                 }
@@ -6977,6 +7144,13 @@
                     const inp = document.getElementById('adminMutationRainbowInput');
                     if (inp) inp.value = (d.rainbow * 100).toFixed(1);
                 }
+            });
+
+            // Carte rare obtenue — notification bas droite pour tous les joueurs
+            firebaseDB.ref('admin/rareAlert').on('value', snap => {
+                const d = snap.val();
+                if (!d || !d.ts) return;
+                showRareAlert(d.pseudo, d.cardName, d.rarity, d.mutation, d.ts);
             });
 
             } // fin bloc _globalListenersAttached
@@ -7126,6 +7300,63 @@
             banner.classList.add('show');
             clearTimeout(banner._hide);
             banner._hide = setTimeout(() => banner.classList.remove('show'), 8000);
+        }
+
+        // ── Notification carte rare (bas droite) ──
+        const _RARE_ALERT_RARITIES = new Set(['og','limited','no','admin_exclusive']);
+        const _RARE_ALERT_ICONS    = { og:'⭐', limited:'💎', no:'❤', admin_exclusive:'⚡' };
+        const _RARE_ALERT_COLORS   = { og:'#ffd700', limited:'#ff59e7', no:'#ff4444', admin_exclusive:'#ff0040' };
+        const _MUT_LABELS          = { gold:'✨ GOLD', diamond:'💎 DIAMANT', rainbow:'🌈 RAINBOW', normal:'Normal' };
+        let _lastRareAlertTs = 0;
+
+        function showRareAlert(pseudo, cardName, rarity, mutation, ts) {
+            if (ts && ts <= _lastRareAlertTs) return;
+            // Ignorer les messages trop anciens (plus de 30s) — évite d'afficher au rechargement
+            if (ts && Date.now() - ts > 30000) return;
+            _lastRareAlertTs = ts || Date.now();
+            const banner = document.getElementById('rareAlertBanner');
+            const text   = document.getElementById('rareAlertText');
+            if (!banner || !text) return;
+            const mutLabel    = _MUT_LABELS[mutation] || 'Normal';
+            const rarityColor = _RARE_ALERT_COLORS[rarity] || '#ffd700';
+            const icon        = _RARE_ALERT_ICONS[rarity] || '⭐';
+            // Adapter le glow à la rareté
+            banner.style.borderColor = rarityColor;
+            banner.style.setProperty('--ra-color', rarityColor);
+            banner.style.animation = 'none';
+            // Force reflow pour relancer l'animation
+            void banner.offsetWidth;
+            banner.style.animation = '';
+            // Injecter le CSS de couleur dynamique via keyframes inline
+            banner.style.setProperty('--glow1', rarityColor + '99');
+            banner.style.setProperty('--glow2', rarityColor + 'cc');
+            banner.style.boxShadow =
+                '0 0 30px ' + rarityColor + '88, ' +
+                '0 0 70px ' + rarityColor + '44, ' +
+                '0 8px 40px rgba(0,0,0,0.9), ' +
+                'inset 0 0 40px ' + rarityColor + '0a';
+            text.innerHTML =
+                '<div class="ra-header">' + icon + ' CARTE ULTRA RARE OBTENUE ! ' + icon + '</div>' +
+                '<div class="ra-body">' +
+                    '<strong style="color:' + rarityColor + ';font-size:1.1em;text-shadow:0 0 16px ' + rarityColor + ';">' + pseudo + '</strong>' +
+                    ' a obtenu' +
+                    '<span class="ra-card" style="color:' + rarityColor + ';">' + icon + ' ' + cardName + '</span>' +
+                    '<span class="ra-rarity" style="color:' + rarityColor + ';border:1px solid ' + rarityColor + '44;text-shadow:0 0 10px ' + rarityColor + ';">en ' + mutLabel + ' !</span>' +
+                '</div>';
+            banner.classList.add('show');
+            clearTimeout(banner._hide);
+            banner._hide = setTimeout(() => banner.classList.remove('show'), 5000);
+        }
+
+        function broadcastRareCard(cardName, rarity, mutation) {
+            if (!firebaseDB) return;
+            if (!_RARE_ALERT_RARITIES.has(rarity)) return;
+            const pseudo = localStorage.getItem('tradePseudo') || 'Un joueur';
+            firebaseDB.ref('admin/rareAlert').set({
+                pseudo, cardName, rarity,
+                mutation: mutation || 'normal',
+                ts: Date.now()
+            });
         }
 
         function applyDoubleGold(active, expiry, multiplier) {
@@ -7822,7 +8053,7 @@
             // Stocker durationMs et ts plutôt qu'un expiry absolu (évite les dérives d'horloge)
             const durationMs = totalMs;
             const durLabel = minVal > 0 && secVal > 0 ? minVal + 'min ' + secVal + 's' : minVal > 0 ? minVal + ' min' : secVal + 's';
-            firebaseDB.ref('admin/doubleGold').set({ active: true, durationMs, multiplier: multVal, ts: firebase.database.ServerValue.TIMESTAMP })
+            firebaseDB.ref('admin/doubleGold').set({ active: true, durationMs, multiplier: multVal, ts: Date.now() })
                 .then(() => {
                     const msg = '✅ Or ×' + multVal + ' activé pour ' + durLabel + ' !';
                     adminStatus(msg);
@@ -8233,7 +8464,7 @@
             // Message broadcast une seule fois par activation
             if (!_miamBroadcastShown) {
                 _miamBroadcastShown = true;
-                showBroadcast('🍖 TIMOTÉ EST LÀ ET IL VEUT MANGER: DES PATES, UN TASTY CROUSTY, DU RIZ, DU POULET, UN BURGER, BURGER KING, LA PLAZA MAYOR, DES BRAINROTS, MADAME CHAUVIN, KENDJI GIRAC, UN PAIN AU CHOCOLAT, MARTIN(INSHALLAH), TON AME, LE CODE DU JEU(CHIANT), UN COMMENTAIRE YOUTUBE SHORT, UNE FAUTE DORTOGRAFE, UN PADDLE, LA LUNE, DE LA VIANDE, LA MUTATION DIAMANT, UN BON PIED, ANTOINE, UN BUS ALÉOP, UNE ANNÉE LUMIÈRE, LE SON, MOUSIEUR, LE CUISTO, LA FRENCH MURDER, UN GROUPE CLASSE, DES OIGNONS, LENNI LOGNON, MR MERCIERTASTYCROUSTY92I, UNE ENCEINTE JBL, NAPS, SOPHIE RAIN, LE 67 KID, CHATGPT, LA FUSE MACHINE , LE BREVET BLANC DE CENI, UNE PRESSE HYDRAULIQUE, LE MESSAGE LA, LA LUCK X100, SACHMNS LE MEILLEUR ADMIN DU MONDE, LE CÉLÉBRE: CA VA SACHA ?, MA GROSSE BEUTE, LE TEMPS, UN NUAGE, UN CADENAS, UN PARAPLUIE, LE MONT SAINT MICHEL !', Date.now());
+                showBroadcast('🍖 TIMOTÉ EST LÀ ET IL VEUT MANGER: DES PATES, UN TASTY CROUSTY, DU RIZ, DU POULET, UN BURGER, BURGER KING, LA PLAZA MAYOR, DES BRAINROTS, MADAME CHAUVIN, KENDJI GIRAC, UN PAIN AU CHOCOLAT, MARTIN(INSHALLAH), TON AME, LE CODE DU JEU(CHIANT), UN COMMENTAIRE YOUTUBE SHORT, UNE FAUTE DORTOGRAFE, UN PADDLE, LA LUNE, DE LA VIANDE, LA MUTATION DIAMANT, UN BON PIED, ANTOINE, UN BUS ALÉOP, UNE ANNÉE LUMIÈRE, LE SON, MOUSIEUR, LE CUISTO, LA FRENCH MURDER, UN GROUPE CLASSE, DES OIGNONS, LENNI LOGNON, MR MERCIERTASTYCROUSTY92I, UNE ENCEINTE JBL, NAPS, SOPHIE RAIN, LE 67 KID, CHATGPT, LA FUSE MACHINE !', Date.now());
             }
             // Mettre à jour le statut admin si panel ouvert
             const st = document.getElementById('adminMiamStatus');
@@ -8881,6 +9112,123 @@
         // ═══════════════════════════════════════════
         // Symboles avec poids (plus le poids est bas, plus le symbole est rare sur les rouleaux)
         // Poids total = 100. Symboles communs = hauts poids, symboles jackpot = très bas poids.
+        const SLOTS_WEIGHTED = [
+            { sym: '🃏', w: 30 },  // très commun
+            { sym: '⭐', w: 25 },  // commun
+            { sym: '🍀', w: 18 },  // commun
+            { sym: '🎯', w: 13 },  // peu commun
+            { sym: '💰', w:  7 },  // rare
+            { sym: '🔥', w:  4 },  // très rare
+            { sym: '💎', w:  2 },  // ultra rare
+            { sym: '🌟', w:  1 },  // jackpot quasi impossible
+        ];
+        const SLOTS_SYMBOLS = SLOTS_WEIGHTED.map(function(s){ return s.sym; });
+        const SLOTS_TOTAL_W = SLOTS_WEIGHTED.reduce(function(a,s){ return a + s.w; }, 0);
+        function _slotsPickSymbol() {
+            let r = Math.random() * SLOTS_TOTAL_W;
+            for (let i = 0; i < SLOTS_WEIGHTED.length; i++) {
+                r -= SLOTS_WEIGHTED[i].w;
+                if (r <= 0) return SLOTS_WEIGHTED[i].sym;
+            }
+            return SLOTS_WEIGHTED[SLOTS_WEIGHTED.length - 1].sym;
+        }
+        // Jackpots fortement réduits — seuls les rares valent encore beaucoup
+        const SLOTS_MULT3 = { '🃏':3, '⭐':7, '🍀':5, '🎯':5, '💰':4, '🔥':12, '💎':25, '🌟':50 };
+        // 2 identiques = ×2 (petits gains, ajustés pour que la maison soit rentable)
+        let slotsSpinning = false;
+
+        function openSlots() {
+            document.getElementById('slotsModal').classList.add('open');
+        }
+        function closeSlots() {
+            document.getElementById('slotsModal').classList.remove('open');
+        }
+
+        function spinSlots() {
+            if (slotsSpinning) return;
+            const bet = parseInt(document.getElementById('slotsBetInput').value) || 0;
+            if (bet < 100) { showSlotsMsg('Mise minimum : 100 💰', 'lose'); return; }
+            if (stats.totalGold < bet) { showSlotsMsg("Pas assez d'or !", 'lose'); return; }
+
+            // Déduire la mise
+            stats.totalGold -= bet;
+            updateGoldDisplay();
+            autoSave();
+
+            slotsSpinning = true;
+            document.getElementById('slotsSpinBtn').disabled = true;
+            document.getElementById('slotsResultMsg').textContent = '';
+            // Réinitialiser les reels
+            for (let i = 0; i < 3; i++) {
+                const reel = document.getElementById('slotReel' + i);
+                reel.classList.remove('winner');
+                reel.classList.add('spin');
+            }
+            playSound('wheel');
+
+            // Animation de spin progressive
+            const spinDuration = [800, 1100, 1400];
+            const results = [];
+            for (let i = 0; i < 3; i++) {
+                (function(idx) {
+                    // Changer symbole rapidement pendant le spin
+                    const interval = setInterval(function() {
+                        document.getElementById('slotReel' + idx).textContent = _slotsPickSymbol();
+                    }, 80);
+                    setTimeout(function() {
+                        clearInterval(interval);
+                        const sym = _slotsPickSymbol();
+                        const reel = document.getElementById('slotReel' + idx);
+                        reel.textContent = sym;
+                        reel.classList.remove('spin');
+                        results[idx] = sym;
+                        if (idx === 2) {
+                            slotsSpinning = false;
+                            document.getElementById('slotsSpinBtn').disabled = false;
+                            resolveSlotsResult(results, bet);
+                        }
+                    }, spinDuration[idx]);
+                })(i);
+            }
+        }
+
+        function resolveSlotsResult(results, bet) {
+            const [a, b, c] = results;
+            let mult = 0;
+            let msg = '';
+
+            if (a === b && b === c) {
+                // 3 identiques
+                mult = SLOTS_MULT3[a] || 10;
+                msg = '🎉 3 ' + a + ' ! ×' + mult + ' !';
+                for (let i = 0; i < 3; i++) document.getElementById('slotReel' + i).classList.add('winner');
+                playSound('secret');
+                flashGoodCard('legendary');
+            } else if (a === b || b === c || a === c) {
+                // 2 identiques
+                mult = 2;
+                msg = '✨ 2 identiques ! ×2 !';
+                playSound('epic');
+            } else {
+                msg = '😞 Perdu ! Aucune combinaison.';
+            }
+
+            if (mult > 0) {
+                const gain = Math.floor(bet * mult);
+                stats.totalGold += gain;
+                updateGoldDisplay();
+                autoSave();
+                showSlotsMsg(msg + '  +' + gain.toLocaleString() + ' 💰', 'win');
+            } else {
+                showSlotsMsg(msg, 'lose');
+            }
+        }
+
+        function showSlotsMsg(msg, type) {
+            const el = document.getElementById('slotsResultMsg');
+            el.textContent = msg;
+            el.className = 'slots-result-msg ' + (type || '');
+        }
 
 
         function updateGoldDisplay() {
