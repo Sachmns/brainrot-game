@@ -2831,45 +2831,6 @@
         .wheel-admin-total { color:#555; font-size:0.75em; margin-top:6px; }
         .wheel-admin-total.ok { color:#2ecc71; }
         .wheel-admin-total.err { color:#e74c3c; }
-        /* ═══ MACHINE À SOUS ═══ */
-        .slots-sidebar-btn {
-            position:fixed; left:15px; top:calc(35% + 370px); z-index:1000;
-            display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;
-            background:linear-gradient(180deg,#800040,#4a0025); border:3px solid #ff0080;
-            border-radius:16px; padding:14px 10px; box-shadow:0 6px 0 #200010,0 8px 20px rgba(0,0,0,0.6);
-            transition:all 0.2s; width:75px;
-        }
-        .slots-sidebar-btn:hover { transform:scale(1.07); box-shadow:0 6px 0 #200010,0 8px 30px rgba(255,0,128,0.5); }
-        .slots-sidebar-btn span { color:#ff80bf; font-size:0.68em; font-weight:900; text-transform:uppercase; letter-spacing:1px; text-align:center; }
-
-        .slots-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.96); z-index:7600; justify-content:center; align-items:center; }
-        .slots-modal.open { display:flex; }
-        .slots-panel { background:radial-gradient(ellipse at top,#2a0018 0%,#0d0008 60%); border:2px solid rgba(255,0,128,0.4); border-radius:28px; padding:28px 24px; width:96%; max-width:420px; box-shadow:0 0 80px rgba(255,0,128,0.15),inset 0 1px 0 rgba(255,255,255,0.05); position:relative; text-align:center; }
-        .slots-close { position:absolute; top:14px; right:18px; background:none; border:none; color:#ff0080; font-size:1.5em; cursor:pointer; }
-        .slots-title { color:#ff0080; font-size:1.5em; font-weight:900; letter-spacing:4px; text-shadow:0 0 30px rgba(255,0,128,0.7); margin-bottom:3px; }
-        .slots-sub { color:#660030; font-size:0.75em; margin-bottom:20px; }
-        .slots-machine { background:rgba(0,0,0,0.6); border:1px solid rgba(255,0,128,0.15); border-radius:20px; padding:22px 16px 14px; margin-bottom:20px; position:relative; }
-        .slots-reels { display:flex; gap:12px; justify-content:center; margin-bottom:14px; }
-        .slots-reel { width:80px; height:90px; background:linear-gradient(145deg,#0d0008,#1a000f); border:2px solid rgba(255,0,128,0.2); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:2.4em; transition:all 0.1s; overflow:hidden; position:relative; box-shadow:inset 0 2px 8px rgba(0,0,0,0.6); }
-        .slots-reel.spin { animation:slotSpin 0.08s infinite linear; }
-        @keyframes slotSpin { 0%{transform:translateY(0)} 50%{transform:translateY(-8px)} 100%{transform:translateY(0)} }
-        .slots-reel.winner { border-color:#ffd700; box-shadow:0 0 20px rgba(255,215,0,0.5),inset 0 0 15px rgba(255,215,0,0.08); }
-        .slots-result-msg { font-size:1em; font-weight:900; min-height:24px; letter-spacing:1px; margin-bottom:10px; padding:6px 10px; border-radius:8px; transition:all 0.3s; }
-        .slots-result-msg.win { color:#ffd700; }
-        .slots-result-msg.lose { color:#e74c3c; }
-        .slots-bet-row { display:flex; align-items:center; gap:8px; justify-content:center; margin-bottom:12px; flex-wrap:wrap; }
-        .slots-bet-label { color:#ff0080; font-size:0.78em; font-weight:900; }
-        .slots-bet-input { width:100px; background:rgba(0,0,0,0.6); border:2px solid rgba(255,0,128,0.25); border-radius:12px; color:#fff; padding:9px 12px; font-size:0.9em; text-align:center; outline:none; transition:border-color 0.2s; }
-        .slots-bet-presets { display:flex; gap:5px; flex-wrap:wrap; justify-content:center; margin-bottom:12px; }
-        .slots-preset { padding:4px 10px; background:rgba(255,0,128,0.08); border:1px solid rgba(255,0,128,0.25); border-radius:8px; color:#ff80bf; font-size:0.7em; font-weight:900; cursor:pointer; transition:all 0.15s; }
-        .slots-preset:hover { border-color:rgba(255,0,128,0.5); color:#ff80bf; background:rgba(255,0,128,0.1); transform:translateY(-1px); }
-        .slots-spin-btn { width:100%; padding:15px; background:linear-gradient(180deg,#ff0080,#800040); color:#fff; border:none; border-radius:16px; font-size:1em; font-weight:900; cursor:pointer; letter-spacing:2px; font-family:'Arial Black',Arial,sans-serif; box-shadow:0 6px 0 #300010,0 0 30px rgba(255,0,128,0.2); transition:all 0.18s; margin-bottom:18px; }
-        .slots-spin-btn:hover { transform:translateY(-2px); box-shadow:0 8px 0 #300010; }
-        .slots-spin-btn:active { transform:translateY(3px); box-shadow:0 3px 0 #300010; }
-        .slots-spin-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
-        .slots-paytable { background:rgba(0,0,0,0.4); border:1px solid rgba(255,0,128,0.08); border-radius:16px; padding:14px 16px; }
-        .slots-paytable div { margin:3px 0; color:rgba(255,255,255,0.45); font-size:0.75em; }
-        .slots-paytable span { color:#ff80bf; font-weight:900; }
 
         /* ═══════════════ FIN ROUE ═══════════════ */
         /* Livre admin */
@@ -3380,6 +3341,28 @@
         .miam-reveal-mut  { font-size: 0.85em; font-weight: 900; letter-spacing: 3px; }
         .miam-reveal-close { margin-top: 8px; padding: 10px 28px; border-radius: 12px; border: none; background: linear-gradient(180deg,#ff6b00,#cc3a00); color: #ffd700; font-size: 0.9em; font-weight: 900; cursor: pointer; font-family: 'Arial Black', Arial, sans-serif; }
 
+        /* ════ ÉVÉNEMENTS PROGRAMMÉS ════ */
+        .sched-item {
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,170,0,0.25);
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .sched-item-info { flex: 1; min-width: 0; }
+        .sched-item-type { color: #ffaa00; font-size: 0.72em; font-weight: 900; letter-spacing: 1px; }
+        .sched-item-detail { color: #ccc; font-size: 0.7em; margin-top: 2px; }
+        .sched-item-time { color: #ffd700; font-size: 0.68em; font-weight: 900; white-space: nowrap; }
+        .sched-item-del { background: rgba(180,0,0,0.4); border: 1px solid rgba(255,60,60,0.3); border-radius: 8px; color: #ff6666; font-size: 0.7em; padding: 3px 9px; cursor: pointer; flex-shrink: 0; white-space: nowrap; }
+        .sched-item-del:hover { background: rgba(220,0,0,0.6); }
+        .sched-item-done { opacity: 0.45; border-color: rgba(100,100,100,0.2); }
+        .sched-countdown { color: #ffaa00; font-size: 0.65em; font-weight: 900; }
+
+
         </style>
 </head>
 <body>
@@ -3489,12 +3472,6 @@
         <span>Craft</span>
     </div>
 
-    <!-- Bouton Machine à sous -->
-    <div class="slots-sidebar-btn" onclick="openSlots()" title="Machine à sous">
-        <span style="font-size:2em;">🎰</span>
-        <span>Slots</span>
-    </div>
-
     <!-- Bouton MIAM (activé par admin) -->
     <div class="miam-sidebar-btn" id="miamSidebarBtn" onclick="openMiam()" title="TIMOTÉ - Fusion de mutations" style="display:none;">
         <span>🍖</span>
@@ -3576,50 +3553,6 @@
             <div class="craft-reveal-rarity" id="craftRevealRarity"></div>
             <div class="craft-reveal-new" id="craftRevealNew" style="display:none;">NOUVEAU ✨</div>
             <button class="craft-reveal-close" onclick="closeCraftAnim()">✅ CONTINUER</button>
-        </div>
-    </div>
-
-    <!-- Modal Machine à sous -->
-    <div class="slots-modal" id="slotsModal">
-        <div class="slots-panel">
-            <button class="slots-close" onclick="closeSlots()">✕</button>
-            <div class="slots-title">🎰 MACHINE À SOUS</div>
-            <div class="slots-sub">3 symboles identiques = jackpot !</div>
-            <div class="slots-machine">
-                <div class="slots-reels">
-                    <div class="slots-reel" id="slotReel0">⭐</div>
-                    <div class="slots-reel" id="slotReel1">⭐</div>
-                    <div class="slots-reel" id="slotReel2">⭐</div>
-                </div>
-                <div class="slots-result-msg" id="slotsResultMsg"></div>
-            </div>
-            <div class="slots-bet-row">
-                <span class="slots-bet-label">Mise :</span>
-                <input class="slots-bet-input" id="slotsBetInput" type="number" value="1000" min="100">
-                <span style="color:#660030;font-size:0.75em;">💰</span>
-            </div>
-            <div class="slots-bet-presets">
-                <div class="slots-preset" onclick="document.getElementById('slotsBetInput').value=1000">1K</div>
-                <div class="slots-preset" onclick="document.getElementById('slotsBetInput').value=5000">5K</div>
-                <div class="slots-preset" onclick="document.getElementById('slotsBetInput').value=10000">10K</div>
-                <div class="slots-preset" onclick="document.getElementById('slotsBetInput').value=50000">50K</div>
-                <div class="slots-preset" onclick="document.getElementById('slotsBetInput').value=100000">100K</div>
-            </div>
-            <button class="slots-spin-btn" id="slotsSpinBtn" onclick="spinSlots()">🎰 TOURNER</button>
-            <div class="slots-paytable">
-                <div style="color:rgba(255,0,128,0.4);font-size:0.62em;font-weight:900;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">TABLE DES GAINS</div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;">
-                    <div style="display:flex;justify-content:space-between;"><span>🌟🌟🌟</span><span style="color:#ff80bf;font-weight:900;">×50</span></div>
-                    <div style="display:flex;justify-content:space-between;"><span>💎💎💎</span><span style="color:#ff80bf;font-weight:900;">×25</span></div>
-                    <div style="display:flex;justify-content:space-between;"><span>🔥🔥🔥</span><span style="color:#ff80bf;font-weight:900;">×12</span></div>
-                    <div style="display:flex;justify-content:space-between;"><span>⭐⭐⭐</span><span style="color:#ff80bf;font-weight:900;">×7</span></div>
-                    <div style="display:flex;justify-content:space-between;"><span>🍀🍀🍀</span><span style="color:#ff80bf;font-weight:900;">×5</span></div>
-                    <div style="display:flex;justify-content:space-between;"><span>🎯🎯🎯</span><span style="color:#ff80bf;font-weight:900;">×5</span></div>
-                    <div style="display:flex;justify-content:space-between;"><span>💰💰💰</span><span style="color:#ff80bf;font-weight:900;">×4</span></div>
-                    <div style="display:flex;justify-content:space-between;"><span>🃏🃏🃏</span><span style="color:#ff80bf;font-weight:900;">×3</span></div>
-                    <div style="display:flex;justify-content:space-between;grid-column:1/-1;"><span style="color:rgba(255,255,255,0.4);">2 identiques</span><span style="color:#ff80bf;font-weight:900;">×2</span></div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -3882,6 +3815,96 @@
                         <button class="admin-btn" onclick="craftAdminAddRecipe()" style="background:linear-gradient(180deg,#004a30,#002a18);border:2px solid rgba(0,255,136,0.3);color:#00ff88;">➕ Nouvelle recette</button>
                         <button class="admin-btn blue" onclick="craftAdminSave()">💾 Sauvegarder</button>
                     </div>
+                </div>
+
+
+                <!-- Événements programmés -->
+                <div class="admin-section" style="border-color:rgba(255,170,0,0.4);background:rgba(255,140,0,0.03);">
+                    <div class="admin-section-title" style="color:#ffaa00;">📅 Événements programmés</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:12px;">Programme un événement à une date et heure précise. Il se déclenchera automatiquement pour tous les joueurs connectés.</div>
+
+                    <!-- Formulaire d'ajout -->
+                    <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,170,0,0.2);border-radius:12px;padding:12px;margin-bottom:12px;">
+                        <div style="color:#ffaa00;font-size:0.72em;font-weight:900;margin-bottom:8px;letter-spacing:1px;">➕ NOUVEL ÉVÉNEMENT</div>
+
+                        <div class="admin-row" style="margin-bottom:8px;gap:6px;flex-wrap:wrap;">
+                            <select id="schedType" class="admin-input" style="flex:1;min-width:120px;" onchange="schedTypeChange()">
+                                <option value="luck">🍀 Chance</option>
+                                <option value="gold">💰 Double or</option>
+                                <option value="theme">🎨 Thème</option>
+                                <option value="miam">🍖 MIAM</option>
+                            </select>
+                        </div>
+
+                        <!-- Paramètres Chance -->
+                        <div id="schedParamsLuck" class="admin-row" style="margin-bottom:8px;gap:6px;flex-wrap:wrap;">
+                            <select id="schedLuckMult" class="admin-input" style="max-width:90px;">
+                                <option value="2">×2</option>
+                                <option value="4">×4</option>
+                                <option value="8">×8</option>
+                                <option value="16">×16</option>
+                                <option value="32">×32</option>
+                                <option value="100">×100</option>
+                            </select>
+                            <span style="color:#aaa;font-size:0.72em;align-self:center;">durée:</span>
+                            <input class="admin-input" type="number" id="schedLuckMin" value="5" min="0" style="max-width:60px;" placeholder="min">
+                            <span style="color:#aaa;font-size:0.72em;align-self:center;">min</span>
+                            <input class="admin-input" type="number" id="schedLuckSec" value="0" min="0" max="59" style="max-width:60px;" placeholder="sec">
+                            <span style="color:#aaa;font-size:0.72em;align-self:center;">sec</span>
+                        </div>
+
+                        <!-- Paramètres Double or -->
+                        <div id="schedParamsGold" class="admin-row" style="margin-bottom:8px;gap:6px;flex-wrap:wrap;display:none;">
+                            <select id="schedGoldMult" class="admin-input" style="max-width:90px;">
+                                <option value="2">×2</option>
+                                <option value="3">×3</option>
+                                <option value="4">×4</option>
+                                <option value="5">×5</option>
+                            </select>
+                            <span style="color:#aaa;font-size:0.72em;align-self:center;">durée:</span>
+                            <input class="admin-input" type="number" id="schedGoldMin" value="5" min="0" style="max-width:60px;" placeholder="min">
+                            <span style="color:#aaa;font-size:0.72em;align-self:center;">min</span>
+                            <input class="admin-input" type="number" id="schedGoldSec" value="0" min="0" max="59" style="max-width:60px;" placeholder="sec">
+                            <span style="color:#aaa;font-size:0.72em;align-self:center;">sec</span>
+                        </div>
+
+                        <!-- Paramètres Thème -->
+                        <div id="schedParamsTheme" style="margin-bottom:8px;display:none;">
+                            <select id="schedThemeId" class="admin-input" style="width:100%;">
+                                <option value="">🔵 Défaut</option>
+                                <option value="saint-patrick">🍀 Saint Patrick</option>
+                                <option value="printemps">🌸 Printemps</option>
+                                <option value="minecraft">⛏️ Minecraft</option>
+                                <option value="unchained">⛓️ Unchained</option>
+                                <option value="inazuma">⚡ Inazuma Eleven</option>
+                                <option value="or">✨ Or</option>
+                                <option value="diamant">💎 Diamant</option>
+                                <option value="rainbow">🌈 Rainbow</option>
+                                <option value="paques">🐣 Pâques</option>
+                            </select>
+                        </div>
+
+                        <!-- Paramètres MIAM -->
+                        <div id="schedParamsMiam" class="admin-row" style="margin-bottom:8px;gap:6px;flex-wrap:wrap;display:none;">
+                            <span style="color:#aaa;font-size:0.72em;align-self:center;">durée:</span>
+                            <input class="admin-input" type="number" id="schedMiamMin" value="10" min="1" style="max-width:60px;">
+                            <span style="color:#aaa;font-size:0.72em;align-self:center;">min</span>
+                            <input class="admin-input" type="number" id="schedMiamSec" value="0" min="0" max="59" style="max-width:60px;">
+                            <span style="color:#aaa;font-size:0.72em;align-self:center;">sec</span>
+                        </div>
+
+                        <!-- Date/heure de déclenchement -->
+                        <div class="admin-row" style="margin-bottom:10px;gap:6px;flex-wrap:wrap;align-items:center;">
+                            <span style="color:#ffaa00;font-size:0.72em;font-weight:900;white-space:nowrap;">🕐 Déclencher le :</span>
+                            <input class="admin-input" type="datetime-local" id="schedDateTime" style="flex:1;min-width:180px;">
+                        </div>
+
+                        <button class="admin-btn" onclick="schedAddEvent()" style="background:linear-gradient(180deg,#aa6600,#664000);box-shadow:0 4px 0 #332000;border:2px solid #ffaa00;width:100%;">📅 Programmer l'événement</button>
+                        <div style="color:#555;font-size:0.7em;margin-top:6px;" id="schedFormStatus"></div>
+                    </div>
+
+                    <!-- Liste des événements programmés -->
+                    <div id="schedList" style="max-height:260px;overflow-y:auto;"></div>
                 </div>
 
             </div>
@@ -7233,6 +7256,12 @@
                 refreshAdminPlayerLists();
             });
 
+            // Événements programmés
+            firebaseDB.ref('admin/scheduledEvents').on('value', snap => {
+                window._scheduledEvents = snap.val() || {};
+                _schedRenderList();
+            });
+
             // Carte forcée globale : écrite directement par joueur depuis adminForceCardAll
             // (plus de listener global nécessaire)
 
@@ -7474,6 +7503,7 @@
             loadAdminNotepad();
             craftAdminLoad();
             buildAdminBanCardGrid();
+            _schedRenderList();
             // Charger l'URL actuelle du coffre dans le champ
             if (firebaseDB) firebaseDB.ref('admin/chestImg').once('value').then(s => {
                 const el = document.getElementById('adminChestUrl');
@@ -8741,6 +8771,224 @@
                 .catch(e => adminStatus('Erreur : ' + e.message));
         }
 
+
+        // ════════════════════════════════════════════════════════
+        // ═══            ÉVÉNEMENTS PROGRAMMÉS                 ═══
+        // ════════════════════════════════════════════════════════
+
+        window._scheduledEvents = {};
+        let _schedCheckInterval = null;
+
+        // Démarrer le vérificateur toutes les 10 secondes
+        function _schedStartChecker() {
+            if (_schedCheckInterval) return;
+            _schedCheckInterval = setInterval(_schedCheckFire, 10000);
+            _schedCheckFire(); // vérifier immédiatement
+        }
+
+        function _schedCheckFire() {
+            if (!firebaseDB) return;
+            const now = Date.now();
+            const events = window._scheduledEvents || {};
+            Object.entries(events).forEach(([key, ev]) => {
+                if (ev.fired || !ev.triggerAt) return;
+                if (now >= ev.triggerAt) {
+                    // Déclencher l'événement
+                    _schedFire(ev);
+                    // Marquer comme déclenché dans Firebase
+                    firebaseDB.ref('admin/scheduledEvents/' + key + '/fired').set(true).catch(() => {});
+                }
+            });
+        }
+
+        function _schedFire(ev) {
+            if (!firebaseDB) return;
+            if (ev.type === 'luck') {
+                const durationMs = ((parseInt(ev.luckMin) || 0) * 60 + (parseInt(ev.luckSec) || 0)) * 1000;
+                if (durationMs > 0) {
+                    firebaseDB.ref('admin/luck').set({
+                        multiplier: parseInt(ev.luckMult) || 2,
+                        durationMs,
+                        ts: Date.now()
+                    }).catch(() => {});
+                }
+            } else if (ev.type === 'gold') {
+                const durationMs = ((parseInt(ev.goldMin) || 0) * 60 + (parseInt(ev.goldSec) || 0)) * 1000;
+                if (durationMs > 0) {
+                    firebaseDB.ref('admin/doubleGold').set({
+                        active: true,
+                        durationMs,
+                        multiplier: parseInt(ev.goldMult) || 2,
+                        ts: Date.now()
+                    }).catch(() => {});
+                }
+            } else if (ev.type === 'theme') {
+                firebaseDB.ref('admin/theme').set(ev.themeId || null).catch(() => {});
+            } else if (ev.type === 'miam') {
+                const durationMs = ((parseInt(ev.miamMin) || 0) * 60 + (parseInt(ev.miamSec) || 0)) * 1000;
+                if (durationMs > 0) {
+                    firebaseDB.ref('admin/miam').set({
+                        active: true,
+                        durationMs,
+                        ts: Date.now()
+                    }).catch(() => {});
+                }
+            }
+        }
+
+        function schedTypeChange() {
+            const type = document.getElementById('schedType').value;
+            document.getElementById('schedParamsLuck').style.display  = type === 'luck'  ? 'flex' : 'none';
+            document.getElementById('schedParamsGold').style.display  = type === 'gold'  ? 'flex' : 'none';
+            document.getElementById('schedParamsTheme').style.display = type === 'theme' ? 'block': 'none';
+            document.getElementById('schedParamsMiam').style.display  = type === 'miam'  ? 'flex' : 'none';
+        }
+
+        function schedAddEvent() {
+            if (!firebaseDB) { _schedStatus('⚠️ Firebase non connecté'); return; }
+            const type = document.getElementById('schedType').value;
+            const dtVal = document.getElementById('schedDateTime').value;
+            if (!dtVal) { _schedStatus('⚠️ Définis une date et heure'); return; }
+            const triggerAt = new Date(dtVal).getTime();
+            if (isNaN(triggerAt) || triggerAt <= Date.now()) {
+                _schedStatus('⚠️ La date doit être dans le futur'); return;
+            }
+
+            const ev = { type, triggerAt, fired: false, createdAt: Date.now() };
+
+            if (type === 'luck') {
+                ev.luckMult = parseInt(document.getElementById('schedLuckMult').value) || 2;
+                ev.luckMin  = parseInt(document.getElementById('schedLuckMin').value)  || 0;
+                ev.luckSec  = parseInt(document.getElementById('schedLuckSec').value)  || 0;
+                if ((ev.luckMin * 60 + ev.luckSec) <= 0) { _schedStatus('⚠️ Durée de la chance manquante'); return; }
+            } else if (type === 'gold') {
+                ev.goldMult = parseInt(document.getElementById('schedGoldMult').value) || 2;
+                ev.goldMin  = parseInt(document.getElementById('schedGoldMin').value)  || 0;
+                ev.goldSec  = parseInt(document.getElementById('schedGoldSec').value)  || 0;
+                if ((ev.goldMin * 60 + ev.goldSec) <= 0) { _schedStatus('⚠️ Durée du double or manquante'); return; }
+            } else if (type === 'theme') {
+                ev.themeId = document.getElementById('schedThemeId').value;
+            } else if (type === 'miam') {
+                ev.miamMin = parseInt(document.getElementById('schedMiamMin').value) || 10;
+                ev.miamSec = parseInt(document.getElementById('schedMiamSec').value) || 0;
+                if ((ev.miamMin * 60 + ev.miamSec) <= 0) { _schedStatus('⚠️ Durée MIAM manquante'); return; }
+            }
+
+            const key = 'ev_' + Date.now();
+            firebaseDB.ref('admin/scheduledEvents/' + key).set(ev)
+                .then(() => {
+                    _schedStatus('✅ Événement programmé !');
+                    document.getElementById('schedDateTime').value = '';
+                })
+                .catch(e => _schedStatus('Erreur : ' + e.message));
+        }
+
+        function schedDeleteEvent(key) {
+            if (!firebaseDB) return;
+            firebaseDB.ref('admin/scheduledEvents/' + key).remove().catch(() => {});
+        }
+
+        function schedDeleteAllFired() {
+            if (!firebaseDB) return;
+            const events = window._scheduledEvents || {};
+            Object.entries(events).forEach(([key, ev]) => {
+                if (ev.fired) firebaseDB.ref('admin/scheduledEvents/' + key).remove().catch(() => {});
+            });
+        }
+
+        function _schedStatus(msg) {
+            const el = document.getElementById('schedFormStatus');
+            if (!el) return;
+            el.textContent = msg;
+            el.style.color = msg.startsWith('✅') ? '#2ecc71' : '#e74c3c';
+            clearTimeout(el._t);
+            el._t = setTimeout(() => { el.textContent = ''; }, 4000);
+        }
+
+        function _schedRenderList() {
+            const list = document.getElementById('schedList');
+            if (!list) return;
+            const events = window._scheduledEvents || {};
+            const entries = Object.entries(events).sort((a, b) => (a[1].triggerAt || 0) - (b[1].triggerAt || 0));
+
+            if (!entries.length) {
+                list.innerHTML = '<div style="color:#444;font-size:0.72em;text-align:center;padding:12px;">Aucun événement programmé</div>';
+                return;
+            }
+
+            const TYPE_LABELS = { luck:'🍀 Chance', gold:'💰 Double or', theme:'🎨 Thème', miam:'🍖 MIAM' };
+            const THEME_LABELS = { '':'Défaut', 'saint-patrick':'Saint Patrick', 'printemps':'Printemps',
+                'minecraft':'Minecraft', 'unchained':'Unchained', 'inazuma':'Inazuma Eleven',
+                'or':'Or', 'diamant':'Diamant', 'rainbow':'Rainbow', 'paques':'Pâques' };
+
+            list.innerHTML = '';
+
+            // Bouton nettoyer les déclenchés
+            const hasFired = entries.some(([,ev]) => ev.fired);
+            if (hasFired) {
+                const clearBtn = document.createElement('button');
+                clearBtn.className = 'admin-btn';
+                clearBtn.style.cssText = 'font-size:0.68em;padding:4px 10px;margin-bottom:8px;background:rgba(80,80,80,0.3);box-shadow:0 3px 0 #111;';
+                clearBtn.textContent = '🗑 Supprimer les déclenchés';
+                clearBtn.onclick = schedDeleteAllFired;
+                list.appendChild(clearBtn);
+            }
+
+            entries.forEach(([key, ev]) => {
+                const div = document.createElement('div');
+                div.className = 'sched-item' + (ev.fired ? ' sched-item-done' : '');
+
+                // Détail de l'événement
+                let detail = '';
+                if (ev.type === 'luck') {
+                    detail = '×' + ev.luckMult + ' pendant ' + (ev.luckMin || 0) + 'min ' + (ev.luckSec || 0) + 's';
+                } else if (ev.type === 'gold') {
+                    detail = '×' + ev.goldMult + ' pendant ' + (ev.goldMin || 0) + 'min ' + (ev.goldSec || 0) + 's';
+                } else if (ev.type === 'theme') {
+                    detail = THEME_LABELS[ev.themeId || ''] || ev.themeId || 'Défaut';
+                } else if (ev.type === 'miam') {
+                    detail = 'pendant ' + (ev.miamMin || 0) + 'min ' + (ev.miamSec || 0) + 's';
+                }
+
+                // Date/heure formatée
+                const dt = new Date(ev.triggerAt);
+                const dateStr = dt.toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit' }) +
+                                ' à ' + dt.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+
+                // Countdown si pas encore déclenché
+                const now = Date.now();
+                let countdownStr = '';
+                if (!ev.fired && ev.triggerAt > now) {
+                    const rem = Math.ceil((ev.triggerAt - now) / 1000);
+                    const h = Math.floor(rem / 3600);
+                    const m = Math.floor((rem % 3600) / 60);
+                    const s = rem % 60;
+                    countdownStr = h > 0 ? 'dans ' + h + 'h ' + m + 'min' :
+                                   m > 0 ? 'dans ' + m + 'min ' + s + 's' :
+                                           'dans ' + s + 's';
+                }
+
+                div.innerHTML = '<div class="sched-item-info">' +
+                    '<div class="sched-item-type">' + (TYPE_LABELS[ev.type] || ev.type) + '</div>' +
+                    '<div class="sched-item-detail">' + detail + '</div>' +
+                    '</div>' +
+                    '<div style="text-align:right;">' +
+                        '<div class="sched-item-time">' + dateStr + '</div>' +
+                        (countdownStr ? '<div class="sched-countdown">' + countdownStr + '</div>' : '') +
+                        (ev.fired ? '<div style="color:#2ecc71;font-size:0.62em;font-weight:900;">✅ Déclenché</div>' : '') +
+                    '</div>';
+                if (!ev.fired) {
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'sched-item-del';
+                    delBtn.textContent = '✕';
+                    delBtn.onclick = (function(k) { return function() { schedDeleteEvent(k); }; })(key);
+                    div.appendChild(delBtn);
+                }
+
+                list.appendChild(div);
+            });
+        }
+
         function adminStatus(msg) {
             const el = document.getElementById('adminStatusMsg');
             if (!el) return;
@@ -8753,6 +9001,7 @@
         // Init Firebase au chargement
         window.addEventListener('load', () => {
             initFirebase();
+            _schedStartChecker();
             initPseudoModal();
             const inp = document.getElementById('pseudoModalInput');
             if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') confirmPseudo(); });
@@ -9107,128 +9356,6 @@
             }
         });
 
-        // ═══════════════════════════════════════════
-        //  MACHINE À SOUS
-        // ═══════════════════════════════════════════
-        // Symboles avec poids (plus le poids est bas, plus le symbole est rare sur les rouleaux)
-        // Poids total = 100. Symboles communs = hauts poids, symboles jackpot = très bas poids.
-        const SLOTS_WEIGHTED = [
-            { sym: '🃏', w: 30 },  // très commun
-            { sym: '⭐', w: 25 },  // commun
-            { sym: '🍀', w: 18 },  // commun
-            { sym: '🎯', w: 13 },  // peu commun
-            { sym: '💰', w:  7 },  // rare
-            { sym: '🔥', w:  4 },  // très rare
-            { sym: '💎', w:  2 },  // ultra rare
-            { sym: '🌟', w:  1 },  // jackpot quasi impossible
-        ];
-        const SLOTS_SYMBOLS = SLOTS_WEIGHTED.map(function(s){ return s.sym; });
-        const SLOTS_TOTAL_W = SLOTS_WEIGHTED.reduce(function(a,s){ return a + s.w; }, 0);
-        function _slotsPickSymbol() {
-            let r = Math.random() * SLOTS_TOTAL_W;
-            for (let i = 0; i < SLOTS_WEIGHTED.length; i++) {
-                r -= SLOTS_WEIGHTED[i].w;
-                if (r <= 0) return SLOTS_WEIGHTED[i].sym;
-            }
-            return SLOTS_WEIGHTED[SLOTS_WEIGHTED.length - 1].sym;
-        }
-        // Jackpots fortement réduits — seuls les rares valent encore beaucoup
-        const SLOTS_MULT3 = { '🃏':3, '⭐':7, '🍀':5, '🎯':5, '💰':4, '🔥':12, '💎':25, '🌟':50 };
-        // 2 identiques = ×2 (petits gains, ajustés pour que la maison soit rentable)
-        let slotsSpinning = false;
-
-        function openSlots() {
-            document.getElementById('slotsModal').classList.add('open');
-        }
-        function closeSlots() {
-            document.getElementById('slotsModal').classList.remove('open');
-        }
-
-        function spinSlots() {
-            if (slotsSpinning) return;
-            const bet = parseInt(document.getElementById('slotsBetInput').value) || 0;
-            if (bet < 100) { showSlotsMsg('Mise minimum : 100 💰', 'lose'); return; }
-            if (stats.totalGold < bet) { showSlotsMsg("Pas assez d'or !", 'lose'); return; }
-
-            // Déduire la mise
-            stats.totalGold -= bet;
-            updateGoldDisplay();
-            autoSave();
-
-            slotsSpinning = true;
-            document.getElementById('slotsSpinBtn').disabled = true;
-            document.getElementById('slotsResultMsg').textContent = '';
-            // Réinitialiser les reels
-            for (let i = 0; i < 3; i++) {
-                const reel = document.getElementById('slotReel' + i);
-                reel.classList.remove('winner');
-                reel.classList.add('spin');
-            }
-            playSound('wheel');
-
-            // Animation de spin progressive
-            const spinDuration = [800, 1100, 1400];
-            const results = [];
-            for (let i = 0; i < 3; i++) {
-                (function(idx) {
-                    // Changer symbole rapidement pendant le spin
-                    const interval = setInterval(function() {
-                        document.getElementById('slotReel' + idx).textContent = _slotsPickSymbol();
-                    }, 80);
-                    setTimeout(function() {
-                        clearInterval(interval);
-                        const sym = _slotsPickSymbol();
-                        const reel = document.getElementById('slotReel' + idx);
-                        reel.textContent = sym;
-                        reel.classList.remove('spin');
-                        results[idx] = sym;
-                        if (idx === 2) {
-                            slotsSpinning = false;
-                            document.getElementById('slotsSpinBtn').disabled = false;
-                            resolveSlotsResult(results, bet);
-                        }
-                    }, spinDuration[idx]);
-                })(i);
-            }
-        }
-
-        function resolveSlotsResult(results, bet) {
-            const [a, b, c] = results;
-            let mult = 0;
-            let msg = '';
-
-            if (a === b && b === c) {
-                // 3 identiques
-                mult = SLOTS_MULT3[a] || 10;
-                msg = '🎉 3 ' + a + ' ! ×' + mult + ' !';
-                for (let i = 0; i < 3; i++) document.getElementById('slotReel' + i).classList.add('winner');
-                playSound('secret');
-                flashGoodCard('legendary');
-            } else if (a === b || b === c || a === c) {
-                // 2 identiques
-                mult = 2;
-                msg = '✨ 2 identiques ! ×2 !';
-                playSound('epic');
-            } else {
-                msg = '😞 Perdu ! Aucune combinaison.';
-            }
-
-            if (mult > 0) {
-                const gain = Math.floor(bet * mult);
-                stats.totalGold += gain;
-                updateGoldDisplay();
-                autoSave();
-                showSlotsMsg(msg + '  +' + gain.toLocaleString() + ' 💰', 'win');
-            } else {
-                showSlotsMsg(msg, 'lose');
-            }
-        }
-
-        function showSlotsMsg(msg, type) {
-            const el = document.getElementById('slotsResultMsg');
-            el.textContent = msg;
-            el.className = 'slots-result-msg ' + (type || '');
-        }
 
 
         function updateGoldDisplay() {
