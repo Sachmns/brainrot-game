@@ -6647,6 +6647,17 @@
                 stats.totalGold = save.stats.totalGold || 0;
                 stats.secretCount = save.stats.secretCount || 0;
                 unlockedCards = new Map(save.unlockedCards || []);
+                // Supprimer les cartes admin_exclusive qui ne sont plus dans le code du jeu
+                // (cartes données manuellement par un admin mais supprimées depuis)
+                const _hardcodedAdminCards = new Set((cardImages.admin_exclusive || []).map(c => c.name));
+                for (const ck of Array.from(unlockedCards.keys())) {
+                    if (ck.startsWith('admin_exclusive|')) {
+                        const cardName = ck.slice('admin_exclusive|'.length);
+                        if (!_hardcodedAdminCards.has(cardName)) {
+                            unlockedCards.delete(ck);
+                        }
+                    }
+                }
                 if (save.unlockedGoldCards) unlockedGoldCards = new Map(save.unlockedGoldCards);
                 if (save.unlockedDiamondCards) unlockedDiamondCards = new Map(save.unlockedDiamondCards);
                 if (save.unlockedRainbowCards) unlockedRainbowCards = new Map(save.unlockedRainbowCards);
@@ -7038,8 +7049,9 @@
         window._serverTimeOffset = 0;
 
         function _serverNow() {
-            // Retourne l'heure serveur estimée à partir de l'offset Firebase
-            return Date.now() - window._serverTimeOffset;
+            // Firebase serverTimeOffset = serverTime - localTime
+            // Donc: serverTime = localTime + serverTimeOffset
+            return Date.now() + window._serverTimeOffset;
         }
 
         function initFirebase() {
@@ -8801,14 +8813,18 @@
 
         function _schedCheckFire() {
             if (!firebaseDB) return;
-            const now = _serverNow(); // heure serveur corrigée (indépendante de l'horloge locale)
+            const now = _serverNow();
             const events = window._scheduledEvents || {};
             Object.entries(events).forEach(([key, ev]) => {
                 if (ev.fired || !ev.triggerAt) return;
                 if (now >= ev.triggerAt) {
+                    // Marquer IMMÉDIATEMENT en local pour éviter le double-déclenchement
+                    // avant que Firebase confirme l'écriture asynchrone
+                    ev.fired = true;
+                    window._scheduledEvents[key] = ev;
                     // Déclencher l'événement
                     _schedFire(ev);
-                    // Marquer comme déclenché dans Firebase
+                    // Persister dans Firebase
                     firebaseDB.ref('admin/scheduledEvents/' + key + '/fired').set(true).catch(() => {});
                 }
             });
@@ -8822,7 +8838,7 @@
                     firebaseDB.ref('admin/luck').set({
                         multiplier: parseInt(ev.luckMult) || 2,
                         durationMs,
-                        ts: firebase.database.ServerValue.TIMESTAMP
+                        ts: Date.now()
                     }).catch(() => {});
                 }
             } else if (ev.type === 'gold') {
@@ -8832,7 +8848,7 @@
                         active: true,
                         durationMs,
                         multiplier: parseInt(ev.goldMult) || 2,
-                        ts: firebase.database.ServerValue.TIMESTAMP
+                        ts: Date.now()
                     }).catch(() => {});
                 }
             } else if (ev.type === 'theme') {
@@ -8843,7 +8859,7 @@
                     firebaseDB.ref('admin/miam').set({
                         active: true,
                         durationMs,
-                        ts: firebase.database.ServerValue.TIMESTAMP
+                        ts: Date.now()
                     }).catch(() => {});
                 }
             }
@@ -8862,7 +8878,7 @@
             const type = document.getElementById('schedType').value;
             const dtVal = document.getElementById('schedDateTime').value;
             if (!dtVal) { _schedStatus('⚠️ Définis une date et heure'); return; }
-            const triggerAt = new Date(dtVal).getTime() - window._serverTimeOffset;
+            const triggerAt = new Date(dtVal).getTime() + window._serverTimeOffset;
             if (isNaN(triggerAt) || triggerAt <= _serverNow()) {
                 _schedStatus('⚠️ La date doit être dans le futur'); return;
             }
@@ -9851,6 +9867,16 @@
                 stats.totalGold   = save.stats?.totalGold   || 0;
                 stats.secretCount = save.stats?.secretCount || 0;
                 unlockedCards = new Map(save.unlockedCards || []);
+                // Supprimer les cartes admin_exclusive qui ne sont plus dans le code du jeu
+                const _hardcodedAdminCards2 = new Set((cardImages.admin_exclusive || []).map(c => c.name));
+                for (const ck of Array.from(unlockedCards.keys())) {
+                    if (ck.startsWith('admin_exclusive|')) {
+                        const cardName = ck.slice('admin_exclusive|'.length);
+                        if (!_hardcodedAdminCards2.has(cardName)) {
+                            unlockedCards.delete(ck);
+                        }
+                    }
+                }
                 if (save.unlockedGoldCards) unlockedGoldCards = new Map(save.unlockedGoldCards);
                 if (save.unlockedDiamondCards) unlockedDiamondCards = new Map(save.unlockedDiamondCards);
                 if (save.unlockedRainbowCards) unlockedRainbowCards = new Map(save.unlockedRainbowCards);
