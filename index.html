@@ -7033,10 +7033,23 @@
 
         window._bannedCards = new Set(); // Cartes bannies des coffres
 
+        // Décalage entre l'horloge locale et l'horloge serveur Firebase (ms)
+        // Positif = horloge locale en avance, négatif = en retard
+        window._serverTimeOffset = 0;
+
+        function _serverNow() {
+            // Retourne l'heure serveur estimée à partir de l'offset Firebase
+            return Date.now() - window._serverTimeOffset;
+        }
+
         function initFirebase() {
             try {
                 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
                 firebaseDB = firebase.database();
+                // Écouter le décalage d'horloge serveur en temps réel
+                firebaseDB.ref('.info/serverTimeOffset').on('value', function(snap) {
+                    window._serverTimeOffset = snap.val() || 0;
+                });
                 listenAdminCommands();
             } catch(e) { firebaseDB = null; }
         }
@@ -8788,7 +8801,7 @@
 
         function _schedCheckFire() {
             if (!firebaseDB) return;
-            const now = Date.now();
+            const now = _serverNow(); // heure serveur corrigée (indépendante de l'horloge locale)
             const events = window._scheduledEvents || {};
             Object.entries(events).forEach(([key, ev]) => {
                 if (ev.fired || !ev.triggerAt) return;
@@ -8809,7 +8822,7 @@
                     firebaseDB.ref('admin/luck').set({
                         multiplier: parseInt(ev.luckMult) || 2,
                         durationMs,
-                        ts: Date.now()
+                        ts: firebase.database.ServerValue.TIMESTAMP
                     }).catch(() => {});
                 }
             } else if (ev.type === 'gold') {
@@ -8819,7 +8832,7 @@
                         active: true,
                         durationMs,
                         multiplier: parseInt(ev.goldMult) || 2,
-                        ts: Date.now()
+                        ts: firebase.database.ServerValue.TIMESTAMP
                     }).catch(() => {});
                 }
             } else if (ev.type === 'theme') {
@@ -8830,7 +8843,7 @@
                     firebaseDB.ref('admin/miam').set({
                         active: true,
                         durationMs,
-                        ts: Date.now()
+                        ts: firebase.database.ServerValue.TIMESTAMP
                     }).catch(() => {});
                 }
             }
@@ -8849,12 +8862,12 @@
             const type = document.getElementById('schedType').value;
             const dtVal = document.getElementById('schedDateTime').value;
             if (!dtVal) { _schedStatus('⚠️ Définis une date et heure'); return; }
-            const triggerAt = new Date(dtVal).getTime();
-            if (isNaN(triggerAt) || triggerAt <= Date.now()) {
+            const triggerAt = new Date(dtVal).getTime() - window._serverTimeOffset;
+            if (isNaN(triggerAt) || triggerAt <= _serverNow()) {
                 _schedStatus('⚠️ La date doit être dans le futur'); return;
             }
 
-            const ev = { type, triggerAt, fired: false, createdAt: Date.now() };
+            const ev = { type, triggerAt, fired: false, createdAt: _serverNow() };
 
             if (type === 'luck') {
                 ev.luckMult = parseInt(document.getElementById('schedLuckMult').value) || 2;
@@ -8910,6 +8923,7 @@
             if (!list) return;
             const events = window._scheduledEvents || {};
             const entries = Object.entries(events).sort((a, b) => (a[1].triggerAt || 0) - (b[1].triggerAt || 0));
+            const now = _serverNow();
 
             if (!entries.length) {
                 list.innerHTML = '<div style="color:#444;font-size:0.72em;text-align:center;padding:12px;">Aucun événement programmé</div>';
@@ -8956,7 +8970,6 @@
                                 ' à ' + dt.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
 
                 // Countdown si pas encore déclenché
-                const now = Date.now();
                 let countdownStr = '';
                 if (!ev.fired && ev.triggerAt > now) {
                     const rem = Math.ceil((ev.triggerAt - now) / 1000);
