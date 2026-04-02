@@ -534,6 +534,59 @@
             border-bottom: 3px solid #f5c842;
         }
 
+        /* ── Thème CHOCOLAT 🍫 ── */
+        body.theme-chocolat {
+            --theme-bg-from:     #d4956a;
+            --theme-bg-to:       #a0622a;
+            --theme-header-from: #f0c090;
+            --theme-header-to:   #c07840;
+            --theme-border:      #6b3a10;
+            --theme-accent:      #8b4a18;
+            --theme-particle:    #f0d0a0;
+            --theme-glow:        rgba(107,58,16,0.4);
+        }
+        body.theme-chocolat header {
+            animation: chocolatGlowPulse 2.5s ease-in-out infinite;
+            border-bottom-color: #6b3a10 !important;
+        }
+        @keyframes chocolatGlowPulse {
+            0%,100% { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 30px rgba(107,58,16,0.4); }
+            50%      { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 70px rgba(107,58,16,0.8), 0 0 120px rgba(80,40,10,0.3); }
+        }
+        body.theme-chocolat .chest-main {
+            border-color: #6b3a10 !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3), 0 0 45px rgba(107,58,16,0.5) !important;
+            background: linear-gradient(145deg, #c07840 0%, #8b4a18 100%) !important;
+        }
+        body.theme-chocolat .stat-card {
+            border-color: rgba(107,58,16,0.5) !important;
+            background: linear-gradient(145deg, #d08848 0%, #a05820 100%) !important;
+        }
+        body.theme-chocolat .open-btn {
+            background: linear-gradient(180deg, #6b3a10 0%, #4a2408 100%) !important;
+            color: #f8e8c8 !important;
+            border: 3px solid #8b4a18 !important;
+            box-shadow: 0 8px 28px rgba(107,58,16,0.8) !important;
+            font-weight: 900 !important;
+        }
+        body.theme-chocolat h1 {
+            color: #2a1205 !important;
+            text-shadow: 3px 3px 0 #f8e8c8, -1px -1px 0 #f8e8c8, 1px -1px 0 #f8e8c8, -1px 1px 0 #f8e8c8,
+                         0 0 25px rgba(107,58,16,0.6) !important;
+        }
+        body.theme-chocolat .subtitle { color: #2a1205 !important; font-weight: 900 !important; text-shadow: 0 1px 3px rgba(248,232,200,0.5) !important; }
+        .theme-banner.chocolat {
+            background: linear-gradient(90deg, #4a2408, #8b4a18, #c07840, #f0c090, #c07840, #8b4a18, #4a2408);
+            background-size: 300% 100%;
+            color: #fff4e0;
+            box-shadow: 0 3px 25px rgba(107,58,16,0.8);
+            animation: bannerShift 3s linear infinite;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            letter-spacing: 4px;
+            border-bottom: 3px solid #6b3a10;
+            font-weight: 900;
+        }
+
         /* Bannière de thème actif */
         .theme-banner {
             display: none;
@@ -3744,6 +3797,7 @@
                         <button class="admin-btn" onclick="adminSetTheme('diamant')" style="background:linear-gradient(180deg,#60d8f8,#0090c0);box-shadow:0 4px 0 #004060;border:2px solid #00d4ff;color:#002030;">💎 Diamant</button>
                         <button class="admin-btn" onclick="adminSetTheme('rainbow')" style="background:linear-gradient(90deg,#ff6b9d,#ffc75f,#00c9a7,#4d8af0);background-size:200%;box-shadow:0 4px 0 rgba(0,0,0,0.3);border:2px solid #fff;color:#fff;font-weight:900;">🌈 Rainbow</button>
                         <button class="admin-btn" onclick="adminSetTheme('paques')" style="background:linear-gradient(180deg,#ffe0f0,#ffc0e8);box-shadow:0 4px 0 #cc8090;border:2px solid #ff8dc7;color:#7a1040;">🐣 Pâques</button>
+                        <button class="admin-btn" onclick="adminSetTheme('chocolat')" style="background:linear-gradient(180deg,#c07840,#8b4a18);box-shadow:0 4px 0 #3a1a00;border:2px solid #6b3a10;color:#f8e8c8;font-weight:900;">💩 CACA</button>
                     </div>
                     <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminThemeStatus">Thème actuel : Défaut</div>
                 </div>
@@ -8217,6 +8271,12 @@
                 banner: '🍫 🐣 JOYEUSES PÂQUES 🐣 🍫',
                 bannerClass: 'paques',
                 particles: { color: '#f5c842', emoji: ['🍫','🐣','🥚','🐰','🍬','🌼','🍭','🥕','🌷'], count: 85, glow: 'rgba(245,200,66,0.9)' }
+            },
+            'chocolat': {
+                label: '💩 CACA',
+                banner: '💩 CACA 💩',
+                bannerClass: 'chocolat',
+                particles: { color: '#8b4a18', emoji: ['💩','💨','🚽','💨','🔥','🚽','💩','🔥'], count: 80, glow: 'rgba(107,58,16,0.9)' }
             }
         };
 
@@ -8519,7 +8579,7 @@
             // Message broadcast une seule fois par activation
             if (!_miamBroadcastShown) {
                 _miamBroadcastShown = true;
-                showBroadcast('🍖 TIMOTÉ EST LÀ ET IL VEUT MANGER: DES PATES, UN TASTY CROUSTY, DU RIZ, DU POULET, UN BURGER, BURGER KING, LA PLAZA MAYOR, DES BRAINROTS, MADAME CHAUVIN, KENDJI GIRAC, UN PAIN AU CHOCOLAT, MARTIN(INSHALLAH), TON AME, LE CODE DU JEU(CHIANT), UN COMMENTAIRE YOUTUBE SHORT, UNE FAUTE DORTOGRAFE, UN PADDLE, LA LUNE, DE LA VIANDE, LA MUTATION DIAMANT, UN BON PIED, ANTOINE, UN BUS ALÉOP, UNE ANNÉE LUMIÈRE, LE SON, MOUSIEUR, LE CUISTO, LA FRENCH MURDER, UN GROUPE CLASSE, DES OIGNONS, LENNI LOGNON, MR MERCIERTASTYCROUSTY92I, UNE ENCEINTE JBL, NAPS, SOPHIE RAIN, LE 67 KID, CHATGPT, LA FUSE MACHINE !', Date.now());
+                showBroadcast('🍖 TIMOTÉ EST LÀ ET IL VEUT MANGER: DES PATES, UN TASTY CROUSTY, DU RIZ, DU POULET, UN BURGER, BURGER KING, LA PLAZA MAYOR, DES BRAINROTS, MADAME CHAUVIN, KENDJI GIRAC, UN PAIN AU CHOCOLAT, MARTIN(INSHALLAH), TON AME, LE CODE DU JEU(CHIANT), UN COMMENTAIRE YOUTUBE SHORT, UNE FAUTE DORTOGRAFE, UN PADDLE, LA LUNE, DE LA VIANDE, LA MUTATION DIAMANT, UN BON PIED, ANTOINE, UN BUS ALÉOP, UNE ANNÉE LUMIÈRE, LE SON, MOUSIEUR, LE CUISTO, LA FRENCH MURDER, UN GROUPE CLASSE, DES OIGNONS, LENNI LOGNON, MR MERCIERTASTYCROUSTY92I, UNE ENCEINTE JBL, NAPS, SOPHIE RAIN, LE 67 KID, CHATGPT, LA FUSE MACHINE, PALPER DU RIZ !', Date.now());
             }
             // Mettre à jour le statut admin si panel ouvert
             const st = document.getElementById('adminMiamStatus');
