@@ -3536,19 +3536,19 @@
         <div class="miam-modal">
             <button class="miam-close-btn" onclick="closeMiam()">✕</button>
             <div class="miam-title">🍖 MACHINE MIAM</div>
-            <div class="miam-subtitle">Fusionne 10 cartes mutées pour débloquer une nouvelle carte avec la même mutation</div>
+            <div class="miam-subtitle">Fusionne 5 cartes mutées pour débloquer une nouvelle carte avec la même mutation</div>
             <div class="miam-mutation-selector">
                 <button class="miam-mut-btn gold active" onclick="miamSelectMutation('gold')">✨ GOLD</button>
                 <button class="miam-mut-btn diamond" onclick="miamSelectMutation('diamond')">💎 DIAMANT</button>
                 <button class="miam-mut-btn rainbow" onclick="miamSelectMutation('rainbow')">🌈 RAINBOW</button>
             </div>
-            <div class="miam-progress" id="miamProgress">0 / 10 cartes sélectionnées</div>
+            <div class="miam-progress" id="miamProgress">0 / 5 cartes sélectionnées</div>
             <div class="miam-slots-grid" id="miamSlotsGrid"></div>
             <div class="miam-card-picker" id="miamCardPicker">
                 <div class="miam-picker-title" id="miamPickerTitle">Choisis une carte à ajouter :</div>
                 <div class="miam-picker-grid" id="miamPickerGrid"></div>
             </div>
-            <button class="miam-fuse-btn" id="miamFuseBtn" onclick="doMiamFusion()" disabled>🔥 FUSIONNER (0/10)</button>
+            <button class="miam-fuse-btn" id="miamFuseBtn" onclick="doMiamFusion()" disabled>🔥 FUSIONNER (0/5)</button>
         </div>
     </div>
 
@@ -8550,7 +8550,7 @@
         let _miamExpiry        = 0;
         let _miamTimer         = null;
         let _miamSelectedMut   = 'gold';
-        let _miamSlots         = []; // tableau de 10 éléments, null = vide, sinon {cardKey, name, rarity, img}
+        let _miamSlots         = []; // tableau de 5 éléments, null = vide, sinon {cardKey, name, rarity, img}
         let _miamPickerSlotIdx = null; // index du slot en attente de choix
         let _miamBroadcastShown = false;
 
@@ -8613,7 +8613,7 @@
 
         function openMiam() {
             if (!_miamExpiry || _miamExpiry <= Date.now()) return;
-            _miamSlots = new Array(10).fill(null);
+            _miamSlots = new Array(5).fill(null);
             _miamPickerSlotIdx = null;
             document.getElementById('miamModal').classList.add('open');
             _miamRenderSlots();
@@ -8638,7 +8638,7 @@
         function miamSelectMutation(mut) {
             _miamSelectedMut = mut;
             // Reset slots quand on change de mutation
-            _miamSlots = new Array(10).fill(null);
+            _miamSlots = new Array(5).fill(null);
             _miamPickerSlotIdx = null;
             document.getElementById('miamCardPicker').classList.remove('open');
             _miamRenderMutBtns();
@@ -8735,15 +8735,15 @@
 
         function _miamUpdateProgress() {
             const filled = _miamSlots.filter(Boolean).length;
-            document.getElementById('miamProgress').textContent = filled + ' / 10 cartes sélectionnées';
+            document.getElementById('miamProgress').textContent = filled + ' / 5 cartes sélectionnées';
             const btn = document.getElementById('miamFuseBtn');
-            btn.disabled = filled < 10;
-            btn.textContent = filled >= 10 ? '🔥 FUSIONNER !' : '🔥 FUSIONNER (' + filled + '/10)';
+            btn.disabled = filled < 5;
+            btn.textContent = filled >= 5 ? '🔥 FUSIONNER !' : '🔥 FUSIONNER (' + filled + '/5)';
         }
 
         function doMiamFusion() {
             const filled = _miamSlots.filter(Boolean);
-            if (filled.length < 10) return;
+            if (filled.length < 5) return;
             const mut = _miamSelectedMut;
             const mutMap = _miamGetMap(mut);
             const meta = MIAM_MUT_META[mut];
