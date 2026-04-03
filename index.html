@@ -3412,6 +3412,58 @@
         .sched-countdown { color: #ffaa00; font-size: 0.65em; font-weight: 900; }
 
 
+        /* ════ MIAM STATS ════ */
+        .miam-stats-block {
+            margin-bottom: 14px;
+        }
+        .miam-stats-title {
+            color: #ff8040;
+            font-size: 0.68em;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .miam-stat-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+        .miam-stat-label {
+            width: 110px;
+            flex-shrink: 0;
+            font-size: 0.64em;
+            font-weight: 900;
+        }
+        .miam-stat-bar-wrap {
+            flex: 1;
+            background: rgba(255,255,255,0.07);
+            border-radius: 6px;
+            height: 7px;
+            overflow: hidden;
+        }
+        .miam-stat-bar {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+        .miam-stat-pct {
+            width: 38px;
+            text-align: right;
+            font-size: 0.64em;
+            font-weight: 900;
+            color: #aaa;
+            flex-shrink: 0;
+        }
+        .miam-stats-empty {
+            color: #555;
+            font-size: 0.68em;
+            text-align: center;
+            padding: 8px 0;
+        }
+
+
         </style>
 </head>
 <body>
@@ -3544,7 +3596,8 @@
                 <div class="miam-picker-title" id="miamPickerTitle">Choisis une carte à ajouter :</div>
                 <div class="miam-picker-grid" id="miamPickerGrid"></div>
             </div>
-            <button class="miam-fuse-btn" id="miamFuseBtn" onclick="doMiamFusion()" disabled>🔥 FUSIONNER (0/5)</button>
+            <div class="miam-stats-block" id="miamStatsBlock"></div>
+            <button class="miam-fuse-btn" id="miamFuseBtn" onclick="doMiamFusion()" disabled>🔥 MANGER (0/5)</button>
         </div>
     </div>
 
@@ -8730,6 +8783,85 @@
                 }
             }
             _miamRenderMutBtns();
+            _miamRenderStats();
+        }
+
+        function _miamRenderStats() {
+            const block = document.getElementById('miamStatsBlock');
+            if (!block) return;
+
+            const ALLOWED_RARITIES = ['common','rare','epic','legendary','mythic','brainrot_god','secret'];
+            const RARITY_LABELS = {
+                common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire',
+                mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret'
+            };
+            const RARITY_COLORS = {
+                common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700',
+                mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#ffffff'
+            };
+
+            const mut = _miamSelectedMut;
+            const mutMap = _miamGetMap(mut);
+
+            // Compter les cartes disponibles par rareté (non encore possédées avec cette mutation)
+            const counts = {};
+            let total = 0;
+            ALLOWED_RARITIES.forEach(function(rarity) {
+                const cards = cardImages[rarity] || [];
+                let n = 0;
+                cards.forEach(function(card) {
+                    const ck = rarity + '|' + card.name;
+                    if (!mutMap.has(ck) || mutMap.get(ck) <= 0) n++;
+                });
+                if (n > 0) { counts[rarity] = n; total += n; }
+            });
+
+            block.innerHTML = '';
+            if (total === 0) {
+                block.innerHTML = '<div class="miam-stats-empty">✅ Tu as toutes les cartes avec cette mutation !</div>';
+                return;
+            }
+
+            const title = document.createElement('div');
+            title.className = 'miam-stats-title';
+            title.textContent = '📊 Chances d\'obtenir chaque rareté';
+            block.appendChild(title);
+
+            // Trier du plus rare au moins rare (ordre inversé)
+            const sorted = ALLOWED_RARITIES.filter(r => counts[r]).reverse();
+            sorted.forEach(function(rarity) {
+                const n = counts[rarity];
+                const pct = (n / total * 100);
+                const pctStr = pct < 0.1 ? pct.toFixed(2) + '%' :
+                               pct < 1   ? pct.toFixed(1) + '%' :
+                                           Math.round(pct) + '%';
+
+                const row = document.createElement('div');
+                row.className = 'miam-stat-row';
+
+                const label = document.createElement('div');
+                label.className = 'miam-stat-label';
+                label.style.color = RARITY_COLORS[rarity] || '#aaa';
+                label.textContent = RARITY_LABELS[rarity] || rarity;
+
+                const barWrap = document.createElement('div');
+                barWrap.className = 'miam-stat-bar-wrap';
+
+                const bar = document.createElement('div');
+                bar.className = 'miam-stat-bar';
+                bar.style.width = Math.max(1, pct) + '%';
+                bar.style.background = RARITY_COLORS[rarity] || '#aaa';
+
+                const pctEl = document.createElement('div');
+                pctEl.className = 'miam-stat-pct';
+                pctEl.textContent = pctStr;
+
+                barWrap.appendChild(bar);
+                row.appendChild(label);
+                row.appendChild(barWrap);
+                row.appendChild(pctEl);
+                block.appendChild(row);
+            });
         }
 
         function closeMiam() {
@@ -8747,6 +8879,7 @@
             _miamRenderMutBtns();
             _miamRenderSlots();
             _miamUpdateProgress();
+            _miamRenderStats();
         }
 
         function _miamRenderMutBtns() {
@@ -8783,6 +8916,7 @@
             _miamSlots[idx] = null;
             _miamRenderSlots();
             _miamUpdateProgress();
+            _miamRenderStats();
         }
 
         function _miamOpenPicker(slotIdx) {
@@ -8834,6 +8968,7 @@
             document.getElementById('miamCardPicker').classList.remove('open');
             _miamRenderSlots();
             _miamUpdateProgress();
+            _miamRenderStats();
         }
 
         function _miamUpdateProgress() {
@@ -8841,7 +8976,7 @@
             document.getElementById('miamProgress').textContent = filled + ' / 5 cartes sélectionnées';
             const btn = document.getElementById('miamFuseBtn');
             btn.disabled = filled < 5;
-            btn.textContent = filled >= 5 ? '🔥 FUSIONNER !' : '🔥 FUSIONNER (' + filled + '/5)';
+            btn.textContent = filled >= 5 ? '🔥 MANGER !' : '🔥 MANGER (' + filled + '/5)';
         }
 
         function doMiamFusion() {
