@@ -3753,6 +3753,32 @@
                     <div style="color:#555;font-size:0.75em;margin-top:8px;" id="adminLuckStatus">Aucune chance globale active</div>
                 </div>
 
+                <!-- Chance individuelle -->
+                <div class="admin-section" style="border-color:rgba(46,204,113,0.3);background:rgba(46,204,113,0.03);">
+                    <div class="admin-section-title" style="color:#7dffb3;">🍀 Chance pour un joueur</div>
+                    <div class="admin-player-list" id="adminPlayerListLuckOne"></div>
+                    <div class="admin-row" style="margin-top:8px;flex-wrap:wrap;gap:6px;">
+                        <input class="admin-input" id="adminLuckOnePseudo" placeholder="Pseudo du joueur…" style="flex:1;min-width:120px;">
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;margin:8px 0;flex-wrap:wrap;">
+                        <span style="color:#7dffb3;font-size:0.78em;white-space:nowrap;">Durée :</span>
+                        <input class="admin-input" id="adminLuckOneMinutes" type="number" value="5" min="0" style="width:60px;padding:6px 8px;font-size:0.85em;">
+                        <span style="color:#7dffb3;font-size:0.75em;">min</span>
+                        <input class="admin-input" id="adminLuckOneSeconds" type="number" value="0" min="0" max="59" style="width:60px;padding:6px 8px;font-size:0.85em;">
+                        <span style="color:#7dffb3;font-size:0.75em;">sec</span>
+                    </div>
+                    <div class="admin-luck-grid">
+                        <button class="admin-luck-btn" onclick="adminSetLuckOne(2)">×2</button>
+                        <button class="admin-luck-btn" onclick="adminSetLuckOne(4)">×4</button>
+                        <button class="admin-luck-btn" onclick="adminSetLuckOne(8)">×8</button>
+                        <button class="admin-luck-btn" onclick="adminSetLuckOne(16)">×16</button>
+                        <button class="admin-luck-btn" onclick="adminSetLuckOne(32)">×32</button>
+                        <button class="admin-luck-btn x100" onclick="adminSetLuckOne(100)">🔥 ×100</button>
+                        <button class="admin-luck-btn" onclick="adminSetLuckOne(0)" style="color:#e74c3c;border-color:rgba(231,76,60,0.4)">OFF</button>
+                    </div>
+                    <div style="color:#555;font-size:0.75em;margin-top:8px;" id="adminLuckOneStatus"></div>
+                </div>
+
                 <!-- Double or -->
                 <div class="admin-section">
                     <div class="admin-section-title">💰 Double or pour TOUS</div>
@@ -5468,8 +5494,16 @@
                         broadcastRareCard(reward.name, reward.rarity, _mut);
                     }
 
-                    // Les cartes admin_exclusive ne comptent pas dans le classement
-                    if (reward.rarity === 'admin_exclusive') return;
+                    // Les cartes admin_exclusive : ajouter à unlockedCards et à cardImages pour le livre
+                    if (reward.rarity === 'admin_exclusive') {
+                        if (!unlockedCards.has(cardKey)) { unlockedCards.set(cardKey, 0); stats.totalCards++; }
+                        unlockedCards.set(cardKey, unlockedCards.get(cardKey) + 1);
+                        if (!cardImages.admin_exclusive) cardImages.admin_exclusive = [];
+                        if (!cardImages.admin_exclusive.find(c => c.name === reward.name)) {
+                            cardImages.admin_exclusive.push({ name: reward.name, img: reward.img || '' });
+                        }
+                        return;
+                    }
                     const hasMutation = reward.isGold || reward.isDiamond || reward.isRainbow;
                     const isNewCard = !hasMutation && !unlockedCards.has(cardKey);
                     if (!hasMutation) {
@@ -7044,6 +7078,27 @@
                 }
             });
 
+            // Écouter la chance individuelle envoyée par l'admin
+            firebaseDB.ref('players/' + key + '/luckGift').on('value', snap => {
+                const d = snap.val();
+                if (!d || !d.multiplier || !d.durationMs || !d.ts) return;
+                // Calculer le temps restant (anti-dérive horloge)
+                const elapsed   = Date.now() - d.ts;
+                const remaining = d.durationMs - Math.max(0, elapsed);
+                if (remaining <= 0) {
+                    firebaseDB.ref('players/' + key + '/luckGift').set(null);
+                    return;
+                }
+                // Appliquer la chance personnelle
+                personalLuck = d.multiplier;
+                luckExpiry   = Date.now() + remaining;
+                autoSave();
+                startLuckTimer();
+                showBroadcast('🍀 L\'admin t\'a offert la Chance ×' + d.multiplier + ' !', Date.now());
+                // Consommer pour éviter la réapplication après refresh
+                firebaseDB.ref('players/' + key + '/luckGift').set(null);
+            });
+
             // Écouter les prix boutique en temps réel
             firebaseDB.ref('admin/shopPrices').on('value', snap => {
                 const prices = snap.val();
@@ -7540,7 +7595,7 @@
 
         function refreshAdminPlayerLists() {
             const players = window._adminPlayerList || [];
-            ['adminPlayerListGold', 'adminPlayerListForce', 'adminPlayerListBan', 'adminPlayerListStats', 'adminPlayerListPermaBan', 'adminPlayerListCurse'].forEach(listId => {
+            ['adminPlayerListGold', 'adminPlayerListForce', 'adminPlayerListBan', 'adminPlayerListStats', 'adminPlayerListPermaBan', 'adminPlayerListCurse', 'adminPlayerListLuckOne'].forEach(listId => {
                 const el = document.getElementById(listId);
                 if (!el) return;
                 el.innerHTML = '';
@@ -7562,6 +7617,7 @@
                         if (listId === 'adminPlayerListCurse') document.getElementById('adminCursePseudo').value = p;
                         if (listId === 'adminPlayerListStats') { document.getElementById('adminStatsPseudo').value = p; }
                         if (listId === 'adminPlayerListAdminCard') document.getElementById('adminCardPseudo').value = p;
+                        if (listId === 'adminPlayerListLuckOne') document.getElementById('adminLuckOnePseudo').value = p;
                     };
                     el.appendChild(pill);
                 });
@@ -8415,6 +8471,39 @@
             const key = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g, '_');
             firebaseDB.ref('players/' + key + '/giftAdminCard').set({ name, img: img || '', ts: Date.now() })
                 .then(() => adminStatus('✅ Carte ADMIN envoyée à ' + pseudo + ' !'))
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
+        function adminSetLuckOne(multiplier) {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            const pseudo = document.getElementById('adminLuckOnePseudo').value.trim();
+            if (!pseudo) { adminStatus('⚠️ Pseudo vide'); return; }
+            const online = window._adminPlayerList || [];
+            if (!online.includes(pseudo)) { adminStatus('⚠️ ' + pseudo + ' n\'est pas connecté'); return; }
+            const statusEl = document.getElementById('adminLuckOneStatus');
+            if (multiplier === 0) {
+                // Désactiver la chance de ce joueur
+                const key = encodeURIComponent(pseudo).replace(/[.#$\/\[\]]/g, '_');
+                firebaseDB.ref('players/' + key + '/luckGift').set(null)
+                    .then(() => {
+                        adminStatus('✅ Chance désactivée pour ' + pseudo);
+                        if (statusEl) statusEl.textContent = '✅ Chance désactivée pour ' + pseudo;
+                    })
+                    .catch(e => adminStatus('Erreur : ' + e.message));
+                return;
+            }
+            const minutes = Math.max(0, parseInt(document.getElementById('adminLuckOneMinutes').value) || 0);
+            const seconds = Math.min(59, Math.max(0, parseInt(document.getElementById('adminLuckOneSeconds').value) || 0));
+            const durationMs = (minutes * 60 + seconds) * 1000;
+            if (durationMs <= 0) { adminStatus('⚠️ Définis une durée'); return; }
+            const durLabel = minutes > 0 ? minutes + 'min' + (seconds > 0 ? ' ' + seconds + 's' : '') : seconds + 's';
+            const key = encodeURIComponent(pseudo).replace(/[.#$\/\[\]]/g, '_');
+            firebaseDB.ref('players/' + key + '/luckGift').set({ multiplier, durationMs, ts: Date.now() })
+                .then(() => {
+                    const msg = '✅ Chance ×' + multiplier + ' envoyée à ' + pseudo + ' pour ' + durLabel;
+                    adminStatus(msg);
+                    if (statusEl) statusEl.textContent = msg;
+                })
                 .catch(e => adminStatus('Erreur : ' + e.message));
         }
 
