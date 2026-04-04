@@ -587,6 +587,112 @@
             font-weight: 900;
         }
 
+        /* ── Thème MITROX ── */
+        body.theme-mitrox {
+            --theme-bg-from:     #c084fc;
+            --theme-bg-to:       #a855f7;
+            --theme-header-from: #e9d5ff;
+            --theme-header-to:   #c084fc;
+            --theme-border:      #7c3aed;
+            --theme-accent:      #9333ea;
+            --theme-particle:    #f3e8ff;
+            --theme-glow:        rgba(168,85,247,0.5);
+        }
+        body.theme-mitrox header {
+            animation: mitroxGlowPulse 2s ease-in-out infinite;
+            border-bottom-color: #7c3aed !important;
+        }
+        @keyframes mitroxGlowPulse {
+            0%,100% { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 30px rgba(168,85,247,0.5); }
+            50%      { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 80px rgba(168,85,247,1), 0 0 140px rgba(124,58,237,0.4); }
+        }
+        body.theme-mitrox .chest-main {
+            border-color: #7c3aed !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3), 0 0 50px rgba(168,85,247,0.6) !important;
+            background: linear-gradient(145deg, #9333ea 0%, #6d28d9 100%) !important;
+        }
+        body.theme-mitrox .stat-card {
+            border-color: rgba(124,58,237,0.6) !important;
+            background: linear-gradient(145deg, #a855f7 0%, #7c3aed 100%) !important;
+        }
+        body.theme-mitrox .open-btn {
+            background: linear-gradient(180deg, #7c3aed 0%, #5b21b6 100%) !important;
+            color: #f3e8ff !important;
+            border: 3px solid #c084fc !important;
+            box-shadow: 0 8px 28px rgba(124,58,237,0.9) !important;
+            font-weight: 900 !important;
+        }
+        body.theme-mitrox h1 {
+            color: #1a0040 !important;
+            text-shadow: 3px 3px 0 #f3e8ff, -1px -1px 0 #f3e8ff, 1px -1px 0 #f3e8ff, -1px 1px 0 #f3e8ff,
+                         0 0 30px rgba(255,255,255,0.8) !important;
+        }
+        body.theme-mitrox .subtitle { color: #1a0040 !important; font-weight: 900 !important; text-shadow: 0 1px 3px rgba(255,255,255,0.5) !important; }
+        .theme-banner.mitrox {
+            background: linear-gradient(90deg, #5b21b6, #7c3aed, #a855f7, #c084fc, #a855f7, #7c3aed, #5b21b6);
+            background-size: 300% 100%;
+            color: #fff;
+            box-shadow: 0 3px 28px rgba(168,85,247,0.9);
+            animation: bannerShift 2.5s linear infinite;
+            text-shadow: 0 0 10px rgba(255,255,255,0.6), 1px 1px 0 rgba(0,0,0,0.4);
+            letter-spacing: 4px;
+            border-bottom: 3px solid #7c3aed;
+            font-weight: 900;
+        }
+
+        /* ── Thème Anniversaire 🎂 ── */
+        body.theme-anniversaire {
+            --theme-bg-from:     #ffd700;
+            --theme-bg-to:       #ff6b9d;
+            --theme-header-from: #fff176;
+            --theme-header-to:   #ffd700;
+            --theme-border:      #ff69b4;
+            --theme-accent:      #ff69b4;
+            --theme-particle:    #fff176;
+            --theme-glow:        rgba(255,105,180,0.5);
+        }
+        body.theme-anniversaire header {
+            animation: anniGlowPulse 1.8s ease-in-out infinite;
+            border-bottom-color: #ff69b4 !important;
+        }
+        @keyframes anniGlowPulse {
+            0%,100% { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 30px rgba(255,105,180,0.5); }
+            50%      { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 70px rgba(255,215,0,1), 0 0 120px rgba(255,105,180,0.5); }
+        }
+        body.theme-anniversaire .chest-main {
+            border-color: #ff69b4 !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3), 0 0 45px rgba(255,105,180,0.6) !important;
+            background: linear-gradient(145deg, #ffb3d9 0%, #ff69b4 100%) !important;
+        }
+        body.theme-anniversaire .stat-card {
+            border-color: rgba(255,105,180,0.6) !important;
+            background: linear-gradient(145deg, #fff176 0%, #ffd700 100%) !important;
+        }
+        body.theme-anniversaire .open-btn {
+            background: linear-gradient(180deg, #ff69b4 0%, #cc2f77 100%) !important;
+            color: #fff !important;
+            border: 3px solid #ffd700 !important;
+            box-shadow: 0 8px 28px rgba(255,105,180,0.9) !important;
+            font-weight: 900 !important;
+        }
+        body.theme-anniversaire h1 {
+            color: #7a0040 !important;
+            text-shadow: 3px 3px 0 #fff176, -1px -1px 0 #fff176, 1px -1px 0 #fff176, -1px 1px 0 #fff176,
+                         0 0 30px rgba(255,215,0,0.9), 0 0 60px rgba(255,105,180,0.5) !important;
+        }
+        body.theme-anniversaire .subtitle { color: #7a0040 !important; font-weight: 900 !important; }
+        .theme-banner.anniversaire {
+            background: linear-gradient(90deg, #cc2f77, #ff69b4, #ffd700, #fff176, #ffd700, #ff69b4, #cc2f77);
+            background-size: 300% 100%;
+            color: #fff;
+            box-shadow: 0 3px 28px rgba(255,105,180,0.8);
+            animation: bannerShift 2s linear infinite;
+            text-shadow: 0 0 10px rgba(255,255,255,0.7), 1px 1px 0 rgba(0,0,0,0.3);
+            letter-spacing: 4px;
+            border-bottom: 3px solid #ff69b4;
+            font-weight: 900;
+        }
+
         /* Bannière de thème actif */
         .theme-banner {
             display: none;
@@ -2677,6 +2783,76 @@
         .broadcast-banner.show { bottom:30px; }
         .broadcast-banner .bb-from { color:#ff99cc; font-size:0.72em; font-weight:900; letter-spacing:2px; margin-bottom:4px; }
 
+        /* ═══ POP-UP ADMIN ═══ */
+        .admin-popup-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 11000;
+            justify-content: center;
+            align-items: center;
+            animation: popupFadeIn 0.25s ease;
+        }
+        .admin-popup-overlay.show { display: flex; }
+        @keyframes popupFadeIn { from { opacity:0; } to { opacity:1; } }
+        .admin-popup-box {
+            background: linear-gradient(145deg, #1a0a2e, #0a0418);
+            border: 3px solid #ff69b4;
+            border-radius: 24px;
+            padding: 28px 28px 22px;
+            max-width: 480px;
+            width: 92%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 60px rgba(255,105,180,0.4), 0 20px 60px rgba(0,0,0,0.8);
+            animation: popupSlideIn 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+        }
+        @keyframes popupSlideIn { from { transform:scale(0.7) translateY(40px); opacity:0; } to { transform:scale(1) translateY(0); opacity:1; } }
+        .admin-popup-from {
+            font-size: 0.68em;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: #ff69b4;
+            text-shadow: 0 0 10px rgba(255,105,180,0.7);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+        .admin-popup-img {
+            width: 100%;
+            max-height: 220px;
+            object-fit: contain;
+            border-radius: 14px;
+            margin-bottom: 14px;
+            display: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .admin-popup-img.show { display: block; }
+        .admin-popup-text {
+            color: #fff;
+            font-size: 1.05em;
+            font-weight: 700;
+            line-height: 1.5;
+            margin-bottom: 18px;
+            word-break: break-word;
+        }
+        .admin-popup-close {
+            background: linear-gradient(180deg, #ff69b4, #cc3370);
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 32px;
+            font-family: 'Arial Black', Arial, sans-serif;
+            font-size: 0.9em;
+            font-weight: 900;
+            cursor: pointer;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 0 #7a0030, 0 6px 20px rgba(255,105,180,0.5);
+            transition: all 0.15s;
+        }
+        .admin-popup-close:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #7a0030, 0 8px 25px rgba(255,105,180,0.6); }
+        .admin-popup-close:active { transform: translateY(2px); box-shadow: 0 2px 0 #7a0030; }
+
         /* ═══ BANNIÈRE CARTE RARE BAS DROITE ═══ */
         .rare-alert {
             position: fixed;
@@ -3750,6 +3926,16 @@
     <div class="global-luck-banner" id="globalLuckBanner"></div>
     <div class="global-luck-banner double-gold" id="doubleGoldBanner" style="display:none;top:auto;bottom:0;animation:none;"></div>
 
+    <!-- Pop-up Admin -->
+    <div class="admin-popup-overlay" id="adminPopupOverlay">
+        <div class="admin-popup-box">
+            <div class="admin-popup-from">📢 MESSAGE DE L'ADMIN</div>
+            <img class="admin-popup-img" id="adminPopupImg" src="" alt="">
+            <div class="admin-popup-text" id="adminPopupText"></div>
+            <button class="admin-popup-close" onclick="closeAdminPopup()">✕ Fermer</button>
+        </div>
+    </div>
+
     <!-- Admin Panel -->
     <!-- Modal mot de passe admin -->
     <div class="admin-pwd-overlay" id="adminPwdOverlay">
@@ -3873,6 +4059,8 @@
                         <button class="admin-btn" onclick="adminSetTheme('rainbow')" style="background:linear-gradient(90deg,#ff6b9d,#ffc75f,#00c9a7,#4d8af0);background-size:200%;box-shadow:0 4px 0 rgba(0,0,0,0.3);border:2px solid #fff;color:#fff;font-weight:900;">🌈 Rainbow</button>
                         <button class="admin-btn" onclick="adminSetTheme('paques')" style="background:linear-gradient(180deg,#ffe0f0,#ffc0e8);box-shadow:0 4px 0 #cc8090;border:2px solid #ff8dc7;color:#7a1040;">🐣 Pâques</button>
                         <button class="admin-btn" onclick="adminSetTheme('chocolat')" style="background:linear-gradient(180deg,#c07840,#8b4a18);box-shadow:0 4px 0 #3a1a00;border:2px solid #6b3a10;color:#f8e8c8;font-weight:900;">💩 CACA</button>
+                        <button class="admin-btn" onclick="adminSetTheme('mitrox')" style="background:linear-gradient(180deg,#a855f7,#6d28d9);box-shadow:0 4px 0 #3b0764;border:2px solid #7c3aed;color:#f3e8ff;font-weight:900;">🎮 MITROX</button>
+                        <button class="admin-btn" onclick="adminSetTheme('anniversaire')" style="background:linear-gradient(180deg,#ff69b4,#cc2f77);box-shadow:0 4px 0 #7a0030;border:2px solid #ffd700;color:#fff;font-weight:900;">🎂 Anniversaire</button>
                     </div>
                     <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminThemeStatus">Thème actuel : Défaut</div>
                 </div>
@@ -4271,6 +4459,27 @@
                 </div>
 
                 <button class="admin-btn blue" onclick="adminRefreshDashboard()" style="margin-top:4px;font-size:0.8em;padding:9px;">🔄 Actualiser tout</button>
+
+                <!-- POP-UP ADMIN -->
+                <div class="admin-section" style="border-color:rgba(255,105,180,0.4);background:rgba(255,105,180,0.03);margin-top:12px;">
+                    <div class="admin-section-title" style="color:#ff69b4;">📣 Pop-up pour les joueurs</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:12px;">Affiche une pop-up avec image et texte sur l'écran des joueurs connectés.</div>
+
+                    <input class="admin-input" id="adminPopupTextInput" placeholder="Texte du message…" style="margin-bottom:8px;width:100%;">
+                    <input class="admin-input" id="adminPopupImgInput" placeholder="URL de l'image (optionnel)…" style="margin-bottom:12px;width:100%;">
+
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="admin-btn" onclick="adminSendPopupAll()" style="background:linear-gradient(180deg,#cc3370,#7a0030);box-shadow:0 4px 0 #3a0015;border:2px solid rgba(255,105,180,0.5);flex:1;">🌍 Envoyer à tous</button>
+                    </div>
+
+                    <div style="margin-top:10px;">
+                        <div class="admin-player-list" id="adminPlayerListPopup"></div>
+                        <input class="admin-input" id="adminPopupPseudo" placeholder="Pseudo du joueur…" style="margin-top:8px;width:100%;">
+                        <button class="admin-btn blue" onclick="adminSendPopupOne()" style="margin-top:6px;">🎯 Envoyer à ce joueur</button>
+                    </div>
+
+                    <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminPopupStatus"></div>
+                </div>
 
             </div>
 
@@ -7344,6 +7553,14 @@
                 showBroadcast(d.msg, d.ts);
             });
 
+            // Pop-up admin globale
+            const _joinTsPopup = Date.now();
+            firebaseDB.ref('admin/popup').on('value', snap => {
+                const d = snap.val();
+                if (!d || !d.ts || d.ts <= _joinTsPopup) return;
+                showAdminPopup(d.text || '', d.img || '');
+            });
+
             // Taux de drop des mutations
             firebaseDB.ref('admin/mutations').on('value', snap => {
                 const d = snap.val();
@@ -7442,6 +7659,14 @@
                     autoSave();
                     showBroadcast('⚡ Tu as reçu une carte ADMIN EXCLUSIVE : ' + d.name + ' !', Date.now());
                     firebaseDB.ref('players/' + encodeURIComponent(myPseudo).replace(/[.#$/\[\]]/g,'_') + '/giftAdminCard').set(null);
+                });
+
+                // Pop-up ciblée pour ce joueur
+                firebaseDB.ref('players/' + encodeURIComponent(myPseudo).replace(/[.#$/\[\]]/g,'_') + '/adminPopup').on('value', snap => {
+                    const d = snap.val();
+                    if (!d || !d.ts) return;
+                    showAdminPopup(d.text || '', d.img || '');
+                    firebaseDB.ref('players/' + encodeURIComponent(myPseudo).replace(/[.#$/\[\]]/g,'_') + '/adminPopup').set(null);
                 });
             }
 
@@ -7685,7 +7910,7 @@
 
         function refreshAdminPlayerLists() {
             const players = window._adminPlayerList || [];
-            ['adminPlayerListGold', 'adminPlayerListForce', 'adminPlayerListBan', 'adminPlayerListStats', 'adminPlayerListPermaBan', 'adminPlayerListCurse', 'adminPlayerListLuckOne'].forEach(listId => {
+            ['adminPlayerListGold', 'adminPlayerListForce', 'adminPlayerListBan', 'adminPlayerListStats', 'adminPlayerListPermaBan', 'adminPlayerListCurse', 'adminPlayerListLuckOne', 'adminPlayerListPopup'].forEach(listId => {
                 const el = document.getElementById(listId);
                 if (!el) return;
                 el.innerHTML = '';
@@ -7708,6 +7933,7 @@
                         if (listId === 'adminPlayerListStats') { document.getElementById('adminStatsPseudo').value = p; }
                         if (listId === 'adminPlayerListAdminCard') document.getElementById('adminCardPseudo').value = p;
                         if (listId === 'adminPlayerListLuckOne') document.getElementById('adminLuckOnePseudo').value = p;
+                        if (listId === 'adminPlayerListPopup') document.getElementById('adminPopupPseudo').value = p;
                     };
                     el.appendChild(pill);
                 });
@@ -7808,6 +8034,60 @@
             firebaseDB.ref('admin/luck').set({ multiplier, durationMs, ts: Date.now() })
                 .then(() => { adminStatus(multiplier > 0 ? '✅ Chance ×' + multiplier + ' activée pour ' + durLabel + ' !' : '✅ Chance désactivée'); })
                 .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+
+        // ── Pop-up admin ──
+        function showAdminPopup(text, img) {
+            const overlay = document.getElementById('adminPopupOverlay');
+            const textEl  = document.getElementById('adminPopupText');
+            const imgEl   = document.getElementById('adminPopupImg');
+            if (!overlay || !textEl || !imgEl) return;
+            textEl.textContent = text;
+            if (img) {
+                imgEl.src = img;
+                imgEl.classList.add('show');
+                imgEl.onerror = () => imgEl.classList.remove('show');
+            } else {
+                imgEl.src = '';
+                imgEl.classList.remove('show');
+            }
+            overlay.classList.add('show');
+        }
+
+        function closeAdminPopup() {
+            const overlay = document.getElementById('adminPopupOverlay');
+            if (overlay) overlay.classList.remove('show');
+        }
+
+        function _adminPopupStatus(msg) {
+            const el = document.getElementById('adminPopupStatus');
+            if (!el) return;
+            el.textContent = msg;
+            clearTimeout(el._t);
+            el._t = setTimeout(() => { el.textContent = ''; }, 4000);
+        }
+
+        function adminSendPopupAll() {
+            if (!firebaseDB) { _adminPopupStatus('⚠️ Firebase non connecté'); return; }
+            const text = (document.getElementById('adminPopupTextInput').value || '').trim();
+            const img  = (document.getElementById('adminPopupImgInput').value || '').trim();
+            if (!text && !img) { _adminPopupStatus('⚠️ Saisis un texte ou une image'); return; }
+            firebaseDB.ref('admin/popup').set({ text, img, ts: Date.now() })
+                .then(() => { _adminPopupStatus('✅ Pop-up envoyée à tous les joueurs !'); })
+                .catch(e => _adminPopupStatus('Erreur : ' + e.message));
+        }
+
+        function adminSendPopupOne() {
+            if (!firebaseDB) { _adminPopupStatus('⚠️ Firebase non connecté'); return; }
+            const pseudo = document.getElementById('adminPopupPseudo').value.trim();
+            if (!pseudo) { _adminPopupStatus('⚠️ Saisis un pseudo'); return; }
+            const text = (document.getElementById('adminPopupTextInput').value || '').trim();
+            const img  = (document.getElementById('adminPopupImgInput').value || '').trim();
+            if (!text && !img) { _adminPopupStatus('⚠️ Saisis un texte ou une image'); return; }
+            const key = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g, '_');
+            firebaseDB.ref('players/' + key + '/adminPopup').set({ text, img, ts: Date.now() })
+                .then(() => { _adminPopupStatus('✅ Pop-up envoyée à ' + pseudo + ' !'); })
+                .catch(e => _adminPopupStatus('Erreur : ' + e.message));
         }
 
         function adminBroadcast() {
@@ -8423,6 +8703,18 @@
                 banner: '💩 CACA 💩',
                 bannerClass: 'chocolat',
                 particles: { color: '#8b4a18', emoji: ['💩','💨','🚽','💨','🔥','🚽','💩','🔥'], count: 80, glow: 'rgba(107,58,16,0.9)' }
+            },
+            'mitrox': {
+                label: '🎮 MITROX',
+                banner: '❤ MITROX ❤',
+                bannerClass: 'mitrox',
+                particles: { color: '#c084fc', emoji: ['🎮','📺','▶️','🔴','💜','⚡','🏆','🎯','🕹️'], count: 85, glow: 'rgba(168,85,247,1)' }
+            },
+            'anniversaire': {
+                label: '🎂 Anniversaire',
+                banner: '🎉 BON ANNIVERSAIRE ! 🎂',
+                bannerClass: 'anniversaire',
+                particles: { color: '#ff69b4', emoji: ['🎂','🎉','🎈','🎁','🥳','✨','🍰','🎊','🕯️'], count: 90, glow: 'rgba(255,105,180,0.9)' }
             }
         };
 
