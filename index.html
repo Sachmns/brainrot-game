@@ -4307,7 +4307,7 @@
     </div>
 
     <header>
-        <h1>⚔️ BRAINROT ⚔️</h1>
+        <h1 id="gameTitle">⚔️ BRAINROT ⚔️</h1>
         <p class="subtitle">Simulateur de Coffre Brainrot - Cliquez 5 fois pour débloquer les étoiles !(By Sach Mns)</p>
         <div class="luck-timer-badge" id="luckTimerBadge">
             <span id="luckTimerIcon">🍀</span>
@@ -7636,6 +7636,27 @@
 
         const ADMIN_PSEUDO = 'Sachmns';
 
+        // Triple-tap sur le titre du jeu (mobile uniquement) pour ouvrir le panel admin
+        (function() {
+            var _titleTapCount = 0;
+            var _titleTapTimer = null;
+            var titleEl = document.getElementById('gameTitle');
+            if (!titleEl) return;
+            titleEl.addEventListener('touchend', function(e) {
+                // Uniquement sur appareil tactile
+                if (!navigator.maxTouchPoints && !navigator.msMaxTouchPoints) return;
+                _titleTapCount++;
+                if (_titleTapTimer) clearTimeout(_titleTapTimer);
+                if (_titleTapCount >= 3) {
+                    _titleTapCount = 0;
+                    clearTimeout(_titleTapTimer);
+                    openAdminPasswordModal();
+                } else {
+                    _titleTapTimer = setTimeout(function() { _titleTapCount = 0; }, 600);
+                }
+            });
+        })();
+
         function openAdminPasswordModal() {
             const currentPseudo = localStorage.getItem('tradePseudo') || '';
             if (currentPseudo !== ADMIN_PSEUDO) {
@@ -8892,7 +8913,7 @@
         function _miamRenderSlots() {
             const grid = document.getElementById('miamSlotsGrid');
             grid.innerHTML = '';
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 5; i++) {
                 const slot = _miamSlots[i];
                 const div = document.createElement('div');
                 div.className = 'miam-slot' + (slot ? ' filled' : '');
