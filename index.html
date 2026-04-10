@@ -10930,27 +10930,63 @@
                 // give = ce que B doit donner (son or + ses cartes)
                 // receive = ce que B reçoit (or validé de A + cartes validées de A)
                 const otherPseudo = isA ? d.playerB : d.playerA;
-                const execId      = _tradeRoomId + '_exec';
-                firebaseDB.ref('players/' + _tkey(otherPseudo) + '/tradeExec').set({
+                // Capturer les valeurs dépendant de l'état courant AVANT tout reset,
+                // car _tradeResetLocal() va mettre _tradeRoomId et _tradeRoomHostKey à null.
+                const execId       = _tradeRoomId + '_exec';
+                const otherKey     = _tkey(otherPseudo);
+                const myKey        = _tkey(me);
+                const hostKeySnap  = _tradeRoomHostKey || myKey;
+
+                // Écrire la commande pour B, puis seulement après confirmation
+                // nettoyer l'état local — garantit que B reçoit bien sa commande
+                // avant qu'on décroche les listeners ou remet à zéro les variables.
+                firebaseDB.ref('players/' + otherKey + '/tradeExec').set({
                     execId,
                     give:    { cards: hisCards,      gold: validHisGold  },
                     receive: { cards: validMyCards,  gold: validMyGold   },
                     ts: Date.now(),
-                }).catch(() => {});
-
-                firebaseDB.ref('players/' + _tkey(me) + '/tradeOffer').set(null).catch(() => {});
-                setTimeout(() => {
-                    const hostKey2 = _tradeRoomHostKey || _tkey(me);
-                    firebaseDB.ref('players/' + hostKey2 + '/tradeRoom').set(null).catch(() => {});
-                }, 2000);
-
-                _tradeDetachRoom();
-                _tradeResetLocal();
-                if (document.getElementById('tradeModal').classList.contains('open')) {
-                    _tradeShowPhase(1);
-                    _tradeSetInviteStatus('✅ Trade effectué avec ' + otherPseudo + ' !');
-                }
-                showBroadcast('🔄 Trade effectué avec ' + otherPseudo + ' !', Date.now());
+                }).then(() => {
+                    // Nettoyage local uniquement après confirmation Firebase
+                    firebaseDB.ref('players/' + myKey + '/tradeOffer').set(null).catch(() => {});
+                    setTimeout(() => {
+                        firebaseDB.ref('players/' + hostKeySnap + '/tradeRoom').set(null).catch(() => {});
+                    }, 2000);
+                    _tradeDetachRoom();
+                    _tradeResetLocal();
+                    if (document.getElementById('tradeModal').classList.contains('open')) {
+                        _tradeShowPhase(1);
+                        _tradeSetInviteStatus('✅ Trade effectué avec ' + otherPseudo + ' !');
+                    }
+                    showBroadcast('🔄 Trade effectué avec ' + otherPseudo + ' !', Date.now());
+                }).catch(e => {
+                    // L'écriture pour B a échoué — retry une fois après 1 seconde
+                    setTimeout(() => {
+                        firebaseDB.ref('players/' + otherKey + '/tradeExec').set({
+                            execId,
+                            give:    { cards: hisCards,      gold: validHisGold  },
+                            receive: { cards: validMyCards,  gold: validMyGold   },
+                            ts: Date.now(),
+                        }).then(() => {
+                            firebaseDB.ref('players/' + myKey + '/tradeOffer').set(null).catch(() => {});
+                            setTimeout(() => {
+                                firebaseDB.ref('players/' + hostKeySnap + '/tradeRoom').set(null).catch(() => {});
+                            }, 2000);
+                            _tradeDetachRoom();
+                            _tradeResetLocal();
+                            if (document.getElementById('tradeModal').classList.contains('open')) {
+                                _tradeShowPhase(1);
+                                _tradeSetInviteStatus('✅ Trade effectué avec ' + otherPseudo + ' !');
+                            }
+                            showBroadcast('🔄 Trade effectué avec ' + otherPseudo + ' !', Date.now());
+                        }).catch(() => {
+                            // Échec définitif : nettoyer quand même côté A pour ne pas bloquer l'UI
+                            firebaseDB.ref('players/' + myKey + '/tradeOffer').set(null).catch(() => {});
+                            _tradeDetachRoom();
+                            _tradeResetLocal();
+                            _tradeSetStatus('❌ Erreur de synchronisation avec ' + otherPseudo + ' — réessaie.');
+                        });
+                    }, 1000);
+                });
 
             }).catch(e => { _tradeExecuting = false; _tradeSetStatus('❌ Erreur : ' + e.message); }); // BUG1: libérer sur erreur
         }
