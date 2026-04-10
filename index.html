@@ -3896,6 +3896,29 @@
         .trade-gold-max { font-size: 0.58em; color: #555; white-space: nowrap; }
 
         /* Proposition de l'autre joueur */
+        .trade-sort-select {
+            background: rgba(0,170,255,0.07);
+            border: 1px solid rgba(0,170,255,0.25);
+            border-radius: 10px;
+            color: #88ccff;
+            padding: 7px 10px;
+            font-size: 0.72em;
+            font-weight: 900;
+            outline: none;
+            cursor: pointer;
+            font-family: 'Arial Black', Arial, sans-serif;
+            letter-spacing: 0.5px;
+            transition: border-color 0.2s;
+        }
+        .trade-sort-select:focus { border-color: rgba(0,170,255,0.5); }
+        .trade-sort-select option { background: #0a0018; color: #ccc; }
+        /* Other offer cards — larger + clearer */
+        .trade-other-card {
+            width: 86px !important;
+        }
+        .trade-other-card img { width: 64px !important; height: 64px !important; }
+        .toc-rarity { font-size: 0.52em; font-weight: 900; margin-top: 1px; }
+
         .trade-other-offer {
             display: flex; flex-wrap: wrap; gap: 6px;
             min-height: 50px; align-content: flex-start;
@@ -4157,7 +4180,15 @@
                             <div class="trade-mut-tabs" id="tradeGiveMutTabs"></div>
 
                             <!-- Recherche + grille cartes -->
-                            <input class="trade-search" id="tradeGiveSearch" placeholder="🔍 Rechercher une carte…" oninput="_tradeRenderGiveGrid()">
+                            <div style="display:flex;gap:6px;align-items:center;">
+                                <input class="trade-search" id="tradeGiveSearch" placeholder="🔍 Rechercher une carte…" oninput="_tradeRenderGiveGrid()" style="flex:1;margin-bottom:0;">
+                                <select class="trade-sort-select" id="tradeGiveSortSelect" onchange="_tradeRenderGiveGrid()">
+                                    <option value="name">A → Z</option>
+                                    <option value="rarity">Rareté</option>
+                                    <option value="qty_desc">Quantité ↓</option>
+                                    <option value="qty_asc">Quantité ↑</option>
+                                </select>
+                            </div>
                             <div class="trade-card-grid" id="tradeGiveGrid"></div>
 
                             <!-- Panier sélection -->
@@ -5699,6 +5730,9 @@
                 { name: 'Sammy', img: 'https://static.wikia.nocookie.net/stealabr/images/3/3d/Spydersammy.webp/revision/latest/scale-to-width/360?cb=20250914125926' }
             ]
         };
+
+        // Exposer cardImages globalement pour le système de trade
+        window.cardImages = cardImages;
 
         // Image de l'or
         const goldImage = 'https://cdn3d.iconscout.com/3d/premium/thumb/piece-7127674-5769597.png';
@@ -7272,7 +7306,7 @@
         function getTotalBookCards() {
             let total = 0;
             ['common','rare','epic','legendary','mythic','brainrot_god','secret','og','limited','no'].forEach(k => {
-                if (cardImages[k]) total += cardImages[k].length * 4; // normale + GOLD + DIAMANT + RAINBOW
+                if (cardImages[k]) total += cardImages[k].length * 5; // normale + GOLD + DIAMANT + RAINBOW + CHOCOLAT
             });
             return total;
         }
@@ -7285,7 +7319,8 @@
                     if (unlockedCards.has(ck))        unlocked++; // normale
                     if (unlockedGoldCards.has(ck))    unlocked++; // GOLD
                     if (unlockedDiamondCards.has(ck)) unlocked++; // DIAMANT
-                    if (unlockedRainbowCards.has(ck)) unlocked++; // RAINBOW
+                    if (unlockedRainbowCards.has(ck))    unlocked++; // RAINBOW
+                    if (unlockedChocolateCards.has(ck)) unlocked++; // CHOCOLAT
                 });
             });
             return unlocked;
@@ -10673,7 +10708,24 @@
                     (searchVal ? 'Aucune carte correspondante' : 'Aucune carte avec cette mutation') + '</div>';
                 return;
             }
-            entries.sort((a, b) => a.name.localeCompare(b.name));
+            // ── Tri selon le sélecteur ──
+            const _TRADE_RARITY_RANK = {
+                common:0, rare:1, epic:2, legendary:3, mythic:4,
+                brainrot_god:5, secret:6, og:7, limited:8,
+                hero:9, evolution:10, champions:11, no:12, admin_exclusive:13
+            };
+            const sortSel = document.getElementById('tradeGiveSortSelect');
+            const sortMode = sortSel ? sortSel.value : 'name';
+            entries.sort((a, b) => {
+                if (sortMode === 'rarity') {
+                    const ra = _TRADE_RARITY_RANK[a.rarity] ?? 99;
+                    const rb = _TRADE_RARITY_RANK[b.rarity] ?? 99;
+                    return rb - ra || a.name.localeCompare(b.name);
+                }
+                if (sortMode === 'qty_desc') return b.count - a.count || a.name.localeCompare(b.name);
+                if (sortMode === 'qty_asc')  return a.count - b.count || a.name.localeCompare(b.name);
+                return a.name.localeCompare(b.name); // 'name' default
+            });
             entries.forEach(card => {
                 const basketQty = _tradeBasket.filter(b => b.cardKey === card.cardKey && b.mut === card.mut).length;
                 const inBasket  = basketQty > 0;
@@ -10764,14 +10816,34 @@
                 return;
             }
 
+            const _TOC_RAR_COL = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff', og:'#c8a000', limited:'#ff59e7', hero:'#ffca18', evolution:'#6a00ff', champions:'#f1fc74', no:'#ff0000', admin_exclusive:'#ff0040' };
+            const _TOC_RAR_LBL = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limitée', hero:'Héros', evolution:'Évolution', champions:'Champions', no:'Impossible', admin_exclusive:'ADMIN' };
+
             cards.forEach(card => {
+                // Résoudre l'image depuis cardImages si absente dans l'offre Firebase
+                let imgSrc = card.img || '';
+                if (!imgSrc && card.cardKey) {
+                    const ckParts  = card.cardKey.split('|');
+                    const ckRarity = ckParts[0];
+                    const ckName   = ckParts.slice(1).join('|');
+                    const ckData   = ((window.cardImages || {})[ckRarity] || []).find(c => c.name === ckName);
+                    if (ckData) imgSrc = ckData.img || '';
+                }
+                // Résoudre la rareté depuis cardKey si absente
+                const rarity = card.rarity || (card.cardKey ? card.cardKey.split('|')[0] : '');
+                const rarColor = _TOC_RAR_COL[rarity] || '#aaa';
+                const rarLabel = _TOC_RAR_LBL[rarity] || rarity;
+
                 const div = document.createElement('div');
                 div.className = 'trade-other-card';
-                const imgF = TRADE_MUT_FILTERS[card.mut] ? 'filter:' + TRADE_MUT_FILTERS[card.mut] + ';' : '';
+                const imgF     = TRADE_MUT_FILTERS[card.mut] ? 'filter:' + TRADE_MUT_FILTERS[card.mut] + ';' : '';
+                const mutLabel = (card.mut && card.mut !== 'normal') ? (TRADE_MUT_LABELS[card.mut] || '') : '';
+                const mutColor = TRADE_MUT_COLORS[card.mut] || '#ccc';
                 div.innerHTML =
-                    '<img src="' + (card.img || '') + '" onerror="this.style.display=\'none\'" style="' + imgF + '">' +
+                    '<img src="' + imgSrc + '" onerror="this.style.display=\'none\'" style="' + imgF + '">' +
                     '<div class="toc-name">' + (card.name || '') + '</div>' +
-                    '<div class="toc-mut" style="color:' + (TRADE_MUT_COLORS[card.mut]||'#ccc') + ';">' + (TRADE_MUT_LABELS[card.mut]||'') + '</div>';
+                    '<div class="toc-rarity" style="color:' + rarColor + ';">' + rarLabel + '</div>' +
+                    (mutLabel ? '<div class="toc-mut" style="color:' + mutColor + ';">' + mutLabel + '</div>' : '');
                 el.appendChild(div);
             });
 
