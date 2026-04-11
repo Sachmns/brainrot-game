@@ -693,6 +693,187 @@
             font-weight: 900;
         }
 
+
+        /* ── Thème Été ☀️ ── */
+        body.theme-ete {
+            --theme-bg-from:     #87ceeb;
+            --theme-bg-to:       #1e90ff;
+            --theme-header-from: #ffe066;
+            --theme-header-to:   #ff9500;
+            --theme-border:      #ffe066;
+            --theme-accent:      #ffe066;
+            --theme-particle:    #fff9c4;
+            --theme-glow:        rgba(255,220,80,0.55);
+        }
+        body.theme-ete header {
+            animation: eteGlowPulse 2.2s ease-in-out infinite;
+            border-bottom-color: #ffe066 !important;
+        }
+        @keyframes eteGlowPulse {
+            0%,100% { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 35px rgba(255,200,50,0.4); }
+            50%      { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 80px rgba(255,220,80,0.9), 0 0 140px rgba(255,160,0,0.35); }
+        }
+        body.theme-ete .chest-main {
+            border-color: #ffe066 !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25), 0 0 55px rgba(255,220,80,0.6), 0 0 100px rgba(255,160,0,0.25) !important;
+            background: linear-gradient(145deg, #fff9c4 0%, #ffe066 100%) !important;
+        }
+        body.theme-ete .stat-card {
+            border-color: rgba(255,220,80,0.55) !important;
+            background: linear-gradient(145deg, #0a3d6b 0%, #1e6fa0 100%) !important;
+        }
+        body.theme-ete .open-btn {
+            background: linear-gradient(180deg, #ffe066 0%, #ff9500 100%) !important;
+            color: #4a2800 !important;
+            border: 3px solid #fff9c4 !important;
+            box-shadow: 0 8px 30px rgba(255,200,50,0.8) !important;
+            font-weight: 900 !important;
+        }
+        body.theme-ete h1 {
+            color: #fff9c4 !important;
+            text-shadow: 3px 3px 0 #b06000, -1px -1px 0 #b06000, 1px -1px 0 #b06000, -1px 1px 0 #b06000,
+                         0 0 30px rgba(255,220,80,1), 0 0 70px rgba(255,160,0,0.6) !important;
+        }
+        body.theme-ete .subtitle { color: #fff9c4 !important; text-shadow: 0 0 12px rgba(255,220,80,0.9) !important; }
+        .theme-banner.ete {
+            background: linear-gradient(90deg, #ff9500, #ffe066, #fff9c4, #87ceeb, #fff9c4, #ffe066, #ff9500);
+            background-size: 300% 100%;
+            color: #4a2800;
+            box-shadow: 0 3px 28px rgba(255,200,50,0.8);
+            animation: bannerShift 3s linear infinite;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.6);
+            letter-spacing: 4px;
+            border-bottom: 3px solid #ffe066;
+            font-weight: 900;
+        }
+
+        /* ── Thème Bonbon 🍬 ── */
+        body.theme-bonbon {
+            --theme-bg-from:     #ff9de2;
+            --theme-bg-to:       #c8a0f8;
+            --theme-header-from: #fffde7;
+            --theme-header-to:   #ffb3f0;
+            --theme-border:      #ff6fcf;
+            --theme-accent:      #ff6fcf;
+            --theme-particle:    #ffffff;
+            --theme-glow:        rgba(255,111,207,0.55);
+        }
+        body.theme-bonbon header {
+            animation: bonbonGlowPulse 1.9s ease-in-out infinite;
+            border-bottom-color: #ff6fcf !important;
+        }
+        @keyframes bonbonGlowPulse {
+            0%,100% { box-shadow: 0 4px 20px rgba(0,0,0,0.2), 0 0 30px rgba(255,111,207,0.4); }
+            50%      { box-shadow: 0 4px 20px rgba(0,0,0,0.2), 0 0 70px rgba(255,111,207,0.85), 0 0 120px rgba(200,160,248,0.45); }
+        }
+        body.theme-bonbon .chest-main {
+            border-color: #ff6fcf !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2), 0 0 50px rgba(255,111,207,0.6), 0 0 90px rgba(200,160,248,0.3) !important;
+            background: linear-gradient(145deg, #fffde7 0%, #ffb3f0 100%) !important;
+        }
+        body.theme-bonbon .stat-card {
+            border-color: rgba(255,111,207,0.5) !important;
+            background: linear-gradient(145deg, #4a006a 0%, #7b00a8 100%) !important;
+        }
+        body.theme-bonbon .open-btn {
+            background: linear-gradient(180deg, #ff6fcf 0%, #c820a0 100%) !important;
+            color: #fff !important;
+            border: 3px solid #fffde7 !important;
+            box-shadow: 0 8px 30px rgba(255,111,207,0.85) !important;
+            font-weight: 900 !important;
+        }
+        body.theme-bonbon h1 {
+            color: #fff !important;
+            text-shadow: 3px 3px 0 #8a006a, -1px -1px 0 #8a006a, 1px -1px 0 #8a006a, -1px 1px 0 #8a006a,
+                         0 0 28px rgba(255,111,207,1), 0 0 60px rgba(200,160,248,0.7) !important;
+        }
+        body.theme-bonbon .subtitle { color: #fffde7 !important; text-shadow: 0 0 14px rgba(255,111,207,0.9) !important; }
+        .theme-banner.bonbon {
+            background: linear-gradient(90deg, #c820a0, #ff6fcf, #fffde7, #c8a0f8, #fffde7, #ff6fcf, #c820a0);
+            background-size: 300% 100%;
+            color: #fff;
+            box-shadow: 0 3px 28px rgba(255,111,207,0.85);
+            animation: bannerShift 2.2s linear infinite;
+            text-shadow: 0 0 12px rgba(255,255,255,0.8), 1px 1px 0 rgba(180,0,130,0.5);
+            letter-spacing: 4px;
+            border-bottom: 3px solid #ff6fcf;
+            font-weight: 900;
+        }
+
+        /* ── Thème Glitch ⚡ ── */
+        body.theme-glitch {
+            --theme-bg-from:     #0d0d1a;
+            --theme-bg-to:       #050510;
+            --theme-header-from: #1a0033;
+            --theme-header-to:   #0a0020;
+            --theme-border:      #00ffcc;
+            --theme-accent:      #00ffcc;
+            --theme-particle:    #00ffcc;
+            --theme-glow:        rgba(0,255,204,0.45);
+        }
+        body.theme-glitch header {
+            animation: glitchHeaderPulse 1.5s ease-in-out infinite;
+            border-bottom-color: #00ffcc !important;
+        }
+        @keyframes glitchHeaderPulse {
+            0%,100% { box-shadow: 0 4px 20px rgba(0,0,0,0.9), 0 0 25px rgba(0,255,204,0.3), 2px 0 0 rgba(255,0,80,0.15), -2px 0 0 rgba(0,200,255,0.15); }
+            50%      { box-shadow: 0 4px 20px rgba(0,0,0,0.9), 0 0 65px rgba(0,255,204,0.7), 3px 0 0 rgba(255,0,80,0.3), -3px 0 0 rgba(0,200,255,0.3); }
+        }
+        body.theme-glitch .chest-main {
+            border-color: #00ffcc !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8), 0 0 45px rgba(0,255,204,0.5), 2px 2px 0 rgba(255,0,80,0.25), -2px -2px 0 rgba(0,200,255,0.25) !important;
+        }
+        body.theme-glitch .stat-card {
+            border-color: rgba(0,255,204,0.4) !important;
+            background: linear-gradient(145deg, #0a001a 0%, #050010 100%) !important;
+            box-shadow: 0 0 12px rgba(0,255,204,0.18) !important;
+        }
+        body.theme-glitch .open-btn {
+            background: linear-gradient(180deg, #00ffcc 0%, #007755 100%) !important;
+            color: #000d0a !important;
+            border: 3px solid #00ffcc !important;
+            box-shadow: 0 8px 30px rgba(0,255,204,0.75), 2px 0 0 rgba(255,0,80,0.4), -2px 0 0 rgba(0,200,255,0.4) !important;
+            font-weight: 900 !important;
+        }
+        body.theme-glitch h1 {
+            color: #00ffcc !important;
+            text-shadow: 3px 3px 0 #003322, -1px -1px 0 #003322, 1px -1px 0 #003322, -1px 1px 0 #003322,
+                         0 0 30px rgba(0,255,204,1), 3px 0 8px rgba(255,0,80,0.7), -3px 0 8px rgba(0,200,255,0.7) !important;
+            animation: glitchText 4s steps(1) infinite;
+        }
+        @keyframes glitchText {
+            0%,90%,100% { clip-path: none; transform: none; }
+            91%  { clip-path: inset(10% 0 80% 0); transform: translate(-3px, 0); }
+            92%  { clip-path: inset(60% 0 20% 0); transform: translate(3px, 0); }
+            93%  { clip-path: none; transform: none; }
+            96%  { clip-path: inset(30% 0 50% 0); transform: translate(-2px, 0); }
+            97%  { clip-path: none; transform: none; }
+        }
+        body.theme-glitch .subtitle {
+            color: #00ffcc !important;
+            text-shadow: 0 0 12px rgba(0,255,204,0.9), 2px 0 4px rgba(255,0,80,0.5) !important;
+        }
+        .theme-banner.glitch {
+            background: linear-gradient(90deg, #050510, #0a0020, #00ffcc, #ff0050, #00c8ff, #00ffcc, #0a0020, #050510);
+            background-size: 300% 100%;
+            color: #00ffcc;
+            box-shadow: 0 3px 28px rgba(0,255,204,0.7), 2px 0 0 rgba(255,0,80,0.5);
+            animation: bannerShift 1.8s linear infinite, glitchBanner 5s steps(1) infinite;
+            text-shadow: 0 0 16px rgba(0,255,204,1), 3px 0 6px rgba(255,0,80,0.8), -3px 0 6px rgba(0,200,255,0.8);
+            letter-spacing: 6px;
+            border-bottom: 3px solid #00ffcc;
+            font-weight: 900;
+        }
+        @keyframes glitchBanner {
+            0%,88%,100% { transform: none; filter: none; }
+            89% { transform: translate(4px,0) skewX(-2deg); filter: hue-rotate(90deg); }
+            90% { transform: translate(-4px,0) skewX(2deg); filter: hue-rotate(-90deg); }
+            91% { transform: none; filter: none; }
+            95% { transform: translate(2px,0); filter: hue-rotate(180deg); }
+            96% { transform: none; filter: none; }
+        }
+
+
         /* Bannière de thème actif */
         .theme-banner {
             display: none;
@@ -4831,6 +5012,9 @@
                         <button class="admin-btn" onclick="adminSetTheme('chocolat')" style="background:linear-gradient(180deg,#c07840,#8b4a18);box-shadow:0 4px 0 #3a1a00;border:2px solid #6b3a10;color:#f8e8c8;font-weight:900;">💩 CACA</button>
                         <button class="admin-btn" onclick="adminSetTheme('mitrox')" style="background:linear-gradient(180deg,#a855f7,#6d28d9);box-shadow:0 4px 0 #3b0764;border:2px solid #7c3aed;color:#f3e8ff;font-weight:900;">🎮 MITROX</button>
                         <button class="admin-btn" onclick="adminSetTheme('anniversaire')" style="background:linear-gradient(180deg,#ff69b4,#cc2f77);box-shadow:0 4px 0 #7a0030;border:2px solid #ffd700;color:#fff;font-weight:900;">🎂 Anniversaire</button>
+                        <button class="admin-btn" onclick="adminSetTheme('ete')" style="background:linear-gradient(180deg,#ff9500,#ffe066);box-shadow:0 4px 0 #b06000;border:2px solid #ffe066;color:#4a2800;font-weight:900;">☀️ Été</button>
+                        <button class="admin-btn" onclick="adminSetTheme('bonbon')" style="background:linear-gradient(180deg,#c820a0,#ff6fcf);box-shadow:0 4px 0 #7a0060;border:2px solid #ff6fcf;color:#fff;font-weight:900;">🍬 Bonbon</button>
+                        <button class="admin-btn" onclick="adminSetTheme('glitch')" style="background:linear-gradient(180deg,#00ffcc,#007755);box-shadow:0 4px 0 #003322;border:2px solid #00ffcc;color:#000d0a;font-weight:900;letter-spacing:2px;">⚡ Glitch</button>
                     </div>
                     <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminThemeStatus">Thème actuel : Défaut</div>
                 </div>
@@ -4971,6 +5155,9 @@
                                 <option value="chocolat">💩 CACA</option>
                                 <option value="mitrox">🎮 MITROX</option>
                                 <option value="anniversaire">🎂 Anniversaire</option>
+                                <option value="ete">☀️ Été</option>
+                                <option value="bonbon">🍬 Bonbon</option>
+                                <option value="glitch">⚡ Glitch</option>
                             </select>
                         </div>
 
@@ -9678,6 +9865,24 @@
                 banner: '🎉 BON ANNIVERSAIRE ! 🎂',
                 bannerClass: 'anniversaire',
                 particles: { color: '#ff69b4', emoji: ['🎂','🎉','🎈','🎁','🥳','✨','🍰','🎊','🕯️'], count: 90, glow: 'rgba(255,105,180,0.9)' }
+            },
+            'ete': {
+                label: '☀️ Été',
+                banner: '☀️ 🌊 BIENVENUE EN ÉTÉ ! 🌊 ☀️',
+                bannerClass: 'ete',
+                particles: { color: '#ffe066', emoji: ['☀️','🌊','🏖️','🌴','🍦','🐚','🌅','⛱️','🦀'], count: 85, glow: 'rgba(255,220,80,0.9)' }
+            },
+            'bonbon': {
+                label: '🍬 Bonbon',
+                banner: '🍬 🍭 MONDE DES BONBONS 🍭 🍬',
+                bannerClass: 'bonbon',
+                particles: { color: '#ff9de2', emoji: ['🍬','🍭','🧁','🍰','🍩','✨','💝','🌈','🍓'], count: 90, glow: 'rgba(255,111,207,0.9)' }
+            },
+            'glitch': {
+                label: '⚡ Glitch',
+                banner: '⚡ G̴L̷I̴T̸C̵H̶ ⚡',
+                bannerClass: 'glitch',
+                particles: { color: '#00ffcc', emoji: ['⚡','💻','🔌','📡','🖥️','⌨️','🔋','📶','🕹️'], count: 75, glow: 'rgba(0,255,204,0.9)' }
             }
         };
 
