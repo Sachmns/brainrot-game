@@ -421,6 +421,7 @@
             width: 300%;
             height: 100%;
             z-index: -1;
+            pointer-events: none;
             background: linear-gradient(90deg, #ff6b9d, #ff9671, #ffc75f, #f9f871, #00c9a7, #4d8af0, #845ec2, #ff6b9d, #ff9671, #ffc75f, #f9f871, #00c9a7, #4d8af0, #845ec2, #ff6b9d);
             will-change: transform;
             animation: rainbowBg 4s linear infinite;
@@ -899,6 +900,7 @@
             position: fixed;
             inset: 0;
             z-index: -1;
+            pointer-events: none;
             animation: chaosBg 0.18s steps(1) infinite;
         }
         @keyframes chaosBg {
@@ -4721,7 +4723,7 @@
             <button class="incubator-close" onclick="closeIncubator()">✕</button>
             <div class="incubator-title">🧬 BRAINROT INCUBATOR</div>
             <div class="incubator-sub">Tente d'appliquer une mutation à une carte normale</div>
-            <div class="incubator-cost-badge">💰 7 500 000 or par tentative</div>
+            <div class="incubator-cost-badge" id="incubatorCostBadge">💰 Coût selon la rareté</div>
 
             <!-- Phase sélection -->
             <div id="incubatorPhaseSelect">
@@ -4730,7 +4732,7 @@
                 <div class="incubator-selected-preview" id="incubatorPreview">
                     <div class="incubator-preview-none">Sélectionne une carte sans mutation</div>
                 </div>
-                <button class="incubator-launch-btn" id="incubatorLaunchBtn" onclick="_incubatorLaunch()" disabled>⚡ INCUBER — 5 000 000 💰</button>
+                <button class="incubator-launch-btn" id="incubatorLaunchBtn" onclick="_incubatorLaunch()" disabled>⚡ INCUBER 💰</button>
                 <div class="incubator-status" id="incubatorStatus"></div>
             </div>
 
@@ -12266,6 +12268,19 @@
         // ════════════════════════════════════════════════
         // BRAINROT INCUBATOR
         // ════════════════════════════════════════════════
+        const _INCUBATOR_COST_BY_RARITY = {
+            common:       100000,
+            rare:         200000,
+            epic:         400000,
+            legendary:    800000,
+            mythic:       1600000,
+            brainrot_god: 3000000,
+            secret:       6000000,
+            og:           15000000,
+            limited:      30000000,
+            no:           60000000,
+        };
+
         let _incubatorSelected = null; // { cardKey, name, rarity, img }
 
         function openIncubator() {
@@ -12326,22 +12341,40 @@
         }
 
         function _incubatorUpdatePreview() {
-            const preview = document.getElementById('incubatorPreview');
-            const btn     = document.getElementById('incubatorLaunchBtn');
+            const preview   = document.getElementById('incubatorPreview');
+            const btn       = document.getElementById('incubatorLaunchBtn');
+            const costBadge = document.getElementById('incubatorCostBadge');
             if (_incubatorSelected) {
-                preview.innerHTML =
-                    '<img src="' + _incubatorSelected.img + '" onerror="this.style.display=\'none\'">' +
-                    '<div class="incubator-preview-info">' +
-                        '<div class="incubator-preview-name">' + _incubatorSelected.name + '</div>' +
-                        '<div style="font-size:0.65em;color:#553366;margin-top:3px;">Carte normale · prête pour incubation</div>' +
-                    '</div>';
-                btn.disabled = false;
+                const isAdmin = _incubatorSelected.rarity === 'admin_exclusive';
+                const cost    = isAdmin ? null : (_INCUBATOR_COST_BY_RARITY[_incubatorSelected.rarity] || 0);
+                if (isAdmin) {
+                    preview.innerHTML =
+                        '<img src="' + _incubatorSelected.img + '" onerror=\"this.style.display=\'none\'">' +
+                        '<div class="incubator-preview-info">' +
+                            '<div class="incubator-preview-name">' + _incubatorSelected.name + '</div>' +
+                            '<div style="font-size:0.65em;color:#e74c3c;margin-top:3px;">🚫 Carte ADMIN — incubation interdite</div>' +
+                        '</div>';
+                    btn.disabled = true;
+                    btn.textContent = '🚫 INTERDIT';
+                    if (costBadge) costBadge.textContent = '🚫 Cartes ADMIN interdites dans l\'incubateur';
+                } else {
+                    preview.innerHTML =
+                        '<img src="' + _incubatorSelected.img + '" onerror=\"this.style.display=\'none\'">' +
+                        '<div class="incubator-preview-info">' +
+                            '<div class="incubator-preview-name">' + _incubatorSelected.name + '</div>' +
+                            '<div style="font-size:0.65em;color:#553366;margin-top:3px;">Carte normale · prête pour incubation</div>' +
+                        '</div>';
+                    btn.disabled = false;
+                    btn.textContent = '⚡ INCUBER — ' + cost.toLocaleString() + ' 💰';
+                    if (costBadge) costBadge.textContent = '💰 ' + cost.toLocaleString() + ' or pour cette rareté';
+                }
             } else {
                 preview.innerHTML = '<div class="incubator-preview-none">Sélectionne une carte sans mutation</div>';
                 btn.disabled = true;
+                btn.textContent = '⚡ INCUBER 💰';
+                if (costBadge) costBadge.textContent = '💰 Coût selon la rareté de la carte';
             }
         }
-
         function _incubatorLaunch() {
             const statusEl = document.getElementById('incubatorStatus');
 
@@ -12363,10 +12396,17 @@
                 return;
             }
 
-            // Sécurité : vérifier l'or
-            const COST = 7500000;
+            // Sécurité : bloquer les cartes ADMIN
+            if (_incubatorSelected.rarity === 'admin_exclusive') {
+                statusEl.textContent = '🚫 Les cartes ADMIN ne peuvent pas être incubées';
+                statusEl.style.color = '#e74c3c';
+                return;
+            }
+
+            // Sécurité : vérifier l'or (coût selon la rareté)
+            const COST = _INCUBATOR_COST_BY_RARITY[_incubatorSelected.rarity] || 0;
             if (stats.totalGold < COST) {
-                statusEl.textContent = '❌ Pas assez d\'or (7 500 000 requis)';
+                statusEl.textContent = '❌ Pas assez d\'or (' + COST.toLocaleString() + ' requis)';
                 statusEl.style.color = '#e74c3c';
                 return;
             }
