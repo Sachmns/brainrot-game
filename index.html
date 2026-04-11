@@ -4721,7 +4721,7 @@
             <button class="incubator-close" onclick="closeIncubator()">✕</button>
             <div class="incubator-title">🧬 BRAINROT INCUBATOR</div>
             <div class="incubator-sub">Tente d'appliquer une mutation à une carte normale</div>
-            <div class="incubator-cost-badge">💰 5 000 000 or par tentative</div>
+            <div class="incubator-cost-badge">💰 7 500 000 or par tentative</div>
 
             <!-- Phase sélection -->
             <div id="incubatorPhaseSelect">
@@ -8258,7 +8258,6 @@
             try {
                 const save = JSON.parse(raw);
                 stats.totalChests = save.stats.totalChests || 0;
-                stats.totalCards = save.stats.totalCards || 0;
                 stats.totalGold = save.stats.totalGold || 0;
                 stats.secretCount = save.stats.secretCount || 0;
                 unlockedCards = new Map(save.unlockedCards || []);
@@ -8288,6 +8287,13 @@
                 } else if (personalLuck > 0) {
                     personalLuck = 0; luckExpiry = 0;
                 }
+                // Recalculer stats.totalCards depuis les Maps (source de vérité)
+                const _countFromMapsLocal = unlockedCards.size
+                    + unlockedGoldCards.size
+                    + unlockedDiamondCards.size
+                    + unlockedRainbowCards.size
+                    + unlockedChocolateCards.size;
+                stats.totalCards = Math.max(save.stats.totalCards || 0, _countFromMapsLocal);
                 document.getElementById('totalChests').textContent = stats.totalChests;
                 document.getElementById('totalCards').textContent = stats.totalCards;
                 document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
@@ -10007,13 +10013,13 @@
             'diamant':      'https://static.wikia.nocookie.net/ccgn/images/6/63/Diamond_Lucky_Block.png/revision/latest/scale-to-width-down/250?cb=20240608054034',
             'rainbow':      'https://media.forgecdn.net/avatars/thumbnails/937/639/256/256/638416108779387145.png',
             'paques':       'https://static.wikia.nocookie.net/stealabr/images/a/a4/EggBlock.png/revision/latest?cb=20260405230823',
-            'chocolat':     'https://static.wikia.nocookie.net/stealabr/images/8/81/TacoLuckyBlock2.png/revision/latest?cb=20251007133142',
+            'chocolat':     'https://videos.openai.com/az/vg-assets/task_01knyhvexde128d3yjfd30rmzy%2F1775920650_img_1.webp?se=2026-04-13T00%3A00%3A00Z&sp=r&sv=2026-02-06&sr=b&skoid=aa5ddad1-c91a-4f0a-9aca-e20682cc8969&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-04-11T12%3A59%3A27Z&ske=2026-04-18T13%3A04%3A27Z&sks=b&skv=2026-02-06&sig=qD8bdX7GAfg3rJ/VtknbDLmB7uI82ZNkKt30CCjkr6Y%3D&ac=oaivgprodscus2',
             'mitrox':       'https://yt3.ggpht.com/eLU_Ns8Fq9f3RUrSTjWUtxjnU2UUe39ZeNzYFTuTsXN4G-oVw9l9WY9pkxBflgPortlfAjy1fw=s176-c-k-c0x00ffffff-no-rj-mo',
-            'anniversaire': 'https://static.wikia.nocookie.net/stealabr/images/2/2d/Spooky_block.png/revision/latest?cb=20251026090952',
+            'anniversaire': 'https://videos.openai.com/az/vg-assets/task_01knyj251merdtx1hc9k1gp6qy%2F1775920869_img_1.webp?se=2026-04-13T00%3A00%3A00Z&sp=r&sv=2026-02-06&sr=b&skoid=aa5ddad1-c91a-4f0a-9aca-e20682cc8969&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-04-11T12%3A59%3A27Z&ske=2026-04-18T13%3A04%3A27Z&sks=b&skv=2026-02-06&sig=GUlvR2bE8jeEkD6sJM9D0uicG03QpTZdbBU2fmcpoGM%3D&ac=oaivgprodscus2',
             'ete':          'https://image2url.com/r2/default/images/1775915846382-1fb2b7cb-fa6e-4612-acc9-6d58d0af7579.png',
             'bonbon':       'https://image2url.com/r2/default/images/1775919344574-af501515-d2c4-46b2-9f8f-1c1c9de8a660.png',
             'glitch':       'https://image2url.com/r2/default/images/1775915394688-12a29544-d2af-4875-bfa4-481d8d2d12ec.png',
-            'chaos':        'https://static.wikia.nocookie.net/stealabr/images/7/7c/AdminLuckyBlock.png/revision/latest?cb=20251007132226',
+            'chaos':        'https://videos.openai.com/az/vg-assets/task_01knyhywdtf6pv5ngyhypvnkdf%2F1775920744_img_0.webp?se=2026-04-13T00%3A00%3A00Z&sp=r&sv=2026-02-06&sr=b&skoid=aa5ddad1-c91a-4f0a-9aca-e20682cc8969&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-04-11T12%3A59%3A27Z&ske=2026-04-18T13%3A04%3A27Z&sks=b&skv=2026-02-06&sig=6kezX5ycrnJg%2BTvJL5l8KXZPMfZlfiHjRImtTF2ET0o%3D&ac=oaivgprodscus2',
             'glass':        'https://image2url.com/r2/default/images/1775915657472-22a01410-62cc-46af-8310-3b6c7e624f36.png',
         };
 
@@ -12358,9 +12364,9 @@
             }
 
             // Sécurité : vérifier l'or
-            const COST = 5000000;
+            const COST = 7500000;
             if (stats.totalGold < COST) {
-                statusEl.textContent = '❌ Pas assez d\'or (5 000 000 requis)';
+                statusEl.textContent = '❌ Pas assez d\'or (7 500 000 requis)';
                 statusEl.style.color = '#e74c3c';
                 return;
             }
@@ -13058,7 +13064,6 @@
             try {
                 const save = JSON.parse(saveStr);
                 stats.totalChests = save.stats?.totalChests || 0;
-                stats.totalCards  = save.stats?.totalCards  || 0;
                 stats.totalGold   = save.stats?.totalGold   || 0;
                 stats.secretCount = save.stats?.secretCount || 0;
                 unlockedCards = new Map(save.unlockedCards || []);
@@ -13083,6 +13088,18 @@
                 luckExpiry   = save.luckExpiry   || 0;
                 if (personalLuck > 0 && luckExpiry > Date.now()) startLuckTimer();
                 else { personalLuck = 0; luckExpiry = 0; }
+
+                // Recalculer stats.totalCards depuis les Maps (source de vérité)
+                // pour éviter le désync sur les nouveaux comptes
+                const _countFromMaps = unlockedCards.size
+                    + unlockedGoldCards.size
+                    + unlockedDiamondCards.size
+                    + unlockedRainbowCards.size
+                    + unlockedChocolateCards.size;
+                const _savedCards = save.stats?.totalCards || 0;
+                // Prendre le max : si la save est à 0 mais les Maps ont des cartes, utiliser les Maps
+                stats.totalCards = Math.max(_savedCards, _countFromMaps);
+
                 document.getElementById('totalChests').textContent     = stats.totalChests;
                 document.getElementById('totalCards').textContent      = stats.totalCards;
                 document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
@@ -13180,6 +13197,8 @@
             const hash = await _hash(pwd);
             const localSave = _getSave();
             await firebaseDB.ref(_akey(pseudo)).set({ pseudo, hash, save: localSave, createdAt: Date.now() });
+            // Appliquer la save locale au nouvel compte pour garantir la cohérence des stats
+            if (localSave) _applySave(localSave);
             _onLoggedIn(pseudo);
             msg.textContent = 'Compte créé ! Bienvenue ' + pseudo + ' 🎉'; msg.className='auth-msg ok';
             setTimeout(closeAuth, 1400);
