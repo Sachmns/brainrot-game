@@ -3176,6 +3176,226 @@
         }
         .craft-sidebar-btn:hover { transform:scale(1.07); box-shadow:0 6px 0 #001008,0 8px 30px rgba(0,255,136,0.4); }
         .craft-sidebar-btn > span { color:#00ff88; font-size:0.68em; font-weight:900; text-transform:uppercase; letter-spacing:1px; text-align:center; }
+
+
+        /* ════ INCUBATOR ANIMATION ════ */
+        .incubator-anim-overlay {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.97);
+            border-radius: 22px;
+            z-index: 10;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .incubator-anim-overlay.active { display: flex; }
+
+        /* Orbes tournants */
+        .inc-orb-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            animation: incOrbSpin linear infinite;
+        }
+        .inc-orb-ring-1 { width:240px; height:240px; border-top-color:#cc44ff; border-right-color:#cc44ff; animation-duration:1.8s; }
+        .inc-orb-ring-2 { width:290px; height:290px; border-bottom-color:#8800cc; border-left-color:#8800cc; animation-duration:2.8s; animation-direction:reverse; }
+        .inc-orb-ring-3 { width:340px; height:340px; border-top-color:rgba(204,68,255,0.4); border-right-color:rgba(204,68,255,0.4); animation-duration:4s; }
+        @keyframes incOrbSpin { to { transform: rotate(360deg); } }
+
+        /* Carte centrale */
+        .inc-anim-card-wrap {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: incCardFloat 1.4s ease-in-out infinite alternate;
+        }
+        @keyframes incCardFloat {
+            from { transform: translateY(0px) scale(1); }
+            to   { transform: translateY(-10px) scale(1.04); }
+        }
+        .inc-anim-card-img {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 24px #cc44ff) drop-shadow(0 0 48px #8800cc);
+            animation: incCardGlow 1.4s ease-in-out infinite alternate;
+        }
+        @keyframes incCardGlow {
+            from { filter: drop-shadow(0 0 16px #cc44ff) drop-shadow(0 0 32px #6600aa); }
+            to   { filter: drop-shadow(0 0 40px #dd88ff) drop-shadow(0 0 70px #cc44ff); }
+        }
+
+        /* Texte rotatif */
+        .inc-anim-text {
+            margin-top: 28px;
+            color: #cc44ff;
+            font-size: 0.88em;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(204,68,255,0.8);
+            animation: incTextPulse 0.8s ease-in-out infinite alternate;
+            z-index: 2;
+        }
+        @keyframes incTextPulse {
+            from { opacity: 0.6; transform: scale(0.97); }
+            to   { opacity: 1;   transform: scale(1.02); }
+        }
+
+        /* Barre de progression */
+        .inc-anim-bar-wrap {
+            position: absolute;
+            bottom: 36px;
+            left: 40px;
+            right: 40px;
+            height: 5px;
+            background: rgba(204,68,255,0.12);
+            border-radius: 4px;
+            overflow: hidden;
+            z-index: 2;
+        }
+        .inc-anim-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #8800cc, #cc44ff, #ff88ff);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(204,68,255,0.7);
+            transition: none;
+        }
+
+        /* Particules */
+        .inc-particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #cc44ff;
+            pointer-events: none;
+            animation: incParticleFly 1.5s ease-out forwards;
+        }
+        @keyframes incParticleFly {
+            0%   { opacity: 1; transform: translate(0,0) scale(1); }
+            100% { opacity: 0; transform: translate(var(--tx),var(--ty)) scale(0); }
+        }
+
+        /* Flash final */
+        .inc-anim-flash {
+            position: absolute;
+            inset: 0;
+            background: #fff;
+            opacity: 0;
+            border-radius: 22px;
+            pointer-events: none;
+            z-index: 9;
+        }
+        .inc-anim-flash.flash { animation: incFlash 0.6s ease-out forwards; }
+        @keyframes incFlash {
+            0%   { opacity: 0.85; }
+            100% { opacity: 0; }
+        }
+
+        /* ════ BRAINROT INCUBATOR ════ */
+        .incubator-sidebar-btn {
+            position:fixed; left:15px; top:calc(35% + 375px); z-index:1000;
+            display:flex; flex-direction:column; align-items:center; gap:5px; cursor:pointer;
+            background:linear-gradient(180deg,#1a004a,#0d0028);
+            border:3px solid #cc44ff;
+            border-radius:16px; padding:12px 8px;
+            box-shadow:0 6px 0 #06001a, 0 8px 20px rgba(0,0,0,0.6), 0 0 18px rgba(204,68,255,0.3);
+            transition:all 0.2s; width:75px; text-align:center;
+        }
+        .incubator-sidebar-btn:hover {
+            transform:scale(1.07);
+            box-shadow:0 6px 0 #06001a, 0 8px 30px rgba(204,68,255,0.6), 0 0 30px rgba(204,68,255,0.4);
+        }
+        .incubator-sidebar-btn > span:first-child { font-size:1.7em; }
+        .incubator-sidebar-btn > span:last-child  { color:#cc44ff; font-size:0.6em; font-weight:900; text-transform:uppercase; letter-spacing:0.5px; line-height:1.2; }
+
+        .incubator-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.96); z-index:7800; justify-content:center; align-items:center; }
+        .incubator-modal.open { display:flex; }
+        .incubator-panel {
+            background:linear-gradient(145deg,#07001a,#100030);
+            border:3px solid rgba(204,68,255,0.5);
+            border-radius:28px; padding:28px 24px 24px;
+            width:96%; max-width:480px;
+            box-shadow:0 0 60px rgba(204,68,255,0.15);
+            position:relative; max-height:90vh; overflow-y:auto; text-align:center;
+        }
+        .incubator-close { position:absolute; top:14px; right:18px; background:none; border:none; color:#cc44ff; font-size:1.5em; cursor:pointer; }
+        .incubator-title {
+            color:#cc44ff; font-size:1.3em; font-weight:900; letter-spacing:3px;
+            text-shadow:0 0 20px rgba(204,68,255,0.7); margin-bottom:4px;
+        }
+        .incubator-sub { color:#553366; font-size:0.74em; margin-bottom:20px; letter-spacing:1px; }
+        .incubator-cost-badge {
+            display:inline-block; background:rgba(204,68,255,0.1);
+            border:1px solid rgba(204,68,255,0.35); border-radius:20px;
+            padding:5px 16px; font-size:0.78em; font-weight:900; color:#cc44ff;
+            margin-bottom:18px; letter-spacing:1px;
+        }
+        .incubator-search {
+            width:100%; padding:9px 14px; background:rgba(0,0,0,0.4);
+            border:1px solid rgba(204,68,255,0.25); border-radius:10px;
+            color:#ccc; font-size:0.8em; outline:none; box-sizing:border-box;
+            margin-bottom:10px; font-family:Arial,sans-serif;
+        }
+        .incubator-search:focus { border-color:rgba(204,68,255,0.6); }
+        .incubator-search::placeholder { color:#334; }
+        .incubator-grid {
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(80px,1fr));
+            gap:8px; max-height:220px; overflow-y:auto;
+            margin-bottom:14px;
+        }
+        .incubator-card-item {
+            background:rgba(0,0,0,0.4); border:1.5px solid rgba(255,255,255,0.08);
+            border-radius:10px; padding:6px; cursor:pointer; text-align:center;
+            transition:all 0.12s; position:relative;
+        }
+        .incubator-card-item:hover  { border-color:rgba(204,68,255,0.5); background:rgba(204,68,255,0.06); }
+        .incubator-card-item.selected { border-color:#cc44ff; background:rgba(204,68,255,0.16); box-shadow:0 0 12px rgba(204,68,255,0.5); }
+        .incubator-card-item img { width:100%; height:70px; object-fit:contain; }
+        .incubator-card-item .inc-name { font-size:0.58em; font-weight:700; color:#ccc; margin-top:3px; line-height:1.2; }
+        .incubator-card-item .inc-count { position:absolute; top:3px; right:4px; background:rgba(204,68,255,0.75); color:#fff; font-size:0.55em; font-weight:900; border-radius:6px; padding:1px 4px; }
+        .incubator-selected-preview {
+            background:rgba(0,0,0,0.3); border:1px solid rgba(204,68,255,0.25);
+            border-radius:12px; padding:12px 16px; margin-bottom:14px;
+            display:flex; align-items:center; gap:12px; min-height:58px;
+        }
+        .incubator-selected-preview img { width:48px; height:48px; object-fit:contain; }
+        .incubator-preview-info { flex:1; text-align:left; }
+        .incubator-preview-name { font-size:0.82em; font-weight:900; color:#fff; }
+        .incubator-preview-none { font-size:0.74em; color:#334; width:100%; text-align:center; }
+        .incubator-launch-btn {
+            width:100%; padding:15px;
+            background:linear-gradient(180deg,#cc44ff,#6600aa);
+            border:none; border-radius:16px; color:#fff;
+            font-size:0.95em; font-weight:900; cursor:pointer;
+            letter-spacing:2px; text-transform:uppercase; font-family:'Arial Black',Arial,sans-serif;
+            box-shadow:0 6px 0 #330055, 0 8px 28px rgba(204,68,255,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+            transition:all 0.15s; position:relative; overflow:hidden;
+        }
+        .incubator-launch-btn::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent); transform:translateX(-100%); transition:transform 0.4s; }
+        .incubator-launch-btn:hover:not(:disabled)::after { transform:translateX(100%); }
+        .incubator-launch-btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 8px 0 #330055,0 12px 35px rgba(204,68,255,0.7); }
+        .incubator-launch-btn:active:not(:disabled) { transform:translateY(3px); box-shadow:0 3px 0 #330055; }
+        .incubator-launch-btn:disabled { opacity:0.35; cursor:not-allowed; background:linear-gradient(180deg,#334,#223); box-shadow:none; }
+        .incubator-status { text-align:center; font-size:0.78em; font-weight:700; margin-top:10px; min-height:20px; }
+        /* Résultat animation */
+        .incubator-result-box {
+            display:none; text-align:center; padding:20px 10px 10px;
+        }
+        .incubator-result-box.show { display:block; }
+        .incubator-result-img { width:90px; height:90px; object-fit:contain; margin:0 auto 10px; display:block; }
+        .incubator-result-title { font-size:1.1em; font-weight:900; letter-spacing:2px; margin-bottom:6px; }
+        .incubator-result-mut { font-size:0.78em; font-weight:900; padding:3px 14px; border-radius:20px; display:inline-block; margin-bottom:14px; }
+        .incubator-result-continue { padding:10px 28px; background:rgba(204,68,255,0.15); border:1px solid rgba(204,68,255,0.4); border-radius:10px; color:#cc44ff; font-size:0.82em; font-weight:900; cursor:pointer; transition:all 0.15s; }
+        .incubator-result-continue:hover { background:rgba(204,68,255,0.25); }
         .craft-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.96); z-index:7700; justify-content:center; align-items:center; }
         .craft-modal.open { display:flex; }
         .craft-panel { background:linear-gradient(145deg,#000d06,#001a0c); border:3px solid rgba(0,255,136,0.4); border-radius:28px; padding:28px 22px; width:96%; max-width:520px; box-shadow:0 0 60px rgba(0,255,136,0.12); position:relative; max-height:90vh; overflow-y:auto; text-align:center; }
@@ -4106,6 +4326,56 @@
     <div class="craft-sidebar-btn" onclick="openCraft()" title="Craft Machine">
         <span style="font-size:2em;">⚒️</span>
         <span>Craft</span>
+    </div>
+
+    <!-- Bouton BRAINROT INCUBATOR -->
+    <div class="incubator-sidebar-btn" onclick="openIncubator()" title="Brainrot Incubator">
+        <span>🧬</span>
+        <span>INCUBATOR</span>
+    </div>
+
+    <!-- Modal BRAINROT INCUBATOR -->
+    <div class="incubator-modal" id="incubatorModal">
+        <div class="incubator-panel">
+            <button class="incubator-close" onclick="closeIncubator()">✕</button>
+            <div class="incubator-title">🧬 BRAINROT INCUBATOR</div>
+            <div class="incubator-sub">Tente d'appliquer une mutation à une carte normale</div>
+            <div class="incubator-cost-badge">💰 5 000 000 or par tentative</div>
+
+            <!-- Phase sélection -->
+            <div id="incubatorPhaseSelect">
+                <input class="incubator-search" id="incubatorSearch" placeholder="🔍 Rechercher une carte…" oninput="_incubatorRenderGrid()">
+                <div class="incubator-grid" id="incubatorGrid"></div>
+                <div class="incubator-selected-preview" id="incubatorPreview">
+                    <div class="incubator-preview-none">Sélectionne une carte sans mutation</div>
+                </div>
+                <button class="incubator-launch-btn" id="incubatorLaunchBtn" onclick="_incubatorLaunch()" disabled>⚡ INCUBER — 5 000 000 💰</button>
+                <div class="incubator-status" id="incubatorStatus"></div>
+            </div>
+
+            <!-- Animation d'incubation -->
+            <div class="incubator-anim-overlay" id="incubatorAnimOverlay">
+                <div class="inc-orb-ring inc-orb-ring-1"></div>
+                <div class="inc-orb-ring inc-orb-ring-2"></div>
+                <div class="inc-orb-ring inc-orb-ring-3"></div>
+                <div class="inc-anim-card-wrap">
+                    <img class="inc-anim-card-img" id="incAnimCardImg" src="" alt="">
+                </div>
+                <div class="inc-anim-text" id="incAnimText">⚡ INCUBATION EN COURS…</div>
+                <div class="inc-anim-bar-wrap">
+                    <div class="inc-anim-bar" id="incAnimBar"></div>
+                </div>
+                <div class="inc-anim-flash" id="incAnimFlash"></div>
+            </div>
+
+            <!-- Phase résultat -->
+            <div class="incubator-result-box" id="incubatorResultBox">
+                <img class="incubator-result-img" id="incubatorResultImg" src="" alt="">
+                <div class="incubator-result-title" id="incubatorResultTitle"></div>
+                <div class="incubator-result-mut" id="incubatorResultMut"></div>
+                <button class="incubator-result-continue" onclick="_incubatorContinue()">🔄 Réessayer / Changer de carte</button>
+            </div>
+        </div>
     </div>
 
     <!-- Bouton MIAM (activé par admin) -->
@@ -5731,7 +6001,10 @@
             ]
         };
 
-        // Exposer cardImages globalement pour le système de trade
+        // Exposer cardImages globalement pour le système de trade.
+        // window.cardImages et cardImages partagent la même référence objet :
+        // tout .push() ou ajout de propriété sur l'un se reflète automatiquement sur l'autre.
+        // IMPORTANT : ne jamais réassigner cardImages (cardImages = {...}) sans refaire window.cardImages = cardImages.
         window.cardImages = cardImages;
 
         // Image de l'or
@@ -5767,7 +6040,8 @@
             secretCount: 0,
             limitedCount: 0,
             heroCount: 0,
-            noCount: 0
+            noCount: 0,
+            secretsUnlocked: new Set()
         };
 
         let clickCount = 0;
@@ -6310,7 +6584,6 @@
                     }
                     
                     if (!hasMutation && reward.rarity === 'secret') {
-                        if (!stats.secretsUnlocked) stats.secretsUnlocked = new Set();
                         if (!stats.secretsUnlocked.has(cardKey)) {
                             stats.secretsUnlocked.add(cardKey);
                             stats.secretCount++;
@@ -6618,7 +6891,6 @@
                     stats.totalCards++;
                     isNew = true;
                     if (rarity === 'secret') {
-                        if (!stats.secretsUnlocked) stats.secretsUnlocked = new Set();
                         if (!stats.secretsUnlocked.has(cardKey)) { stats.secretsUnlocked.add(cardKey); stats.secretCount++; }
                     }
                 }
@@ -7576,6 +7848,7 @@
                 unlockedDiamondCards: Array.from(unlockedDiamondCards.entries()),
                 unlockedRainbowCards: Array.from(unlockedRainbowCards.entries()),
                 unlockedChocolateCards: Array.from(unlockedChocolateCards.entries()),
+                secretsUnlocked: Array.from(stats.secretsUnlocked),
                 questProgress: questProgress,
                 dailyState: dailyState,
                 personalLuck: personalLuck,
@@ -7612,6 +7885,7 @@
                 if (save.unlockedDiamondCards) unlockedDiamondCards = new Map(save.unlockedDiamondCards);
                 if (save.unlockedRainbowCards) unlockedRainbowCards = new Map(save.unlockedRainbowCards);
                 if (save.unlockedChocolateCards) unlockedChocolateCards = new Map(save.unlockedChocolateCards);
+                if (save.secretsUnlocked) stats.secretsUnlocked = new Set(save.secretsUnlocked);
                 if (save.questProgress) questProgress = save.questProgress;
                 if (save.dailyState) dailyState = save.dailyState;
                 if (save.personalLuck) personalLuck = save.personalLuck;
@@ -8003,7 +8277,8 @@
             });
 
             // Écouter la commande d'exécution de trade (côté playerB)
-            firebaseDB.ref('players/' + key + '/tradeExec').on('value', snap => {
+            window._tradeExecRef = firebaseDB.ref('players/' + key + '/tradeExec');
+            window._tradeExecRef.on('value', snap => {
                 const d = snap.val();
                 if (!d || !d.execId) return;
                 if (_tradeLastExecId === d.execId) return;
@@ -11509,6 +11784,374 @@
             }
         }
 
+        // ════════════════════════════════════════════════
+        // BRAINROT INCUBATOR
+        // ════════════════════════════════════════════════
+        let _incubatorSelected = null; // { cardKey, name, rarity, img }
+
+        function openIncubator() {
+            _incubatorSelected = null;
+            document.getElementById('incubatorSearch').value = '';
+            document.getElementById('incubatorStatus').textContent = '';
+            document.getElementById('incubatorPhaseSelect').style.display = '';
+            document.getElementById('incubatorResultBox').classList.remove('show');
+            document.getElementById('incubatorModal').classList.add('open');
+            _incubatorRenderGrid();
+            _incubatorUpdatePreview();
+        }
+
+        function closeIncubator() {
+            document.getElementById('incubatorModal').classList.remove('open');
+            _incubatorSelected = null;
+        }
+
+        function _incubatorRenderGrid() {
+            const grid      = document.getElementById('incubatorGrid');
+            const searchVal = (document.getElementById('incubatorSearch').value || '').trim().toLowerCase();
+            grid.innerHTML  = '';
+
+            // Rassembler toutes les cartes NORMALES (non mutées) que le joueur possède
+            const entries = [];
+            unlockedCards.forEach((count, cardKey) => {
+                if (count <= 0) return;
+                const parts  = cardKey.split('|');
+                const rarity = parts[0];
+                const name   = parts.slice(1).join('|');
+                if (searchVal && !name.toLowerCase().includes(searchVal)) return;
+                const cardList = (window.cardImages || {})[rarity] || [];
+                const cardData = cardList.find(c => c.name === name);
+                entries.push({ cardKey, name, rarity, img: cardData ? cardData.img : '', count });
+            });
+
+            if (!entries.length) {
+                grid.innerHTML = '<div style="color:#334;font-size:0.7em;padding:14px;grid-column:1/-1;text-align:center;">' + (searchVal ? 'Aucune carte correspondante' : 'Aucune carte normale disponible') + '</div>';
+                return;
+            }
+
+            entries.sort((a, b) => a.name.localeCompare(b.name));
+            entries.forEach(card => {
+                const isSelected = _incubatorSelected && _incubatorSelected.cardKey === card.cardKey;
+                const div = document.createElement('div');
+                div.className = 'incubator-card-item' + (isSelected ? ' selected' : '');
+                div.innerHTML =
+                    '<img src="' + card.img + '" onerror="this.style.display=\'none\'">' +
+                    '<span class="inc-count">×' + card.count + '</span>' +
+                    '<div class="inc-name">' + card.name + '</div>';
+                div.onclick = () => {
+                    _incubatorSelected = card;
+                    _incubatorRenderGrid();
+                    _incubatorUpdatePreview();
+                };
+                grid.appendChild(div);
+            });
+        }
+
+        function _incubatorUpdatePreview() {
+            const preview = document.getElementById('incubatorPreview');
+            const btn     = document.getElementById('incubatorLaunchBtn');
+            if (_incubatorSelected) {
+                preview.innerHTML =
+                    '<img src="' + _incubatorSelected.img + '" onerror="this.style.display=\'none\'">' +
+                    '<div class="incubator-preview-info">' +
+                        '<div class="incubator-preview-name">' + _incubatorSelected.name + '</div>' +
+                        '<div style="font-size:0.65em;color:#553366;margin-top:3px;">Carte normale · prête pour incubation</div>' +
+                    '</div>';
+                btn.disabled = false;
+            } else {
+                preview.innerHTML = '<div class="incubator-preview-none">Sélectionne une carte sans mutation</div>';
+                btn.disabled = true;
+            }
+        }
+
+        function _incubatorLaunch() {
+            const statusEl = document.getElementById('incubatorStatus');
+
+            // Sécurité : vérifier qu'une carte est sélectionnée
+            if (!_incubatorSelected) {
+                statusEl.textContent = '⚠️ Sélectionne une carte d\'abord';
+                statusEl.style.color = '#ffaa00';
+                return;
+            }
+
+            // Sécurité : vérifier que le joueur possède encore la carte (non mutée)
+            const currentCount = unlockedCards.get(_incubatorSelected.cardKey) || 0;
+            if (currentCount <= 0) {
+                statusEl.textContent = '⚠️ Tu ne possèdes plus cette carte !';
+                statusEl.style.color = '#e74c3c';
+                _incubatorSelected = null;
+                _incubatorRenderGrid();
+                _incubatorUpdatePreview();
+                return;
+            }
+
+            // Sécurité : vérifier l'or
+            const COST = 5000000;
+            if (stats.totalGold < COST) {
+                statusEl.textContent = '❌ Pas assez d\'or (5 000 000 requis)';
+                statusEl.style.color = '#e74c3c';
+                return;
+            }
+
+            // Désactiver le bouton pour éviter le double-clic
+            const btn = document.getElementById('incubatorLaunchBtn');
+            btn.disabled = true;
+            statusEl.textContent = '⚡ Incubation en cours…';
+            statusEl.style.color = '#cc44ff';
+
+            // Déduire l'or (irréversible, avant le tirage)
+            stats.totalGold -= COST;
+            document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
+            const sgEl = document.getElementById('shopGoldDisplay');
+            if (sgEl) sgEl.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
+            autoSave();
+
+            // Tirage — utilise les mêmes taux que _mutationRates (dynamiques admin)
+            const rates  = window._mutationRates || { gold: 0.10, diamond: 0.075, rainbow: 0.01, chocolate: 0.067 };
+            const roll   = Math.random();
+            let mutation = null; // null = aucune mutation
+
+            if (roll < rates.rainbow) {
+                mutation = 'rainbow';
+            } else if (roll < rates.rainbow + rates.diamond) {
+                mutation = 'diamond';
+            } else if (roll < rates.rainbow + rates.diamond + rates.chocolate) {
+                mutation = 'chocolate';
+            } else if (roll < rates.rainbow + rates.diamond + rates.chocolate + rates.gold) {
+                mutation = 'gold';
+            }
+
+            // Appliquer la mutation
+            const card = _incubatorSelected;
+            const cardKey = card.cardKey;
+
+            if (mutation) {
+                // Ajouter la carte dans la map de mutation correspondante
+                const mutMap = {
+                    gold:      unlockedGoldCards,
+                    diamond:   unlockedDiamondCards,
+                    rainbow:   unlockedRainbowCards,
+                    chocolate: unlockedChocolateCards,
+                }[mutation];
+
+                if (mutMap) {
+                    // Ajouter 1 exemplaire muté
+                    mutMap.set(cardKey, (mutMap.get(cardKey) || 0) + 1);
+                    // Retirer 1 exemplaire normal (la carte est remplacée par sa version mutée)
+                    const curNormal = unlockedCards.get(cardKey) || 0;
+                    if (curNormal <= 1) {
+                        unlockedCards.delete(cardKey);
+                    } else {
+                        unlockedCards.set(cardKey, curNormal - 1);
+                    }
+                    // Le total de cartes reste identique (1 normale → 1 mutée)
+                    document.getElementById('totalCards').textContent = stats.totalCards;
+                    autoSave();
+                }
+            }
+
+            // Afficher le résultat
+            const MUT_LABELS = { gold: '✨ MUTATION GOLD', diamond: '💎 MUTATION DIAMANT', rainbow: '🌈 MUTATION RAINBOW', chocolate: '🍫 MUTATION CHOCOLAT' };
+            const MUT_COLORS = { gold: '#ffd700', diamond: '#00bfff', rainbow: '#cc44ff', chocolate: '#D2691E' };
+            const MUT_BG     = { gold: 'rgba(255,215,0,0.15)', diamond: 'rgba(0,191,255,0.15)', rainbow: 'rgba(204,68,255,0.15)', chocolate: 'rgba(210,105,30,0.15)' };
+            const MUT_FILTERS = {
+                gold:      'sepia(0.4) saturate(2) brightness(1.1) drop-shadow(0 0 8px #ffd700)',
+                diamond:   'hue-rotate(180deg) saturate(2) brightness(1.1) drop-shadow(0 0 8px #00bfff)',
+                rainbow:   'saturate(1.8) brightness(1.15) drop-shadow(0 0 8px #cc44ff)',
+                chocolate: 'sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85) drop-shadow(0 0 8px #8B4513)',
+            };
+
+            // Lancer l'animation — le résultat est révélé à la fin
+            _incubatorStartAnim(card, mutation, MUT_LABELS, MUT_COLORS, MUT_BG, MUT_FILTERS, statusEl);
+        }
+
+
+        // ════ ANIMATION INCUBATOR ════
+        var _incubatorAnimTimers = [];
+
+        function _incubatorStartAnim(card, mutation, MUT_LABELS, MUT_COLORS, MUT_BG, MUT_FILTERS, statusEl) {
+            // Nettoyer tout timer précédent (sécurité)
+            _incubatorAnimTimers.forEach(clearTimeout);
+            _incubatorAnimTimers = [];
+
+            const overlay = document.getElementById('incubatorAnimOverlay');
+            const bar     = document.getElementById('incAnimBar');
+            const text    = document.getElementById('incAnimText');
+            const flash   = document.getElementById('incAnimFlash');
+            const cardImg = document.getElementById('incAnimCardImg');
+            const phSel   = document.getElementById('incubatorPhaseSelect');
+
+            // Mettre la carte dans l'animation
+            cardImg.src = card.img || '';
+            cardImg.onerror = function() { cardImg.style.opacity = '0.3'; };
+
+            // Cacher la phase sélection, montrer l'overlay
+            phSel.style.display = 'none';
+            overlay.classList.add('active');
+
+            // Réinitialiser la barre
+            bar.style.transition = 'none';
+            bar.style.width = '0%';
+            void bar.offsetWidth; // reflow
+
+            // Phrases rotatives de suspense
+            var TEXTS = [
+                '⚡ INCUBATION EN COURS…',
+                '🧬 ANALYSE GÉNÉTIQUE…',
+                '🔬 FUSION DES CELLULES…',
+                '💫 RÉORGANISATION ADN…',
+                '⚗️ MUTATION EN PRÉPARATION…',
+                '🌀 TRANSFORMATION…',
+                '✨ PRESQUE PRÊT…',
+                '🔥 FINALISATION…',
+            ];
+            var textIdx = 0;
+            function _nextText() {
+                textIdx = (textIdx + 1) % TEXTS.length;
+                text.textContent = TEXTS[textIdx];
+            }
+            var textTimer = setInterval(_nextText, 1100);
+            _incubatorAnimTimers.push(textTimer);
+
+            // Progression barre sur 9s
+            var ANIM_DURATION = 9000;
+            bar.style.transition = 'width ' + ANIM_DURATION + 'ms cubic-bezier(0.1,0.4,0.2,1)';
+            bar.style.width = '100%';
+
+            // Particules en rafale toutes les 500ms
+            var particleTimer = setInterval(function() {
+                _incubatorSpawnParticles(overlay);
+            }, 500);
+            _incubatorAnimTimers.push(particleTimer);
+            _incubatorSpawnParticles(overlay); // première salve immédiate
+
+            // Changement de couleur selon le temps (tension)
+            var colorTimer = _incubatorAnimTimers.push(setTimeout(function() {
+                overlay.querySelectorAll('.inc-orb-ring-1').forEach(function(r) {
+                    r.style.borderTopColor = '#ff44aa';
+                    r.style.borderRightColor = '#ff44aa';
+                });
+                text.style.color = '#ff44aa';
+                text.style.textShadow = '0 0 20px rgba(255,68,170,0.9)';
+            }, 6000));
+
+            // Flash de révélation à 9s, résultat à 9.6s
+            var revealTimer = setTimeout(function() {
+                clearInterval(textTimer);
+                clearInterval(particleTimer);
+                text.textContent = mutation ? '✨ MUTATION DÉTECTÉE !' : '😔 AUCUNE MUTATION';
+                text.style.fontSize = '1em';
+
+                // Flash blanc
+                flash.classList.remove('flash');
+                void flash.offsetWidth;
+                flash.classList.add('flash');
+
+                // Changer les anneaux selon résultat
+                var revColor = mutation ? (MUT_COLORS[mutation] || '#cc44ff') : '#555';
+                overlay.querySelectorAll('.inc-orb-ring').forEach(function(r) {
+                    r.style.borderTopColor    = revColor;
+                    r.style.borderRightColor  = revColor;
+                    r.style.borderBottomColor = revColor;
+                    r.style.borderLeftColor   = revColor;
+                    r.style.opacity = mutation ? '1' : '0.3';
+                });
+
+                if (mutation) {
+                    cardImg.style.filter = MUT_FILTERS[mutation];
+                    // Nouvelle salve de particules colorées
+                    for (var i = 0; i < 4; i++) {
+                        (function(delay) {
+                            setTimeout(function() { _incubatorSpawnParticles(overlay, MUT_COLORS[mutation]); }, delay);
+                        })(i * 150);
+                    }
+                }
+
+                // Masquer l'overlay et afficher le résultat
+                var showTimer = setTimeout(function() {
+                    overlay.classList.remove('active');
+                    // Reset couleurs pour le prochain lancement
+                    overlay.querySelectorAll('.inc-orb-ring-1').forEach(function(r) {
+                        r.style.borderTopColor = '#cc44ff';
+                        r.style.borderRightColor = '#cc44ff';
+                    });
+                    text.style.color = '#cc44ff';
+                    text.style.textShadow = '';
+                    text.style.fontSize = '';
+
+                    // Afficher le résultat (logique originale inchangée)
+                    const resultImg   = document.getElementById('incubatorResultImg');
+                    const resultTitle = document.getElementById('incubatorResultTitle');
+                    const resultMut   = document.getElementById('incubatorResultMut');
+                    const resultBox   = document.getElementById('incubatorResultBox');
+
+                    resultImg.src = card.img;
+                    resultImg.onerror = function() { resultImg.style.display = 'none'; };
+
+                    if (mutation) {
+                        resultImg.style.filter  = MUT_FILTERS[mutation] || '';
+                        resultTitle.textContent = '✅ MUTATION OBTENUE !';
+                        resultTitle.style.color = MUT_COLORS[mutation];
+                        resultMut.textContent   = MUT_LABELS[mutation];
+                        resultMut.style.color   = MUT_COLORS[mutation];
+                        resultMut.style.background = MUT_BG[mutation];
+                        resultMut.style.border  = '1px solid ' + MUT_COLORS[mutation];
+                    } else {
+                        resultImg.style.filter  = '';
+                        resultTitle.textContent = '😔 PAS DE MUTATION';
+                        resultTitle.style.color = '#888';
+                        resultMut.textContent   = 'La carte reste sans mutation';
+                        resultMut.style.color   = '#555';
+                        resultMut.style.background = 'rgba(100,100,100,0.1)';
+                        resultMut.style.border  = '1px solid rgba(100,100,100,0.3)';
+                    }
+
+                    resultBox.classList.add('show');
+                    if (statusEl) statusEl.textContent = '';
+                }, 700);
+                _incubatorAnimTimers.push(showTimer);
+
+            }, ANIM_DURATION);
+            _incubatorAnimTimers.push(revealTimer);
+        }
+
+        function _incubatorSpawnParticles(container, color) {
+            var col = color || '#cc44ff';
+            var N = 8;
+            for (var i = 0; i < N; i++) {
+                var p = document.createElement('div');
+                p.className = 'inc-particle';
+                var angle  = Math.random() * Math.PI * 2;
+                var dist   = 80 + Math.random() * 140;
+                var tx     = Math.cos(angle) * dist;
+                var ty     = Math.sin(angle) * dist;
+                p.style.setProperty('--tx', tx + 'px');
+                p.style.setProperty('--ty', ty + 'px');
+                p.style.left   = (50 + Math.cos(angle) * 20) + '%';
+                p.style.top    = (45 + Math.sin(angle) * 20) + '%';
+                p.style.background  = col;
+                p.style.boxShadow   = '0 0 6px ' + col;
+                p.style.animationDuration = (0.8 + Math.random() * 0.8) + 's';
+                p.style.animationDelay    = (Math.random() * 0.3) + 's';
+                container.appendChild(p);
+                // Supprimer la particule après l'animation
+                setTimeout(function(_p) { if (_p.parentNode) _p.remove(); }, 1600, p);
+            }
+        }
+
+        function _incubatorContinue() {
+            _incubatorSelected = null;
+            // Sécurité: stopper toute animation en cours
+            _incubatorAnimTimers.forEach(clearTimeout);
+            _incubatorAnimTimers = [];
+            const overlay = document.getElementById('incubatorAnimOverlay');
+            if (overlay) overlay.classList.remove('active');
+            document.getElementById('incubatorPhaseSelect').style.display = '';
+            document.getElementById('incubatorResultBox').classList.remove('show');
+            document.getElementById('incubatorStatus').textContent = '';
+            _incubatorRenderGrid();
+            _incubatorUpdatePreview();
+        }
+
         function _craftCanMake(recipe) {
             if (!recipe || !recipe.ingredients || !recipe.ingredients.length) return false;
             return recipe.ingredients.every(function(ing) {
@@ -11960,6 +12603,7 @@
                 if (save.unlockedDiamondCards) unlockedDiamondCards = new Map(save.unlockedDiamondCards);
                 if (save.unlockedRainbowCards) unlockedRainbowCards = new Map(save.unlockedRainbowCards);
                 if (save.unlockedChocolateCards) unlockedChocolateCards = new Map(save.unlockedChocolateCards);
+                if (save.secretsUnlocked) stats.secretsUnlocked = new Set(save.secretsUnlocked);
                 if (save.questProgress) questProgress = save.questProgress;
                 if (save.dailyState)    dailyState    = save.dailyState;
                 personalLuck = save.personalLuck || 0;
@@ -12074,7 +12718,7 @@
             stats.totalCards  = 0;
             stats.totalGold   = 0;
             stats.secretCount = 0;
-            if (stats.secretsUnlocked) stats.secretsUnlocked = new Set();
+            stats.secretsUnlocked = new Set();
             unlockedCards     = new Map();
             unlockedGoldCards = new Map();
             unlockedDiamondCards = new Map();
@@ -12088,6 +12732,8 @@
             // Effacer la save locale commune (crSave_autoSave)
             localStorage.removeItem('crSave_autoSave');
             localStorage.removeItem('crSave_' + currentSaveCode);
+            // Détacher le listener tradeExec avant de supprimer tradePseudo
+            if (window._tradeExecRef) { window._tradeExecRef.off(); window._tradeExecRef = null; }
             localStorage.removeItem('tradePseudo');
             // Mettre à jour l'affichage
             try {
@@ -12218,7 +12864,6 @@
                     if (wasNew) { unlockedCards.set(cardKey, 0); stats.totalCards++; }
                     unlockedCards.set(cardKey, unlockedCards.get(cardKey) + 1);
                     if (_buyTenSelected === 'secret') {
-                        if (!stats.secretsUnlocked) stats.secretsUnlocked = new Set();
                         if (!stats.secretsUnlocked.has(cardKey)) { stats.secretsUnlocked.add(cardKey); stats.secretCount++; }
                     }
                 }
