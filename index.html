@@ -9993,6 +9993,30 @@
         }
 
         // ═══ SYSTÈME DE THÈMES ═══
+
+        // Images de coffres associées à chaque thème.
+        // '' = thème Défaut → image par défaut (null réinitialise le listener).
+        const THEME_CHEST_IMAGES = {
+            '':             null,
+            'saint-patrick':'https://static.wikia.nocookie.net/stealabr/images/1/19/Leprechaun_Lucky_Block.png/revision/latest?cb=20260316134453',
+            'printemps':    'https://cdn.nookazon.com/petsimulator99/Pets/14976271261.png',
+            'minecraft':    'https://mblogthumb-phinf.pstatic.net/MjAxNzAxMjlfOTUg/MDAxNDg1NjIxMDU5MDA2.h8qikrcxFGJ0u-ZF8dwKvkSePAJaWtQx4qYIMRD_QAAg.-HGmgR3GyGm_aWX_N90I2ICrNjz3sauHSd6xweBnOfUg.PNG.baljern/3d_lucky_block.png?type=w420',
+            'unchained':    'https://image2url.com/r2/default/images/1775920138121-dd7f4621-26bb-4309-8d7e-2ab3e104466d.blob',
+            'inazuma':      'https://image2url.com/r2/default/images/1775919776336-2f961c13-916b-4c77-af2e-5cd6d4b5c740.png',
+            'or':           'https://static.wikia.nocookie.net/stealabr/images/1/18/GOLD_LUCKY_BLOCK.png/revision/latest/scale-to-width-down/250?cb=20260206164525',
+            'diamant':      'https://static.wikia.nocookie.net/ccgn/images/6/63/Diamond_Lucky_Block.png/revision/latest/scale-to-width-down/250?cb=20240608054034',
+            'rainbow':      'https://media.forgecdn.net/avatars/thumbnails/937/639/256/256/638416108779387145.png',
+            'paques':       'https://static.wikia.nocookie.net/stealabr/images/a/a4/EggBlock.png/revision/latest?cb=20260405230823',
+            'chocolat':     'https://static.wikia.nocookie.net/stealabr/images/8/81/TacoLuckyBlock2.png/revision/latest?cb=20251007133142',
+            'mitrox':       'https://yt3.ggpht.com/eLU_Ns8Fq9f3RUrSTjWUtxjnU2UUe39ZeNzYFTuTsXN4G-oVw9l9WY9pkxBflgPortlfAjy1fw=s176-c-k-c0x00ffffff-no-rj-mo',
+            'anniversaire': 'https://static.wikia.nocookie.net/stealabr/images/2/2d/Spooky_block.png/revision/latest?cb=20251026090952',
+            'ete':          'https://image2url.com/r2/default/images/1775915846382-1fb2b7cb-fa6e-4612-acc9-6d58d0af7579.png',
+            'bonbon':       'https://image2url.com/r2/default/images/1775919344574-af501515-d2c4-46b2-9f8f-1c1c9de8a660.png',
+            'glitch':       'https://image2url.com/r2/default/images/1775915394688-12a29544-d2af-4875-bfa4-481d8d2d12ec.png',
+            'chaos':        'https://static.wikia.nocookie.net/stealabr/images/7/7c/AdminLuckyBlock.png/revision/latest?cb=20251007132226',
+            'glass':        'https://image2url.com/r2/default/images/1775915657472-22a01410-62cc-46af-8310-3b6c7e624f36.png',
+        };
+
         const THEMES = {
             '': {
                 label: 'Défaut',
@@ -10156,6 +10180,16 @@
             // Mettre à jour le statut dans l'admin
             const statusEl = document.getElementById('adminThemeStatus');
             if (statusEl) statusEl.textContent = 'Thème actuel : ' + theme.label;
+
+            // Mettre à jour l'image du coffre selon le thème
+            if (typeof THEME_CHEST_IMAGES !== 'undefined') {
+                const defaultChest = 'https://static.wikia.nocookie.net/stealabr/images/3/3a/SecretLuckyBlock.png/revision/latest?cb=20251125192757';
+                const chestUrl = THEME_CHEST_IMAGES[themeId] || defaultChest;
+                const img1 = document.getElementById('mainChestImg');
+                if (img1) img1.src = chestUrl;
+                const img2 = document.getElementById('openingChestImage');
+                if (img2) img2.src = chestUrl;
+            }
         }
 
         function _adjustLuckBannerPosition() {
@@ -10218,12 +10252,21 @@
             if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
             const theme = THEMES[themeId];
             if (themeId && !theme) { adminStatus('⚠️ Thème inconnu'); return; }
-            firebaseDB.ref('admin/theme').set(themeId || null)
+            // Appliquer l'image de coffre associée au thème en même temps que le thème lui-même.
+            // THEME_CHEST_IMAGES[''] === null → adminResetChestImg comportement (listener repasse au défaut).
+            const themeChestUrl = (typeof THEME_CHEST_IMAGES !== 'undefined' && THEME_CHEST_IMAGES[themeId || ''] != null)
+                ? THEME_CHEST_IMAGES[themeId]
+                : null;
+            const updates = { 'admin/theme': themeId || null, 'admin/chestImg': themeChestUrl };
+            firebaseDB.ref().update(updates)
                 .then(() => {
                     const label = theme ? theme.label : 'Défaut';
                     adminStatus('✅ Thème activé : ' + label);
                     const statusEl = document.getElementById('adminThemeStatus');
                     if (statusEl) statusEl.textContent = 'Thème actuel : ' + label;
+                    // Mettre à jour le champ URL dans l'admin panel si visible
+                    const urlEl = document.getElementById('adminChestUrl');
+                    if (urlEl) urlEl.value = themeChestUrl || '';
                 })
                 .catch(e => adminStatus('Erreur : ' + e.message));
         }
@@ -10851,7 +10894,15 @@
                     }).catch(() => {});
                 }
             } else if (ev.type === 'theme') {
-                firebaseDB.ref('admin/theme').set(ev.themeId || null).catch(() => {});
+                // Appliquer aussi l'image de coffre associée au thème programmé.
+                const _schedThemeId = ev.themeId || '';
+                const _schedChestUrl = (typeof THEME_CHEST_IMAGES !== 'undefined' && THEME_CHEST_IMAGES[_schedThemeId] != null)
+                    ? THEME_CHEST_IMAGES[_schedThemeId]
+                    : null;
+                firebaseDB.ref().update({
+                    'admin/theme':    _schedThemeId || null,
+                    'admin/chestImg': _schedChestUrl,
+                }).catch(() => {});
             } else if (ev.type === 'miam') {
                 const durationMs = ((parseInt(ev.miamMin) || 0) * 60 + (parseInt(ev.miamSec) || 0)) * 1000;
                 if (durationMs > 0) {
