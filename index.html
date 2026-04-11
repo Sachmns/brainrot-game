@@ -874,6 +874,189 @@
         }
 
 
+
+        /* ── Thème Chaos 💥 ── */
+        body.theme-chaos {
+            --theme-bg-from:     #ff0040;
+            --theme-bg-to:       #7700ff;
+            --theme-header-from: #ff6600;
+            --theme-header-to:   #ff0080;
+            --theme-border:      #ffff00;
+            --theme-accent:      #ffff00;
+            --theme-particle:    #ffffff;
+            --theme-glow:        rgba(255,255,0,0.6);
+        }
+        body.theme-chaos {
+            animation: chaosBg 0.4s steps(1) infinite;
+        }
+        @keyframes chaosBg {
+            0%   { background: linear-gradient(135deg, #ff0040 0%, #7700ff 100%) !important; }
+            10%  { background: linear-gradient(200deg, #ff6600 0%, #0066ff 100%) !important; }
+            20%  { background: linear-gradient(45deg,  #00ff88 0%, #ff0066 100%) !important; }
+            30%  { background: linear-gradient(300deg, #ffff00 0%, #ff00ff 100%) !important; }
+            40%  { background: linear-gradient(90deg,  #00ffff 0%, #ff4400 100%) !important; }
+            50%  { background: linear-gradient(170deg, #ff0080 0%, #00ff00 100%) !important; }
+            60%  { background: linear-gradient(260deg, #8800ff 0%, #ffaa00 100%) !important; }
+            70%  { background: linear-gradient(10deg,  #ff3300 0%, #00aaff 100%) !important; }
+            80%  { background: linear-gradient(330deg, #00ff44 0%, #ff0044 100%) !important; }
+            90%  { background: linear-gradient(80deg,  #ff00ff 0%, #ffff00 100%) !important; }
+        }
+        body.theme-chaos header {
+            animation: chaosHeader 0.3s steps(1) infinite !important;
+            border-bottom-color: #ffff00 !important;
+        }
+        @keyframes chaosHeader {
+            0%   { background: linear-gradient(180deg,#ff0040,#ff6600) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 60px rgba(255,0,64,0.9) !important; }
+            14%  { background: linear-gradient(180deg,#ff6600,#ffff00) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 60px rgba(255,255,0,0.9) !important; }
+            28%  { background: linear-gradient(180deg,#00ff88,#0066ff) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 60px rgba(0,255,136,0.9) !important; }
+            42%  { background: linear-gradient(180deg,#ff00ff,#8800ff) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 60px rgba(255,0,255,0.9) !important; }
+            56%  { background: linear-gradient(180deg,#00ffff,#0044ff) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 60px rgba(0,255,255,0.9) !important; }
+            70%  { background: linear-gradient(180deg,#ff4400,#ff0080) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 60px rgba(255,68,0,0.9) !important; }
+            84%  { background: linear-gradient(180deg,#aaff00,#ff6600) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 60px rgba(170,255,0,0.9) !important; }
+        }
+        body.theme-chaos .chest-main {
+            animation: chaosChest 0.25s steps(1) infinite !important;
+        }
+        @keyframes chaosChest {
+            0%   { border-color:#ff0040 !important; box-shadow:0 15px 40px rgba(0,0,0,0.5),0 0 50px rgba(255,0,64,1) !important; }
+            20%  { border-color:#ffff00 !important; box-shadow:0 15px 40px rgba(0,0,0,0.5),0 0 50px rgba(255,255,0,1) !important; }
+            40%  { border-color:#00ff88 !important; box-shadow:0 15px 40px rgba(0,0,0,0.5),0 0 50px rgba(0,255,136,1) !important; }
+            60%  { border-color:#ff00ff !important; box-shadow:0 15px 40px rgba(0,0,0,0.5),0 0 50px rgba(255,0,255,1) !important; }
+            80%  { border-color:#00ffff !important; box-shadow:0 15px 40px rgba(0,0,0,0.5),0 0 50px rgba(0,255,255,1) !important; }
+        }
+        body.theme-chaos .stat-card {
+            animation: chaosCard 0.5s steps(1) infinite !important;
+        }
+        @keyframes chaosCard {
+            0%   { border-color:rgba(255,0,64,0.8) !important;  background:linear-gradient(145deg,#2a0010,#0a0005) !important; }
+            25%  { border-color:rgba(0,255,136,0.8) !important; background:linear-gradient(145deg,#002a10,#000a05) !important; }
+            50%  { border-color:rgba(255,255,0,0.8) !important; background:linear-gradient(145deg,#2a2a00,#0a0a00) !important; }
+            75%  { border-color:rgba(0,255,255,0.8) !important; background:linear-gradient(145deg,#002a2a,#000a0a) !important; }
+        }
+        body.theme-chaos .open-btn {
+            animation: chaosBtn 0.2s steps(1) infinite !important;
+            color: #fff !important;
+            font-weight: 900 !important;
+        }
+        @keyframes chaosBtn {
+            0%   { background:linear-gradient(180deg,#ff0040,#aa0020) !important; box-shadow:0 8px 30px rgba(255,0,64,1),0 0 20px rgba(255,0,64,0.8) !important; border:3px solid #ffff00 !important; }
+            16%  { background:linear-gradient(180deg,#ff6600,#aa3300) !important; box-shadow:0 8px 30px rgba(255,100,0,1),0 0 20px rgba(255,100,0,0.8) !important; border:3px solid #00ffff !important; }
+            33%  { background:linear-gradient(180deg,#ffff00,#aaaa00) !important; box-shadow:0 8px 30px rgba(255,255,0,1),0 0 20px rgba(255,255,0,0.8) !important; border:3px solid #ff00ff !important; color:#000 !important; }
+            50%  { background:linear-gradient(180deg,#00ff88,#007744) !important; box-shadow:0 8px 30px rgba(0,255,136,1),0 0 20px rgba(0,255,136,0.8) !important; border:3px solid #ff0040 !important; color:#000 !important; }
+            66%  { background:linear-gradient(180deg,#00ffff,#007788) !important; box-shadow:0 8px 30px rgba(0,255,255,1),0 0 20px rgba(0,255,255,0.8) !important; border:3px solid #ff6600 !important; color:#000 !important; }
+            83%  { background:linear-gradient(180deg,#ff00ff,#880088) !important; box-shadow:0 8px 30px rgba(255,0,255,1),0 0 20px rgba(255,0,255,0.8) !important; border:3px solid #00ff88 !important; }
+        }
+        body.theme-chaos h1 {
+            animation: chaosTitle 0.35s steps(1) infinite !important;
+        }
+        @keyframes chaosTitle {
+            0%   { color:#ff0040 !important; text-shadow:4px 4px 0 #000,-2px -2px 0 #000,0 0 30px rgba(255,0,64,1),0 0 60px rgba(255,0,64,0.8) !important; }
+            14%  { color:#ffff00 !important; text-shadow:4px 4px 0 #000,-2px -2px 0 #000,0 0 30px rgba(255,255,0,1),0 0 60px rgba(255,255,0,0.8) !important; }
+            28%  { color:#00ff88 !important; text-shadow:4px 4px 0 #000,-2px -2px 0 #000,0 0 30px rgba(0,255,136,1),0 0 60px rgba(0,255,136,0.8) !important; }
+            42%  { color:#ff00ff !important; text-shadow:4px 4px 0 #000,-2px -2px 0 #000,0 0 30px rgba(255,0,255,1),0 0 60px rgba(255,0,255,0.8) !important; }
+            56%  { color:#00ffff !important; text-shadow:4px 4px 0 #000,-2px -2px 0 #000,0 0 30px rgba(0,255,255,1),0 0 60px rgba(0,255,255,0.8) !important; }
+            70%  { color:#ff6600 !important; text-shadow:4px 4px 0 #000,-2px -2px 0 #000,0 0 30px rgba(255,100,0,1),0 0 60px rgba(255,100,0,0.8) !important; }
+            84%  { color:#aaff00 !important; text-shadow:4px 4px 0 #000,-2px -2px 0 #000,0 0 30px rgba(170,255,0,1),0 0 60px rgba(170,255,0,0.8) !important; }
+        }
+        body.theme-chaos .subtitle {
+            animation: chaosSubtitle 0.45s steps(1) infinite !important;
+        }
+        @keyframes chaosSubtitle {
+            0%   { color:#ffff00 !important; }
+            33%  { color:#00ffff !important; }
+            66%  { color:#ff00ff !important; }
+        }
+        .theme-banner.chaos {
+            background: linear-gradient(90deg,#ff0040,#ff6600,#ffff00,#00ff88,#00ffff,#ff00ff,#ff0040);
+            background-size: 300% 100%;
+            color: #fff;
+            box-shadow: 0 3px 30px rgba(255,0,64,0.9);
+            animation: bannerShift 0.5s linear infinite, chaosBannerFlash 0.3s steps(1) infinite;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.8), 0 0 20px rgba(255,255,255,0.9);
+            letter-spacing: 5px;
+            border-bottom: 3px solid #ffff00;
+            font-weight: 900;
+        }
+        @keyframes chaosBannerFlash {
+            0%   { border-bottom-color:#ffff00; }
+            25%  { border-bottom-color:#00ffff; }
+            50%  { border-bottom-color:#ff00ff; }
+            75%  { border-bottom-color:#00ff88; }
+        }
+
+        /* ── Thème Glass 🧊 ── */
+        body.theme-glass {
+            --theme-bg-from:     #dff4ff;
+            --theme-bg-to:       #b8e8ff;
+            --theme-header-from: rgba(255,255,255,0.75);
+            --theme-header-to:   rgba(200,235,255,0.65);
+            --theme-border:      rgba(180,230,255,0.8);
+            --theme-accent:      rgba(180,230,255,0.9);
+            --theme-particle:    rgba(200,240,255,0.9);
+            --theme-glow:        rgba(150,210,255,0.35);
+        }
+        body.theme-glass header {
+            background: linear-gradient(180deg, rgba(255,255,255,0.72) 0%, rgba(200,235,255,0.58) 100%) !important;
+            border-bottom: 2px solid rgba(150,210,255,0.6) !important;
+            backdrop-filter: blur(18px) saturate(1.4) !important;
+            -webkit-backdrop-filter: blur(18px) saturate(1.4) !important;
+            box-shadow: 0 4px 24px rgba(100,180,255,0.18), inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(150,210,255,0.3) !important;
+            animation: glassHeaderShimmer 4s ease-in-out infinite !important;
+        }
+        @keyframes glassHeaderShimmer {
+            0%,100% { box-shadow: 0 4px 24px rgba(100,180,255,0.18), inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(150,210,255,0.3); }
+            50%     { box-shadow: 0 4px 32px rgba(100,180,255,0.35), inset 0 1px 0 rgba(255,255,255,1),    inset 0 -1px 0 rgba(150,210,255,0.6); }
+        }
+        body.theme-glass .chest-main {
+            background: linear-gradient(145deg, rgba(255,255,255,0.55) 0%, rgba(200,235,255,0.35) 100%) !important;
+            border: 2px solid rgba(180,230,255,0.75) !important;
+            box-shadow: 0 15px 40px rgba(100,180,255,0.18), 0 0 0 1px rgba(255,255,255,0.6) inset, 0 1px 0 rgba(255,255,255,0.9) inset !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+        }
+        body.theme-glass .stat-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.58) 0%, rgba(210,240,255,0.4) 100%) !important;
+            border: 1.5px solid rgba(180,230,255,0.65) !important;
+            box-shadow: 0 4px 18px rgba(100,180,255,0.12), inset 0 1px 0 rgba(255,255,255,0.8) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+        }
+        body.theme-glass .open-btn {
+            background: linear-gradient(180deg, rgba(255,255,255,0.75) 0%, rgba(180,225,255,0.6) 100%) !important;
+            color: #1a5a8a !important;
+            border: 2px solid rgba(150,210,255,0.8) !important;
+            box-shadow: 0 8px 28px rgba(100,180,255,0.25), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(150,210,255,0.3) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            font-weight: 900 !important;
+            animation: glassBtnShimmer 3s ease-in-out infinite !important;
+        }
+        @keyframes glassBtnShimmer {
+            0%,100% { box-shadow: 0 8px 28px rgba(100,180,255,0.25), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(150,210,255,0.3); }
+            50%     { box-shadow: 0 8px 36px rgba(100,180,255,0.45), inset 0 1px 0 rgba(255,255,255,1),   inset 0 -1px 0 rgba(150,210,255,0.6); }
+        }
+        body.theme-glass h1 {
+            color: #1a5a8a !important;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.9), 0 0 30px rgba(100,180,255,0.5), 0 2px 8px rgba(100,160,220,0.3) !important;
+        }
+        body.theme-glass .subtitle {
+            color: #2a7ab0 !important;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.8), 0 0 12px rgba(100,180,255,0.4) !important;
+        }
+        .theme-banner.glass {
+            background: linear-gradient(90deg, rgba(255,255,255,0.82), rgba(210,240,255,0.9), rgba(255,255,255,0.95), rgba(180,225,255,0.85), rgba(255,255,255,0.82));
+            background-size: 300% 100%;
+            color: #1a5a8a;
+            box-shadow: 0 3px 20px rgba(100,180,255,0.3), inset 0 1px 0 rgba(255,255,255,0.9);
+            animation: bannerShift 5s linear infinite;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.9), 0 0 12px rgba(100,180,255,0.5);
+            letter-spacing: 4px;
+            border-bottom: 2px solid rgba(150,210,255,0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            font-weight: 900;
+        }
+
         /* Bannière de thème actif */
         .theme-banner {
             display: none;
@@ -5015,6 +5198,8 @@
                         <button class="admin-btn" onclick="adminSetTheme('ete')" style="background:linear-gradient(180deg,#ff9500,#ffe066);box-shadow:0 4px 0 #b06000;border:2px solid #ffe066;color:#4a2800;font-weight:900;">☀️ Été</button>
                         <button class="admin-btn" onclick="adminSetTheme('bonbon')" style="background:linear-gradient(180deg,#c820a0,#ff6fcf);box-shadow:0 4px 0 #7a0060;border:2px solid #ff6fcf;color:#fff;font-weight:900;">🍬 Bonbon</button>
                         <button class="admin-btn" onclick="adminSetTheme('glitch')" style="background:linear-gradient(180deg,#00ffcc,#007755);box-shadow:0 4px 0 #003322;border:2px solid #00ffcc;color:#000d0a;font-weight:900;letter-spacing:2px;">⚡ Glitch</button>
+                        <button class="admin-btn" onclick="adminSetTheme('chaos')" style="background:linear-gradient(180deg,#ff0040,#7700ff);box-shadow:0 4px 0 #330000;border:2px solid #ffff00;color:#fff;font-weight:900;letter-spacing:1px;animation:chaosBtn 0.2s steps(1) infinite;">💥 Chaos</button>
+                        <button class="admin-btn" onclick="adminSetTheme('glass')" style="background:linear-gradient(180deg,rgba(255,255,255,0.75),rgba(180,225,255,0.6));box-shadow:0 4px 0 rgba(100,180,255,0.3),inset 0 1px 0 rgba(255,255,255,0.9);border:2px solid rgba(150,210,255,0.8);color:#1a5a8a;font-weight:900;backdrop-filter:blur(8px);">🧊 Glass</button>
                     </div>
                     <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminThemeStatus">Thème actuel : Défaut</div>
                 </div>
@@ -5158,6 +5343,8 @@
                                 <option value="ete">☀️ Été</option>
                                 <option value="bonbon">🍬 Bonbon</option>
                                 <option value="glitch">⚡ Glitch</option>
+                                <option value="chaos">💥 Chaos</option>
+                                <option value="glass">🧊 Glass</option>
                             </select>
                         </div>
 
@@ -9883,6 +10070,18 @@
                 banner: '⚡ G̴L̷I̴T̸C̵H̶ ⚡',
                 bannerClass: 'glitch',
                 particles: { color: '#00ffcc', emoji: ['⚡','💻','🔌','📡','🖥️','⌨️','🔋','📶','🕹️'], count: 75, glow: 'rgba(0,255,204,0.9)' }
+            },
+            'chaos': {
+                label: '💥 Chaos',
+                banner: '💥 C H A O S 💥',
+                bannerClass: 'chaos',
+                particles: { color: '#ff0040', emoji: ['💥','🌀','⚡','🔥','💫','🌈','✨','💢','🎆'], count: 100, glow: 'rgba(255,0,64,1)' }
+            },
+            'glass': {
+                label: '🧊 Glass',
+                banner: '🧊 ❄️ GLASS ❄️ 🧊',
+                bannerClass: 'glass',
+                particles: { color: 'rgba(200,240,255,0.9)', emoji: ['🧊','❄️','💧','🫧','🌊','✨','💎','🔷','🫙'], count: 70, glow: 'rgba(150,210,255,0.85)' }
             }
         };
 
