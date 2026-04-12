@@ -8380,7 +8380,10 @@
                 dots.appendChild(d);
             }
             document.getElementById('quizStreakCount').textContent = quizStreak;
-            document.getElementById('quizGainDisplay').textContent = quizGold.toLocaleString();
+            // Afficher le gain total + le prochain gain pour motiver
+            const _quizStreakTable = [0, 500, 800, 1200, 1700, 2300, 3000, 3800, 4700, 5700, 7000, 8500, 10000, 12000, 14000, 16000, 18000, 20000, 22000, 24000, 26000, 28000, 30000, 32000, 34000, 36000, 38000, 40000, 42000, 44000, 46000, 48000, 50000];
+            const nextGain = _quizStreakTable[Math.min(quizStreak + 1, _quizStreakTable.length - 1)];
+            document.getElementById('quizGainDisplay').textContent = quizGold.toLocaleString() + ' (+' + nextGain.toLocaleString() + ')';
         }
 
         function loadQuizQuestion() {
@@ -8433,7 +8436,10 @@
             if (chosen === correctAnswer) {
                 btn.classList.add('correct');
                 quizStreak++;
-                quizGold += currentQuizMode === 'rarity' ? 20000 : 20000;
+                // Gain progressif selon le streak : faible au début, croît doucement, plafonné
+            const _quizStreakTable = [0, 500, 800, 1200, 1700, 2300, 3000, 3800, 4700, 5700, 7000, 8500, 10000, 12000, 14000, 16000, 18000, 20000, 22000, 24000, 26000, 28000, 30000, 32000, 34000, 36000, 38000, 40000, 42000, 44000, 46000, 48000, 50000];
+                const _quizGain = _quizStreakTable[Math.min(quizStreak, _quizStreakTable.length - 1)];
+                quizGold += _quizGain;
                 renderStreakDots();
                 setTimeout(() => loadQuizQuestion(), 900);
             } else {
@@ -8458,8 +8464,8 @@
                 if (sg) sg.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
                 autoSave();
             }
-            document.getElementById('quizResultEmoji').textContent = quizStreak === 0 ? '😬' : quizStreak >= 5 ? '🔥' : '🎉';
-            document.getElementById('quizResultTitle').textContent = quizStreak === 0 ? 'Dommage !' : quizStreak >= 5 ? 'INCROYABLE !' : 'Bien joué !';
+            document.getElementById('quizResultEmoji').textContent = quizStreak === 0 ? '😬' : quizStreak >= 7 ? '🔥' : quizStreak >= 4 ? '⭐' : '🎉';
+            document.getElementById('quizResultTitle').textContent = quizStreak === 0 ? 'Dommage !' : quizStreak >= 7 ? 'INCROYABLE !' : quizStreak >= 4 ? 'En feu !' : 'Bien joué !';
             document.getElementById('quizResultGold').textContent = '+' + quizGold.toLocaleString() + ' 💰';
             document.getElementById('quizResultSub').textContent = quizStreak + ' bonne' + (quizStreak > 1 ? 's' : '') + ' réponse' + (quizStreak > 1 ? 's' : '') + ' d\'affilée';
         }
@@ -10011,20 +10017,20 @@
             'saint-patrick':'https://static.wikia.nocookie.net/stealabr/images/1/19/Leprechaun_Lucky_Block.png/revision/latest?cb=20260316134453',
             'printemps':    'https://cdn.nookazon.com/petsimulator99/Pets/14976271261.png',
             'minecraft':    'https://mblogthumb-phinf.pstatic.net/MjAxNzAxMjlfOTUg/MDAxNDg1NjIxMDU5MDA2.h8qikrcxFGJ0u-ZF8dwKvkSePAJaWtQx4qYIMRD_QAAg.-HGmgR3GyGm_aWX_N90I2ICrNjz3sauHSd6xweBnOfUg.PNG.baljern/3d_lucky_block.png?type=w420',
-            'unchained':    'https://image2url.com/r2/default/images/1775920138121-dd7f4621-26bb-4309-8d7e-2ab3e104466d.blob',
-            'inazuma':      'https://image2url.com/r2/default/images/1775919776336-2f961c13-916b-4c77-af2e-5cd6d4b5c740.png',
+            'unchained':    'https://image2url.com/r2/bucket2/images/1775989361950-6e3e175b-9ff0-43b8-aecc-c77ace2af9cf.png',
+            'inazuma':      'https://image2url.com/r2/bucket3/images/1775989145745-1798e2c2-2da5-4bde-9afa-53517f649bfd.png',
             'or':           'https://static.wikia.nocookie.net/stealabr/images/1/18/GOLD_LUCKY_BLOCK.png/revision/latest/scale-to-width-down/250?cb=20260206164525',
             'diamant':      'https://static.wikia.nocookie.net/ccgn/images/6/63/Diamond_Lucky_Block.png/revision/latest/scale-to-width-down/250?cb=20240608054034',
             'rainbow':      'https://media.forgecdn.net/avatars/thumbnails/937/639/256/256/638416108779387145.png',
             'paques':       'https://static.wikia.nocookie.net/stealabr/images/a/a4/EggBlock.png/revision/latest?cb=20260405230823',
-            'chocolat':     'https://videos.openai.com/az/vg-assets/task_01knyhvexde128d3yjfd30rmzy%2F1775920650_img_1.webp?se=2026-04-13T00%3A00%3A00Z&sp=r&sv=2026-02-06&sr=b&skoid=aa5ddad1-c91a-4f0a-9aca-e20682cc8969&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-04-11T12%3A59%3A27Z&ske=2026-04-18T13%3A04%3A27Z&sks=b&skv=2026-02-06&sig=qD8bdX7GAfg3rJ/VtknbDLmB7uI82ZNkKt30CCjkr6Y%3D&ac=oaivgprodscus2',
+            'chocolat':     'https://image2url.com/r2/bucket1/images/1775989112803-da9f7c42-e802-455a-b26a-fae000c8822e.png',
             'mitrox':       'https://yt3.ggpht.com/eLU_Ns8Fq9f3RUrSTjWUtxjnU2UUe39ZeNzYFTuTsXN4G-oVw9l9WY9pkxBflgPortlfAjy1fw=s176-c-k-c0x00ffffff-no-rj-mo',
-            'anniversaire': 'https://videos.openai.com/az/vg-assets/task_01knyj251merdtx1hc9k1gp6qy%2F1775920869_img_1.webp?se=2026-04-13T00%3A00%3A00Z&sp=r&sv=2026-02-06&sr=b&skoid=aa5ddad1-c91a-4f0a-9aca-e20682cc8969&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-04-11T12%3A59%3A27Z&ske=2026-04-18T13%3A04%3A27Z&sks=b&skv=2026-02-06&sig=GUlvR2bE8jeEkD6sJM9D0uicG03QpTZdbBU2fmcpoGM%3D&ac=oaivgprodscus2',
-            'ete':          'https://image2url.com/r2/default/images/1775915846382-1fb2b7cb-fa6e-4612-acc9-6d58d0af7579.png',
-            'bonbon':       'https://image2url.com/r2/default/images/1775919344574-af501515-d2c4-46b2-9f8f-1c1c9de8a660.png',
-            'glitch':       'https://image2url.com/r2/default/images/1775915394688-12a29544-d2af-4875-bfa4-481d8d2d12ec.png',
-            'chaos':        'https://videos.openai.com/az/vg-assets/task_01knyhywdtf6pv5ngyhypvnkdf%2F1775920744_img_0.webp?se=2026-04-13T00%3A00%3A00Z&sp=r&sv=2026-02-06&sr=b&skoid=aa5ddad1-c91a-4f0a-9aca-e20682cc8969&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-04-11T12%3A59%3A27Z&ske=2026-04-18T13%3A04%3A27Z&sks=b&skv=2026-02-06&sig=6kezX5ycrnJg%2BTvJL5l8KXZPMfZlfiHjRImtTF2ET0o%3D&ac=oaivgprodscus2',
-            'glass':        'https://image2url.com/r2/default/images/1775915657472-22a01410-62cc-46af-8310-3b6c7e624f36.png',
+            'anniversaire': 'https://image2url.com/r2/bucket1/images/1775989084807-b8d2301a-86a1-4ab7-8484-6132026ad570.png',
+            'ete':          'https://image2url.com/r2/bucket1/images/1775989054511-90969848-f66a-4fc4-bf68-de36a1abfccf.png',
+            'bonbon':       'https://image2url.com/r2/bucket3/images/1775989025349-0426292e-f465-4f1f-b78f-1cea259a2685.png',
+            'glitch':       'https://image2url.com/r2/bucket2/images/1775988992437-bb0a592c-c3e2-4e82-98c2-de9c7129bf99.png',
+            'chaos':        'https://image2url.com/r2/bucket1/images/1775989344409-4135c041-1855-4695-9b26-4a6d81d95fa4.png',
+            'glass':        'https://image2url.com/r2/bucket2/images/1775988752766-43820564-09e1-46ab-8e7f-ba8e800ffef5.png',
         };
 
         const THEMES = {
