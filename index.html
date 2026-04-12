@@ -8374,6 +8374,8 @@
         }
 
         // Charger automatiquement au démarrage
+        let _aqProgress = {};   // { [questId]: { progress: number, claimed: boolean } }
+
         const raw = localStorage.getItem('crSave_' + currentSaveCode);
         if (raw) {
             try {
@@ -9028,11 +9030,18 @@
 
             // Broadcast — ignorer les messages antérieurs à la connexion
             const _joinTs = Date.now();
+            let _lastAdminBroadcastTs = 0; // timestamp dédié aux broadcasts admin (indépendant des broadcasts locaux)
             firebaseDB.ref('admin/broadcast').on('value', snap => {
                 const d = snap.val();
                 if (!d || !d.msg) return;
                 if (!d.ts || d.ts <= _joinTs) return; // message ancien, on ignore
-                showBroadcast(d.msg, d.ts);
+                if (d.ts <= _lastAdminBroadcastTs) return; // déjà affiché
+                _lastAdminBroadcastTs = d.ts;
+                const banner = document.getElementById('broadcastBanner');
+                document.getElementById('broadcastText').textContent = d.msg;
+                banner.classList.add('show');
+                clearTimeout(banner._hide);
+                banner._hide = setTimeout(() => banner.classList.remove('show'), 8000);
             });
 
             // Pop-up admin globale
@@ -12220,7 +12229,6 @@
 
         // ─── État persisté ────────────────────────────────────────────────────
         // Séparé de questProgress pour ne pas interférer avec le système existant
-        let _aqProgress = {};   // { [questId]: { progress: number, claimed: boolean } }
 
         function _aqInitProgress() {
             ADVANCED_QUESTS.forEach(q => {
