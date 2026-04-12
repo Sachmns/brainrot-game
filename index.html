@@ -4602,6 +4602,107 @@
         .trade-reject-btn:hover { background:linear-gradient(180deg,#4a1000,#200800); }
         .trade-incoming-timer { text-align:center; font-size:0.62em; color:#334; margin-top:8px; }
 
+
+        /* ══════════════════════════════════════════════
+           QUÊTES AVANCÉES — Styles
+           ══════════════════════════════════════════════ */
+
+        /* Toast de notification quête avancée */
+        .aq-toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: linear-gradient(135deg, #1a0035 0%, #2d0060 100%);
+            border: 2px solid #aa44ff;
+            border-radius: 14px;
+            padding: 12px 22px;
+            z-index: 99998;
+            pointer-events: none;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.35s, transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            box-shadow: 0 6px 30px rgba(170,68,255,0.5);
+            min-width: 240px;
+            max-width: 340px;
+        }
+        .aq-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .aq-toast-title {
+            color: #cc88ff;
+            font-size: 0.78em;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .aq-toast-body {
+            color: #fff;
+            font-size: 0.88em;
+            font-weight: 700;
+        }
+        .aq-toast-reward {
+            color: #ffd700;
+            font-size: 0.78em;
+            margin-top: 4px;
+        }
+
+        /* Section avancée dans le panneau quêtes */
+        .aq-section-header {
+            margin-top: 18px;
+            margin-bottom: 10px;
+            padding: 8px 14px;
+            background: linear-gradient(90deg, rgba(170,68,255,0.15), transparent);
+            border-left: 3px solid #aa44ff;
+            border-radius: 0 8px 8px 0;
+            color: #cc88ff;
+            font-size: 0.72em;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .aq-section-header.secret { border-left-color: #ff4466; color: #ff8899; background: linear-gradient(90deg, rgba(255,68,102,0.12), transparent); }
+        .aq-section-header.adaptive { border-left-color: #00ccff; color: #66eeff; background: linear-gradient(90deg, rgba(0,204,255,0.12), transparent); }
+
+        /* Item quête avancée */
+        .aq-item {
+            background: rgba(170,68,255,0.04);
+            border: 1px solid rgba(170,68,255,0.18);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-bottom: 7px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.15s;
+        }
+        .aq-item.claimable { border-color: #aa44ff; background: rgba(170,68,255,0.12); box-shadow: 0 0 14px rgba(170,68,255,0.3); }
+        .aq-item.completed { opacity: 0.5; }
+        .aq-item.secret-locked { filter: blur(0.5px); }
+        .aq-item .aq-icon { font-size: 1.4em; flex-shrink: 0; width: 32px; text-align: center; }
+        .aq-item .aq-info { flex: 1; }
+        .aq-item .aq-name { color: #fff; font-size: 0.82em; font-weight: 900; }
+        .aq-item .aq-desc { color: #668; font-size: 0.72em; margin-top: 2px; line-height: 1.3; }
+        .aq-item .aq-desc.secret { color: #664455; font-style: italic; }
+        .aq-item .aq-bar-wrap { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+        .aq-item .aq-bar { height: 100%; background: linear-gradient(90deg, #aa44ff, #dd88ff); border-radius: 2px; transition: width 0.4s; }
+        .aq-item .aq-progress-text { color: #778; font-size: 0.65em; margin-top: 3px; }
+        .aq-item .aq-right { flex-shrink: 0; text-align: right; }
+        .aq-item .aq-reward { color: #ffd700; font-size: 0.75em; font-weight: 900; }
+        .aq-claim-btn {
+            padding: 5px 12px;
+            background: linear-gradient(180deg, #aa44ff, #6600cc);
+            border: none; border-radius: 8px;
+            color: #fff; font-size: 0.72em; font-weight: 900;
+            cursor: pointer; font-family: inherit;
+            box-shadow: 0 3px 0 #330066;
+            transition: all 0.12s;
+        }
+        .aq-claim-btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
+        .aq-claim-btn:active { transform: translateY(1px); box-shadow: 0 1px 0 #330066; }
+
         </style>
 </head>
 <body>
@@ -5985,7 +6086,7 @@
                 { name: 'Noobini Santanini', img: 'https://static.wikia.nocookie.net/stealabr/images/c/cd/NoobiniSantanini.png/revision/latest/scale-to-width-down/102?cb=20251207000659' },
                 { name: 'Tartaragno', img: 'https://static.wikia.nocookie.net/stealabr/images/d/de/Tartaragnoo.png/revision/latest/scale-to-width-down/150?cb=20251013020010' },
                 { name: 'Pipi Corni', img: 'https://static.wikia.nocookie.net/stealabr/images/5/53/PipiCorni.png/revision/latest/scale-to-width-down/135?cb=20251128210620' },
-                { name: 'Holy Arepa', img: 'https://static.wikia.nocookie.net/stealabr/images/c/c3/Holy_Arepa.png/revision/latest/scale-to-width-down/70?cb=20260307223639' }
+                { name: 'Holy Arepa', img: 'https://static.wikia.nocookie.net/stealabr/images/c/c1/Holy_Arepa_Image.png/revision/latest/thumbnail/width/360/height/360?cb=20260317020735' }
             ],
             rare: [
                 { name: 'Trippi troppi', img: 'https://static.wikia.nocookie.net/stealabr/images/f/f0/Trippi_Troppi.png/revision/latest/scale-to-width-down/144?cb=20251220012554' },
@@ -6434,7 +6535,7 @@
         const chestRewards = {
             gold: [800, 1500],
             cards: 2,
-            rarity: { common: 0.49, rare: 0.25, epic: 0.10, legendary: 0.06, mythic: 0.05, brainrot_god: 0.04, secret: 0.03, og: 0.0005, limited: 0.0001, no: 0.00001 },
+            rarity: { common: 0.49, rare: 0.25, epic: 0.10, legendary: 0.06, mythic: 0.05, brainrot_god: 0.04, secret: 0.03, og: 0.0005, limited: 0.0001, no: 0.000001 },
             starProbability: [1, 0.50, 0.35, 0.20, 0.10] // Probabilités 1->2, 2->3, 3->4, 4->5
         };
 
@@ -7049,6 +7150,8 @@
             
             autoSave();
             updateQuestProgress();
+            // Quêtes avancées — tracker coffre
+            if (typeof _aqTrackChest === 'function') _aqTrackChest(rewards);
         }
 
         function closeModal() {
@@ -7577,7 +7680,7 @@
                 { key: 'secret',       label: '🖤 Secret 3%',          color: '#ffffff' },
                 { key: 'og',           label: '⚡ OG 0.05%',          color: 'linear-gradient(90deg, #000000, #ffd700)' },
                 { key: 'limited',      label: '💎 Limitées 0.01%',     color: '#ff59e7' },
-                { key: 'no',           label: '❤ Impossible 0.001%',   color: '#ff0000' },
+                { key: 'no',           label: '❤ Impossible 0.0001%',   color: '#ff0000' },
                 { key: 'admin_exclusive', label: '⚡ ADMIN EXCLUSIVE', color: 'linear-gradient(90deg,#ff0040,#0040ff)' }
             ];
 
@@ -8219,6 +8322,8 @@
             });
             const sub = document.getElementById('questSubtitle');
             if (sub) sub.textContent = doneQ + ' / ' + totalQ + ' quêtes permanentes complétées';
+            // Quêtes avancées — rendu section
+            if (typeof _aqRenderSection === 'function') _aqRenderSection();
         }
 
         function onCardBought(rarity) {
@@ -8260,6 +8365,8 @@
                 personalLuck: personalLuck,
                 luckExpiry: luckExpiry
             };
+            // Quêtes avancées — sauvegarder
+            if (typeof _aqSave === 'function') _aqSave(save);
             localStorage.setItem('crSave_' + currentSaveCode, JSON.stringify(save));
             const _sp = localStorage.getItem('tradePseudo');
             if (_sp) syncStatsToFirebase(_sp);
@@ -8295,6 +8402,8 @@
                 if (save.dailyState) dailyState = save.dailyState;
                 if (save.personalLuck) personalLuck = save.personalLuck;
                 if (save.luckExpiry) luckExpiry = save.luckExpiry;
+                // Quêtes avancées — restaurer
+                if (typeof _aqLoad === 'function') _aqLoad(save);
                 // Reprendre le timer si encore actif
                 if (personalLuck > 0 && luckExpiry > Date.now()) {
                     startLuckTimer();
@@ -10203,6 +10312,9 @@
                 }
             }
 
+            // Quêtes avancées — tracker changement de thème
+            if (typeof _aqTrackTheme === 'function') _aqTrackTheme(themeId);
+
             // Mettre à jour le statut dans l'admin
             const statusEl = document.getElementById('adminThemeStatus');
             if (statusEl) statusEl.textContent = 'Thème actuel : ' + theme.label;
@@ -11869,6 +11981,636 @@
         }
 
 
+
+        // ════════════════════════════════════════════════════════════════════
+        // ══   SYSTÈME DE QUÊTES AVANCÉES                                  ══
+        // ══   Modulaire, temps réel, localStorage, sans dépendance        ══
+        // ════════════════════════════════════════════════════════════════════
+
+        // ─── Rang de rareté pour comparaisons ────────────────────────────────
+        const _AQ_RARITY_RANK = {
+            common: 0, rare: 1, epic: 2, legendary: 3, mythic: 4,
+            brainrot_god: 5, secret: 6, og: 7, limited: 8, no: 9,
+            admin_exclusive: 10
+        };
+        function _aqRank(r) { return _AQ_RARITY_RANK[r] !== undefined ? _AQ_RARITY_RANK[r] : -1; }
+        function _aqAtLeast(r, min) { return _aqRank(r) >= _aqRank(min); }
+
+        // ─── Définitions des quêtes avancées ─────────────────────────────────
+        // Structure :
+        //   id        : identifiant unique
+        //   cat       : 'gameplay' | 'theme' | 'stats' | 'secret' | 'adaptive'
+        //   icon      : emoji affiché
+        //   name      : titre (affiché, peut être '???' pour secrets)
+        //   desc      : description (peut être trompeuse pour quêtes mensonge)
+        //   reward    : or récompensé
+        //   secret    : true = masqué jusqu'à complétion
+        //   lie       : true = description volontairement trompeuse
+        //   inverse   : true = se complète en échouant l'objectif affiché
+        const ADVANCED_QUESTS = [
+
+            // ── Gameplay ───────────────────────────────────────────────────
+            {
+                id: 'aq_speed_5_30',
+                cat: 'gameplay', icon: '⚡',
+                name: 'Speed Run I',
+                desc: 'Ouvrir 5 coffres en moins de 30 secondes',
+                reward: 75000
+            },
+            {
+                id: 'aq_speed_10_60',
+                cat: 'gameplay', icon: '⚡',
+                name: 'Speed Run II',
+                desc: 'Ouvrir 10 coffres en moins de 60 secondes',
+                reward: 200000
+            },
+            {
+                id: 'aq_streak_no_legend_15',
+                cat: 'gameplay', icon: '🛡️',
+                name: 'Streak Parfait',
+                desc: 'Ouvrir 15 coffres sans obtenir de Légendaire ni mieux',
+                reward: 90000
+            },
+            {
+                id: 'aq_rng_seq_clrl',
+                cat: 'gameplay', icon: '🔮',
+                name: 'Paradoxe du RNG',
+                desc: 'Obtenir en séquence : Commun → Légendaire → Rare → Légendaire',
+                reward: 300000
+            },
+            {
+                id: 'aq_precision_30pct_rare',
+                cat: 'gameplay', icon: '🎯',
+                name: 'Précision Divine',
+                desc: 'Obtenir exactement 3 Rares sur 10 coffres consécutifs (30%)',
+                reward: 150000
+            },
+            {
+                id: 'aq_freeze_rng_5',
+                cat: 'gameplay', icon: '❄️',
+                name: 'Freeze RNG',
+                desc: 'Obtenir 5 fois de suite la même rareté',
+                reward: 120000
+            },
+
+            // ── Thèmes ─────────────────────────────────────────────────────
+            {
+                id: 'aq_all_themes_chest',
+                cat: 'theme', icon: '🌍',
+                name: 'Maître des Univers',
+                desc: 'Ouvrir au moins 1 coffre dans chacun des 5 thèmes différents',
+                reward: 500000
+            },
+            {
+                id: 'aq_inazuma_rare',
+                cat: 'theme', icon: '⚡',
+                name: 'Éveil Inazuma',
+                desc: 'En thème Inazuma, obtenir une carte Légendaire ou mieux',
+                reward: 180000
+            },
+            {
+                id: 'aq_diamant_streak_3epic',
+                cat: 'theme', icon: '💎',
+                name: 'Ascension du Diamant',
+                desc: 'En thème Diamant, obtenir 3 Épiques ou mieux d\'affilée',
+                reward: 220000
+            },
+            {
+                id: 'aq_chaos_visual_5',
+                cat: 'theme', icon: '🎨',
+                name: 'Chaos Visuel',
+                desc: 'Changer de thème après chaque coffre pendant 5 tours d\'affilée',
+                reward: 160000
+            },
+            {
+                id: 'aq_dim_cycle',
+                cat: 'theme', icon: '🌀',
+                name: 'Cycle des Dimensions',
+                desc: 'Ouvrir un coffre dans l\'ordre exact : Or → Diamant → Rainbow',
+                reward: 400000
+            },
+
+            // ── Stats ──────────────────────────────────────────────────────
+            {
+                id: 'aq_optimizer_50pct_rare_20',
+                cat: 'stats', icon: '📊',
+                name: 'Optimisateur',
+                desc: 'Obtenir 50% ou plus de Rares+ sur 20 coffres consécutifs',
+                reward: 200000
+            },
+            {
+                id: 'aq_scientist_100chests',
+                cat: 'stats', icon: '🔬',
+                name: 'Scientifique du RNG',
+                desc: 'Ouvrir 100 coffres en une seule session sans fermer le jeu',
+                reward: 250000
+            },
+
+            // ── Adaptatives ────────────────────────────────────────────────
+            {
+                id: 'aq_adaptive_nocturne',
+                cat: 'adaptive', icon: '🌙',
+                name: 'Joueur Nocturne',
+                desc: 'Ouvrir 10 coffres entre 00h et 06h (heure locale)',
+                reward: 130000
+            },
+            {
+                id: 'aq_adaptive_marathon',
+                cat: 'adaptive', icon: '🏃',
+                name: 'Marathon',
+                desc: 'Ouvrir 30 coffres en moins de 10 minutes en une session',
+                reward: 350000
+            },
+            {
+                id: 'aq_timeline_broken',
+                cat: 'adaptive', icon: '⏳',
+                name: 'Timeline Cassée',
+                desc: 'Changer de thème exactement 10 fois sans ouvrir de coffre',
+                reward: 180000
+            },
+
+            // ── Secrètes ───────────────────────────────────────────────────
+            {
+                id: 'aq_secret_combo',
+                cat: 'secret', icon: '🔒',
+                name: '???',
+                desc: 'Séquence cachée : change de thème, attend 5s, ouvre un coffre',
+                secret: true,
+                reward: 1000000
+            },
+            {
+                id: 'aq_secret_spam',
+                cat: 'secret', icon: '🔒',
+                name: '???',
+                desc: 'Comportement inhabituel détecté…',
+                secret: true,
+                reward: 500000
+            },
+            {
+                id: 'aq_secret_lie',
+                cat: 'secret', icon: '🃏',
+                name: 'Quête Mensonge',
+                desc: 'Obtenir exactement 0 carte Rare sur 5 coffres — RÉUSSIR EN ÉCHOUANT',
+                secret: false,
+                lie: true,    // La vraie condition est différente de la desc
+                reward: 222000
+            },
+            {
+                id: 'aq_secret_inverse',
+                cat: 'secret', icon: '🔄',
+                name: 'Quête Inversée',
+                desc: 'Ne PAS ouvrir de coffre pendant 60 secondes consécutives',
+                secret: false,
+                inverse: true,
+                reward: 111000
+            },
+            {
+                id: 'aq_secret_corruption',
+                cat: 'secret', icon: '☠️',
+                name: 'Mode Corruption',
+                desc: '???  Actions étranges détectées…',
+                secret: true,
+                reward: 777000
+            },
+        ];
+
+        // ─── État runtime (non persisté directement, reconstruit à chaque session) ─
+        const _aqState = {
+            // Speed run
+            speed: { active: false, startTs: 0, count: 0 },
+            // Streak « pas légendaire+ »
+            streakNoLegend: 0,
+            // Séquence RNG : cibles ordonnées
+            rngSeqTarget: ['common', 'legendary', 'rare', 'legendary'],
+            rngSeqIdx: 0,
+            // Fenêtre glissante de 10 coffres (raretés best)
+            window10: [],
+            // Fenêtre glissante de 20 coffres (raretés best)
+            window20: [],
+            // Streak même rareté
+            streakSame: { rarity: null, count: 0 },
+            // Thèmes dans lesquels on a ouvert un coffre
+            themesWithChest: new Set(),
+            // Streak Diamant épique+
+            diamantStreak: 0,
+            // Chaos visuel : thème changé après chaque coffre
+            chaosState: { lastThemeAtChest: null, streak: 0 },
+            // Cycle des dimensions : ['or','diamant','rainbow'] dans l'ordre
+            dimCycle: { seq: [], needed: ['or', 'diamant', 'rainbow'] },
+            // Optimisateur : fenêtre 20 coffres
+            optiWindow20: [],
+            // Session : coffres depuis ouverture page
+            sessionChests: 0,
+            sessionStartTs: Date.now(),
+            // Timeline cassée
+            timelineSwitches: 0,
+            lastActionWasThemeSwitch: false,
+            // Secret combo : thème changé + timestamp
+            secretComboThemeTs: 0,
+            // Secret spam
+            spamLog: [],
+            // Secret inverse : timer
+            inverseTimer: null,
+            inversePending: false,
+            // Nocturne
+            nocturneCount: 0,
+            // Quête mensonge : compter les 0 Rares sur 5 coffres
+            lieWindow5: [],
+        };
+
+        // ─── État persisté ────────────────────────────────────────────────────
+        // Séparé de questProgress pour ne pas interférer avec le système existant
+        let _aqProgress = {};   // { [questId]: { progress: number, claimed: boolean } }
+
+        function _aqInitProgress() {
+            ADVANCED_QUESTS.forEach(q => {
+                if (!_aqProgress[q.id]) _aqProgress[q.id] = { progress: 0, claimed: false };
+            });
+        }
+
+        // ─── Toast notification ────────────────────────────────────────────────
+        let _aqToastTimer = null;
+        function _aqShowToast(name, reward, isSecret) {
+            const el    = document.getElementById('aqToast');
+            const title = document.getElementById('aqToastTitle');
+            const body  = document.getElementById('aqToastBody');
+            const rew   = document.getElementById('aqToastReward');
+            if (!el) return;
+            title.textContent = isSecret ? '🔒 QUÊTE SECRÈTE DÉBLOQUÉE !' : '🏆 QUÊTE AVANCÉE DÉBLOQUÉE !';
+            body.textContent  = name;
+            rew.textContent   = '+' + reward.toLocaleString() + ' 💰';
+            el.classList.add('show');
+            if (_aqToastTimer) clearTimeout(_aqToastTimer);
+            _aqToastTimer = setTimeout(() => {
+                el.classList.remove('show');
+                _aqToastTimer = null;
+            }, 5000);
+        }
+
+        // ─── Compléter une quête avancée ──────────────────────────────────────
+        function _aqComplete(questId) {
+            const q = ADVANCED_QUESTS.find(x => x.id === questId);
+            if (!q) return;
+            const p = _aqProgress[questId];
+            if (!p || p.claimed) return;
+            p.progress = 1;
+            p.claimed  = true;
+            // Récompense or
+            stats.totalGold += q.reward;
+            document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
+            const sg = document.getElementById('shopGoldDisplay');
+            if (sg) sg.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
+            // Notification visuelle
+            const displayName = (q.secret && p.progress === 1) ? '???' : q.name;
+            _aqShowToast(displayName, q.reward, q.secret);
+            showQuestNotif('🏆 ' + (q.secret ? 'Quête secrète' : q.name) + ' — +' + q.reward.toLocaleString() + ' 💰');
+            // Badge quêtes
+            _aqUpdateBadge();
+            // Sauvegarder
+            autoSave();
+            // Rafraîchir le panel si ouvert
+            if (document.getElementById('questModal') &&
+                document.getElementById('questModal').style.display !== 'none') {
+                _aqRenderSection();
+            }
+        }
+
+        // ─── Badge quêtes avancées ────────────────────────────────────────────
+        function _aqUpdateBadge() {
+            // Compter les quêtes avancées réclamables non encore claimed
+            const claimable = ADVANCED_QUESTS.filter(q => {
+                const p = _aqProgress[q.id];
+                return p && p.progress >= 1 && !p.claimed;
+            }).length;
+            // On incrémente le badge existant (questBadge) s'il y a des quêtes réclamables
+            const badge = document.getElementById('questBadge');
+            if (!badge) return;
+            // Recalculer le total avec le système existant
+            let total = claimable;
+            // On lit le badge existant et on s'assure qu'il reflète les deux systèmes
+            // Note : updateQuestBadge() du système existant est toujours appelé séparément
+        }
+
+        // ─── Tracker coffre — appelé depuis updateStats ───────────────────────
+        function _aqTrackChest(rewards) {
+            const now = Date.now();
+
+            // Extraire la meilleure rareté de ce coffre
+            let bestRarity = 'common';
+            rewards.forEach(r => {
+                if (r.type === 'card' && _aqRank(r.rarity) > _aqRank(bestRarity)) {
+                    bestRarity = r.rarity;
+                }
+            });
+
+            const currentTheme = typeof _currentTheme !== 'undefined' ? _currentTheme : '';
+
+            // ── Session ──────────────────────────────────────────────────────
+            _aqState.sessionChests++;
+
+            // ── Speed run ────────────────────────────────────────────────────
+            const sp = _aqState.speed;
+            if (!sp.active) { sp.active = true; sp.startTs = now; sp.count = 0; }
+            sp.count++;
+            const elapsed = now - sp.startTs;
+            if (sp.count >= 5  && elapsed <= 30000) _aqComplete('aq_speed_5_30');
+            if (sp.count >= 10 && elapsed <= 60000) _aqComplete('aq_speed_10_60');
+            // Reset fenêtre si trop ancien
+            if (elapsed > 60000) { sp.active = false; sp.count = 0; sp.startTs = now; }
+
+            // ── Marathon (30 coffres < 10 min) ───────────────────────────────
+            const sessionElapsed = now - _aqState.sessionStartTs;
+            if (_aqState.sessionChests >= 30 && sessionElapsed <= 600000) {
+                _aqComplete('aq_adaptive_marathon');
+            }
+
+            // ── Scientifique (100 coffres session) ───────────────────────────
+            if (_aqState.sessionChests >= 100) _aqComplete('aq_scientist_100chests');
+
+            // ── Streak pas Légendaire+ ────────────────────────────────────────
+            if (!_aqAtLeast(bestRarity, 'legendary')) {
+                _aqState.streakNoLegend++;
+                if (_aqState.streakNoLegend >= 15) _aqComplete('aq_streak_no_legend_15');
+            } else {
+                _aqState.streakNoLegend = 0;
+            }
+
+            // ── Séquence RNG ──────────────────────────────────────────────────
+            const target = _aqState.rngSeqTarget[_aqState.rngSeqIdx];
+            if (bestRarity === target) {
+                _aqState.rngSeqIdx++;
+                if (_aqState.rngSeqIdx >= _aqState.rngSeqTarget.length) {
+                    _aqComplete('aq_rng_seq_clrl');
+                    _aqState.rngSeqIdx = 0; // reset pour rejouer
+                }
+            } else {
+                // Reset si erreur, mais si correspond au step 0, on repart
+                _aqState.rngSeqIdx = (bestRarity === _aqState.rngSeqTarget[0]) ? 1 : 0;
+            }
+
+            // ── Freeze RNG (5 mêmes raretés d'affilée) ───────────────────────
+            if (_aqState.streakSame.rarity === bestRarity) {
+                _aqState.streakSame.count++;
+                if (_aqState.streakSame.count >= 5) _aqComplete('aq_freeze_rng_5');
+            } else {
+                _aqState.streakSame = { rarity: bestRarity, count: 1 };
+            }
+
+            // ── Fenêtre glissante 10 (Précision divine) ───────────────────────
+            _aqState.window10.push(bestRarity);
+            if (_aqState.window10.length > 10) _aqState.window10.shift();
+            if (_aqState.window10.length === 10) {
+                const rares10 = _aqState.window10.filter(r => r === 'rare').length;
+                if (rares10 === 3) _aqComplete('aq_precision_30pct_rare');
+            }
+
+            // ── Fenêtre glissante 20 (Optimisateur) ───────────────────────────
+            _aqState.window20.push(bestRarity);
+            if (_aqState.window20.length > 20) _aqState.window20.shift();
+            if (_aqState.window20.length === 20) {
+                const goodCount = _aqState.window20.filter(r => _aqAtLeast(r, 'rare')).length;
+                if (goodCount >= 10) _aqComplete('aq_optimizer_50pct_rare_20');
+            }
+
+            // ── Thèmes utilisés ────────────────────────────────────────────────
+            _aqState.themesWithChest.add(currentTheme);
+            if (_aqState.themesWithChest.size >= 5) _aqComplete('aq_all_themes_chest');
+
+            // ── Inazuma rare ───────────────────────────────────────────────────
+            if (currentTheme === 'inazuma' && _aqAtLeast(bestRarity, 'legendary')) {
+                _aqComplete('aq_inazuma_rare');
+            }
+
+            // ── Diamant streak épique+ ─────────────────────────────────────────
+            if (currentTheme === 'diamant') {
+                if (_aqAtLeast(bestRarity, 'epic')) {
+                    _aqState.diamantStreak++;
+                    if (_aqState.diamantStreak >= 3) _aqComplete('aq_diamant_streak_3epic');
+                } else {
+                    _aqState.diamantStreak = 0;
+                }
+            } else {
+                _aqState.diamantStreak = 0;
+            }
+
+            // ── Chaos visuel (thème changé après chaque coffre) ───────────────
+            const ch = _aqState.chaosState;
+            // Si le thème actuel est DIFFÉRENT du thème lors du coffre précédent
+            if (ch.lastThemeAtChest !== null && ch.lastThemeAtChest !== currentTheme) {
+                ch.streak++;
+                if (ch.streak >= 5) _aqComplete('aq_chaos_visual_5');
+            } else {
+                ch.streak = 0;
+            }
+            ch.lastThemeAtChest = currentTheme;
+
+            // ── Cycle des dimensions ────────────────────────────────────────────
+            const dc = _aqState.dimCycle;
+            const needed = dc.needed; // ['or', 'diamant', 'rainbow']
+            const expectedNext = needed[dc.seq.length];
+            if (currentTheme === expectedNext) {
+                dc.seq.push(currentTheme);
+                if (dc.seq.length >= needed.length) {
+                    _aqComplete('aq_dim_cycle');
+                    dc.seq = []; // reset pour rejouabilité
+                }
+            } else if (needed.includes(currentTheme)) {
+                // Mauvais ordre : reset, mais si c'est le premier de la séquence, commencer
+                dc.seq = (currentTheme === needed[0]) ? [currentTheme] : [];
+            }
+
+            // ── Nocturne ────────────────────────────────────────────────────────
+            const hour = new Date().getHours();
+            if (hour >= 0 && hour < 6) {
+                _aqState.nocturneCount++;
+                if (_aqState.nocturneCount >= 10) _aqComplete('aq_adaptive_nocturne');
+            }
+
+            // ── Timeline cassée : un coffre remet le compteur de switches à 0 ──
+            _aqState.timelineSwitches = 0;
+            _aqState.lastActionWasThemeSwitch = false;
+
+            // ── Secret combo (thème changé puis coffre dans les 5-15s) ──────────
+            if (_aqState.secretComboThemeTs > 0) {
+                const delta = now - _aqState.secretComboThemeTs;
+                if (delta >= 5000 && delta <= 15000) {
+                    _aqComplete('aq_secret_combo');
+                }
+                _aqState.secretComboThemeTs = 0;
+            }
+
+            // ── Spam (8+ coffres en 3 secondes) ───────────────────────────────
+            _aqState.spamLog.push(now);
+            _aqState.spamLog = _aqState.spamLog.filter(t => now - t <= 3000);
+            if (_aqState.spamLog.length >= 8) _aqComplete('aq_secret_spam');
+
+            // ── Quête mensonge : la vraie condition = obtenir une Légendaire+ ──
+            // (la desc dit 0 Rares sur 5, mais la vraie condition est différente)
+            _aqState.lieWindow5.push(bestRarity);
+            if (_aqState.lieWindow5.length > 5) _aqState.lieWindow5.shift();
+            if (_aqAtLeast(bestRarity, 'legendary')) {
+                _aqComplete('aq_secret_lie'); // vraie condition secrète
+            }
+
+            // ── Secret corruption (streak same + 3 thèmes changés consécutifs) ─
+            if (_aqProgress['aq_secret_corruption'] &&
+                !_aqProgress['aq_secret_corruption'].claimed) {
+                const corruptionOk = _aqState.streakSame.count >= 3 &&
+                                     _aqState.chaosState.streak >= 3;
+                if (corruptionOk) _aqComplete('aq_secret_corruption');
+            }
+
+            // ── Inverse : reset le timer (coffre ouvert = timer repart) ──────
+            _aqResetInverseTimer();
+        }
+
+        // ─── Tracker changement thème — appelé depuis applyTheme ──────────────
+        function _aqTrackTheme(newThemeId) {
+            // Secret combo : noter le timestamp du changement
+            _aqState.secretComboThemeTs = Date.now();
+
+            // Timeline cassée : incrémenter si la dernière action était aussi un switch
+            if (_aqState.lastActionWasThemeSwitch) {
+                _aqState.timelineSwitches++;
+            } else {
+                _aqState.timelineSwitches = 1;
+            }
+            _aqState.lastActionWasThemeSwitch = true;
+            if (_aqState.timelineSwitches >= 10) {
+                _aqComplete('aq_timeline_broken');
+                _aqState.timelineSwitches = 0;
+            }
+        }
+
+        // ─── Timer quête inversée ──────────────────────────────────────────────
+        function _aqResetInverseTimer() {
+            if (_aqState.inverseTimer) clearTimeout(_aqState.inverseTimer);
+            _aqState.inversePending = true;
+            _aqState.inverseTimer = setTimeout(() => {
+                // 60 secondes sans coffre = quête inversée complétée
+                _aqComplete('aq_secret_inverse');
+                _aqState.inversePending = false;
+                _aqState.inverseTimer = null;
+            }, 60000);
+        }
+
+        // ─── Initialisation ────────────────────────────────────────────────────
+        function _aqInit() {
+            _aqInitProgress();
+            _aqResetInverseTimer(); // Démarrer le timer inversé dès le chargement
+        }
+
+        // ─── Sauvegarder / Restaurer _aqProgress ────────────────────────────
+        function _aqSave(saveObj) {
+            saveObj.aqProgress = _aqProgress;
+        }
+        function _aqLoad(saveObj) {
+            if (saveObj && saveObj.aqProgress) {
+                _aqProgress = saveObj.aqProgress;
+            }
+            _aqInitProgress(); // s'assurer que toutes les clés existent
+        }
+
+        // ─── Rendu section dans le panneau quêtes ────────────────────────────
+        function _aqRenderSection() {
+            const container = document.getElementById('questContent');
+            if (!container) return;
+
+            // Supprimer l'ancienne section avancée si elle existe
+            const old = document.getElementById('aq-render-root');
+            if (old) old.remove();
+
+            const root = document.createElement('div');
+            root.id = 'aq-render-root';
+
+            const categories = [
+                { key: 'gameplay',  label: '⚡ Gameplay Avancé',    cls: '' },
+                { key: 'theme',     label: '🎨 Quêtes Thèmes',      cls: '' },
+                { key: 'stats',     label: '📊 Quêtes Stats',        cls: '' },
+                { key: 'adaptive',  label: '🧬 Quêtes Adaptatives',  cls: 'adaptive' },
+                { key: 'secret',    label: '🔒 Quêtes Secrètes',     cls: 'secret' },
+            ];
+
+            let totalAdv = 0, doneAdv = 0;
+
+            categories.forEach(cat => {
+                const quests = ADVANCED_QUESTS.filter(q => q.cat === cat.key);
+                if (!quests.length) return;
+
+                const header = document.createElement('div');
+                header.className = 'aq-section-header' + (cat.cls ? ' ' + cat.cls : '');
+                header.textContent = cat.label;
+                root.appendChild(header);
+
+                quests.forEach(q => {
+                    totalAdv++;
+                    const p = _aqProgress[q.id] || { progress: 0, claimed: false };
+                    if (p.claimed) doneAdv++;
+                    const isDone     = p.claimed;
+                    const isReady    = p.progress >= 1 && !isDone;
+                    const isSecret   = q.secret && !isDone;
+                    const displayName = isSecret ? '???' : q.name;
+                    const displayDesc = isSecret ? 'Accomplis une action cachée pour débloquer cette quête…' : q.desc;
+
+                    const item = document.createElement('div');
+                    item.className = 'aq-item' +
+                        (isDone   ? ' completed' : '') +
+                        (isReady  ? ' claimable' : '') +
+                        (isSecret ? ' secret-locked' : '');
+
+                    const pct = isDone ? 100 : (isReady ? 100 : 0);
+                    const barStyle = isDone || isReady ? 'width:100%' : 'width:0%';
+
+                    let rightHTML = '';
+                    if (isDone) {
+                        rightHTML = '<div class="aq-right"><span class="quest-status">✅</span></div>';
+                    } else if (isReady) {
+                        rightHTML = `<div class="aq-right"><button class="aq-claim-btn" onclick="_aqClaim('${q.id}')">Réclamer</button></div>`;
+                    } else {
+                        rightHTML = `<div class="aq-right"><span class="aq-reward">+${q.reward.toLocaleString()} 💰</span></div>`;
+                    }
+
+                    item.innerHTML = `
+                        <div class="aq-icon">${q.icon}</div>
+                        <div class="aq-info">
+                            <div class="aq-name">${displayName}</div>
+                            <div class="aq-desc${isSecret ? ' secret' : ''}">${displayDesc}</div>
+                            <div class="aq-bar-wrap"><div class="aq-bar" style="${barStyle}"></div></div>
+                            <div class="aq-progress-text">${isDone ? '✅ Complétée' : isReady ? '✅ Prête à réclamer !' : '🔄 En cours…'}${!isDone ? ' — +' + q.reward.toLocaleString() + ' 💰' : ''}</div>
+                        </div>
+                        ${rightHTML}
+                    `;
+                    root.appendChild(item);
+                });
+            });
+
+            container.appendChild(root);
+
+            // Mettre à jour le sous-titre
+            const sub = document.getElementById('questSubtitle');
+            if (sub) {
+                const baseSub = sub.textContent.replace(/ \| ⚡.*$/, '');
+                sub.textContent = baseSub + ' | ⚡ ' + doneAdv + '/' + totalAdv + ' avancées';
+            }
+        }
+
+        // ─── Réclamer une quête avancée ───────────────────────────────────────
+        function _aqClaim(questId) {
+            const q = ADVANCED_QUESTS.find(x => x.id === questId);
+            if (!q) return;
+            const p = _aqProgress[questId];
+            if (!p || p.claimed || p.progress < 1) return;
+            p.claimed = true;
+            stats.totalGold += q.reward;
+            document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
+            const sg = document.getElementById('shopGoldDisplay');
+            if (sg) sg.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
+            autoSave();
+            showQuestNotif('🏆 ' + q.name + ' — +' + q.reward.toLocaleString() + ' 💰');
+            _aqUpdateBadge();
+            _aqRenderSection();
+        }
+
         function adminStatus(msg) {
             const el = document.getElementById('adminStatusMsg');
             if (!el) return;
@@ -11881,6 +12623,8 @@
         // Init Firebase au chargement
         window.addEventListener('load', () => {
             initFirebase();
+            // Initialiser les quêtes avancées
+            if (typeof _aqInit === 'function') _aqInit();
             _schedStartChecker();
             initPseudoModal();
             const inp = document.getElementById('pseudoModalInput');
@@ -13042,7 +13786,7 @@
                     '</div>' +
                     '<div class="craft-adm-row">' +
                         _buildCardSelect('cr_key_' + ri, resKey, 'flex:1;') +
-                        '<select id="cr_mut_' + ri + '" class="craft-adm-input" style="font-size:0.72em;background:#0a0015;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;padding:3px 5px;"><option value="none">— Mut.</option><option value="gold">✨ Gold</option><option value="diamond">💎 Dia.</option><option value="rainbow">🌈 Rain.</option></select>' +
+                        '<select id="cr_mut_' + ri + '" class="craft-adm-input" style="font-size:0.72em;background:#0a0015;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;padding:3px 5px;"><option value="none">— Mut.</option><option value="gold">✨ Gold</option><option value="diamond">💎 Dia.</option><option value="rainbow">🌈 Rain.</option><option value="chocolate">💩 Caca.</option></select>' +
                     '</div>' +
                     '<div style="color:#555;font-size:0.65em;font-weight:900;letter-spacing:2px;margin:8px 0 4px;">INGRÉDIENTS</div>';
 
@@ -13051,7 +13795,7 @@
                     html +=
                         '<div class="craft-adm-row">' +
                             _buildCardSelect('ci_key_' + ri + '_' + ii, ingKey, 'flex:1;') +
-                            '<select id="ci_mut_' + ri + '_' + ii + '" class="craft-adm-input" style="font-size:0.72em;background:#0a0015;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;padding:3px 5px;"><option value="none">— Mut.</option><option value="gold">✨ Gold</option><option value="diamond">💎 Dia.</option><option value="rainbow">🌈 Rain.</option></select>' +
+                            '<select id="ci_mut_' + ri + '_' + ii + '" class="craft-adm-input" style="font-size:0.72em;background:#0a0015;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;padding:3px 5px;"><option value="none">— Mut.</option><option value="gold">✨ Gold</option><option value="diamond">💎 Dia.</option><option value="rainbow">🌈 Rain.</option><option value="chocolate">💩 Caca.</option></select>' +
                             '<input id="ci_qty_' + ri + '_' + ii + '" class="craft-adm-input" type="number" min="1" value="' + (ing.qty||1) + '" style="width:42px;text-align:center;" placeholder="Qté">' +
                             '<button onclick="craftAdminRemoveIng(' + ri + ',' + ii + ')" style="background:none;border:none;color:rgba(231,76,60,0.6);cursor:pointer;font-size:1em;">✕</button>' +
                         '</div>';
@@ -13882,6 +14626,14 @@
         }
 
     </script>
+
+    <!-- Toast Quêtes Avancées -->
+    <div class="aq-toast" id="aqToast">
+        <div class="aq-toast-title" id="aqToastTitle">🏆 QUÊTE AVANCÉE</div>
+        <div class="aq-toast-body"  id="aqToastBody"></div>
+        <div class="aq-toast-reward" id="aqToastReward"></div>
+    </div>
+
 
 
 
