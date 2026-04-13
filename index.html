@@ -3148,6 +3148,80 @@
         .admin-rarity-pill.active { border-color:#ff0040; color:#fff; background:rgba(255,0,64,0.2); }
         .global-luck-banner { position:fixed; top:0; left:0; width:100%; z-index:100000; padding:7px 20px; text-align:center; font-weight:900; font-size:0.95em; letter-spacing:3px; display:none; animation:luckBannerIn 0.5s ease; }
         .global-luck-banner.show { display:block; }
+
+        /* ── Boost Mutation x2 badge ── */
+        .mut-boost-badge {
+            display: none;
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 9800;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 26px;
+            border-radius: 60px;
+            font-family: 'Arial Black', Arial, sans-serif;
+            font-weight: 900;
+            font-size: 1.15em;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #1a003a, #3d008a, #1a003a);
+            background-size: 200% 200%;
+            border: 3px solid rgba(224,64,251,0.85);
+            box-shadow: 0 6px 30px rgba(150,60,255,0.7), 0 0 0 0 rgba(150,60,255,0.4);
+            animation: mutBoostPulse 1.4s infinite;
+            cursor: default;
+        }
+        .mut-boost-badge.show { display: flex; }
+        .mut-boost-badge .mbb-emoji { font-size: 1.8em; }
+        .mut-boost-badge .mbb-label { color: #e8c0ff; font-size: 0.8em; font-weight: 900; letter-spacing: 1px; }
+        .mut-boost-badge .mbb-x2 { color: #f800ff; font-size: 1.6em; text-shadow: 0 0 16px rgba(248,0,255,1), 0 0 4px #fff; }
+        .mut-boost-badge .mbb-timer { color: #d0aaff; font-size: 0.85em; font-weight: 700; background: rgba(0,0,0,0.3); padding: 3px 10px; border-radius: 20px; }
+        @keyframes mutBoostPulse {
+            0%,100% { box-shadow: 0 6px 30px rgba(150,60,255,0.7); background-position: 0% 50%; }
+            50%      { box-shadow: 0 6px 45px rgba(224,64,251,1), 0 0 0 8px rgba(150,60,255,0.15); background-position: 100% 50%; }
+        }
+
+        /* ── Shop Discount (in-shop display only — no top banner) ── */
+        .shop-discount-tag {
+            display: inline-block;
+            background: linear-gradient(90deg, #00cc66, #00aa44);
+            color: #fff;
+            font-size: 0.68em;
+            font-weight: 900;
+            padding: 2px 7px;
+            border-radius: 8px;
+            letter-spacing: 1px;
+        }
+        .shop-price-original {
+            text-decoration: line-through;
+            color: rgba(255,255,255,0.45);
+            font-size: 0.72em;
+            font-weight: 700;
+            line-height: 1;
+        }
+        /* Quand réduction active : bouton en colonne pour tout faire tenir */
+        .shop-item-buy-btn.discounted {
+            flex-direction: column;
+            gap: 2px;
+            padding: 7px 12px;
+            font-size: 0.9em;
+            line-height: 1.2;
+        }
+        /* Timer de réduction dans la boutique */
+        #shopDiscountTimer {
+            display: none;
+            text-align: center;
+            font-size: 0.78em;
+            font-weight: 900;
+            color: #00cc66;
+            letter-spacing: 1px;
+            margin-top: 6px;
+            padding: 5px 12px;
+            background: rgba(0,204,102,0.1);
+            border: 1px solid rgba(0,204,102,0.3);
+            border-radius: 10px;
+        }
+        #shopDiscountTimer.show { display: block; }
         @keyframes luckBannerIn { from{transform:translateY(-100%)} to{transform:translateY(0)} }
         .global-luck-banner.lx2  { background:linear-gradient(90deg,#1a5a1a,#2ecc71,#1a5a1a); color:#fff; box-shadow:0 4px 20px rgba(46,204,113,0.5); }
         .global-luck-banner.lx4  { background:linear-gradient(90deg,#0a3d6b,#3498db,#0a3d6b); color:#fff; box-shadow:0 4px 20px rgba(52,152,219,0.5); }
@@ -5180,6 +5254,16 @@
     <div class="global-luck-banner" id="globalLuckBanner"></div>
     <div class="global-luck-banner double-gold" id="doubleGoldBanner" style="display:none;top:auto;bottom:0;animation:none;"></div>
 
+    <!-- Boost Mutation x2 — badge bas-droite -->
+    <div class="mut-boost-badge" id="mutBoostBadge">
+        <span class="mbb-emoji" id="mutBoostEmoji">✨</span>
+        <span class="mbb-label" id="mutBoostLabel">GOLD</span>
+        <span class="mbb-x2">×2</span>
+        <span class="mbb-timer" id="mutBoostTimer">--:--</span>
+    </div>
+
+    <!-- Réduction Boutique : pas de bandeau, affiché dans la boutique et via broadcast -->
+
     <!-- Pop-up Admin -->
     <div class="admin-popup-overlay" id="adminPopupOverlay">
         <div class="admin-popup-box">
@@ -5634,6 +5718,24 @@
                     <button class="admin-btn" onclick="adminResetShopPrices()" style="margin-top:10px;">↺ Réinitialiser les prix</button>
                 </div>
 
+                <!-- RÉDUCTION BOUTIQUE -->
+                <div class="admin-section" style="border-color:rgba(0,204,102,0.4);background:rgba(0,204,102,0.03);margin-top:10px;">
+                    <div class="admin-section-title" style="color:#00cc66;">🏷️ Réduction Globale Boutique</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:12px;">Applique une réduction sur tous les prix de la boutique. S'additionne au système de prix existant.</div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+                        <span style="color:#aaa;font-size:0.78em;white-space:nowrap;">Réduction :</span>
+                        <input id="adminShopDiscountPct" class="admin-input" type="number" value="20" min="1" max="90" style="width:70px;padding:6px 8px;font-size:0.9em;text-align:center;">
+                        <span style="color:#00cc66;font-size:0.82em;">%</span>
+                        <input id="adminShopDiscountDuration" class="admin-input" type="number" value="300" min="10" style="width:80px;padding:6px 8px;font-size:0.82em;text-align:center;" placeholder="sec">
+                        <span style="color:#888;font-size:0.72em;">secondes</span>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="admin-btn" onclick="adminActivateShopDiscount()" style="background:linear-gradient(180deg,#006622,#003311);box-shadow:0 4px 0 #001a09;border:2px solid rgba(0,204,102,0.5);">🏷️ Activer la réduction</button>
+                        <button class="admin-btn" onclick="adminDeactivateShopDiscount()" style="background:linear-gradient(180deg,#3a0a0a,#1a0505);box-shadow:0 4px 0 #0a0000;border:2px solid rgba(231,76,60,0.4);color:#e74c3c;">⏹ OFF</button>
+                    </div>
+                    <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminShopDiscountStatus"></div>
+                </div>
+
             </div>
 
             <!-- ONGLET MUTATIONS -->
@@ -5693,6 +5795,28 @@
 
                     <button class="admin-btn" onclick="adminSaveMutationRates()" style="background:linear-gradient(180deg,#b8860b,#7a5800);box-shadow:0 4px 0 #3a2800;border:2px solid rgba(255,215,0,0.4);margin-top:4px;">💾 Sauvegarder les taux</button>
                     <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminMutationStatus"></div>
+                </div>
+
+                <!-- BOOST x2 MUTATION -->
+                <div class="admin-section" style="border-color:rgba(180,80,255,0.4);background:rgba(180,80,255,0.03);margin-top:10px;">
+                    <div class="admin-section-title" style="color:#cc44ff;">⚡ Boost ×2 Mutation</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:12px;">Double le taux de drop d'une mutation pour tous les joueurs (coffres, boutique, incubateur).</div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+                        <span style="color:#aaa;font-size:0.78em;white-space:nowrap;">Mutation :</span>
+                        <select id="adminMutBoostSelect" class="admin-input" style="padding:6px 8px;font-size:0.82em;background:#0a0015;color:#fff;border:1px solid rgba(180,80,255,0.3);border-radius:8px;">
+                            <option value="gold">✨ GOLD</option>
+                            <option value="diamond">💎 DIAMANT</option>
+                            <option value="rainbow">🌈 RAINBOW</option>
+                            <option value="chocolate">💩 CACA</option>
+                        </select>
+                        <input id="adminMutBoostDuration" class="admin-input" type="number" value="300" min="10" style="width:80px;padding:6px 8px;font-size:0.82em;text-align:center;" placeholder="sec">
+                        <span style="color:#888;font-size:0.72em;">secondes</span>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="admin-btn" onclick="adminActivateMutBoost()" style="background:linear-gradient(180deg,#6600cc,#33006a);box-shadow:0 4px 0 #1a0035;border:2px solid rgba(180,80,255,0.5);">⚡ Activer ×2</button>
+                        <button class="admin-btn" onclick="adminDeactivateMutBoost()" style="background:linear-gradient(180deg,#3a0a0a,#1a0505);box-shadow:0 4px 0 #0a0000;border:2px solid rgba(231,76,60,0.4);color:#e74c3c;">⏹ OFF</button>
+                    </div>
+                    <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminMutBoostStatus"></div>
                 </div>
 
             </div>
@@ -5878,6 +6002,7 @@
                 <div class="shop-gold" id="shopGoldDisplay">💰 0 Or</div>
             </div>
             <div class="shop-items">
+                <div id="shopDiscountTimer"></div>
                 <div class="shop-item common" onclick="buyCard('common')">
                     <div class="shop-item-inner">
                         <div class="shop-item-rarity-bar"></div>
@@ -6762,16 +6887,17 @@
                         else if (_forcedMut === 'chocolate') { r.isChocolate = true; r.isNewChocolate = !unlockedChocolateCards.has(cardKey); }
                     } else {
                         const roll = Math.random();
-                        if (roll < window._mutationRates.rainbow) {
+                        const _rR = _getMutRate('rainbow'), _rD = _getMutRate('diamond'), _rG = _getMutRate('gold'), _rC = _getMutRate('chocolate');
+                        if (roll < _rR) {
                             r.isRainbow = true;
                             r.isNewRainbow = !unlockedRainbowCards.has(cardKey);
-                        } else if (roll < window._mutationRates.rainbow + window._mutationRates.diamond) {
+                        } else if (roll < _rR + _rD) {
                             r.isDiamond = true;
                             r.isNewDiamond = !unlockedDiamondCards.has(cardKey);
-                        } else if (roll < window._mutationRates.rainbow + window._mutationRates.diamond + window._mutationRates.gold) {
+                        } else if (roll < _rR + _rD + _rG) {
                             r.isGold = true;
                             r.isNewGold = !unlockedGoldCards.has(cardKey);
-                        } else if (roll < window._mutationRates.rainbow + window._mutationRates.diamond + window._mutationRates.gold + window._mutationRates.chocolate) {
+                        } else if (roll < _rR + _rD + _rG + _rC) {
                             r.isChocolate = true;
                             r.isNewChocolate = !unlockedChocolateCards.has(cardKey);
                         }
@@ -7347,7 +7473,7 @@
             if (_cards.length > 0 && _cards.every(c => _banned.has(rarity + '|' + c.name))) {
                 playSound('error'); return;
             }
-            const price = shopPrices[rarity];
+            const price = _getEffectiveShopPrice(shopPrices[rarity]);
             if (stats.totalGold < price) {
                 playSound('error');
                 alert('❌ Pas assez d\'or ! Il te faut ' + price.toLocaleString() + ' or.');
@@ -7369,22 +7495,23 @@
             let isChocolate = false;
             let isNewChocolate = false;
             const _roll = Math.random();
-            if (_roll < window._mutationRates.rainbow) {
+            const _bR = _getMutRate('rainbow'), _bD = _getMutRate('diamond'), _bG = _getMutRate('gold'), _bC = _getMutRate('chocolate');
+            if (_roll < _bR) {
                 isRainbow = true;
                 isNewRainbow = !unlockedRainbowCards.has(cardKey);
                 if (isNewRainbow) { unlockedRainbowCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, rarity); }
                 unlockedRainbowCards.set(cardKey, unlockedRainbowCards.get(cardKey) + 1);
-            } else if (_roll < window._mutationRates.rainbow + window._mutationRates.diamond) {
+            } else if (_roll < _bR + _bD) {
                 isDiamond = true;
                 isNewDiamond = !unlockedDiamondCards.has(cardKey);
                 if (isNewDiamond) { unlockedDiamondCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, rarity); }
                 unlockedDiamondCards.set(cardKey, unlockedDiamondCards.get(cardKey) + 1);
-            } else if (_roll < window._mutationRates.rainbow + window._mutationRates.diamond + window._mutationRates.gold) {
+            } else if (_roll < _bR + _bD + _bG) {
                 isGold = true;
                 isNewGold = !unlockedGoldCards.has(cardKey);
                 if (isNewGold) { unlockedGoldCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, rarity); }
                 unlockedGoldCards.set(cardKey, unlockedGoldCards.get(cardKey) + 1);
-            } else if (_roll < window._mutationRates.rainbow + window._mutationRates.diamond + window._mutationRates.gold + window._mutationRates.chocolate) {
+            } else if (_roll < _bR + _bD + _bG + _bC) {
                 isChocolate = true;
                 isNewChocolate = !unlockedChocolateCards.has(cardKey);
                 if (isNewChocolate) { unlockedChocolateCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, rarity); }
@@ -8871,6 +8998,8 @@
                         if (el) el.textContent = '💰 ' + Number(price).toLocaleString();
                     }
                 });
+                // Réappliquer la réduction si active
+                if (typeof _updateShopPriceDisplays === 'function') _updateShopPriceDisplays();
             });
         }
 
@@ -9092,6 +9221,40 @@
                 const d = snap.val();
                 if (!d || !d.ts) return;
                 showRareAlert(d.pseudo, d.cardName, d.rarity, d.mutation, d.ts);
+            });
+
+            // Boost ×2 Mutation
+            firebaseDB.ref('admin/mutBoost').on('value', snap => {
+                const d = snap.val();
+                if (!d || !d.active) { _applyMutBoost(null, 0); return; }
+                let expiry = 0;
+                if (d.durationMs) {
+                    if (d.ts && typeof d.ts === 'number') {
+                        const elapsed = Date.now() - d.ts;
+                        const remaining = d.durationMs - Math.max(0, elapsed);
+                        expiry = remaining > 0 ? Date.now() + remaining : 0;
+                    } else {
+                        expiry = Date.now() + d.durationMs;
+                    }
+                }
+                _applyMutBoost(d.mut || null, expiry);
+            });
+
+            // Réduction Boutique
+            firebaseDB.ref('admin/shopDiscount').on('value', snap => {
+                const d = snap.val();
+                if (!d || !d.active) { _applyShopDiscount(0, 0); return; }
+                let expiry = 0;
+                if (d.durationMs) {
+                    if (d.ts && typeof d.ts === 'number') {
+                        const elapsed = Date.now() - d.ts;
+                        const remaining = d.durationMs - Math.max(0, elapsed);
+                        expiry = remaining > 0 ? Date.now() + remaining : 0;
+                    } else {
+                        expiry = Date.now() + d.durationMs;
+                    }
+                }
+                _applyShopDiscount(d.pct || 0, expiry);
             });
 
             } // fin bloc _globalListenersAttached
@@ -9342,6 +9505,200 @@
             }
             updateDGBanner();
             globalDoubleGoldInterval = setInterval(updateDGBanner, 1000);
+        }
+
+        // ════════════════════════════════════════════════
+        // BOOST ×2 MUTATION
+        // ════════════════════════════════════════════════
+        window._mutBoostActive = false;
+        window._mutBoostMut    = null;   // 'gold' | 'diamond' | 'rainbow' | 'chocolate'
+        window._mutBoostExpiry = 0;
+        let _mutBoostInterval  = null;
+
+        const _MUT_BOOST_META = {
+            gold:      { emoji: '✨', label: 'GOLD',    color: '#ffd700' },
+            diamond:   { emoji: '💎', label: 'DIAMANT', color: '#00bfff' },
+            rainbow:   { emoji: '🌈', label: 'RAINBOW', color: '#cc44ff' },
+            chocolate: { emoji: '💩', label: 'CACA',    color: '#D2691E' },
+        };
+
+        function _applyMutBoost(mut, expiry) {
+            if (_mutBoostInterval) { clearInterval(_mutBoostInterval); _mutBoostInterval = null; }
+            const badge = document.getElementById('mutBoostBadge');
+            if (!mut || !expiry || expiry <= Date.now()) {
+                window._mutBoostActive = false;
+                window._mutBoostMut    = null;
+                window._mutBoostExpiry = 0;
+                if (badge) badge.classList.remove('show');
+                return;
+            }
+            window._mutBoostActive = true;
+            window._mutBoostMut    = mut;
+            window._mutBoostExpiry = expiry;
+            const meta = _MUT_BOOST_META[mut] || { emoji: '⚡', label: mut.toUpperCase(), color: '#e040fb' };
+            if (badge) {
+                const emojiEl = document.getElementById('mutBoostEmoji');
+                const labelEl = document.getElementById('mutBoostLabel');
+                const timerEl = document.getElementById('mutBoostTimer');
+                if (emojiEl) emojiEl.textContent = meta.emoji;
+                if (labelEl) { labelEl.textContent = meta.label; labelEl.style.color = meta.color; }
+                badge.classList.add('show');
+                function _updateMutBadge() {
+                    const rem = Math.max(0, Math.ceil((window._mutBoostExpiry - Date.now()) / 1000));
+                    if (rem <= 0) {
+                        window._mutBoostActive = false;
+                        window._mutBoostMut    = null;
+                        window._mutBoostExpiry = 0;
+                        badge.classList.remove('show');
+                        clearInterval(_mutBoostInterval);
+                        _mutBoostInterval = null;
+                        return;
+                    }
+                    const m = String(Math.floor(rem/60)).padStart(2,'0');
+                    const s = String(rem%60).padStart(2,'0');
+                    if (timerEl) timerEl.textContent = m + ':' + s;
+                }
+                _updateMutBadge();
+                _mutBoostInterval = setInterval(_updateMutBadge, 1000);
+            }
+        }
+
+        // Hook : appliquer le boost ×2 sur un taux de mutation
+        // Retourne le taux effectif (normal ou doublé si boost actif)
+        function _getMutRate(mutName) {
+            const base = window._mutationRates[mutName] || 0;
+            if (window._mutBoostActive && window._mutBoostMut === mutName && window._mutBoostExpiry > Date.now()) {
+                return Math.min(base * 2, 1);
+            }
+            return base;
+        }
+
+        function adminActivateMutBoost() {
+            if (!firebaseDB) { _adminMutBoostStatus('⚠️ Firebase non connecté'); return; }
+            const mut = document.getElementById('adminMutBoostSelect').value;
+            const sec = parseInt(document.getElementById('adminMutBoostDuration').value) || 300;
+            const durationMs = sec * 1000;
+            firebaseDB.ref('admin/mutBoost').set({ active: true, mut, durationMs, ts: Date.now() })
+                .then(() => { _adminMutBoostStatus('✅ Boost ×2 ' + (mut.toUpperCase()) + ' activé — ' + sec + 's'); })
+                .catch(e => _adminMutBoostStatus('Erreur : ' + e.message));
+        }
+        function adminDeactivateMutBoost() {
+            if (!firebaseDB) { _adminMutBoostStatus('⚠️ Firebase non connecté'); return; }
+            firebaseDB.ref('admin/mutBoost').set({ active: false, mut: null, durationMs: 0, ts: 0 })
+                .then(() => { _adminMutBoostStatus('✅ Boost désactivé'); })
+                .catch(e => _adminMutBoostStatus('Erreur : ' + e.message));
+        }
+        function _adminMutBoostStatus(msg) {
+            const el = document.getElementById('adminMutBoostStatus');
+            if (!el) return;
+            el.textContent = msg;
+            clearTimeout(el._t);
+            el._t = setTimeout(() => { el.textContent = ''; }, 4000);
+        }
+
+        // ════════════════════════════════════════════════
+        // RÉDUCTION BOUTIQUE
+        // ════════════════════════════════════════════════
+        window._shopDiscountPct    = 0;    // 0–90
+        window._shopDiscountExpiry = 0;
+        let _shopDiscountInterval  = null;
+
+        function _applyShopDiscount(pct, expiry) {
+            if (_shopDiscountInterval) { clearInterval(_shopDiscountInterval); _shopDiscountInterval = null; }
+            if (!pct || !expiry || expiry <= Date.now()) {
+                window._shopDiscountPct    = 0;
+                window._shopDiscountExpiry = 0;
+                _updateShopPriceDisplays();
+                const t = document.getElementById('shopDiscountTimer');
+                if (t) t.classList.remove('show');
+                return;
+            }
+            window._shopDiscountPct    = pct;
+            window._shopDiscountExpiry = expiry;
+
+            // Broadcast avec la durée totale restante
+            const totalSec = Math.ceil((expiry - Date.now()) / 1000);
+            const mm = Math.floor(totalSec / 60), ss = totalSec % 60;
+            const durStr = mm > 0 ? mm + 'min' + (ss > 0 ? ss + 's' : '') : ss + 's';
+            showBroadcast('🏷️ SOLDES ! -' + pct + '% sur toute la boutique pendant ' + durStr + ' !', Date.now());
+
+            // Mettre à jour les prix affichés
+            _updateShopPriceDisplays();
+
+            // Timer visible dans la boutique + expiration
+            function _tickDiscount() {
+                const rem = Math.max(0, Math.ceil((window._shopDiscountExpiry - Date.now()) / 1000));
+                const t = document.getElementById('shopDiscountTimer');
+                if (rem <= 0) {
+                    window._shopDiscountPct    = 0;
+                    window._shopDiscountExpiry = 0;
+                    clearInterval(_shopDiscountInterval);
+                    _shopDiscountInterval = null;
+                    _updateShopPriceDisplays();
+                    if (t) t.classList.remove('show');
+                    return;
+                }
+                if (t) {
+                    const m = String(Math.floor(rem / 60)).padStart(2, '0');
+                    const s = String(rem % 60).padStart(2, '0');
+                    t.textContent = '🏷️ -' + pct + '% — ' + m + ':' + s + ' restantes';
+                    t.classList.add('show');
+                }
+            }
+            _tickDiscount();
+            _shopDiscountInterval = setInterval(_tickDiscount, 1000);
+        }
+
+        // Met à jour l'affichage des prix dans la boutique selon la réduction active
+        function _updateShopPriceDisplays() {
+            const pct    = window._shopDiscountPct || 0;
+            const active = pct > 0 && window._shopDiscountExpiry > Date.now();
+            Object.keys(shopPrices).forEach(rarity => {
+                const base = shopPrices[rarity];
+                const el   = document.getElementById('shopPrice_' + rarity);
+                if (!el) return;
+                if (active) {
+                    const discounted = Math.max(1, Math.floor(base * (1 - pct / 100)));
+                    el.classList.add('discounted');
+                    el.innerHTML =
+                        '<span class="shop-price-original">💰 ' + base.toLocaleString() + '</span>' +
+                        '<span><span class="shop-discount-tag">-' + pct + '%</span> 💰 ' + discounted.toLocaleString() + '</span>';
+                } else {
+                    el.classList.remove('discounted');
+                    el.textContent = '💰 ' + base.toLocaleString();
+                }
+            });
+        }
+
+        // Retourne le prix effectif après réduction
+        function _getEffectiveShopPrice(basePrice) {
+            if (window._shopDiscountPct > 0 && window._shopDiscountExpiry > Date.now()) {
+                return Math.max(1, Math.floor(basePrice * (1 - window._shopDiscountPct / 100)));
+            }
+            return basePrice;
+        }
+
+        function adminActivateShopDiscount() {
+            if (!firebaseDB) { _adminShopDiscountStatus('⚠️ Firebase non connecté'); return; }
+            const pct = parseInt(document.getElementById('adminShopDiscountPct').value) || 20;
+            const sec = parseInt(document.getElementById('adminShopDiscountDuration').value) || 300;
+            if (pct < 1 || pct > 90) { _adminShopDiscountStatus('⚠️ Réduction entre 1 et 90%'); return; }
+            firebaseDB.ref('admin/shopDiscount').set({ active: true, pct, durationMs: sec * 1000, ts: Date.now() })
+                .then(() => { _adminShopDiscountStatus('✅ Réduction -' + pct + '% activée — ' + sec + 's'); })
+                .catch(e => _adminShopDiscountStatus('Erreur : ' + e.message));
+        }
+        function adminDeactivateShopDiscount() {
+            if (!firebaseDB) { _adminShopDiscountStatus('⚠️ Firebase non connecté'); return; }
+            firebaseDB.ref('admin/shopDiscount').set({ active: false, pct: 0, durationMs: 0, ts: 0 })
+                .then(() => { _adminShopDiscountStatus('✅ Réduction désactivée'); })
+                .catch(e => _adminShopDiscountStatus('Erreur : ' + e.message));
+        }
+        function _adminShopDiscountStatus(msg) {
+            const el = document.getElementById('adminShopDiscountStatus');
+            if (!el) return;
+            el.textContent = msg;
+            clearTimeout(el._t);
+            el._t = setTimeout(() => { el.textContent = ''; }, 4000);
         }
 
         // ── ADMIN PANEL ─────────────────────────────────
@@ -13194,18 +13551,18 @@
             if (sgEl) sgEl.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
             autoSave();
 
-            // Tirage — utilise les mêmes taux que _mutationRates (dynamiques admin)
-            const rates  = window._mutationRates || { gold: 0.10, diamond: 0.075, rainbow: 0.01, chocolate: 0.067 };
+            // Tirage — utilise les taux effectifs (avec boost ×2 si actif)
+            const _iR = _getMutRate('rainbow'), _iD = _getMutRate('diamond'), _iC = _getMutRate('chocolate'), _iG = _getMutRate('gold');
             const roll   = Math.random();
             let mutation = null; // null = aucune mutation
 
-            if (roll < rates.rainbow) {
+            if (roll < _iR) {
                 mutation = 'rainbow';
-            } else if (roll < rates.rainbow + rates.diamond) {
+            } else if (roll < _iR + _iD) {
                 mutation = 'diamond';
-            } else if (roll < rates.rainbow + rates.diamond + rates.chocolate) {
+            } else if (roll < _iR + _iD + _iC) {
                 mutation = 'chocolate';
-            } else if (roll < rates.rainbow + rates.diamond + rates.chocolate + rates.gold) {
+            } else if (roll < _iR + _iD + _iC + _iG) {
                 mutation = 'gold';
             }
 
@@ -14087,7 +14444,7 @@
             Object.entries(shopPrices).forEach(function(entry) {
                 const rarity = entry[0], price = entry[1];
                 if (!RARITY_LABELS[rarity]) return;
-                const discounted = Math.floor(price * 10 * 0.8);
+                const discounted = Math.floor(_getEffectiveShopPrice(price) * 10 * 0.8);
                 const normal = price * 10;
                 const row = document.createElement('div');
                 row.dataset.rarity = rarity;
@@ -14116,7 +14473,7 @@
             if (!_buyTenSelected) { errEl.textContent = 'Sélectionne une rareté !'; return; }
             const price = shopPrices[_buyTenSelected];
             if (!price) return;
-            const total = Math.floor(price * 10 * 0.8);
+            const total = Math.floor(_getEffectiveShopPrice(price) * 10 * 0.8);
             if (stats.totalGold < total) {
                 playSound('error');
                 errEl.textContent = "Pas assez d'or ! Il te faut " + total.toLocaleString() + ' 💰';
@@ -14127,7 +14484,7 @@
             for (let i = 0; i < 10; i++) {
                 const card = getRandomCard(_buyTenSelected);
                 const cardKey = _buyTenSelected + '|' + card.name;
-                // Mutations : chance configurable par l'admin (tiré AVANT l'ajout normal)
+                // Mutations : chance configurable par l'admin + boost ×2 si actif
                 let isGold = false;
                 let isNewGold = false;
                 let isDiamond = false;
@@ -14137,22 +14494,23 @@
                 let isChocolate = false;
                 let isNewChocolate = false;
                 const _roll10 = Math.random();
-                if (_roll10 < window._mutationRates.rainbow) {
+                const _tR = _getMutRate('rainbow'), _tD = _getMutRate('diamond'), _tG = _getMutRate('gold'), _tC = _getMutRate('chocolate');
+                if (_roll10 < _tR) {
                     isRainbow = true;
                     isNewRainbow = !unlockedRainbowCards.has(cardKey);
                     if (isNewRainbow) { unlockedRainbowCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, _buyTenSelected); }
                     unlockedRainbowCards.set(cardKey, unlockedRainbowCards.get(cardKey) + 1);
-                } else if (_roll10 < window._mutationRates.rainbow + window._mutationRates.diamond) {
+                } else if (_roll10 < _tR + _tD) {
                     isDiamond = true;
                     isNewDiamond = !unlockedDiamondCards.has(cardKey);
                     if (isNewDiamond) { unlockedDiamondCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, _buyTenSelected); }
                     unlockedDiamondCards.set(cardKey, unlockedDiamondCards.get(cardKey) + 1);
-                } else if (_roll10 < window._mutationRates.rainbow + window._mutationRates.diamond + window._mutationRates.gold) {
+                } else if (_roll10 < _tR + _tD + _tG) {
                     isGold = true;
                     isNewGold = !unlockedGoldCards.has(cardKey);
                     if (isNewGold) { unlockedGoldCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, _buyTenSelected); }
                     unlockedGoldCards.set(cardKey, unlockedGoldCards.get(cardKey) + 1);
-                } else if (_roll10 < window._mutationRates.rainbow + window._mutationRates.diamond + window._mutationRates.gold + window._mutationRates.chocolate) {
+                } else if (_roll10 < _tR + _tD + _tG + _tC) {
                     isChocolate = true;
                     isNewChocolate = !unlockedChocolateCards.has(cardKey);
                     if (isNewChocolate) { unlockedChocolateCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, _buyTenSelected); }
