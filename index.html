@@ -8737,7 +8737,7 @@
             // Afficher le gain total + le prochain gain pour motiver
             const _quizStreakTable = [0, 500, 800, 1200, 1700, 2300, 3000, 3800, 4700, 5700, 7000, 8500, 10000, 12000, 14000, 16000, 18000, 20000, 22000, 24000, 26000, 28000, 30000, 32000, 34000, 36000, 38000, 40000, 42000, 44000, 46000, 48000, 50000];
             // Modifier ici les gains du quiz silhouette si besoin (table de base)
-            const _silMult2 = currentQuizMode === 'silhouette' ? 2 : 1; // même SILHOUETTE_MULTIPLIER
+            const _silMult2 = currentQuizMode === 'silhouette' ? 1.5 : 1; // même SILHOUETTE_MULTIPLIER
             const nextGain = _quizStreakTable[Math.min(quizStreak + 1, _quizStreakTable.length - 1)] * _silMult2;
             document.getElementById('quizGainDisplay').textContent = quizGold.toLocaleString() + ' (+' + nextGain.toLocaleString() + ')';
         }
