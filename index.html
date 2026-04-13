@@ -3196,6 +3196,63 @@
         }
 
         /* ── Shop Discount (in-shop display only — no top banner) ── */
+
+        /* ═══ BANNIÈRE SOLDES BOUTIQUE ═══ */
+        #shopSaleBanner {
+            display: none;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            margin-bottom: 14px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #003311 0%, #006622 40%, #00aa44 60%, #006622 80%, #003311 100%);
+            background-size: 300% 100%;
+            border: 2px solid rgba(0, 204, 102, 0.6);
+            box-shadow: 0 0 24px rgba(0, 204, 102, 0.35), inset 0 0 20px rgba(0, 204, 102, 0.08);
+            padding: 14px 18px 12px;
+            animation: shopSaleSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both, shopSaleShimmer 3s linear infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        #shopSaleBanner.show { display: block; }
+        @keyframes shopSaleSlideIn {
+            from { opacity: 0; transform: scaleY(0.6) translateY(-10px); }
+            to   { opacity: 1; transform: scaleY(1)   translateY(0); }
+        }
+        @keyframes shopSaleShimmer {
+            0%   { background-position: 200% center; }
+            100% { background-position: -200% center; }
+        }
+        .shop-sale-pct {
+            font-size: 2.4em;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(0, 255, 100, 0.9), 0 2px 4px rgba(0,0,0,0.8);
+            line-height: 1;
+            animation: shopSalePulse 1.6s ease-in-out infinite alternate;
+        }
+        @keyframes shopSalePulse {
+            from { text-shadow: 0 0 14px rgba(0,255,100,0.6), 0 2px 4px rgba(0,0,0,0.8); }
+            to   { text-shadow: 0 0 32px rgba(0,255,140,1),   0 2px 4px rgba(0,0,0,0.8); }
+        }
+        .shop-sale-label {
+            font-size: 0.72em;
+            font-weight: 900;
+            color: rgba(255,255,255,0.85);
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+        .shop-sale-timer {
+            margin-top: 7px;
+            font-size: 0.78em;
+            font-weight: 900;
+            color: #7dffb3;
+            letter-spacing: 1.5px;
+            opacity: 0.9;
+        }
+
         .shop-discount-tag {
             display: inline-block;
             background: linear-gradient(90deg, #00cc66, #00aa44);
@@ -3222,20 +3279,6 @@
             line-height: 1.2;
         }
         /* Timer de réduction dans la boutique */
-        #shopDiscountTimer {
-            display: none;
-            text-align: center;
-            font-size: 0.78em;
-            font-weight: 900;
-            color: #00cc66;
-            letter-spacing: 1px;
-            margin-top: 6px;
-            padding: 5px 12px;
-            background: rgba(0,204,102,0.1);
-            border: 1px solid rgba(0,204,102,0.3);
-            border-radius: 10px;
-        }
-        #shopDiscountTimer.show { display: block; }
         @keyframes luckBannerIn { from{transform:translateY(-100%)} to{transform:translateY(0)} }
         .global-luck-banner.lx2  { background:linear-gradient(90deg,#1a5a1a,#2ecc71,#1a5a1a); color:#fff; box-shadow:0 4px 20px rgba(46,204,113,0.5); }
         .global-luck-banner.lx4  { background:linear-gradient(90deg,#0a3d6b,#3498db,#0a3d6b); color:#fff; box-shadow:0 4px 20px rgba(52,152,219,0.5); }
@@ -6070,8 +6113,14 @@
             <div style="text-align:center; margin-bottom: 5px;">
                 <div class="shop-gold" id="shopGoldDisplay">💰 0 Or</div>
             </div>
+            <!-- Bannière soldes prominente -->
+            <div id="shopSaleBanner">
+                <div class="shop-sale-pct" id="shopSalePct">-20%</div>
+                <div class="shop-sale-label">SUR TOUTE LA BOUTIQUE</div>
+                <div class="shop-sale-timer" id="shopSaleTimer">⏱ --:--</div>
+            </div>
+
             <div class="shop-items">
-                <div id="shopDiscountTimer"></div>
                 <div class="shop-item common" onclick="buyCard('common')">
                     <div class="shop-item-inner">
                         <div class="shop-item-rarity-bar"></div>
@@ -9770,8 +9819,8 @@
                 window._shopDiscountPct    = 0;
                 window._shopDiscountExpiry = 0;
                 _updateShopPriceDisplays();
-                const t = document.getElementById('shopDiscountTimer');
-                if (t) t.classList.remove('show');
+                const ban = document.getElementById('shopSaleBanner');
+                if (ban) ban.classList.remove('show');
                 return;
             }
             window._shopDiscountPct    = pct;
@@ -9789,21 +9838,25 @@
             // Timer visible dans la boutique + expiration
             function _tickDiscount() {
                 const rem = Math.max(0, Math.ceil((window._shopDiscountExpiry - Date.now()) / 1000));
-                const t = document.getElementById('shopDiscountTimer');
+                const ban = document.getElementById('shopSaleBanner');
+                const banPct   = document.getElementById('shopSalePct');
+                const banTimer = document.getElementById('shopSaleTimer');
                 if (rem <= 0) {
                     window._shopDiscountPct    = 0;
                     window._shopDiscountExpiry = 0;
                     clearInterval(_shopDiscountInterval);
                     _shopDiscountInterval = null;
                     _updateShopPriceDisplays();
-                    if (t) t.classList.remove('show');
+                    if (ban) ban.classList.remove('show');
                     return;
                 }
-                if (t) {
-                    const m = String(Math.floor(rem / 60)).padStart(2, '0');
-                    const s = String(rem % 60).padStart(2, '0');
-                    t.textContent = '🏷️ -' + pct + '% — ' + m + ':' + s + ' restantes';
-                    t.classList.add('show');
+                const m = String(Math.floor(rem / 60)).padStart(2, '0');
+                const s = String(rem % 60).padStart(2, '0');
+                // Bannière prominente
+                if (ban) {
+                    ban.classList.add('show');
+                    if (banPct)   banPct.textContent   = '-' + pct + '%';
+                    if (banTimer) banTimer.textContent = '⏱ ' + m + ':' + s + ' restantes';
                 }
             }
             _tickDiscount();
