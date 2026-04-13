@@ -3235,6 +3235,10 @@
         .admin-luck-btn.x100 { background:linear-gradient(180deg,#ff0040,#7a0000); color:#fff; border-color:#ff0040; font-size:1em; font-weight:900; }
         .admin-luck-btn.x100:hover { background:linear-gradient(180deg,#ff3366,#aa0020); box-shadow:0 0 20px rgba(255,0,64,0.6); }
         .admin-luck-btn.x100.active { background:linear-gradient(180deg,#ffd700,#ff6600); color:#000; border-color:#ffd700; box-shadow:0 0 25px rgba(255,215,0,0.8); }
+        .admin-luck-btn.xhalf { background:rgba(120,0,180,0.15); color:#cc66ff; border-color:rgba(180,0,255,0.4); }
+        .admin-luck-btn.xhalf:hover { background:rgba(120,0,180,0.3); border-color:#cc66ff; }
+        .admin-luck-btn.xhalf.active { background:linear-gradient(180deg,#5a0080,#2a0040); color:#ff99ff; border-color:#cc66ff; box-shadow:0 0 20px rgba(180,0,255,0.5); }
+        .global-luck-banner.lxhalf { background:linear-gradient(90deg,#2a0040,#5a0080,#2a0040); color:#cc66ff; animation:luckBannerIn 0.5s ease; }
         @keyframes luckPulse32 { 0%,100%{box-shadow:0 4px 20px rgba(255,215,0,0.7)} 50%{box-shadow:0 4px 40px rgba(255,215,0,1)} }
         .broadcast-banner { position:fixed; bottom:-400px; left:50%; transform:translateX(-50%); background:linear-gradient(145deg,#1a0535,#0a0220); border:2px solid #7a2d8b; border-radius:16px; padding:14px 28px; z-index:9500; max-width:500px; width:90%; text-align:center; color:#fff; font-size:0.92em; font-weight:700; box-shadow:0 -4px 30px rgba(155,89,182,0.5); transition:bottom 0.5s cubic-bezier(0.175,0.885,0.32,1.275); word-break:break-word; }
         .broadcast-banner.show { bottom:30px; }
@@ -5315,6 +5319,7 @@
                         <span style="color:#7dffb3;font-size:0.75em;">sec</span>
                     </div>
                     <div class="admin-luck-grid">
+                        <button class="admin-luck-btn xhalf" onclick="adminSetLuck(0.5)">🔻 ×0.5</button>
                         <button class="admin-luck-btn" onclick="adminSetLuck(2)">×2</button>
                         <button class="admin-luck-btn" onclick="adminSetLuck(4)">×4</button>
                         <button class="admin-luck-btn" onclick="adminSetLuck(8)">×8</button>
@@ -5341,6 +5346,7 @@
                         <span style="color:#7dffb3;font-size:0.75em;">sec</span>
                     </div>
                     <div class="admin-luck-grid">
+                        <button class="admin-luck-btn xhalf" onclick="adminSetLuckOne(0.5)">🔻 ×0.5</button>
                         <button class="admin-luck-btn" onclick="adminSetLuckOne(2)">×2</button>
                         <button class="admin-luck-btn" onclick="adminSetLuckOne(4)">×4</button>
                         <button class="admin-luck-btn" onclick="adminSetLuckOne(8)">×8</button>
@@ -6949,15 +6955,48 @@
             };
             
             const starFactor = (1 + (boostPercentage[starBoost] || 0));
+            // x0.5 global ou personnel — si actif, priorité absolue (malus)
+            const _isHalfGlobal   = globalLuckMultiplier === 0.5 && globalLuckExpiry - 3000 > Date.now();
+            const _isHalfPersonal = personalLuck === 0.5 && luckExpiry > Date.now();
+            const _halfActive     = _isHalfGlobal || _isHalfPersonal;
+
             const luckMult = (globalLuckMultiplier > 1 && globalLuckMultiplier < 100 && globalLuckExpiry - 3000 > Date.now()) ? globalLuckMultiplier : 1;
-            // personalLuck : 2, 4 ou 8 acheté en boutique
-            const personalMult = personalLuck > 0 ? personalLuck : 1;
+            // personalLuck : 0.5, 2, 4 ou 8 acheté/donné en boutique ou par admin
+            const personalMult = (personalLuck > 0 && personalLuck !== 0.5) ? personalLuck : 1;
 
             // Choisir le multiplicateur effectif (admin ou personnel, prendre le plus fort)
             const effectiveMult = Math.max(luckMult, personalMult);
 
             let adjustedTotal = 0;
             const adjustedRarities = {};
+
+            // ── MODE x0.5 : chance divisée par 2 + cap à Légendaire ──
+            if (_halfActive) {
+                // Raretés autorisées en x0.5 : uniquement jusqu'à legendary
+                const _halfAllowed = new Set(['common','rare','epic','legendary']);
+                for (const [rarity, probability] of Object.entries(rarities)) {
+                    if (!_halfAllowed.has(rarity)) {
+                        adjustedRarities[rarity] = 0;
+                    } else if (rarity === 'common') {
+                        // Common boosté : récupère les probabilités retirées des raretés supérieures
+                        adjustedRarities[rarity] = probability * 2; // plus de common
+                    } else {
+                        adjustedRarities[rarity] = probability * 0.5; // toutes les autres divisées /2
+                    }
+                    adjustedTotal += adjustedRarities[rarity];
+                }
+                // Normaliser
+                for (const r of Object.keys(adjustedRarities)) {
+                    adjustedRarities[r] = adjustedTotal > 0 ? adjustedRarities[r] / adjustedTotal : 0;
+                }
+                // Tirer
+                let _cum = 0;
+                for (const [rarity, probability] of Object.entries(adjustedRarities)) {
+                    _cum += probability;
+                    if (rand <= _cum) return rarity;
+                }
+                return 'common';
+            }
 
             if (effectiveMult > 1) {
                 const luckTables = {
@@ -8888,7 +8927,7 @@
                 luckExpiry   = Date.now() + remaining;
                 autoSave();
                 startLuckTimer();
-                showBroadcast('🍀 L\'admin t\'a offert la Chance ×' + d.multiplier + ' !', Date.now());
+                showBroadcast(d.multiplier === 0.5 ? '🔻 L\'admin t\'a infligé la Malchance ×0.5 !' : '🍀 L\'admin t\'a offert la Chance ×' + d.multiplier + ' !', Date.now());
                 // Consommer pour éviter la réapplication après refresh
                 firebaseDB.ref('players/' + key + '/luckGift').set(null);
             });
@@ -9366,7 +9405,9 @@
             banner.className = 'global-luck-banner';
             banner.classList.remove('show');
 
-            if (multiplier <= 1 || !expiry || expiry <= Date.now()) {
+            // multiplier=1 ou OFF (0) → désactiver. multiplier=0.5 est valide.
+            const _isInactive = (multiplier === 1 || multiplier === 0 || multiplier === undefined || !expiry || expiry <= Date.now());
+            if (_isInactive) {
                 updateAdminLuckStatus();
                 return;
             }
@@ -9374,12 +9415,15 @@
             globalLuckMultiplier = multiplier;
             globalLuckExpiry = expiry;
 
-            const lxClass = { 2:'lx2', 4:'lx4', 8:'lx8', 16:'lx16', 32:'lx32', 100:'lx100' }[multiplier] || 'lx2';
+            const _lxClassMap = { 0.5:'lxhalf', 2:'lx2', 4:'lx4', 8:'lx8', 16:'lx16', 32:'lx32', 100:'lx100' };
+            const lxClass = _lxClassMap[multiplier] || 'lx2';
             banner.classList.add('show', lxClass);
             _adjustLuckBannerPosition();
 
             // Mettre à jour le statut admin immédiatement après avoir positionné les variables
             updateAdminLuckStatus();
+
+            const _multLabel = multiplier === 0.5 ? '×0.5 (malus)' : '×' + multiplier;
 
             // Capturer l'interval ID localement pour éviter les conflits
             const intervalId = setInterval(function() {
@@ -9396,7 +9440,7 @@
                 }
                 const m = String(Math.floor(remaining / 60)).padStart(2, '0');
                 const s = String(remaining % 60).padStart(2, '0');
-                banner.textContent = '🍀 CHANCE ×' + multiplier + ' ACTIVE — ' + m + ':' + s;
+                banner.textContent = (multiplier === 0.5 ? '🔻 MALCHANCE ×0.5 ACTIVE — ' : '🍀 CHANCE ×' + multiplier + ' ACTIVE — ') + m + ':' + s;
                 updateAdminLuckStatus();
             }, 500); // 500ms pour plus de précision
             globalLuckInterval = intervalId;
@@ -9405,7 +9449,7 @@
             const rem0 = Math.max(0, Math.ceil((globalLuckExpiry - Date.now()) / 1000));
             const m0 = String(Math.floor(rem0 / 60)).padStart(2, '0');
             const s0 = String(rem0 % 60).padStart(2, '0');
-            banner.textContent = '🍀 CHANCE ×' + multiplier + ' ACTIVE — ' + m0 + ':' + s0;
+            banner.textContent = (multiplier === 0.5 ? '🔻 MALCHANCE ×0.5 ACTIVE — ' : '🍀 CHANCE ×' + multiplier + ' ACTIVE — ') + m0 + ':' + s0;
         }
 
         // ── Broadcast ───────────────────────────────────
@@ -9858,12 +9902,16 @@
         function updateAdminLuckStatus() {
             const el = document.getElementById('adminLuckStatus');
             if (!el) return;
-            if (globalLuckMultiplier > 1 && globalLuckExpiry > Date.now()) {
+            const _luckActive = (globalLuckMultiplier !== 1 && globalLuckMultiplier !== 0) && globalLuckExpiry > Date.now();
+            if (_luckActive) {
                 const remaining = Math.ceil((globalLuckExpiry - Date.now()) / 1000);
-                el.textContent = '✅ ×' + globalLuckMultiplier + ' actif — ' + remaining + 's restantes';
-                el.style.color = '#2ecc71';
+                const label = globalLuckMultiplier === 0.5 ? '🔻 ×0.5 (malus)' : '✅ ×' + globalLuckMultiplier;
+                el.textContent = label + ' actif — ' + remaining + 's restantes';
+                el.style.color = globalLuckMultiplier === 0.5 ? '#cc66ff' : '#2ecc71';
                 document.querySelectorAll('.admin-luck-btn').forEach(b => {
-                    b.classList.toggle('active', b.textContent === '×' + globalLuckMultiplier);
+                    const isHalf = b.textContent.includes('0.5') && globalLuckMultiplier === 0.5;
+                    const isMatch = b.textContent === '×' + globalLuckMultiplier;
+                    b.classList.toggle('active', isHalf || isMatch);
                 });
             } else {
                 el.textContent = 'Aucune chance globale active';
@@ -9887,7 +9935,7 @@
             const durationMs = multiplier > 0 ? totalMs : 0;
             // Utiliser le timestamp serveur Firebase pour éviter les décalages d'horloge entre appareils
             firebaseDB.ref('admin/luck').set({ multiplier, durationMs, ts: Date.now() })
-                .then(() => { adminStatus(multiplier > 0 ? '✅ Chance ×' + multiplier + ' activée pour ' + durLabel + ' !' : '✅ Chance désactivée'); })
+                .then(() => { adminStatus(multiplier > 0 ? (multiplier === 0.5 ? '✅ Malchance ×0.5 activée pour ' + durLabel + ' !' : '✅ Chance ×' + multiplier + ' activée pour ' + durLabel + ' !') : '✅ Chance désactivée'); })
                 .catch(e => adminStatus('Erreur : ' + e.message));
         }
 
@@ -12510,7 +12558,7 @@
                 name: '???',
                 desc: 'Comportement inhabituel détecté…',
                 secret: true,
-                reward: 500000
+                reward: 10000000
             },
             {
                 id: 'aq_secret_lie',
@@ -12536,7 +12584,7 @@
                 name: 'Mode Corruption',
                 desc: '???  Actions étranges détectées…',
                 secret: true,
-                reward: 777000
+                reward: 10000000
             },
         ];
 
