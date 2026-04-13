@@ -9726,7 +9726,7 @@
             if (!firebaseDB) { _adminShopDiscountStatus('⚠️ Firebase non connecté'); return; }
             const pct = parseInt(document.getElementById('adminShopDiscountPct').value) || 20;
             const sec = parseInt(document.getElementById('adminShopDiscountDuration').value) || 300;
-            if (pct < 1 || pct > 90) { _adminShopDiscountStatus('⚠️ Réduction entre 1 et 90%'); return; }
+            if (pct < 1 || pct > 99) { _adminShopDiscountStatus('⚠️ Réduction entre 1 et 99%'); return; }
             firebaseDB.ref('admin/shopDiscount').set({ active: true, pct, durationMs: sec * 1000, ts: Date.now() })
                 .then(() => { _adminShopDiscountStatus('✅ Réduction -' + pct + '% activée — ' + sec + 's'); })
                 .catch(e => _adminShopDiscountStatus('Erreur : ' + e.message));
