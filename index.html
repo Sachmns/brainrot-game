@@ -4940,6 +4940,26 @@
         .ab-log-entry.ban   { color: #ff4400; }
         .ab-log-entry.gold  { color: #ff2200; }
 
+
+        /* ── Quiz leaderboard sous-onglets ── */
+        .lb-subtabs {
+            display: flex; gap: 5px; margin-bottom: 12px; margin-top: -6px;
+        }
+        .lb-subtab {
+            flex: 1; padding: 6px 4px;
+            background: rgba(0,0,0,0.3);
+            border: 1.5px solid rgba(26,143,255,0.1);
+            border-radius: 9px;
+            color: #1a3a6a; font-size: 0.68em; font-weight: 900;
+            cursor: pointer; text-align: center;
+            transition: all 0.15s;
+            font-family: 'Arial Black', Arial, sans-serif;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .lb-subtab:hover { border-color: rgba(26,143,255,0.3); color: #5599ff; }
+        .lb-subtab.active { border-color: #1a8fff; color: #1a8fff; background: rgba(26,143,255,0.08); }
+        .lb-score-sub { color: #7db8ff; font-size: 0.68em; font-weight: 400; margin-left: 4px; }
+
         </style>
 </head>
 <body>
@@ -6206,6 +6226,12 @@
             <div class="lb-tabs">
                 <div class="lb-tab active" id="lbTabCards" onclick="lbSwitchTab('cards')">🃏 Cartes</div>
                 <div class="lb-tab" id="lbTabGold" onclick="lbSwitchTab('gold')">💰 Or</div>
+                <div class="lb-tab" id="lbTabQuiz" onclick="lbSwitchTab('quiz')">🧠 Quiz</div>
+            </div>
+            <div class="lb-subtabs" id="lbSubtabs" style="display:none;">
+                <div class="lb-subtab active" id="lbSubNom" onclick="lbSwitchSubtab('name')">🎯 Nom</div>
+                <div class="lb-subtab" id="lbSubRarity" onclick="lbSwitchSubtab('rarity')">⭐ Rareté</div>
+                <div class="lb-subtab" id="lbSubSil" onclick="lbSwitchSubtab('silhouette')">🕶️ Silhouette</div>
             </div>
             <div class="lb-list" id="lbList">
                 <div class="lb-status">Chargement…</div>
@@ -8980,6 +9006,7 @@
             if (chosen === correctAnswer) {
                 btn.classList.add('correct');
                 quizStreak++;
+                _quizCurrentStreak++;
                 // Gain progressif selon le streak : faible au début, croît doucement, plafonné
                 // ── Modifier ici les gains du quiz silhouette si besoin ──────────────
                 // _quizStreakTable définit le gain par palier de streak (index = streak atteint).
@@ -9022,6 +9049,20 @@
             // Retirer le filtre silhouette à la fin de la partie
             const _qImgEnd = document.getElementById('quizImg');
             if (_qImgEnd) { _qImgEnd.classList.remove('silhouette-mode', 'silhouette-reveal'); }
+            // ── Sauvegarde du record de streak quiz ───────────────────────
+            // _quizCurrentStreak = série réalisée dans cette partie
+            // currentQuizMode = 'name' | 'rarity' | 'silhouette'
+            if (_quizCurrentStreak > 0 && typeof currentQuizMode !== 'undefined') {
+                const mode = currentQuizMode;
+                if (mode in _quizBestStreak) {
+                    if (_quizCurrentStreak > _quizBestStreak[mode]) {
+                        _quizBestStreak[mode] = _quizCurrentStreak;
+                        // Pousser sur Firebase dans stats du joueur
+                        _quizSaveStreakToFirebase();
+                    }
+                }
+            }
+            _quizCurrentStreak = 0; // reset pour la prochaine partie
             document.getElementById('quizGameScreen').style.display = 'none';
             document.getElementById('quizResultScreen').classList.add('show');
             if (quizGold > 0) {
@@ -9046,6 +9087,7 @@
         function startQuiz(mode) {
             currentQuizMode = mode || currentQuizMode;
             quizStreak = 0; quizGold = 0; quizUsed = new Set(); quizAnswered = false;
+            _quizCurrentStreak = 0; // reset la série en cours
             // Mode silhouette : afficher/masquer le badge ×2
             const _silBadge = document.getElementById('quizSilhouetteBadge');
             if (_silBadge) _silBadge.classList.toggle('show', currentQuizMode === 'silhouette');
@@ -9344,7 +9386,8 @@
                 totalCards: stats.totalCards,
                 totalGold: stats.totalGold,
                 secretCount: stats.secretCount,
-                unlockedCards: unlocked
+                unlockedCards: unlocked,
+                quizBestStreak: _quizBestStreak
             });
             // Sync le détail des cartes pour le livre admin
             const cardsObj = {};
@@ -13816,6 +13859,32 @@
             _abRestoreSanctions();
         }
 
+
+        // ── Persistance streak quiz ──────────────────────────────────────
+        function _quizSaveStreakToFirebase() {
+            autoSave(); // sauvegarde locale
+            if (!firebaseDB) return;
+            const pseudo = localStorage.getItem('tradePseudo') || '';
+            if (!pseudo) return;
+            const key = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g,'_');
+            firebaseDB.ref('players/' + key + '/stats/quizBestStreak').set(_quizBestStreak).catch(() => {});
+        }
+
+        function _quizLoadStreakFromFirebase() {
+            if (!firebaseDB) return;
+            const pseudo = localStorage.getItem('tradePseudo') || '';
+            if (!pseudo) return;
+            const key = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g,'_');
+            firebaseDB.ref('players/' + key + '/stats/quizBestStreak').once('value').then(snap => {
+                const d = snap.val();
+                if (d) {
+                    if (typeof d.name       === 'number') _quizBestStreak.name       = Math.max(_quizBestStreak.name,       d.name);
+                    if (typeof d.rarity     === 'number') _quizBestStreak.rarity     = Math.max(_quizBestStreak.rarity,     d.rarity);
+                    if (typeof d.silhouette === 'number') _quizBestStreak.silhouette = Math.max(_quizBestStreak.silhouette, d.silhouette);
+                }
+            }).catch(() => {});
+        }
+
         function adminStatus(msg) {
             const el = document.getElementById('adminStatusMsg');
             if (!el) return;
@@ -13828,6 +13897,8 @@
         // Init Firebase au chargement
         window.addEventListener('load', () => {
             initFirebase();
+            // Charger le record quiz depuis Firebase dès que connecté
+            setTimeout(_quizLoadStreakFromFirebase, 2000);
             if (typeof _abInit === 'function') _abInit();
             // Initialiser les quêtes avancées
             if (typeof _aqInit === 'function') _aqInit();
@@ -13857,12 +13928,31 @@
         }
 
         let _lbTab = 'cards';
+        let _lbQuizSubtab = 'name';  // sous-onglet quiz actif : 'name' | 'rarity' | 'silhouette'
         let _lbEntries = [];
+
+        // ── Meilleure streak quiz par mode (local + Firebase) ────────────
+        // Structure : { name: 0, rarity: 0, silhouette: 0 }
+        let _quizBestStreak = { name: 0, rarity: 0, silhouette: 0 };
+        // Streak en cours pour le mode actif (mise à jour dans handleQuizAnswer)
+        let _quizCurrentStreak = 0;
 
         function lbSwitchTab(tab) {
             _lbTab = tab;
             document.getElementById('lbTabCards').className = 'lb-tab' + (tab === 'cards' ? ' active' : '');
             document.getElementById('lbTabGold').className  = 'lb-tab' + (tab === 'gold'  ? ' active' : '');
+            document.getElementById('lbTabQuiz').className  = 'lb-tab' + (tab === 'quiz'  ? ' active' : '');
+            // Afficher/cacher les sous-onglets quiz
+            const subtabs = document.getElementById('lbSubtabs');
+            if (subtabs) subtabs.style.display = (tab === 'quiz') ? 'flex' : 'none';
+            renderLbList();
+        }
+
+        function lbSwitchSubtab(sub) {
+            _lbQuizSubtab = sub;
+            document.getElementById('lbSubNom').className    = 'lb-subtab' + (sub === 'name'       ? ' active' : '');
+            document.getElementById('lbSubRarity').className = 'lb-subtab' + (sub === 'rarity'     ? ' active' : '');
+            document.getElementById('lbSubSil').className    = 'lb-subtab' + (sub === 'silhouette' ? ' active' : '');
             renderLbList();
         }
 
@@ -13873,9 +13963,21 @@
                 list.innerHTML = '<div class="lb-status">Aucun joueur enregistré.</div>';
                 return;
             }
-            const sorted = [..._lbEntries].sort((a, b) =>
-                _lbTab === 'gold' ? b.gold - a.gold : b.unlocked - a.unlocked
-            );
+            let sorted;
+            if (_lbTab === 'quiz') {
+                // Classement par meilleure streak quiz pour le sous-mode actif
+                sorted = [..._lbEntries]
+                    .filter(e => (e.quizBestStreak && e.quizBestStreak[_lbQuizSubtab] > 0))
+                    .sort((a, b) => (b.quizBestStreak[_lbQuizSubtab] || 0) - (a.quizBestStreak[_lbQuizSubtab] || 0));
+                if (!sorted.length) {
+                    list.innerHTML = '<div class="lb-status">Aucune série enregistrée pour ce mode.</div>';
+                    return;
+                }
+            } else {
+                sorted = [..._lbEntries].sort((a, b) =>
+                    _lbTab === 'gold' ? b.gold - a.gold : b.unlocked - a.unlocked
+                );
+            }
             list.innerHTML = '';
             sorted.forEach((e, idx) => {
                 const rank = idx + 1;
@@ -13889,6 +13991,13 @@
                         '<div class="lb-rank ' + rankClass + '">' + rankEmoji + '</div>' +
                         '<div class="lb-pseudo">' + e.pseudo + (isMe ? '<span class="lb-me-tag">⭐ TOI</span>' : '') + '</div>' +
                         '<div class="lb-score" style="color:#ffd700">' + (e.gold || 0).toLocaleString() + '<span>💰</span></div>';
+                } else if (_lbTab === 'quiz') {
+                    const streak = (e.quizBestStreak && e.quizBestStreak[_lbQuizSubtab]) || 0;
+                    const modeLabel = { name: 'nom', rarity: 'rareté', silhouette: 'silhouette' }[_lbQuizSubtab] || '';
+                    row.innerHTML =
+                        '<div class="lb-rank ' + rankClass + '">' + rankEmoji + '</div>' +
+                        '<div class="lb-pseudo">' + e.pseudo + (isMe ? '<span class="lb-me-tag">⭐ TOI</span>' : '') + '</div>' +
+                        '<div class="lb-score" style="color:#cc88ff">' + streak + '<span class="lb-score-sub">série ' + modeLabel + '</span></div>';
                 } else {
                     row.innerHTML =
                         '<div class="lb-rank ' + rankClass + '">' + rankEmoji + '</div>' +
@@ -13917,7 +14026,8 @@
                     const pseudo = d?.info?.pseudo;
                     const unlocked = d?.stats?.unlockedCards || 0;
                     const gold = d?.stats?.totalGold || 0;
-                    if (pseudo && !d.perma_banned) _lbEntries.push({ pseudo, unlocked, gold });
+                    const quizBestStreak = d?.stats?.quizBestStreak || { name: 0, rarity: 0, silhouette: 0 };
+                    if (pseudo && !d.perma_banned) _lbEntries.push({ pseudo, unlocked, gold, quizBestStreak });
                 });
                 renderLbList();
             }, err => {
