@@ -4878,6 +4878,68 @@
             box-shadow: 0 8px 30px rgba(170,50,255,0.4);
         }
 
+
+        /* ═══════════════ ANTI-ABUS — UI ═══════════════ */
+
+        /* Overlay avertissement (niveau 1) */
+        .ab-warn-overlay {
+            display: none; position: fixed; inset: 0; z-index: 999990;
+            background: rgba(0,0,0,0.88);
+            justify-content: center; align-items: center; flex-direction: column;
+            gap: 16px;
+        }
+        .ab-warn-overlay.show { display: flex; }
+        .ab-warn-icon  { font-size: 4em; animation: abWarnPulse 1s infinite; }
+        .ab-warn-title { color: #ffaa00; font-size: 1.4em; font-weight: 900; letter-spacing: 3px; text-align: center; }
+        .ab-warn-sub   { color: #664400; font-size: 0.85em; text-align: center; max-width: 340px; line-height: 1.5; }
+        .ab-warn-timer { color: #ffcc44; font-size: 1.1em; font-weight: 900; font-family: monospace; }
+        .ab-warn-btn   { padding: 12px 36px; background: linear-gradient(180deg,#aa6600,#663300); border: 2px solid #ffaa00; border-radius: 12px; color: #fff; font-size: 0.9em; font-weight: 900; cursor: pointer; margin-top: 6px; }
+        .ab-warn-btn:hover { filter: brightness(1.15); }
+        @keyframes abWarnPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+
+        /* Overlay ban temporaire (niveaux 2–3) */
+        .ab-tempban-overlay {
+            display: none; position: fixed; inset: 0; z-index: 999991;
+            background: #000;
+            justify-content: center; align-items: center; flex-direction: column;
+            gap: 14px;
+        }
+        .ab-tempban-overlay.show { display: flex; }
+        .ab-tempban-icon  { font-size: 4.5em; animation: abTempPulse 1.5s infinite; }
+        .ab-tempban-title { color: #ff4400; font-size: 1.5em; font-weight: 900; letter-spacing: 4px; text-align: center; text-shadow: 0 0 30px rgba(255,68,0,0.7); }
+        .ab-tempban-sub   { color: #440000; font-size: 0.82em; text-align: center; max-width: 340px; line-height: 1.5; }
+        .ab-tempban-timer { color: #ff6622; font-size: 1.6em; font-weight: 900; font-family: monospace; text-shadow: 0 0 20px rgba(255,100,34,0.6); }
+        .ab-tempban-level { color: #330000; font-size: 0.7em; letter-spacing: 2px; }
+        @keyframes abTempPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+        /* Toast notification légère (slowdown) */
+        .ab-toast {
+            position: fixed; bottom: 80px; left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(30,15,0,0.95); border: 1.5px solid #ffaa00;
+            border-radius: 12px; padding: 10px 20px; z-index: 99998;
+            color: #ffcc66; font-size: 0.82em; font-weight: 700; text-align: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .ab-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* Section admin anti-abus */
+        .ab-admin-log {
+            max-height: 220px; overflow-y: auto;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,100,0,0.2);
+            border-radius: 10px; padding: 8px 10px;
+            font-size: 0.68em; font-family: monospace;
+            color: #884400;
+        }
+        .ab-admin-log::-webkit-scrollbar { width: 4px; }
+        .ab-admin-log::-webkit-scrollbar-thumb { background: rgba(255,100,0,0.3); border-radius: 2px; }
+        .ab-log-entry { padding: 3px 0; border-bottom: 1px solid rgba(255,100,0,0.08); }
+        .ab-log-entry.warn  { color: #cc8800; }
+        .ab-log-entry.ban   { color: #ff4400; }
+        .ab-log-entry.gold  { color: #ff2200; }
+
         </style>
 </head>
 <body>
@@ -5405,14 +5467,64 @@
             <!-- Onglets de navigation -->
             <div class="admin-tabs">
                 <div class="admin-tab-btn active" id="atab-events" onclick="adminTab('events')">🎮 Événements</div>
+                <div class="admin-tab-btn" id="atab-security" onclick="adminTab('security')">🛡️ Anti-Abus</div>
                 <div class="admin-tab-btn" id="atab-players" onclick="adminTab('players')">👥 Joueurs</div>
                 <div class="admin-tab-btn" id="atab-shop" onclick="adminTab('shop')">🏪 Boutique</div>
                 <div class="admin-tab-btn" id="atab-mutations" onclick="adminTab('mutations')">🧬 Mutations</div>
                 <div class="admin-tab-btn" id="atab-stats" onclick="adminTab('stats')">📊 Stats</div>
             </div>
 
+            <!-- ONGLET ANTI-ABUS -->
+            <div class="admin-tab-panel" id="apanel-security">
+
+                <div class="admin-section" style="border-color:rgba(255,100,0,0.4);background:rgba(255,50,0,0.03);">
+                    <div class="admin-section-title" style="color:#ff6600;">🛡️ Système Anti-Abus</div>
+                    <div style="color:#553300;font-size:0.72em;margin-bottom:12px;">Détection automatique des comportements suspects (macro, auto-click, spam). Les sanctions sont progressives et s'escaladent à chaque récidive.</div>
+
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+                        <div style="flex:1;min-width:110px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,100,0,0.2);border-radius:10px;padding:10px;text-align:center;">
+                            <div style="color:#ff6600;font-size:1.1em;font-weight:900;" id="abAdminActive">—</div>
+                            <div style="color:#443300;font-size:0.65em;margin-top:3px;">Joueurs sanctionnés</div>
+                        </div>
+                        <div style="flex:1;min-width:110px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,100,0,0.2);border-radius:10px;padding:10px;text-align:center;">
+                            <div style="color:#ff9900;font-size:1.1em;font-weight:900;" id="abAdminTotal">—</div>
+                            <div style="color:#443300;font-size:0.65em;margin-top:3px;">Détections totales</div>
+                        </div>
+                    </div>
+
+                    <!-- Seuils configurables -->
+                    <div style="color:#884400;font-size:0.72em;font-weight:900;letter-spacing:1px;margin-bottom:8px;">⚙️ SEUILS DE DÉTECTION</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                        <div style="flex:1;min-width:130px;">
+                            <div style="color:#663300;font-size:0.68em;margin-bottom:3px;">Coffres / 10 sec (défaut: 8)</div>
+                            <input class="admin-input" id="abCfgChestRate" type="number" value="8" min="3" max="30" style="width:100%;padding:5px 8px;font-size:0.85em;">
+                        </div>
+                        <div style="flex:1;min-width:130px;">
+                            <div style="color:#663300;font-size:0.68em;margin-bottom:3px;">Actions / 5 sec (défaut: 15)</div>
+                            <input class="admin-input" id="abCfgActionRate" type="number" value="15" min="5" max="50" style="width:100%;padding:5px 8px;font-size:0.85em;">
+                        </div>
+                    </div>
+                    <button class="admin-btn" onclick="abAdminSaveConfig()" style="background:linear-gradient(180deg,#883300,#441500);box-shadow:0 4px 0 #220800;border:2px solid rgba(255,100,0,0.4);margin-bottom:12px;">💾 Sauvegarder seuils</button>
+
+                    <!-- Actions manuelles -->
+                    <div style="color:#884400;font-size:0.72em;font-weight:900;letter-spacing:1px;margin-bottom:8px;">🔧 ACTIONS MANUELLES</div>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px;">
+                        <input class="admin-input" id="abAdminPseudo" placeholder="Pseudo du joueur…" style="flex:1;min-width:120px;padding:6px 8px;font-size:0.82em;">
+                        <button class="admin-btn" onclick="abAdminLiftSanction()" style="background:rgba(0,60,20,0.5);border:1px solid rgba(0,200,80,0.4);font-size:0.75em;">✅ Lever sanction</button>
+                        <button class="admin-btn" onclick="abAdminForceBan()" style="background:rgba(80,0,0,0.5);border:1px solid rgba(255,60,0,0.4);font-size:0.75em;">🔒 Forcer ban temp.</button>
+                    </div>
+                    <div style="color:#553300;font-size:0.68em;margin-bottom:12px;" id="abAdminActionStatus"></div>
+
+                    <!-- Journal des détections -->
+                    <div style="color:#884400;font-size:0.72em;font-weight:900;letter-spacing:1px;margin-bottom:6px;">📋 JOURNAL (en direct)</div>
+                    <div class="ab-admin-log" id="abAdminLog"><div style="color:#443300;">En attente de données…</div></div>
+                    <button class="admin-btn" onclick="abAdminClearLog()" style="margin-top:6px;background:rgba(40,20,0,0.5);border:1px solid rgba(150,80,0,0.3);font-size:0.72em;">🗑️ Effacer journal</button>
+                </div>
+
+            </div>
+
             <!-- ONGLET ÉVÉNEMENTS -->
-            <div class="admin-tab-panel active" id="apanel-events">
+            <div class="admin-tab-panel" id="apanel-events">
 
                 <!-- Chance globale -->
                 <div class="admin-section">
@@ -6213,7 +6325,7 @@
             <button class="auth-x" onclick="closeBuyTenModal()">✕</button>
             <div style="text-align:center;font-size:1.8em;margin-bottom:6px;">🎲</div>
             <div class="auth-title" style="color:#2ecc71;">ACHAT ×10</div>
-            <div class="auth-sub" style="color:#1a4a1a;">10 cartes aléatoires avec 10% de réduction</div>
+            <div class="auth-sub" style="color:#1a4a1a;">10 cartes aléatoires avec 20% de réduction</div>
             <div id="buyTenGrid" style="display:flex;flex-direction:column;gap:8px;margin:16px 0;max-height:55vh;overflow-y:auto;"></div>
             <button class="auth-submit" style="background:linear-gradient(180deg,#2ecc71,#1a7a40);box-shadow:0 5px 0 #0a3a18;" onclick="confirmBuyTen()">🎲 CONFIRMER L'ACHAT</button>
             <div class="auth-msg err" id="buyTenErr" style="margin-top:8px;"></div>
@@ -6818,6 +6930,8 @@
                 showBroadcast('🚫 Tu as été banni par un administrateur.', Date.now());
                 return;
             }
+            // Anti-abus : vérifier avant d'ouvrir le coffre
+            if (typeof _abGate === 'function' && !_abGate('chest')) return;
             clickCount = 0;
             currentStars = 0;
             
@@ -7429,6 +7543,8 @@
             updateQuestProgress();
             // Quêtes avancées — tracker coffre
             if (typeof _aqTrackChest === 'function') _aqTrackChest(rewards);
+            // Anti-abus : enregistrer l'action coffre complétée
+            if (typeof _abRecord === 'function') _abRecord('chest');
         }
 
         function closeModal() {
@@ -7618,6 +7734,8 @@
         ];
 
         function buyCard(rarity) {
+            // Anti-abus : vérifier avant achat boutique
+            if (typeof _abGate === 'function' && !_abGate('action')) return;
             // Bloquer si toutes les cartes de cette rareté sont bannies
             const _banned = window._bannedCards || new Set();
             const _cards = cardImages[rarity] || [];
@@ -8856,6 +8974,8 @@
         function handleQuizAnswer(btn, chosen, correctAnswer) {
             if (quizAnswered) return;
             quizAnswered = true;
+            // Anti-abus : enregistrer l'action quiz
+            if (typeof _abRecord === 'function') _abRecord('action');
             document.querySelectorAll('.quiz-choice-btn').forEach(b => b.disabled = true);
             if (chosen === correctAnswer) {
                 btn.classList.add('correct');
@@ -9009,6 +9129,8 @@
             const key = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g,'_');
             firebaseDB.ref('players/' + key + '/info').set({ pseudo: pseudo, lastSeen: Date.now() });
             syncStatsToFirebase(pseudo);
+            // Anti-abus : attacher les listeners Firebase
+            if (typeof _abAttachFirebaseListeners === 'function') _abAttachFirebaseListeners();
             // Écouter le ban temporaire
             firebaseDB.ref('players/' + key + '/banned').on('value', snap => {
                 window._playerBanned = snap.val() === true;
@@ -11201,7 +11323,7 @@
             // Message broadcast une seule fois par activation
             if (!_miamBroadcastShown) {
                 _miamBroadcastShown = true;
-                showBroadcast('🍖 TIMOTÉ EST LÀ ET IL VEUT MANGER: DES PATES, UN TASTY CROUSTY, DU RIZ, DU POULET, UN BURGER, BURGER KING, LA PLAZA MAYOR, DES BRAINROTS, MADAME CHAUVIN, KENDJI GIRAC, UN PAIN AU CHOCOLAT, MARTIN(INSHALLAH), TON AME, LE CODE DU JEU(CHIANT), UN COMMENTAIRE YOUTUBE SHORT, UNE FAUTE DORTOGRAFE, UN PADDLE, LA LUNE, DE LA VIANDE, LA MUTATION DIAMANT, UN BON PIED, ANTOINE, UN BUS ALÉOP, UNE ANNÉE LUMIÈRE, LE SON, MOUSIEUR, LE CUISTO, LA FRENCH MURDER, UN GROUPE CLASSE, DES OIGNONS, LENNI LOGNON, MR MERCIERTASTYCROUSTY92I, UNE ENCEINTE JBL, NAPS, SOPHIE RAIN, LE 67 KID, CHATGPT, LA FUSE MACHINE, PALPER DU RIZ !', Date.now());
+                showBroadcast('🍖 TIMOTÉ EST LÀ ET IL VEUT MANGER: DES PATES, UN TASTY CROUSTY, DU RIZ, DU POULET, UN BURGER, BURGER KING, LA PLAZA MAYOR, DES BRAINROTS, MADAME CHAUVIN, KENDJI GIRAC, UN PAIN AU CHOCOLAT, MARTIN(INSHALLAH), TON AME, LE CODE DU JEU(CHIANT), UN COMMENTAIRE YOUTUBE SHORT, UNE FAUTE DORTOGRAFE, UN PADDLE, LA LUNE, DE LA VIANDE, LA MUTATION DIAMANT, UN BON PIED, ANTOINE, UN BUS ALÉOP, UNE ANNÉE LUMIÈRE, LE SON, MOUSIEUR, LE CUISTO, LA FRENCH MURDER, UN GROUPE CLASSE, DES OIGNONS, LENNI LOGNON, MR MERCIERTASTYCROUSTY92I, UNE ENCEINTE JBL, NAPS, SOPHIE RAIN, LE 67 KID, CHATGPT, LA FUSE MACHINE, PALPER DU RIZ, UN PC PORTABLE !', Date.now());
             }
             // Mettre à jour le statut admin si panel ouvert
             const st = document.getElementById('adminMiamStatus');
@@ -13194,6 +13316,506 @@
             _aqRenderSection();
         }
 
+
+        // ═════════════════════════════════════════════════════════════════
+        // ═══              SYSTÈME ANTI-ABUS / ANTI-BOT                 ═══
+        // ═══   Détection intelligente, sanctions progressives          ═══
+        // ═══   Seuils calibrés pour ne pas pénaliser les joueurs       ═══
+        // ═════════════════════════════════════════════════════════════════
+
+        // ── Configuration (peut être surchargée par l'admin via Firebase) ──
+        const _AB_CFG = {
+            // Seuils de détection (très permissifs par défaut)
+            chestPer10s:    8,   // coffres max en 10s avant détection
+            actionPer5s:   15,   // actions totales max en 5s
+            macroJitter:   50,   // ms : si écart-type inter-actions < X → macro suspectée
+            macroMinSample: 8,   // nb d'actions minimum pour analyse macro
+            // Durées des sanctions (ms)
+            warnDuration:   15 * 1000,           // Niv.1 : avertissement 15s
+            ban2Duration:    2 * 60 * 1000,      // Niv.2 : 2 minutes
+            ban3Duration:   15 * 60 * 1000,      // Niv.3 : 15 minutes
+            ban4Duration:  24 * 60 * 60 * 1000,  // Niv.4 : 24 heures
+            ban4GoldPct:    0.10,                 // Niv.4 : -10% de l'or
+            // Récidive
+            escalatePer:    3,   // toutes les X détections → niveau supérieur
+            decayHours:    24,   // après X heures de calme → -1 niveau
+        };
+
+        // ── État local anti-abus ────────────────────────────────────────
+        const _abState = {
+            // Logs temporels des actions
+            chestLog:  [],   // timestamps des ouvertures de coffres
+            actionLog: [],   // timestamps de toutes les actions surveillées
+            // Analyse macro
+            macroLog:  [],   // écarts entre actions consécutives (ms)
+            // Compteurs persistés (chargés depuis localStorage)
+            detections:   0,
+            sanctionLevel: 0,   // 0=propre, 1=warn, 2=ban court, 3=ban moyen, 4=ban long
+            lastDetectTs:  0,
+            lastSanctTs:   0,
+            // Statut courant
+            isSanctioned:  false,
+            sanctionUntil: 0,
+            warnActive:    false,
+            warnUntil:     0,
+            // Slowdown actif (niveau 1 passé)
+            slowdown:      false,
+            slowdownUntil: 0,
+        };
+
+        // ── Persistance locale ──────────────────────────────────────────
+        const _AB_LSKEY = 'ab_state_v1';
+        function _abSave() {
+            try {
+                localStorage.setItem(_AB_LSKEY, JSON.stringify({
+                    detections:    _abState.detections,
+                    sanctionLevel: _abState.sanctionLevel,
+                    lastDetectTs:  _abState.lastDetectTs,
+                    lastSanctTs:   _abState.lastSanctTs,
+                    sanctionUntil: _abState.sanctionUntil,
+                    warnUntil:     _abState.warnUntil,
+                    slowdownUntil: _abState.slowdownUntil,
+                }));
+            } catch(e) {}
+        }
+        function _abLoad() {
+            try {
+                const raw = localStorage.getItem(_AB_LSKEY);
+                if (!raw) return;
+                const d = JSON.parse(raw);
+                _abState.detections    = d.detections    || 0;
+                _abState.sanctionLevel = d.sanctionLevel || 0;
+                _abState.lastDetectTs  = d.lastDetectTs  || 0;
+                _abState.lastSanctTs   = d.lastSanctTs   || 0;
+                _abState.sanctionUntil = d.sanctionUntil || 0;
+                _abState.warnUntil     = d.warnUntil     || 0;
+                _abState.slowdownUntil = d.slowdownUntil || 0;
+            } catch(e) {}
+        }
+
+        // ── Decay automatique du niveau de sanction ─────────────────────
+        // Si le joueur est propre depuis decayHours → baisse d'un niveau
+        function _abApplyDecay() {
+            const now = Date.now();
+            if (_abState.sanctionLevel <= 0) return;
+            const hoursSinceDetect = (now - _abState.lastDetectTs) / 3600000;
+            if (hoursSinceDetect >= _AB_CFG.decayHours) {
+                _abState.sanctionLevel = Math.max(0, _abState.sanctionLevel - 1);
+                _abSave();
+            }
+        }
+
+        // ── Vérifier si une sanction active expire ──────────────────────
+        function _abCheckExpiry() {
+            const now = Date.now();
+            if (_abState.isSanctioned && now >= _abState.sanctionUntil) {
+                _abState.isSanctioned = false;
+                _abState.sanctionUntil = 0;
+                document.getElementById('abTempbanOverlay').classList.remove('show');
+                document.body.style.pointerEvents = '';
+                _abSave();
+            }
+            if (_abState.warnActive && now >= _abState.warnUntil) {
+                _abState.warnActive = false;
+                _abState.warnUntil = 0;
+                document.getElementById('abWarnOverlay').classList.remove('show');
+                _abSave();
+            }
+            if (_abState.slowdown && now >= _abState.slowdownUntil) {
+                _abState.slowdown = false;
+                _abState.slowdownUntil = 0;
+                _abSave();
+            }
+        }
+
+        // ── Restaurer sanctions actives au chargement ───────────────────
+        function _abRestoreSanctions() {
+            const now = Date.now();
+            if (_abState.sanctionUntil > now) {
+                _abState.isSanctioned = true;
+                _abShowTempban(_abState.sanctionLevel);
+            }
+            if (_abState.warnUntil > now) {
+                _abState.warnActive = true;
+                _abShowWarn('Comportement suspect détecté lors d\'une session précédente.');
+            }
+            if (_abState.slowdownUntil > now) {
+                _abState.slowdown = true;
+            }
+        }
+
+        // ── Enregistrer une action surveillée ───────────────────────────
+        // type: 'chest' | 'action'
+        function _abRecord(type) {
+            const now = Date.now();
+            if (type === 'chest') {
+                _abState.chestLog.push(now);
+                // Garder seulement les 30 dernières secondes
+                _abState.chestLog = _abState.chestLog.filter(t => now - t <= 30000);
+            }
+            // Toujours enregistrer dans actionLog
+            _abState.actionLog.push(now);
+            _abState.actionLog = _abState.actionLog.filter(t => now - t <= 30000);
+
+            // Analyse macro : écart avec l'action précédente
+            if (_abState.actionLog.length >= 2) {
+                const prev  = _abState.actionLog[_abState.actionLog.length - 2];
+                const delta = now - prev;
+                if (delta > 0 && delta < 5000) {
+                    _abState.macroLog.push(delta);
+                    if (_abState.macroLog.length > 20) _abState.macroLog.shift();
+                }
+            }
+        }
+
+        // ── Algorithme de détection ─────────────────────────────────────
+        function _abAnalyze() {
+            const now = Date.now();
+            let score = 0; // 0 = propre, >0 = suspect
+
+            // ── 1. Vitesse coffres (10s glissantes) ──────────────────────
+            const chestsIn10s = _abState.chestLog.filter(t => now - t <= 10000).length;
+            if (chestsIn10s >= _AB_CFG.chestPer10s) {
+                score += 2; // détection forte
+            } else if (chestsIn10s >= Math.ceil(_AB_CFG.chestPer10s * 0.75)) {
+                score += 1; // détection faible
+            }
+
+            // ── 2. Cadence générale d'actions (5s glissantes) ────────────
+            const actionsIn5s = _abState.actionLog.filter(t => now - t <= 5000).length;
+            if (actionsIn5s >= _AB_CFG.actionPer5s) {
+                score += 2;
+            } else if (actionsIn5s >= Math.ceil(_AB_CFG.actionPer5s * 0.8)) {
+                score += 1;
+            }
+
+            // ── 3. Détection macro (régularité suspecte) ─────────────────
+            if (_abState.macroLog.length >= _AB_CFG.macroMinSample) {
+                const n    = _abState.macroLog.length;
+                const mean = _abState.macroLog.reduce((a, b) => a + b, 0) / n;
+                const variance = _abState.macroLog.reduce((a, d) => a + (d - mean) ** 2, 0) / n;
+                const stddev = Math.sqrt(variance);
+                // Un humain a un écart-type d'au moins ~80ms sur ses clics
+                // Un bot/macro a stddev < 50ms (très régulier)
+                if (stddev < _AB_CFG.macroJitter && mean < 800) {
+                    score += 3; // détection très forte
+                }
+            }
+
+            return score;
+        }
+
+        // ── Appliquer la sanction selon le niveau ───────────────────────
+        function _abApplySanction(level) {
+            const now = Date.now();
+            _abState.lastSanctTs = now;
+            _abState.sanctionLevel = level;
+            _abSave();
+            _abLogAdmin('Sanction niveau ' + level + ' appliquée', level >= 3 ? 'ban' : level === 2 ? 'ban' : 'warn');
+
+            if (level === 1) {
+                // Avertissement + slowdown 30s
+                _abState.warnActive   = true;
+                _abState.warnUntil    = now + _AB_CFG.warnDuration;
+                _abState.slowdown     = true;
+                _abState.slowdownUntil = now + 30000;
+                _abSave();
+                _abShowWarn('Tes actions sont trop rapides. Ralentis pour éviter une suspension. (Avertissement 1)');
+                setTimeout(_abCheckExpiry, _AB_CFG.warnDuration + 500);
+
+            } else if (level === 2) {
+                // Ban 2 minutes
+                _abState.isSanctioned  = true;
+                _abState.sanctionUntil = now + _AB_CFG.ban2Duration;
+                _abSave();
+                _abShowTempban(2);
+                _abReportToFirebase(level);
+                setTimeout(_abCheckExpiry, _AB_CFG.ban2Duration + 500);
+
+            } else if (level === 3) {
+                // Ban 15 minutes
+                _abState.isSanctioned  = true;
+                _abState.sanctionUntil = now + _AB_CFG.ban3Duration;
+                _abSave();
+                _abShowTempban(3);
+                _abReportToFirebase(level);
+                setTimeout(_abCheckExpiry, _AB_CFG.ban3Duration + 500);
+
+            } else if (level >= 4) {
+                // Ban 24h + perte d'or
+                const goldLost = Math.floor(stats.totalGold * _AB_CFG.ban4GoldPct);
+                if (goldLost > 0) {
+                    stats.totalGold = Math.max(0, stats.totalGold - goldLost);
+                    document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
+                    const sg = document.getElementById('shopGoldDisplay');
+                    if (sg) sg.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
+                    autoSave();
+                    _abLogAdmin('Niveau 4 : ' + goldLost.toLocaleString() + ' or retirés', 'gold');
+                }
+                _abState.isSanctioned  = true;
+                _abState.sanctionUntil = now + _AB_CFG.ban4Duration;
+                _abSave();
+                _abShowTempban(4);
+                _abReportToFirebase(level);
+                setTimeout(_abCheckExpiry, _AB_CFG.ban4Duration + 500);
+            }
+        }
+
+        // ── Point d'entrée principal : appelé après chaque action ───────
+        function _abCheck(type) {
+            _abCheckExpiry();
+            // Ne pas analyser si déjà sanctionné
+            if (_abState.isSanctioned) return false;
+
+            _abApplyDecay();
+            _abRecord(type);
+
+            const score = _abAnalyze();
+            if (score < 2) return true; // propre
+
+            // Détection confirmée
+            _abState.detections++;
+            _abState.lastDetectTs = Date.now();
+            _abSave();
+
+            // Calcul du niveau de sanction (escalade selon récidives)
+            const newLevel = Math.min(4, Math.floor((_abState.detections - 1) / _AB_CFG.escalatePer) + 1);
+            // Ne pas re-sanctionner au même niveau si avertissement en cours
+            if (_abState.warnActive && newLevel <= 1) return false;
+            if (_abState.sanctionLevel >= newLevel && _abState.isSanctioned) return false;
+
+            _abApplySanction(newLevel);
+            return false; // bloquer l'action
+        }
+
+        // ── Retourner si une action est permise (avec slowdown éventuel) ─
+        // Retourne true si l'action peut s'exécuter, false si bloquée
+        function _abGate(type) {
+            _abCheckExpiry();
+            if (_abState.isSanctioned) { _abShowToast('🔒 Accès suspendu.'); return false; }
+            if (_abState.warnActive)   { _abShowToast('⚠️ Ralentis — avertissement actif.'); return false; }
+            if (_abState.slowdown) {
+                _abShowToast('⏳ Cadence réduite — ralentis un peu…');
+                return false; // bloque 1 action sur 3
+            }
+            return _abCheck(type);
+        }
+
+        // ── Affichages UI ────────────────────────────────────────────────
+        function _abShowWarn(msg) {
+            document.getElementById('abWarnSub').textContent = msg;
+            document.getElementById('abWarnOverlay').classList.add('show');
+            // Timer affiché
+            let secs = Math.ceil(_AB_CFG.warnDuration / 1000);
+            const el = document.getElementById('abWarnTimer');
+            el.textContent = 'Levé dans ' + secs + 's';
+            const t = setInterval(() => {
+                secs--;
+                if (secs <= 0) { clearInterval(t); el.textContent = ''; return; }
+                el.textContent = 'Levé dans ' + secs + 's';
+            }, 1000);
+        }
+
+        function abDismissWarn() {
+            document.getElementById('abWarnOverlay').classList.remove('show');
+        }
+
+        function _abShowTempban(level) {
+            const overlay = document.getElementById('abTempbanOverlay');
+            const title   = document.getElementById('abTempbanTitle');
+            const sub     = document.getElementById('abTempbanSub');
+            const lvlEl   = document.getElementById('abTempbanLevel');
+            const timerEl = document.getElementById('abTempbanTimer');
+            document.body.style.pointerEvents = 'none';
+            overlay.style.pointerEvents = 'all';
+
+            const msgs = {
+                2: ['ACCÈS TEMPORAIREMENT SUSPENDU', 'Comportement anormal détecté. Pause obligatoire :'],
+                3: ['SUSPENSION INTERMÉDIAIRE', 'Récidive détectée. Suspension de 15 minutes :'],
+                4: ['SUSPENSION LONGUE', 'Comportement persistant. Suspension de 24h + pénalité appliquée :'],
+            };
+            const m = msgs[level] || msgs[2];
+            title.textContent = m[0];
+            sub.textContent   = m[1];
+            lvlEl.textContent = 'NIVEAU ' + level;
+            overlay.classList.add('show');
+
+            function updateTimer() {
+                const remaining = Math.max(0, _abState.sanctionUntil - Date.now());
+                if (remaining <= 0) {
+                    _abCheckExpiry();
+                    clearInterval(timerInterval);
+                    return;
+                }
+                const h = Math.floor(remaining / 3600000);
+                const m = Math.floor((remaining % 3600000) / 60000);
+                const s = Math.floor((remaining % 60000) / 1000);
+                timerEl.textContent = h > 0
+                    ? String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0')
+                    : String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+            }
+            updateTimer();
+            const timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        let _abToastTimer = null;
+        function _abShowToast(msg) {
+            const el = document.getElementById('abToast');
+            if (!el) return;
+            el.textContent = msg;
+            el.classList.add('show');
+            if (_abToastTimer) clearTimeout(_abToastTimer);
+            _abToastTimer = setTimeout(() => { el.classList.remove('show'); }, 2500);
+        }
+
+        // ── Rapport Firebase ─────────────────────────────────────────────
+        function _abReportToFirebase(level) {
+            if (!firebaseDB) return;
+            const pseudo = localStorage.getItem('tradePseudo') || 'unknown';
+            const key    = _tkey ? _tkey(pseudo) : encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g,'_');
+            const report = {
+                pseudo,
+                level,
+                ts: Date.now(),
+                detections: _abState.detections,
+                sanctionUntil: _abState.sanctionUntil,
+            };
+            firebaseDB.ref('antiAbuse/' + key).set(report).catch(() => {});
+            // Log admin Firebase
+            firebaseDB.ref('antiAbuse/_log').push({
+                pseudo, level, ts: Date.now(),
+                msg: 'Niveau ' + level + ' — ' + _abState.detections + ' détection(s)'
+            }).catch(() => {});
+        }
+
+        // ── Journal admin local ──────────────────────────────────────────
+        const _abLocalLog = [];
+        function _abLogAdmin(msg, type) {
+            const now = new Date().toLocaleTimeString();
+            _abLocalLog.unshift({ msg, type, time: now });
+            if (_abLocalLog.length > 50) _abLocalLog.pop();
+            _abRenderAdminLog();
+        }
+
+        function _abRenderAdminLog() {
+            const el = document.getElementById('abAdminLog');
+            if (!el) return;
+            if (!_abLocalLog.length) { el.innerHTML = '<div style="color:#443300;">Aucune détection</div>'; return; }
+            el.innerHTML = _abLocalLog.map(e =>
+                `<div class="ab-log-entry ${e.type}">[${e.time}] ${e.msg}</div>`
+            ).join('');
+        }
+
+        // ── Fonctions admin ──────────────────────────────────────────────
+        function abAdminSaveConfig() {
+            const chestRate  = parseInt(document.getElementById('abCfgChestRate').value)  || 8;
+            const actionRate = parseInt(document.getElementById('abCfgActionRate').value) || 15;
+            _AB_CFG.chestPer10s  = Math.max(3, chestRate);
+            _AB_CFG.actionPer5s  = Math.max(5, actionRate);
+            adminStatus('✅ Seuils anti-abus mis à jour');
+            // Optionnel : sauvegarder en Firebase pour synchroniser
+            if (firebaseDB) {
+                firebaseDB.ref('admin/antiAbuseConfig').set({ chestPer10s: _AB_CFG.chestPer10s, actionPer5s: _AB_CFG.actionPer5s }).catch(() => {});
+            }
+        }
+
+        function abAdminLiftSanction() {
+            const pseudo = document.getElementById('abAdminPseudo').value.trim();
+            if (!pseudo) { document.getElementById('abAdminActionStatus').textContent = '⚠️ Pseudo vide'; return; }
+            if (!firebaseDB) return;
+            const key = _tkey ? _tkey(pseudo) : encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g,'_');
+            firebaseDB.ref('antiAbuse/' + key).remove().catch(() => {});
+            // Si c'est le joueur local
+            const myPseudo = localStorage.getItem('tradePseudo') || '';
+            if (pseudo === myPseudo) {
+                _abState.isSanctioned  = false;
+                _abState.sanctionUntil = 0;
+                _abState.warnActive    = false;
+                _abState.warnUntil     = 0;
+                _abState.slowdown      = false;
+                _abState.detections    = 0;
+                _abState.sanctionLevel = 0;
+                _abSave();
+                document.getElementById('abTempbanOverlay').classList.remove('show');
+                document.getElementById('abWarnOverlay').classList.remove('show');
+                document.body.style.pointerEvents = '';
+            }
+            document.getElementById('abAdminActionStatus').textContent = '✅ Sanction levée pour ' + pseudo;
+            _abLogAdmin('Sanction levée manuellement pour ' + pseudo, 'warn');
+        }
+
+        function abAdminForceBan() {
+            const pseudo = document.getElementById('abAdminPseudo').value.trim();
+            if (!pseudo) { document.getElementById('abAdminActionStatus').textContent = '⚠️ Pseudo vide'; return; }
+            if (!firebaseDB) return;
+            const key = _tkey ? _tkey(pseudo) : encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g,'_');
+            const until = Date.now() + _AB_CFG.ban2Duration;
+            firebaseDB.ref('antiAbuse/' + key).set({
+                pseudo, level: 2, ts: Date.now(), detections: 1, sanctionUntil: until, forcedByAdmin: true
+            }).catch(() => {});
+            document.getElementById('abAdminActionStatus').textContent = '✅ Ban temporaire appliqué à ' + pseudo;
+            _abLogAdmin('Ban forcé par admin sur ' + pseudo, 'ban');
+        }
+
+        function abAdminClearLog() {
+            _abLocalLog.length = 0;
+            _abRenderAdminLog();
+            if (firebaseDB) firebaseDB.ref('antiAbuse/_log').remove().catch(() => {});
+        }
+
+        // ── Listener Firebase : config + journal ─────────────────────────
+        function _abAttachFirebaseListeners() {
+            if (!firebaseDB || window._abFirebaseAttached) return;
+            window._abFirebaseAttached = true;
+            // Charger la config admin
+            firebaseDB.ref('admin/antiAbuseConfig').on('value', snap => {
+                const cfg = snap.val();
+                if (!cfg) return;
+                if (cfg.chestPer10s)  { _AB_CFG.chestPer10s  = cfg.chestPer10s;  }
+                if (cfg.actionPer5s)  { _AB_CFG.actionPer5s  = cfg.actionPer5s;  }
+                const ci = document.getElementById('abCfgChestRate');
+                const ai = document.getElementById('abCfgActionRate');
+                if (ci) ci.value = _AB_CFG.chestPer10s;
+                if (ai) ai.value = _AB_CFG.actionPer5s;
+            });
+            // Surveiller si l'admin lève une sanction via Firebase
+            const pseudo = localStorage.getItem('tradePseudo') || '';
+            if (pseudo && typeof _tkey === 'function') {
+                const key = _tkey(pseudo);
+                firebaseDB.ref('antiAbuse/' + key).on('value', snap => {
+                    if (!snap.val() && _abState.isSanctioned) {
+                        // Sanction levée par l'admin
+                        _abState.isSanctioned  = false;
+                        _abState.sanctionUntil = 0;
+                        _abState.detections    = 0;
+                        _abSave();
+                        document.getElementById('abTempbanOverlay').classList.remove('show');
+                        document.body.style.pointerEvents = '';
+                    }
+                });
+            }
+            // Journal en direct dans l'admin panel
+            firebaseDB.ref('antiAbuse/_log').limitToLast(20).on('value', snap => {
+                const data = snap.val();
+                if (!data) return;
+                Object.values(data).reverse().forEach(e => {
+                    // Éviter les doublons dans le log local
+                    if (!_abLocalLog.find(l => l.time === new Date(e.ts).toLocaleTimeString() && l.msg === e.msg)) {
+                        _abLocalLog.unshift({ msg: e.pseudo + ' — ' + e.msg, type: e.level >= 3 ? 'ban' : 'warn', time: new Date(e.ts).toLocaleTimeString() });
+                    }
+                });
+                if (_abLocalLog.length > 50) _abLocalLog.length = 50;
+                _abRenderAdminLog();
+            });
+        }
+
+        // ── Initialisation ────────────────────────────────────────────────
+        function _abInit() {
+            _abLoad();
+            _abApplyDecay();
+            _abRestoreSanctions();
+        }
+
         function adminStatus(msg) {
             const el = document.getElementById('adminStatusMsg');
             if (!el) return;
@@ -13206,6 +13828,7 @@
         // Init Firebase au chargement
         window.addEventListener('load', () => {
             initFirebase();
+            if (typeof _abInit === 'function') _abInit();
             // Initialiser les quêtes avancées
             if (typeof _aqInit === 'function') _aqInit();
             _schedStartChecker();
@@ -14474,6 +15097,9 @@
                 if (personalLuck > 0 && luckExpiry > Date.now()) startLuckTimer();
                 else { personalLuck = 0; luckExpiry = 0; }
 
+                // Restaurer les quêtes avancées
+                if (typeof _aqLoad === 'function') _aqLoad(save);
+
                 // Recalculer stats.totalCards depuis les Maps (source de vérité)
                 // pour éviter le désync sur les nouveaux comptes
                 const _countFromMaps = unlockedCards.size
@@ -14807,7 +15433,7 @@
 
         // ═══ ADMIN TABS ═══
         function adminTab(tab) {
-            ['events','players','shop','mutations','stats'].forEach(function(t) {
+            ['events','players','shop','mutations','stats','security'].forEach(function(t) {
                 var btn = document.getElementById('atab-' + t);
                 var panel = document.getElementById('apanel-' + t);
                 if (btn)   btn.classList.toggle('active', t === tab);
@@ -15227,6 +15853,28 @@
 
 
 
+
+
+    <!-- Anti-abus : Avertissement (niveau 1) -->
+    <div class="ab-warn-overlay" id="abWarnOverlay">
+        <div class="ab-warn-icon">⚠️</div>
+        <div class="ab-warn-title">COMPORTEMENT SUSPECT DÉTECTÉ</div>
+        <div class="ab-warn-sub" id="abWarnSub">Tes actions semblent anormalement rapides. Ralentis pour éviter une sanction.</div>
+        <div class="ab-warn-timer" id="abWarnTimer"></div>
+        <button class="ab-warn-btn" onclick="abDismissWarn()">Je comprends</button>
+    </div>
+
+    <!-- Anti-abus : Ban temporaire (niveaux 2–3) -->
+    <div class="ab-tempban-overlay" id="abTempbanOverlay">
+        <div class="ab-tempban-icon">🔒</div>
+        <div class="ab-tempban-title" id="abTempbanTitle">ACCÈS TEMPORAIREMENT SUSPENDU</div>
+        <div class="ab-tempban-sub" id="abTempbanSub">Comportement anormal détecté. Reviens dans :</div>
+        <div class="ab-tempban-timer" id="abTempbanTimer">00:00</div>
+        <div class="ab-tempban-level" id="abTempbanLevel">NIVEAU 2</div>
+    </div>
+
+    <!-- Anti-abus : Toast léger (slowdown) -->
+    <div class="ab-toast" id="abToast"></div>
 
 </body>
 </html>
