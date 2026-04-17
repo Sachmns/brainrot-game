@@ -6320,7 +6320,7 @@
                         <div class="shop-item-rarity-bar"></div>
                         <span class="shop-item-icon" id="shopLuckIcon">✨</span>
                         <div class="shop-item-name" id="shopLuckName">Chance ×2</div>
-                        <div class="shop-item-buy-btn">💰 500 000</div>
+                        <div class="shop-item-buy-btn">💰 750 000</div>
                     </div>
                 </div>
             </div>
@@ -7684,9 +7684,9 @@
         }
 
         function buyLuck() {
-            const price = 500000;
+            const price = 750000;
             if (stats.totalGold < price) {
-                alert('❌ Pas assez d\'or ! Il te faut 500 000 or.');
+                alert('❌ Pas assez d\'or ! Il te faut 750 000 or.');
                 return;
             }
             const nextLuck = personalLuck === 0 ? 2 : personalLuck === 2 ? 4 : personalLuck === 4 ? 8 : 8;
@@ -10196,6 +10196,7 @@
         function openAdmin() {
             if (!firebaseDB) initFirebase();
             document.getElementById('adminOverlay').classList.add('open');
+            adminTab('events'); // s'assurer que l'onglet Événements est actif par défaut
             buildAdminRarityFilter();
             buildAdminCardGrid();
             updateAdminLuckStatus();
