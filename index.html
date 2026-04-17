@@ -8785,7 +8785,8 @@
                 questProgress: questProgress,
                 dailyState: dailyState,
                 personalLuck: personalLuck,
-                luckExpiry: luckExpiry
+                luckExpiry: luckExpiry,
+                quizBestStreak: typeof _quizBestStreak !== 'undefined' ? _quizBestStreak : undefined
             };
             // Quêtes avancées — sauvegarder
             if (typeof _aqSave === 'function') _aqSave(save);
@@ -8797,6 +8798,10 @@
 
         // Charger automatiquement au démarrage
         let _aqProgress = {};   // { [questId]: { progress: number, claimed: boolean } }
+
+        // Meilleure streak quiz (déclaré ici pour être disponible lors du chargement localStorage)
+        let _quizBestStreak    = { name: 0, rarity: 0, silhouette: 0 };
+        let _quizCurrentStreak = 0;
 
         const raw = localStorage.getItem('crSave_' + currentSaveCode);
         if (raw) {
@@ -8826,6 +8831,12 @@
                 if (save.dailyState) dailyState = save.dailyState;
                 if (save.personalLuck) personalLuck = save.personalLuck;
                 if (save.luckExpiry) luckExpiry = save.luckExpiry;
+                // Restaurer la meilleure série quiz
+                if (save.quizBestStreak && typeof _quizBestStreak !== 'undefined') {
+                    if (typeof save.quizBestStreak.name       === 'number') _quizBestStreak.name       = Math.max(_quizBestStreak.name,       save.quizBestStreak.name);
+                    if (typeof save.quizBestStreak.rarity     === 'number') _quizBestStreak.rarity     = Math.max(_quizBestStreak.rarity,     save.quizBestStreak.rarity);
+                    if (typeof save.quizBestStreak.silhouette === 'number') _quizBestStreak.silhouette = Math.max(_quizBestStreak.silhouette, save.quizBestStreak.silhouette);
+                }
                 // Quêtes avancées — restaurer
                 if (typeof _aqLoad === 'function') _aqLoad(save);
                 // Reprendre le timer si encore actif
@@ -9170,9 +9181,17 @@
             if (!firebaseDB || !pseudo) return;
             const key = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g,'_');
             firebaseDB.ref('players/' + key + '/info').set({ pseudo: pseudo, lastSeen: Date.now() });
-            syncStatsToFirebase(pseudo);
             // Anti-abus : attacher les listeners Firebase
             if (typeof _abAttachFirebaseListeners === 'function') _abAttachFirebaseListeners();
+            // Charger la meilleure série quiz depuis Firebase AVANT de syncer les stats
+            // (évite d'écraser le record stocké avec les valeurs locales {0,0,0})
+            if (typeof _quizLoadStreakFromFirebase === 'function') {
+                _quizLoadStreakFromFirebase(function() {
+                    syncStatsToFirebase(pseudo);
+                });
+            } else {
+                syncStatsToFirebase(pseudo);
+            }
             // Écouter le ban temporaire
             firebaseDB.ref('players/' + key + '/banned').on('value', snap => {
                 window._playerBanned = snap.val() === true;
@@ -13870,10 +13889,10 @@
             firebaseDB.ref('players/' + key + '/stats/quizBestStreak').set(_quizBestStreak).catch(() => {});
         }
 
-        function _quizLoadStreakFromFirebase() {
-            if (!firebaseDB) return;
+        function _quizLoadStreakFromFirebase(callback) {
+            if (!firebaseDB) { if (typeof callback === 'function') callback(); return; }
             const pseudo = localStorage.getItem('tradePseudo') || '';
-            if (!pseudo) return;
+            if (!pseudo) { if (typeof callback === 'function') callback(); return; }
             const key = encodeURIComponent(pseudo).replace(/[.#$/\[\]]/g,'_');
             firebaseDB.ref('players/' + key + '/stats/quizBestStreak').once('value').then(snap => {
                 const d = snap.val();
@@ -13882,7 +13901,8 @@
                     if (typeof d.rarity     === 'number') _quizBestStreak.rarity     = Math.max(_quizBestStreak.rarity,     d.rarity);
                     if (typeof d.silhouette === 'number') _quizBestStreak.silhouette = Math.max(_quizBestStreak.silhouette, d.silhouette);
                 }
-            }).catch(() => {});
+                if (typeof callback === 'function') callback();
+            }).catch(() => { if (typeof callback === 'function') callback(); });
         }
 
         function adminStatus(msg) {
@@ -13930,12 +13950,6 @@
         let _lbTab = 'cards';
         let _lbQuizSubtab = 'name';  // sous-onglet quiz actif : 'name' | 'rarity' | 'silhouette'
         let _lbEntries = [];
-
-        // ── Meilleure streak quiz par mode (local + Firebase) ────────────
-        // Structure : { name: 0, rarity: 0, silhouette: 0 }
-        let _quizBestStreak = { name: 0, rarity: 0, silhouette: 0 };
-        // Streak en cours pour le mode actif (mise à jour dans handleQuizAnswer)
-        let _quizCurrentStreak = 0;
 
         function lbSwitchTab(tab) {
             _lbTab = tab;
