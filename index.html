@@ -1076,6 +1076,68 @@
             font-weight: 900;
         }
 
+        /* ── Thème Ombre ── */
+        body.theme-ombre::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: linear-gradient(135deg, #0a0a0a 0%, #050505 100%);
+        }
+        body.theme-ombre {
+            --theme-bg-from:     #0a0a0a;
+            --theme-bg-to:       #050505;
+            --theme-border:      #2a2a2a;
+            --theme-accent:      #444444;
+            --theme-particle:    #333333;
+            --theme-glow:        rgba(50,50,50,0.6);
+        }
+        body.theme-ombre header {
+            background: linear-gradient(180deg, #111111 0%, #080808 100%) !important;
+            border-bottom-color: #222222 !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.95), 0 0 40px rgba(0,0,0,0.8) !important;
+        }
+        body.theme-ombre .chest-main {
+            border-color: #2a2a2a !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.95), 0 0 30px rgba(20,20,20,0.8) !important;
+        }
+        body.theme-ombre .stat-card {
+            background: linear-gradient(145deg, #111111 0%, #080808 100%) !important;
+            border-color: rgba(40,40,40,0.8) !important;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.9) !important;
+        }
+        body.theme-ombre .open-btn {
+            background: linear-gradient(180deg, #222222 0%, #111111 100%) !important;
+            color: #555555 !important;
+            border: 3px solid #333333 !important;
+            box-shadow: 0 8px 0 #050505, 0 0 20px rgba(0,0,0,0.8) !important;
+            font-weight: 900 !important;
+        }
+        body.theme-ombre h1 {
+            color: #444444 !important;
+            text-shadow:
+                2px 2px 0 #000000,
+                -1px -1px 0 #000000,
+                0 0 20px rgba(60,60,60,0.6) !important;
+        }
+        body.theme-ombre .subtitle {
+            color: #333333 !important;
+            text-shadow: 0 0 10px rgba(50,50,50,0.5) !important;
+        }
+
+        .theme-banner.ombre {
+            background: linear-gradient(90deg, #050505, #111111, #0a0a0a, #1a1a1a, #050505);
+            background-size: 300% 100%;
+            color: #555555;
+            box-shadow: 0 3px 18px rgba(0,0,0,0.95), inset 0 1px 0 rgba(40,40,40,0.5);
+            animation: bannerShift 8s linear infinite;
+            text-shadow: 0 0 8px rgba(80,80,80,0.6), 0 1px 0 rgba(0,0,0,1);
+            letter-spacing: 5px;
+            border-bottom: 2px solid rgba(30,30,30,0.9);
+            font-weight: 900;
+        }
+
         /* Bannière de thème actif */
         .theme-banner {
             display: none;
@@ -3593,7 +3655,167 @@
         .admin-book-pill { padding:4px 10px; border-radius:20px; border:1px solid rgba(255,0,64,0.2); background:rgba(255,0,64,0.05); color:#888; font-size:0.7em; cursor:pointer; transition:all 0.15s; font-weight:700; }
         .admin-book-pill.active { border-color:#ff0040; color:#fff; background:rgba(255,0,64,0.2); }
         .admin-book-count { color:#555; font-size:0.72em; text-align:center; margin-bottom:8px; }
-        /* ═══ CONNEXION ═══ */
+        /* ════════════════════════════════════
+           TICKET À GRATTER QUOTIDIEN
+           ════════════════════════════════════ */
+        #scratchOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 999990;
+            background: rgba(0,0,0,0.92);
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+        #scratchOverlay.show { display: flex; }
+
+        .scratch-ticket-wrap {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+        .scratch-ticket-header {
+            background: linear-gradient(135deg, #b8860b, #ffd700, #b8860b);
+            color: #1a0a00;
+            font-family: 'Arial Black', Arial, sans-serif;
+            font-size: 1.1em;
+            font-weight: 900;
+            letter-spacing: 3px;
+            padding: 12px 32px;
+            border-radius: 16px 16px 0 0;
+            text-align: center;
+            width: 420px;
+            box-sizing: border-box;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+        }
+        .scratch-ticket-body {
+            position: relative;
+            width: 420px;
+            height: 220px;
+            background: linear-gradient(135deg, #0a1628, #1a0a35);
+            border-left: 4px solid #ffd700;
+            border-right: 4px solid #ffd700;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #scratchReveal {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px;
+        }
+        #scratchRevealEmoji  { font-size: 4em; line-height: 1; }
+        #scratchRevealLabel  { color: #ffd700; font-size: 1.3em; font-weight: 900; font-family:'Arial Black',Arial,sans-serif; letter-spacing:1px; text-align:center; }
+        #scratchRevealSub    { color: #aaa; font-size: 0.88em; text-align:center; }
+
+        #scratchCanvas {
+            position: absolute;
+            inset: 0;
+            cursor: crosshair;
+            touch-action: none;
+        }
+        .scratch-ticket-footer {
+            background: linear-gradient(135deg, #b8860b, #ffd700, #b8860b);
+            color: #1a0a00;
+            font-size: 0.72em;
+            font-weight: 900;
+            letter-spacing: 2px;
+            padding: 9px 32px;
+            border-radius: 0 0 16px 16px;
+            text-align: center;
+            width: 420px;
+            box-sizing: border-box;
+        }
+
+        /* ═══ SCRATCH + WHEEL : affichage carte ═══ */
+        .reveal-card-img {
+            width: 90px; height: 90px;
+            object-fit: contain;
+            border-radius: 12px;
+            filter: drop-shadow(0 0 12px currentColor);
+            animation: revealCardPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        @keyframes revealCardPop {
+            from { transform: scale(0.5); opacity: 0; }
+            to   { transform: scale(1);   opacity: 1; }
+        }
+        .reveal-card-rarity {
+            font-size: 0.78em;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+        .reveal-card-new {
+            background: linear-gradient(90deg, #00cc44, #00ff88);
+            color: #003311;
+            font-size: 0.65em;
+            font-weight: 900;
+            letter-spacing: 2px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-top: 3px;
+            display: inline-block;
+        }
+        /* Wheel card result */
+        .wheel-card-result {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            margin-top: 4px;
+        }
+        .wheel-card-result img {
+            width: 70px; height: 70px;
+            object-fit: contain;
+            border-radius: 10px;
+            animation: revealCardPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        }
+
+        .scratch-ticket-hint {
+            color: rgba(255,215,0,0.6);
+            font-size: 0.78em;
+            font-family:'Arial Black',Arial,sans-serif;
+            letter-spacing: 1px;
+            animation: scratchHintPulse 1.5s infinite;
+        }
+        @keyframes scratchHintPulse {
+            0%,100% { opacity:0.5; }
+            50%      { opacity:1; }
+        }
+        #scratchCollectBtn {
+            display: none;
+            background: linear-gradient(180deg,#ffd700,#b8860b);
+            border: none;
+            color: #1a0a00;
+            font-family: 'Arial Black', Arial, sans-serif;
+            font-size: 1em;
+            font-weight: 900;
+            letter-spacing: 2px;
+            padding: 14px 40px;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #7a5800;
+            transition: transform 0.1s, box-shadow 0.1s;
+            animation: scratchBtnAppear 0.4s ease;
+        }
+        #scratchCollectBtn:active { transform:translateY(3px); box-shadow:0 3px 0 #7a5800; }
+        @keyframes scratchBtnAppear {
+            from { opacity:0; transform:scale(0.8) translateY(10px); }
+            to   { opacity:1; transform:scale(1) translateY(0); }
+        }
+
+
         .auth-top-btn {
             position:fixed; top:14px; right:14px; z-index:5000;
             background:linear-gradient(180deg,#0a1628,#050d1a);
@@ -4964,15 +5186,7 @@
 </head>
 <body>
     <!-- Modal choix de pseudo -->
-    <div class="pseudo-modal-overlay" id="pseudoModal">
-        <div class="pseudo-modal-box">
-            <div class="pseudo-modal-title">🧠 BRAINROT</div>
-            <div class="pseudo-modal-sub">Choisis ton pseudo pour jouer</div>
-            <input class="pseudo-modal-input" id="pseudoModalInput" placeholder="Ton pseudo…" maxlength="20" autocomplete="off">
-            <button class="pseudo-modal-btn" onclick="confirmPseudo()">🎮 Jouer</button>
-            <div class="pseudo-modal-err" id="pseudoModalErr"></div>
-        </div>
-    </div>
+
 
     <!-- Écran bannissement permanent -->
     <div class="perma-ban-screen" id="permaBanScreen">
@@ -4985,6 +5199,24 @@
     <div class="auth-top-btn" id="authTopBtn" onclick="openAuth()">
         <i class="aico" id="authIco">👤</i>
         <span id="authTopLabel">CONNEXION</span>
+    </div>
+
+    <!-- ════ TICKET À GRATTER QUOTIDIEN ════ -->
+    <div id="scratchOverlay">
+        <div class="scratch-ticket-wrap">
+            <div class="scratch-ticket-header">🎟️ TICKET DU JOUR 🎟️</div>
+            <div class="scratch-ticket-body">
+                <div id="scratchReveal">
+                    <div id="scratchRevealEmoji">❓</div>
+                    <div id="scratchRevealLabel">???</div>
+                    <div id="scratchRevealSub"></div>
+                </div>
+                <canvas id="scratchCanvas" width="420" height="220"></canvas>
+            </div>
+            <div class="scratch-ticket-footer">⭐ BRAINROT SIMULATOR ⭐</div>
+        </div>
+        <div class="scratch-ticket-hint" id="scratchHint">👆 GRATTE POUR RÉVÉLER TA RÉCOMPENSE</div>
+        <button id="scratchCollectBtn" onclick="_scratchCollect()">🎁 RÉCUPÉRER MA RÉCOMPENSE</button>
     </div>
 
     <!-- Modal connexion -->
@@ -5648,6 +5880,7 @@
                         <button class="admin-btn" onclick="adminSetTheme('glitch')" style="background:linear-gradient(180deg,#00ffcc,#007755);box-shadow:0 4px 0 #003322;border:2px solid #00ffcc;color:#000d0a;font-weight:900;letter-spacing:2px;">⚡ Glitch</button>
                         <button class="admin-btn" onclick="adminSetTheme('chaos')" style="background:linear-gradient(180deg,#ff0040,#7700ff);box-shadow:0 4px 0 #330000;border:2px solid #ffff00;color:#fff;font-weight:900;letter-spacing:1px;animation:chaosBtn 0.2s steps(1) infinite;">💥 Chaos</button>
                         <button class="admin-btn" onclick="adminSetTheme('glass')" style="background:linear-gradient(180deg,rgba(255,255,255,0.75),rgba(180,225,255,0.6));box-shadow:0 4px 0 rgba(100,180,255,0.3),inset 0 1px 0 rgba(255,255,255,0.9);border:2px solid rgba(150,210,255,0.8);color:#1a5a8a;font-weight:900;backdrop-filter:blur(8px);">🧊 Glass</button>
+                        <button class="admin-btn" onclick="adminSetTheme('ombre')" style="background:linear-gradient(180deg,#111111,#050505);box-shadow:0 4px 0 #000000;border:2px solid #2a2a2a;color:#555555;font-weight:900;letter-spacing:2px;">🖤 Ombre</button>
                     </div>
                     <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminThemeStatus">Thème actuel : Défaut</div>
                 </div>
@@ -5793,6 +6026,7 @@
                                 <option value="glitch">⚡ Glitch</option>
                                 <option value="chaos">💥 Chaos</option>
                                 <option value="glass">🧊 Glass</option>
+                                <option value="ombre">🖤 Ombre</option>
                             </select>
                         </div>
 
@@ -5823,6 +6057,17 @@
 
             <!-- ONGLET JOUEURS -->
             <div class="admin-tab-panel" id="apanel-players">
+
+                <!-- Ticket à gratter — admin -->
+                <div class="admin-section" style="border-color:rgba(255,215,0,0.4);background:rgba(255,215,0,0.03);margin-bottom:10px;">
+                    <div class="admin-section-title" style="color:#ffd700;">🎟️ Ticket à Gratter</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:10px;">Envoie un ticket à gratter. Laisse vide pour tous les joueurs connectés.</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
+                        <input id="adminTicketTarget" class="admin-input" placeholder="Pseudo (vide = tous)" style="flex:1;min-width:120px;padding:6px 10px;font-size:0.82em;">
+                        <button class="admin-btn" onclick="adminSendTicket()" style="background:linear-gradient(180deg,#b8860b,#7a5800);box-shadow:0 4px 0 #3a2800;border:2px solid rgba(255,215,0,0.5);">🎟️ Envoyer</button>
+                    </div>
+                    <div style="color:#555;font-size:0.72em;" id="adminTicketStatus"></div>
+                </div>
 
                 <!-- Donner or -->
                 <div class="admin-section">
@@ -6883,7 +7128,8 @@
                 { name: 'Los Mariachis', img: 'https://static.wikia.nocookie.net/stealabr/images/f/f8/Los_Mariachis.png/revision/latest/scale-to-width-down/268?cb=20260417145348' },
                 { name: 'Camera Ramena', img: 'https://static.wikia.nocookie.net/stealabr/images/4/46/Camera_Ramena.png/revision/latest/scale-to-width-down/268?cb=20260419152435' },
                 { name: 'Kalika Bros', img: 'https://static.wikia.nocookie.net/stealabr/images/f/f3/Kalika_Bros.png/revision/latest/scale-to-width-down/268?cb=20260419152541' },
-                { name: 'Digi Narwhal', img: 'https://static.wikia.nocookie.net/stealabr/images/7/7f/Digi_Narwhal.png/revision/latest/scale-to-width-down/268?cb=20260419152454' }
+                { name: 'Digi Narwhal', img: 'https://static.wikia.nocookie.net/stealabr/images/7/7f/Digi_Narwhal.png/revision/latest/scale-to-width-down/268?cb=20260419152454' },
+                { name: 'Buho de Volto', img: 'https://static.wikia.nocookie.net/stealabr/images/8/8b/Buho_de_Volto.png/revision/latest/scale-to-width-down/268?cb=20260419152357' }
              ],
               og: [
                 { name: "Strawberry Elephant", img: 'https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest/scale-to-width-down/144?cb=20250830235735' },
@@ -9167,12 +9413,12 @@
         function initPseudoModal() {
             const existing = localStorage.getItem('tradePseudo');
             if (existing && existing.trim()) {
-                // Pseudo déjà choisi, on enregistre juste le joueur dans Firebase
+                // Pseudo déjà enregistré : connexion directe
                 registerPlayer(existing.trim());
                 return;
             }
-            document.getElementById('pseudoModal').classList.add('open');
-            setTimeout(() => document.getElementById('pseudoModalInput').focus(), 100);
+            // Nouveau joueur : ouvrir directement le modal Connexion / Inscription
+            openAuth();
         }
 
         function confirmPseudo() {
@@ -9204,6 +9450,18 @@
             } else {
                 syncStatsToFirebase(pseudo);
             }
+            // Ticket à gratter : vérifier ticket admin perso + ticket quotidien
+            firebaseDB.ref('players/' + key + '/scratchTicket').once('value').then(snap => {
+                const d = snap.val();
+                if (d && d.status === 'pending') {
+                    // Marquer utilisé tout de suite pour éviter toute duplication
+                    firebaseDB.ref('players/' + key + '/scratchTicket').set({ ts: d.ts, status: 'used' }).catch(()=>{});
+                    localStorage.setItem('scratchAdminTicket', 'pending');
+                }
+                setTimeout(_scratchCheckAndShow, 900);
+            }).catch(() => {
+                setTimeout(_scratchCheckAndShow, 900);
+            });
             // Écouter le ban temporaire
             firebaseDB.ref('players/' + key + '/banned').on('value', snap => {
                 window._playerBanned = snap.val() === true;
@@ -9660,6 +9918,20 @@
 
             } // fin bloc _globalListenersAttached
 
+            // ── Listener ticket admin broadcast (pour tous) ──
+            firebaseDB.ref('admin/scratchTicketBroadcast').on('value', snap => {
+                const d = snap.val();
+                if (!d || d.status !== 'pending') return;
+                // Vérifier qu'on n'a pas déjà traité ce broadcast (même ts)
+                const lastTs = localStorage.getItem('scratchAdminBroadcastTs');
+                if (lastTs && parseInt(lastTs) >= d.ts) return;
+                localStorage.setItem('scratchAdminBroadcastTs', d.ts);
+                localStorage.setItem('scratchAdminTicket', 'pending');
+                // Afficher immédiatement si personne n'est en train de gratter
+                const overlay = document.getElementById('scratchOverlay');
+                if (!overlay.classList.contains('show')) _scratchOpen();
+            });
+
             // ── Listeners SPÉCIFIQUES AU JOUEUR — attachés à chaque appel (pseudo peut changer) ──
 
             // Or pour ce joueur
@@ -10113,7 +10385,9 @@
 
         // ── ADMIN PANEL ─────────────────────────────────
         const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-        const ADMIN_PASSWORD = '0611';
+        // Le mot de passe admin est stocké dans Firebase (admin/config/pwdHash)
+        // Il n'est plus en clair dans le code.
+        let _adminPwdHash = null; // chargé depuis Firebase au moment de la vérification
         let konamiIdx = 0;
         document.addEventListener('keydown', e => {
             if (e.key === KONAMI[konamiIdx]) {
@@ -10160,16 +10434,54 @@
             setTimeout(() => document.getElementById('adminPwdInput').focus(), 100);
         }
 
-        function checkAdminPassword() {
+        async function checkAdminPassword() {
             const val = document.getElementById('adminPwdInput').value;
-            if (val === ADMIN_PASSWORD) {
-                document.getElementById('adminPwdOverlay').classList.remove('open');
-                openAdmin();
+            const errEl = document.getElementById('adminPwdErr');
+            if (!val) return;
+
+            // Hasher la saisie en SHA-256 côté client
+            let inputHash;
+            try {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(val);
+                const hashBuf = await crypto.subtle.digest('SHA-256', data);
+                inputHash = Array.from(new Uint8Array(hashBuf))
+                    .map(b => b.toString(16).padStart(2, '0')).join('');
+            } catch(e) {
+                errEl.textContent = '❌ Erreur cryptographique';
+                return;
+            }
+
+            // Vérifier d'abord dans Firebase, sinon fallback sur hash local
+            const _checkHash = (expected) => {
+                // Nettoyer la valeur Firebase (enlever guillemets éventuels)
+                const clean = String(expected).replace(/^"|"$/g, '').trim();
+                if (inputHash === clean) {
+                    document.getElementById('adminPwdOverlay').classList.remove('open');
+                    errEl.textContent = '';
+                    openAdmin();
+                } else {
+                    errEl.textContent = '❌ Mot de passe incorrect';
+                    document.getElementById('adminPwdInput').value = '';
+                    document.getElementById('adminPwdInput').focus();
+                    setTimeout(() => { errEl.textContent = ''; }, 2000);
+                }
+            };
+
+            if (firebaseDB) {
+                errEl.textContent = '⏳ Vérification…';
+                firebaseDB.ref('admin/config/pwdHash').once('value').then(snap => {
+                    const expected = snap.val();
+                    if (!expected) {
+                        errEl.textContent = '❌ Configuration manquante dans Firebase';
+                        return;
+                    }
+                    _checkHash(expected);
+                }).catch(() => {
+                    errEl.textContent = '❌ Erreur de lecture Firebase';
+                });
             } else {
-                document.getElementById('adminPwdErr').textContent = '❌ Mot de passe incorrect';
-                document.getElementById('adminPwdInput').value = '';
-                document.getElementById('adminPwdInput').focus();
-                setTimeout(() => { document.getElementById('adminPwdErr').textContent = ''; }, 2000);
+                errEl.textContent = '❌ Firebase non disponible';
             }
         }
 
@@ -11040,6 +11352,12 @@
                 banner: '🧊 ❄️ GLASS ❄️ 🧊',
                 bannerClass: 'glass',
                 particles: { color: 'rgba(200,240,255,0.9)', emoji: ['🧊','❄️','💧','🫧','🌊','✨','💎','🔷','🫙'], count: 70, glow: 'rgba(150,210,255,0.85)' }
+            },
+            'ombre': {
+                label: '🖤 Ombre',
+                banner: '🖤 ░ O M B R E ░ 🖤',
+                bannerClass: 'ombre',
+                particles: { color: '#333333', emoji: ['🖤','🌑','👤','🕷️','🪦','🌫️','🏴','💀','🌚'], count: 60, glow: 'rgba(20,20,20,0.95)' }
             }
         };
 
@@ -13937,8 +14255,7 @@
             if (typeof _aqInit === 'function') _aqInit();
             _schedStartChecker();
             initPseudoModal();
-            const inp = document.getElementById('pseudoModalInput');
-            if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') confirmPseudo(); });
+
             const pwdInp = document.getElementById('adminPwdInput');
             if (pwdInp) pwdInp.addEventListener('keydown', e => { if (e.key === 'Enter') checkAdminPassword(); });
         });
@@ -15189,6 +15506,315 @@
 
         createStars();
 
+        // ════════════════════════════════════════════════════════════
+        //  TICKET À GRATTER QUOTIDIEN
+        // ════════════════════════════════════════════════════════════
+
+        // ── Table de probabilités ──────────────────────────────────
+        const _SCRATCH_REWARDS = [
+            // OR petite quantité
+            { type:'gold', w:50,  gold:()=> Math.floor((500 + Math.random()*4500)),         emoji:'💰', label:'OR',        sub:()=> '+' + _scratchPending.amount.toLocaleString() + ' 💰' },
+            // OR moyenne
+            { type:'gold', w:15,  gold:()=> Math.floor((5000 + Math.random()*15000)),        emoji:'💰', label:'OR',        sub:()=> '+' + _scratchPending.amount.toLocaleString() + ' 💰' },
+            // OR grosse
+            { type:'gold', w:5,   gold:()=> Math.floor((20000 + Math.random()*30000)),       emoji:'💰', label:'OR',        sub:()=> '+' + _scratchPending.amount.toLocaleString() + ' 💰' },
+            // Chance ×4 — 10 minutes
+            { type:'luck', w:10,  mult:4,  dur:600,  emoji:'🍀', label:'CHANCE ×4',  sub:()=> '10 minutes' },
+            // Chance ×8 — 5 minutes
+            { type:'luck', w:4,   mult:8,  dur:300,  emoji:'🍀', label:'CHANCE ×8',  sub:()=> '5 minutes'  },
+            // Chance ×16 — 3 minutes
+            { type:'luck', w:1,   mult:16, dur:180,  emoji:'🍀', label:'CHANCE ×16', sub:()=> '3 minutes'  },
+            // Carte Commune
+            { type:'card', w:10,  rarity:'common',        emoji:'🃏', label:'CARTE COMMUNE',   sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
+            // Carte Rare
+            { type:'card', w:8,   rarity:'rare',          emoji:'🃏', label:'CARTE RARE',      sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
+            // Carte Épique
+            { type:'card', w:7,   rarity:'epic',          emoji:'🃏', label:'CARTE ÉPIQUE',    sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
+            // Carte Légendaire
+            { type:'card', w:6,   rarity:'legendary',     emoji:'🃏', label:'CARTE LÉGENDAIRE',sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
+            // Carte Mythique ou plus (mythic/brainrot_god/secret/og/limited/no)
+            { type:'card', w:5,   rarity:'mythic',        emoji:'🃏', label:'CARTE MYTHIQUE',  sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
+            // Carte Brainrot God ou mieux
+            { type:'card', w:4,   rarity:'brainrot_god',  emoji:'🃏', label:'BRAINROT GOD !',  sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
+            // OG ou plus (~0.1%)
+            { type:'card', w:0.1, rarity:'og',            emoji:'👑', label:'CARTE OG !!!',    sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
+        ];
+        // Total poids
+        const _SCRATCH_TOTAL_W = _SCRATCH_REWARDS.reduce((s,r) => s + r.w, 0);
+
+        // Récompense générée (en attente de collect)
+        let _scratchPending = null;
+        // Grattage déjà complété pour ce ticket
+        let _scratchDone = false;
+
+        // Choisir une récompense aléatoire
+        function _scratchPickReward() {
+            let r = Math.random() * _SCRATCH_TOTAL_W;
+            for (const reward of _SCRATCH_REWARDS) {
+                r -= reward.w;
+                if (r <= 0) return { ...reward };
+            }
+            return { ..._SCRATCH_REWARDS[0] };
+        }
+
+        // Pré-générer la récompense (on tire la carte maintenant pour éviter tout exploit)
+        function _scratchGenerate() {
+            const reward = _scratchPickReward();
+            if (reward.type === 'gold') {
+                reward.amount = reward.gold();
+                delete reward.gold;
+            }
+            if (reward.type === 'card') {
+                // Essayer de trouver une carte de la rareté demandée
+                const fallbackOrder = ['og','limited','no','brainrot_god','secret','mythic','legendary','epic','rare','common'];
+                let card = null;
+                let actualRarity = reward.rarity;
+                // Essayer la rareté exacte, puis descendre si vide
+                const tryList = [reward.rarity, ...fallbackOrder.filter(r => r !== reward.rarity)];
+                for (const r of tryList) {
+                    card = getRandomCard(r);
+                    if (card) { actualRarity = r; break; }
+                }
+                reward.card = card;
+                reward.rarity = actualRarity;
+            }
+            _scratchPending = reward;
+        }
+
+        // Clé du jour
+        function _scratchTodayKey() {
+            const d = new Date();
+            return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+        }
+
+        // Vérifier si le joueur a droit au ticket aujourd'hui
+        function _scratchCheckAndShow() {
+            const lastDate = localStorage.getItem('scratchLastDate');
+            const adminTicket = localStorage.getItem('scratchAdminTicket');
+            const today = _scratchTodayKey();
+            // Ticket admin (prioritaire, utilisable une fois)
+            if (adminTicket === 'pending') {
+                localStorage.removeItem('scratchAdminTicket');
+                _scratchOpen();
+                return;
+            }
+            // Ticket quotidien
+            if (lastDate !== today) {
+                localStorage.setItem('scratchLastDate', today);
+                _scratchOpen();
+            }
+        }
+
+        // Ouvrir le ticket
+        function _scratchOpen() {
+            _scratchDone = false;
+            _scratchGenerate();
+            // Remplir le canvas avec une texture grise à gratter
+            const canvas = document.getElementById('scratchCanvas');
+            if (!canvas) return;
+            // Synchroniser la taille du canvas avec le CSS
+            canvas.width  = 420;
+            canvas.height = 220;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Fond gris métallique avec texture
+            const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            grad.addColorStop(0,   '#8a8a8a');
+            grad.addColorStop(0.3, '#c0c0c0');
+            grad.addColorStop(0.6, '#a0a0a0');
+            grad.addColorStop(1,   '#707070');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Motif de points pour l'effet "à gratter"
+            ctx.fillStyle = 'rgba(0,0,0,0.08)';
+            for (let x = 0; x < canvas.width; x += 8) {
+                for (let y = 0; y < canvas.height; y += 8) {
+                    if ((x + y) % 16 === 0) ctx.fillRect(x, y, 4, 4);
+                }
+            }
+            // Texte "GRATTEZ ICI"
+            ctx.fillStyle = 'rgba(0,0,0,0.25)';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('✦ GRATTEZ ICI ✦', canvas.width/2, canvas.height/2);
+            // Pré-remplir le reveal (caché sous le canvas)
+            const _sEmojiEl = document.getElementById('scratchRevealEmoji');
+            const _sLabelEl = document.getElementById('scratchRevealLabel');
+            const _sSubEl   = document.getElementById('scratchRevealSub');
+            const _sRC = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#ffffff', og:'#c8a000', limited:'#ff59e7', no:'#ff0000', admin_exclusive:'#ff0040' };
+            const _sRL = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secrète', og:'OG', limited:'Limitée', no:'Impossible' };
+            if (_scratchPending.type === 'card' && _scratchPending.card && _scratchPending.card.img) {
+                const _card = _scratchPending.card;
+                const _rar  = _scratchPending.rarity;
+                const _col  = _sRC[_rar] || '#ffd700';
+                // Vérifier si c'est une nouvelle carte
+                const _ck   = _rar + '|' + _card.name;
+                const _isNew = !unlockedCards.has(_ck) || (unlockedCards.get(_ck) || 0) === 0;
+                _sEmojiEl.innerHTML = '<img class="reveal-card-img" src="' + _card.img + '" style="color:' + _col + ';" onerror="this.style.display=\'none\'">';
+                _sLabelEl.textContent = _card.name;
+                _sLabelEl.style.color = _col;
+                _sSubEl.innerHTML = '<span class="reveal-card-rarity" style="color:' + _col + ';">' + (_sRL[_rar] || _rar) + '</span>' + (_isNew ? '<br><span class="reveal-card-new">✨ NOUVELLE CARTE !</span>' : '');
+            } else {
+                _sEmojiEl.textContent = _scratchPending.emoji;
+                _sLabelEl.textContent = _scratchPending.label;
+                _sLabelEl.style.color = '';
+                _sSubEl.textContent   = _scratchPending.sub ? _scratchPending.sub() : '';
+            }
+            // Afficher
+            document.getElementById('scratchHint').style.display = 'block';
+            document.getElementById('scratchCollectBtn').style.display = 'none';
+            document.getElementById('scratchOverlay').classList.add('show');
+            // Attacher les événements de grattage
+            _scratchAttachEvents(canvas, ctx);
+        }
+
+        // Attacher les events de grattage (mouse + touch)
+        function _scratchAttachEvents(canvas, ctx) {
+            let isDrawing = false;
+            let totalPixels = canvas.width * canvas.height;
+            let scratchedPixels = 0;
+            let revealed = false;
+            ctx.globalCompositeOperation = 'destination-out';
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+            }
+
+            function scratch(e) {
+                if (!isDrawing || revealed) return;
+                e.preventDefault();
+                const pos = getPos(e);
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 22, 0, Math.PI * 2);
+                ctx.fill();
+                // Compter les pixels révélés
+                scratchedPixels += Math.PI * 22 * 22;
+                const pct = Math.min(scratchedPixels / totalPixels, 1);
+                if (pct > 0.45 && !revealed) {
+                    revealed = true;
+                    _scratchRevealComplete(canvas, ctx);
+                }
+            }
+
+            canvas.addEventListener('mousedown', e => { isDrawing = true; scratch(e); });
+            canvas.addEventListener('mousemove', scratch);
+            canvas.addEventListener('mouseup',   () => isDrawing = false);
+            canvas.addEventListener('mouseleave',() => isDrawing = false);
+            canvas.addEventListener('touchstart', e => { isDrawing = true; scratch(e); }, { passive: false });
+            canvas.addEventListener('touchmove',  scratch, { passive: false });
+            canvas.addEventListener('touchend',   () => isDrawing = false);
+        }
+
+        // Révélation complète (efface tout le canvas)
+        function _scratchRevealComplete(canvas, ctx) {
+            // Animation d'effacement progressif du reste
+            let alpha = 1;
+            const fade = setInterval(() => {
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.globalAlpha = 0.15;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                alpha -= 0.15;
+                if (alpha <= 0) {
+                    clearInterval(fade);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.globalAlpha = 1;
+                    _scratchShowCollect();
+                }
+            }, 30);
+        }
+
+        function _scratchShowCollect() {
+            document.getElementById('scratchHint').style.display = 'none';
+            const btn = document.getElementById('scratchCollectBtn');
+            btn.style.display = 'block';
+            _scratchDone = true;
+        }
+
+        // Réclamer la récompense
+        function _scratchCollect() {
+            if (!_scratchPending || !_scratchDone) return;
+            const reward = _scratchPending;
+            _scratchPending = null;
+            document.getElementById('scratchOverlay').classList.remove('show');
+
+            if (reward.type === 'gold') {
+                stats.totalGold += reward.amount;
+                document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
+                const sg = document.getElementById('shopGoldDisplay');
+                if (sg) sg.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
+                showBroadcast('🎟️ Ticket du jour : +' + reward.amount.toLocaleString() + ' 💰 !', Date.now());
+                autoSave();
+            } else if (reward.type === 'luck') {
+                personalLuck = reward.mult;
+                luckExpiry   = Date.now() + reward.dur * 1000;
+                startLuckTimer();
+                showBroadcast('🎟️ Ticket du jour : ' + reward.label + ' pendant ' + (reward.dur / 60 | 0) + 'min !', Date.now());
+                autoSave();
+            } else if (reward.type === 'card') {
+                const card = reward.card;
+                if (card) {
+                    const rarity   = reward.rarity;
+                    const cardKey  = rarity + '|' + card.name;
+                    if (!unlockedCards.has(cardKey)) {
+                        unlockedCards.set(cardKey, 0);
+                        stats.totalCards++;
+                    }
+                    unlockedCards.set(cardKey, (unlockedCards.get(cardKey) || 0) + 1);
+                    showBroadcast('🎟️ Ticket du jour : carte ' + card.name + ' (' + rarity + ') !', Date.now());
+                    autoSave();
+                    // Afficher la carte obtenue
+                    if (typeof showRewards === 'function') {
+                        setTimeout(() => {
+                            const fake = [{ card, rarity, isGold:false, isDiamond:false, isRainbow:false, isChocolate:false }];
+                            // showRewards attend les récompenses dans le format du jeu
+                            // Utiliser l'affichage simple via openingModal si disponible
+                            const om = document.getElementById('openingModal');
+                            if (om) {
+                                document.getElementById('rewardsGrid').innerHTML = `<div class="reward-item" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;">
+                                    <img src="${card.img}" style="width:90px;height:90px;object-fit:contain;border-radius:10px;">
+                                    <div style="color:#ffd700;font-size:0.8em;font-weight:900;">${card.name}</div>
+                                    <div style="color:#aaa;font-size:0.7em;">${rarity}</div>
+                                </div>`;
+                                om.style.display = 'flex';
+                            }
+                        }, 300);
+                    }
+                }
+            }
+        }
+
+        // ── Admin : envoyer un ticket ─────────────────────────────────
+        function adminSendTicket() {
+            if (!firebaseDB) { _adminTicketStatus('⚠️ Firebase non connecté'); return; }
+            const target = (document.getElementById('adminTicketTarget').value || '').trim();
+            const ts = Date.now();
+            if (target) {
+                // Envoyer à un joueur précis
+                const key = encodeURIComponent(target).replace(/[.#$/\[\]]/g, '_');
+                firebaseDB.ref('players/' + key + '/scratchTicket').set({ ts, status: 'pending' })
+                    .then(() => _adminTicketStatus('✅ Ticket envoyé à ' + target))
+                    .catch(e => _adminTicketStatus('Erreur : ' + e.message));
+            } else {
+                // Envoyer à tous les joueurs connectés
+                firebaseDB.ref('admin/scratchTicketBroadcast').set({ ts, status: 'pending' })
+                    .then(() => _adminTicketStatus('✅ Ticket envoyé à tous les joueurs'))
+                    .catch(e => _adminTicketStatus('Erreur : ' + e.message));
+            }
+        }
+        function _adminTicketStatus(msg) {
+            const el = document.getElementById('adminTicketStatus');
+            if (!el) return;
+            el.textContent = msg;
+            clearTimeout(el._t);
+            el._t = setTimeout(() => { el.textContent = ''; }, 4000);
+        }
+
+
         // ═══════════════════════════════════════════
         //  SYSTÈME DE COMPTE
         // ═══════════════════════════════════════════
@@ -15737,10 +16363,26 @@
                 var card = getRandomCard(val.rarity);
                 if (card) {
                     var cardKey = val.rarity + '|' + card.name;
+                    var _wIsNew = !unlockedCards.has(cardKey) || (unlockedCards.get(cardKey) || 0) === 0;
                     if (!unlockedCards.has(cardKey)) { unlockedCards.set(cardKey, 0); stats.totalCards++; }
                     unlockedCards.set(cardKey, unlockedCards.get(cardKey) + 1);
                     document.getElementById('totalCards').textContent = stats.totalCards;
                     autoSave();
+                    var _wRC = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#ffffff', og:'#c8a000', limited:'#ff59e7', no:'#ff0000' };
+                    var _wRL = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secrète', og:'OG', limited:'Limitée', no:'Impossible' };
+                    var _wCol = _wRC[val.rarity] || '#ffd700';
+                    var _wValEl = document.getElementById('wheelResultValue');
+                    if (_wValEl) {
+                        _wValEl.innerHTML = '<div class="wheel-card-result">' +
+                            (card.img ? '<img src="' + card.img + '" style="filter:drop-shadow(0 0 10px ' + _wCol + ');" onerror="this.style.display=\'none\'">' : '🃏') +
+                            '<div style="color:' + _wCol + ';font-weight:900;font-size:1em;">' + card.name + '</div>' +
+                            '<div class="reveal-card-rarity" style="color:' + _wCol + ';">' + (_wRL[val.rarity] || val.rarity) + '</div>' +
+                            (_wIsNew ? '<span class="reveal-card-new">✨ NOUVELLE CARTE !</span>' : '') +
+                            '</div>';
+                        document.getElementById('wheelResult').classList.add('show');
+                        playSound('buy');
+                        return; // éviter le double affichage en bas
+                    }
                     msg = '🃏 ' + card.name + ' (' + val.rarity + ')';
                 } else {
                     msg = seg.label;
