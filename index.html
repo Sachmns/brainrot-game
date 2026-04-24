@@ -9418,7 +9418,7 @@
                 return;
             }
             // Nouveau joueur : ouvrir directement le modal Connexion / Inscription
-            openAuth();
+            openAuth(true);
         }
 
         function confirmPseudo() {
@@ -15910,7 +15910,7 @@
             if (saveStr && firebaseDB) firebaseDB.ref(_authUser.key + '/save').set(saveStr);
         }
 
-        function openAuth() {
+        function openAuth(forced) {
             const msg = document.getElementById('authMsg');
             msg.textContent = ''; msg.className = 'auth-msg';
             if (_authUser) {
@@ -15923,6 +15923,9 @@
                 document.getElementById('authTabs').style.display = 'flex';
                 document.getElementById('authPanelProfile').style.display = 'none';
             }
+            // Cacher la croix si ouverture forcée (premier lancement)
+            const xBtn = document.querySelector('#authOverlay .auth-x');
+            if (xBtn) xBtn.style.display = forced ? 'none' : '';
             document.getElementById('authOverlay').classList.add('open');
         }
         function closeAuth() { document.getElementById('authOverlay').classList.remove('open'); }
@@ -16018,7 +16021,7 @@
             localStorage.removeItem('authPseudo');
             document.getElementById('authTopLabel').textContent = 'CONNEXION';
             document.getElementById('authIco').textContent = '👤';
-            closeAuth();
+            openAuth(true); // Rouvrir obligatoirement sans la croix ✕
         }
 
 
