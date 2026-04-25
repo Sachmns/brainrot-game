@@ -6062,7 +6062,8 @@
                 <div class="admin-section" style="border-color:rgba(255,215,0,0.4);background:rgba(255,215,0,0.03);margin-bottom:10px;">
                     <div class="admin-section-title" style="color:#ffd700;">🎟️ Ticket à Gratter</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:10px;">Envoie un ticket à gratter. Laisse vide pour tous les joueurs connectés.</div>
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
+                    <div class="admin-player-list" id="adminPlayerListTicket"></div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;margin-top:8px;">
                         <input id="adminTicketTarget" class="admin-input" placeholder="Pseudo (vide = tous)" style="flex:1;min-width:120px;padding:6px 10px;font-size:0.82em;">
                         <button class="admin-btn" onclick="adminSendTicket()" style="background:linear-gradient(180deg,#b8860b,#7a5800);box-shadow:0 4px 0 #3a2800;border:2px solid rgba(255,215,0,0.5);">🎟️ Envoyer</button>
                     </div>
@@ -10487,7 +10488,7 @@
 
         function refreshAdminPlayerLists() {
             const players = window._adminPlayerList || [];
-            ['adminPlayerListGold', 'adminPlayerListForce', 'adminPlayerListBan', 'adminPlayerListStats', 'adminPlayerListPermaBan', 'adminPlayerListCurse', 'adminPlayerListLuckOne', 'adminPlayerListPopup'].forEach(listId => {
+            ['adminPlayerListGold', 'adminPlayerListForce', 'adminPlayerListBan', 'adminPlayerListStats', 'adminPlayerListPermaBan', 'adminPlayerListCurse', 'adminPlayerListLuckOne', 'adminPlayerListPopup', 'adminPlayerListTicket'].forEach(listId => {
                 const el = document.getElementById(listId);
                 if (!el) return;
                 el.innerHTML = '';
@@ -10511,6 +10512,7 @@
                         if (listId === 'adminPlayerListAdminCard') document.getElementById('adminCardPseudo').value = p;
                         if (listId === 'adminPlayerListLuckOne') document.getElementById('adminLuckOnePseudo').value = p;
                         if (listId === 'adminPlayerListPopup') document.getElementById('adminPopupPseudo').value = p;
+                        if (listId === 'adminPlayerListTicket') document.getElementById('adminTicketTarget').value = p;
                     };
                     el.appendChild(pill);
                 });
@@ -15183,10 +15185,13 @@
             if (recipe.result.mutation && recipe.result.mutation !== 'none') {
                 craftMutation = recipe.result.mutation;
             } else {
+                // Utilise _getMutRate() pour respecter le boost ×2 si actif
+                const _cR = _getMutRate('rainbow'), _cD = _getMutRate('diamond'), _cG = _getMutRate('gold'), _cC = _getMutRate('chocolate');
                 const roll = Math.random();
-                if (roll < window._mutationRates.rainbow)                                                               craftMutation = 'rainbow';
-                else if (roll < window._mutationRates.rainbow + window._mutationRates.diamond)                          craftMutation = 'diamond';
-                else if (roll < window._mutationRates.rainbow + window._mutationRates.diamond + window._mutationRates.gold) craftMutation = 'gold';
+                if (roll < _cR)                         craftMutation = 'rainbow';
+                else if (roll < _cR + _cD)              craftMutation = 'diamond';
+                else if (roll < _cR + _cD + _cC)        craftMutation = 'chocolate';
+                else if (roll < _cR + _cD + _cC + _cG)  craftMutation = 'gold';
             }
             // Ajouter la carte craftée dans la bonne Map
             let resultIsNew = false;
@@ -15589,7 +15594,6 @@
 
         // Vérifier si le joueur a droit au ticket aujourd'hui
         function _scratchCheckAndShow() {
-            const lastDate = localStorage.getItem('scratchLastDate');
             const adminTicket = localStorage.getItem('scratchAdminTicket');
             const today = _scratchTodayKey();
             // Ticket admin (prioritaire, utilisable une fois)
@@ -15598,11 +15602,39 @@
                 _scratchOpen();
                 return;
             }
-            // Ticket quotidien
-            if (lastDate !== today) {
-                localStorage.setItem('scratchLastDate', today);
-                _scratchOpen();
+            // Ticket quotidien : vérifier la date dans Firebase (multi-appareil)
+            const pseudo = localStorage.getItem('tradePseudo') || localStorage.getItem('authPseudo');
+            if (!pseudo || !firebaseDB) {
+                // Fallback localStorage si pas connecté
+                const lastDate = localStorage.getItem('scratchLastDate');
+                if (lastDate !== today) {
+                    localStorage.setItem('scratchLastDate', today);
+                    _scratchOpen();
+                }
+                return;
             }
+            const key = encodeURIComponent(pseudo).replace(/[.#$\/\[\]]/g, '_');
+            firebaseDB.ref('players/' + key + '/scratchLastDate').once('value').then(function(snap) {
+                const fbDate = snap.val();
+                if (fbDate !== today) {
+                    // Écrire la date dans Firebase AVANT d'ouvrir (évite la double ouverture)
+                    firebaseDB.ref('players/' + key + '/scratchLastDate').set(today).then(function() {
+                        localStorage.setItem('scratchLastDate', today);
+                        _scratchOpen();
+                    }).catch(function() {
+                        // Erreur écriture : ouvrir quand même
+                        _scratchOpen();
+                    });
+                }
+                // Si fbDate === today : ticket déjà utilisé aujourd'hui sur un autre appareil
+            }).catch(function() {
+                // Erreur lecture Firebase : fallback localStorage
+                const lastDate = localStorage.getItem('scratchLastDate');
+                if (lastDate !== today) {
+                    localStorage.setItem('scratchLastDate', today);
+                    _scratchOpen();
+                }
+            });
         }
 
         // Ouvrir le ticket
@@ -16026,20 +16058,30 @@
 
 
 
-        // Auto-reconnexion au chargement
-        setTimeout(function() {
+        // Auto-reconnexion au chargement — robuste (retries si Firebase lent)
+        (function _autoReconnect(attempt) {
             const saved = localStorage.getItem('authPseudo');
-            if (!saved || !firebaseDB) return;
-            firebaseDB.ref(_akey(saved)).once('value').then(snap => {
+            if (!saved) return; // pas de session sauvegardée
+            if (_authUser) return; // déjà connecté
+            if (!firebaseDB) {
+                // Firebase pas encore prêt, réessayer
+                if (attempt < 5) setTimeout(function() { _autoReconnect(attempt + 1); }, 1000);
+                return;
+            }
+            firebaseDB.ref(_akey(saved)).once('value').then(function(snap) {
+                if (_authUser) return; // connecté entre-temps
                 if (!snap || !snap.exists()) return;
                 const data = snap.val();
-                // ✅ CORRECTION : réinitialiser avant d'appliquer la save Firebase
+                if (data.perma_banned) return; // ne pas reconnecter un banni perma
                 _resetLocalState();
                 const best = _bestSave(data.save || null, null);
                 _applySave(best);
                 _onLoggedIn(data.pseudo || saved);
-            }).catch(()=>{});
-        }, 1500);
+            }).catch(function() {
+                // Erreur réseau — réessayer jusqu'à 3 fois
+                if (attempt < 3) setTimeout(function() { _autoReconnect(attempt + 1); }, 2000);
+            });
+        })(0);
 
         // ═══ ACHAT ×10 ═══
         let _buyTenSelected = null;
