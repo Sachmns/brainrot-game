@@ -5682,7 +5682,7 @@
     <div class="mut-boost-badge" id="mutBoostBadge">
         <span class="mbb-emoji" id="mutBoostEmoji">✨</span>
         <span class="mbb-label" id="mutBoostLabel">GOLD</span>
-        <span class="mbb-x2">×2</span>
+        <span class="mbb-x2" id="mutBoostMultLabel">×2</span>
         <span class="mbb-timer" id="mutBoostTimer">--:--</span>
     </div>
 
@@ -6302,8 +6302,13 @@
                         <input id="adminMutBoostDuration" class="admin-input" type="number" value="300" min="10" style="width:80px;padding:6px 8px;font-size:0.82em;text-align:center;" placeholder="sec">
                         <span style="color:#888;font-size:0.72em;">secondes</span>
                     </div>
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                        <button class="admin-btn" onclick="adminActivateMutBoost()" style="background:linear-gradient(180deg,#6600cc,#33006a);box-shadow:0 4px 0 #1a0035;border:2px solid rgba(180,80,255,0.5);">⚡ Activer ×2</button>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                        <select id="adminMutBoostMult" class="admin-input" style="padding:6px 8px;font-size:0.82em;background:#0a0015;color:#fff;border:1px solid rgba(180,80,255,0.3);border-radius:8px;width:70px;">
+                            <option value="2">×2</option>
+                            <option value="3">×3</option>
+                            <option value="4">×4</option>
+                        </select>
+                        <button class="admin-btn" onclick="adminActivateMutBoost()" style="background:linear-gradient(180deg,#6600cc,#33006a);box-shadow:0 4px 0 #1a0035;border:2px solid rgba(180,80,255,0.5);">⚡ Activer</button>
                         <button class="admin-btn" onclick="adminDeactivateMutBoost()" style="background:linear-gradient(180deg,#3a0a0a,#1a0505);box-shadow:0 4px 0 #0a0000;border:2px solid rgba(231,76,60,0.4);color:#e74c3c;">⏹ OFF</button>
                     </div>
                     <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminMutBoostStatus"></div>
@@ -9452,17 +9457,21 @@
                 syncStatsToFirebase(pseudo);
             }
             // Ticket à gratter : vérifier ticket admin perso + ticket quotidien
-            firebaseDB.ref('players/' + key + '/scratchTicket').once('value').then(snap => {
+            // .on('value') au lieu de .once() : reçoit les tickets envoyés APRÈS connexion
+            firebaseDB.ref('players/' + key + '/scratchTicket').on('value', snap => {
                 const d = snap.val();
                 if (d && d.status === 'pending') {
-                    // Marquer utilisé tout de suite pour éviter toute duplication
+                    // Marquer utilisé immédiatement pour éviter la duplication
                     firebaseDB.ref('players/' + key + '/scratchTicket').set({ ts: d.ts, status: 'used' }).catch(()=>{});
-                    localStorage.setItem('scratchAdminTicket', 'pending');
+                    const overlay = document.getElementById('scratchOverlay');
+                    if (overlay && !overlay.classList.contains('show')) {
+                        _scratchOpen();
+                    } else {
+                        localStorage.setItem('scratchAdminTicket', 'pending');
+                    }
                 }
-                setTimeout(_scratchCheckAndShow, 900);
-            }).catch(() => {
-                setTimeout(_scratchCheckAndShow, 900);
             });
+            setTimeout(_scratchCheckAndShow, 900);
             // Écouter le ban temporaire
             firebaseDB.ref('players/' + key + '/banned').on('value', snap => {
                 window._playerBanned = snap.val() === true;
@@ -9897,7 +9906,7 @@
                         expiry = Date.now() + d.durationMs;
                     }
                 }
-                _applyMutBoost(d.mut || null, expiry);
+                _applyMutBoost(d.mut || null, expiry, d.multiplier || 2);
             });
 
             // Réduction Boutique
@@ -10189,10 +10198,11 @@
         // ════════════════════════════════════════════════
         // BOOST ×2 MUTATION
         // ════════════════════════════════════════════════
-        window._mutBoostActive = false;
-        window._mutBoostMut    = null;   // 'gold' | 'diamond' | 'rainbow' | 'chocolate'
-        window._mutBoostExpiry = 0;
-        let _mutBoostInterval  = null;
+        window._mutBoostActive     = false;
+        window._mutBoostMut        = null;   // 'gold' | 'diamond' | 'rainbow' | 'chocolate'
+        window._mutBoostExpiry     = 0;
+        window._mutBoostMultiplier = 2;      // 2 | 3 | 4
+        let _mutBoostInterval      = null;
 
         const _MUT_BOOST_META = {
             gold:      { emoji: '✨', label: 'GOLD',    color: '#ffd700' },
@@ -10201,19 +10211,21 @@
             chocolate: { emoji: '💩', label: 'CACA',    color: '#D2691E' },
         };
 
-        function _applyMutBoost(mut, expiry) {
+        function _applyMutBoost(mut, expiry, multiplier) {
             if (_mutBoostInterval) { clearInterval(_mutBoostInterval); _mutBoostInterval = null; }
             const badge = document.getElementById('mutBoostBadge');
             if (!mut || !expiry || expiry <= Date.now()) {
-                window._mutBoostActive = false;
-                window._mutBoostMut    = null;
-                window._mutBoostExpiry = 0;
+                window._mutBoostActive     = false;
+                window._mutBoostMut        = null;
+                window._mutBoostExpiry     = 0;
+                window._mutBoostMultiplier = 2;
                 if (badge) badge.classList.remove('show');
                 return;
             }
-            window._mutBoostActive = true;
-            window._mutBoostMut    = mut;
-            window._mutBoostExpiry = expiry;
+            window._mutBoostActive     = true;
+            window._mutBoostMut        = mut;
+            window._mutBoostExpiry     = expiry;
+            window._mutBoostMultiplier = multiplier || 2;
             const meta = _MUT_BOOST_META[mut] || { emoji: '⚡', label: mut.toUpperCase(), color: '#e040fb' };
             if (badge) {
                 const emojiEl = document.getElementById('mutBoostEmoji');
@@ -10221,6 +10233,8 @@
                 const timerEl = document.getElementById('mutBoostTimer');
                 if (emojiEl) emojiEl.textContent = meta.emoji;
                 if (labelEl) { labelEl.textContent = meta.label; labelEl.style.color = meta.color; }
+                const multLabelEl = document.getElementById('mutBoostMultLabel');
+                if (multLabelEl) multLabelEl.textContent = '×' + (multiplier || 2);
                 badge.classList.add('show');
                 function _updateMutBadge() {
                     const rem = Math.max(0, Math.ceil((window._mutBoostExpiry - Date.now()) / 1000));
@@ -10247,7 +10261,7 @@
         function _getMutRate(mutName) {
             const base = window._mutationRates[mutName] || 0;
             if (window._mutBoostActive && window._mutBoostMut === mutName && window._mutBoostExpiry > Date.now()) {
-                return Math.min(base * 2, 1);
+                return Math.min(base * (window._mutBoostMultiplier || 2), 1);
             }
             return base;
         }
@@ -10257,8 +10271,9 @@
             const mut = document.getElementById('adminMutBoostSelect').value;
             const sec = parseInt(document.getElementById('adminMutBoostDuration').value) || 300;
             const durationMs = sec * 1000;
-            firebaseDB.ref('admin/mutBoost').set({ active: true, mut, durationMs, ts: Date.now() })
-                .then(() => { _adminMutBoostStatus('✅ Boost ×2 ' + (mut.toUpperCase()) + ' activé — ' + sec + 's'); })
+            const mult = parseInt(document.getElementById('adminMutBoostMult').value) || 2;
+            firebaseDB.ref('admin/mutBoost').set({ active: true, mut, durationMs, ts: Date.now(), multiplier: mult })
+                .then(() => { _adminMutBoostStatus('✅ Boost ×' + mult + ' ' + (mut.toUpperCase()) + ' activé — ' + sec + 's'); })
                 .catch(e => _adminMutBoostStatus('Erreur : ' + e.message));
         }
         function adminDeactivateMutBoost() {
