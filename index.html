@@ -7135,7 +7135,12 @@
                 { name: 'Camera Ramena', img: 'https://static.wikia.nocookie.net/stealabr/images/4/46/Camera_Ramena.png/revision/latest/scale-to-width-down/268?cb=20260419152435' },
                 { name: 'Kalika Bros', img: 'https://static.wikia.nocookie.net/stealabr/images/f/f3/Kalika_Bros.png/revision/latest/scale-to-width-down/268?cb=20260419152541' },
                 { name: 'Digi Narwhal', img: 'https://static.wikia.nocookie.net/stealabr/images/7/7f/Digi_Narwhal.png/revision/latest/scale-to-width-down/268?cb=20260419152454' },
-                { name: 'Buho de Volto', img: 'https://static.wikia.nocookie.net/stealabr/images/8/8b/Buho_de_Volto.png/revision/latest/scale-to-width-down/268?cb=20260419152357' }
+                { name: 'Buho de Volto', img: 'https://static.wikia.nocookie.net/stealabr/images/8/8b/Buho_de_Volto.png/revision/latest/scale-to-width-down/268?cb=20260419152357' },
+                { name: 'Duggy Bros', img: 'https://static.wikia.nocookie.net/stealabr/images/6/69/Duggy_Bros.png/revision/latest/scale-to-width-down/268?cb=20260423114434' },
+                { name: 'Los Hackers', img: 'https://static.wikia.nocookie.net/stealabr/images/6/61/Loshackersmodel.png/revision/latest/scale-to-width-down/267?cb=20260425104410' },
+                { name: 'Money Money Bros', img: 'https://static.wikia.nocookie.net/stealabr/images/8/8e/Money_Money_Bros.png/revision/latest/scale-to-width-down/268?cb=20260424215247' },
+                { name: 'John Doe', img: 'https://static.wikia.nocookie.net/stealabr/images/3/33/John_Doe.png/revision/latest/scale-to-width-down/268?cb=20260425024254' },
+                { name: 'Futbolini Skatini', img: 'https://static.thenounproject.com/png/1554489-200.png' }
              ],
               og: [
                 { name: "Strawberry Elephant", img: 'https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest/scale-to-width-down/144?cb=20250830235735' },
@@ -15539,11 +15544,11 @@
             // OR grosse
             { type:'gold', w:5,   gold:()=> Math.floor((20000 + Math.random()*30000)),       emoji:'💰', label:'OR',        sub:()=> '+' + _scratchPending.amount.toLocaleString() + ' 💰' },
             // Chance ×4 — 10 minutes
-            { type:'luck', w:10,  mult:4,  dur:600,  emoji:'🍀', label:'CHANCE ×4',  sub:()=> '10 minutes' },
+            { type:'luck', w:10,  mult:4,  dur:180,  emoji:'🍀', label:'CHANCE ×4',  sub:()=> '3 minutes' },
             // Chance ×8 — 5 minutes
-            { type:'luck', w:4,   mult:8,  dur:300,  emoji:'🍀', label:'CHANCE ×8',  sub:()=> '5 minutes'  },
+            { type:'luck', w:4,   mult:8,  dur:120,  emoji:'🍀', label:'CHANCE ×8',  sub:()=> '2 minutes'  },
             // Chance ×16 — 3 minutes
-            { type:'luck', w:1,   mult:16, dur:180,  emoji:'🍀', label:'CHANCE ×16', sub:()=> '3 minutes'  },
+            { type:'luck', w:1,   mult:16, dur:60,  emoji:'🍀', label:'CHANCE ×16', sub:()=> '1 minutes'  },
             // Carte Commune
             { type:'card', w:10,  rarity:'common',        emoji:'🃏', label:'CARTE COMMUNE',   sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
             // Carte Rare
