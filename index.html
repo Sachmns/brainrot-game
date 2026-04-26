@@ -1092,28 +1092,106 @@
             --theme-accent:      #444444;
             --theme-particle:    #333333;
             --theme-glow:        rgba(50,50,50,0.6);
+            background: #070707 !important;
         }
         body.theme-ombre header {
             background: linear-gradient(180deg, #111111 0%, #080808 100%) !important;
             border-bottom-color: #222222 !important;
             box-shadow: 0 4px 20px rgba(0,0,0,0.95), 0 0 40px rgba(0,0,0,0.8) !important;
         }
+        /* Coffre principal */
         body.theme-ombre .chest-main {
+            background: linear-gradient(145deg, #111111 0%, #080808 100%) !important;
             border-color: #2a2a2a !important;
             box-shadow: 0 15px 40px rgba(0,0,0,0.95), 0 0 30px rgba(20,20,20,0.8) !important;
+        }
+        body.theme-ombre .chest-main:hover {
+            border-color: #444444 !important;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.99) !important;
+        }
+        body.theme-ombre .chest-name {
+            color: #555555 !important;
+            text-shadow: 2px 2px 0 #000, 0 0 20px rgba(60,60,60,0.5) !important;
+        }
+        body.theme-ombre .chest-description { color: #444444 !important; }
+        /* Bouton ouvrir */
+        body.theme-ombre .open-btn {
+            background: linear-gradient(180deg, #1e1e1e 0%, #0f0f0f 100%) !important;
+            color: #888888 !important;
+            border: 3px solid #333333 !important;
+            box-shadow: 0 8px 0 #050505, 0 0 20px rgba(0,0,0,0.8) !important;
+            font-weight: 900 !important;
+        }
+        body.theme-ombre .open-btn:hover {
+            background: linear-gradient(180deg, #2a2a2a 0%, #181818 100%) !important;
+            color: #aaaaaa !important;
+            border-color: #555555 !important;
+        }
+        /* Cartes récompense */
+        body.theme-ombre .reward-card {
+            background: linear-gradient(145deg, #111111 0%, #080808 100%) !important;
+            border-color: #2a2a2a !important;
+        }
+        /* Stats */
+        body.theme-ombre .stats {
+            background: linear-gradient(145deg, #0f0f0f 0%, #080808 100%) !important;
+            border-color: #222222 !important;
         }
         body.theme-ombre .stat-card {
             background: linear-gradient(145deg, #111111 0%, #080808 100%) !important;
             border-color: rgba(40,40,40,0.8) !important;
             box-shadow: 0 4px 0 rgba(0,0,0,0.9) !important;
         }
-        body.theme-ombre .open-btn {
-            background: linear-gradient(180deg, #222222 0%, #111111 100%) !important;
-            color: #555555 !important;
-            border: 3px solid #333333 !important;
-            box-shadow: 0 8px 0 #050505, 0 0 20px rgba(0,0,0,0.8) !important;
-            font-weight: 900 !important;
+        /* Livre des cartes */
+        body.theme-ombre .book-card {
+            background: linear-gradient(145deg, #111111 0%, #080808 100%) !important;
+            border-color: #222222 !important;
         }
+        body.theme-ombre .book-tab-btn {
+            border-color: #333333 !important;
+            color: #555555 !important;
+            background: rgba(0,0,0,0.4) !important;
+        }
+        body.theme-ombre .book-tab-btn.active {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f) !important;
+            border-color: #555555 !important;
+            color: #999999 !important;
+        }
+        /* Boutons sidebar */
+        body.theme-ombre .sidebar-btn, body.theme-ombre .quest-sidebar-btn {
+            background: linear-gradient(145deg, #111111, #080808) !important;
+            border-color: #222222 !important;
+            color: #666666 !important;
+        }
+        body.theme-ombre .sidebar-btn:hover, body.theme-ombre .quest-sidebar-btn:hover {
+            border-color: #444444 !important;
+            color: #999999 !important;
+        }
+        /* Modals et overlays */
+        body.theme-ombre .modal,
+        body.theme-ombre .save-modal-box,
+        body.theme-ombre .auth-box,
+        body.theme-ombre .trade-modal-box,
+        body.theme-ombre .quest-modal-content,
+        body.theme-ombre .shop-modal,
+        body.theme-ombre .scratch-modal,
+        body.theme-ombre .admin-overlay-box {
+            background: linear-gradient(145deg, #111111 0%, #080808 100%) !important;
+            border-color: #2a2a2a !important;
+        }
+        /* Boutique */
+        body.theme-ombre .shop-item {
+            background: linear-gradient(145deg, #111111 0%, #080808 100%) !important;
+            border-color: #222222 !important;
+        }
+        body.theme-ombre .shop-item:hover { border-color: #444444 !important; }
+        /* Boutons génériques dans le thème */
+        body.theme-ombre .save-btn {
+            background: linear-gradient(180deg, #1e1e1e 0%, #111111 100%) !important;
+            color: #888888 !important;
+            border-color: #333333 !important;
+        }
+        /* Titres */
         body.theme-ombre h1 {
             color: #444444 !important;
             text-shadow:
@@ -1121,10 +1199,10 @@
                 -1px -1px 0 #000000,
                 0 0 20px rgba(60,60,60,0.6) !important;
         }
-        body.theme-ombre .subtitle {
-            color: #333333 !important;
-            text-shadow: 0 0 10px rgba(50,50,50,0.5) !important;
-        }
+        body.theme-ombre .subtitle { color: #333333 !important; text-shadow: none !important; }
+        body.theme-ombre .stat-label { color: #444444 !important; }
+        body.theme-ombre .stat-number { color: #666666 !important; text-shadow: none !important; }
+        body.theme-ombre .chest-title, body.theme-ombre .chest-subtitle { color: #444444 !important; }
 
         .theme-banner.ombre {
             background: linear-gradient(90deg, #050505, #111111, #0a0a0a, #1a1a1a, #050505);
@@ -11265,6 +11343,7 @@
             'glitch':       'https://image2url.com/r2/bucket2/images/1775988992437-bb0a592c-c3e2-4e82-98c2-de9c7129bf99.png',
             'chaos':        'https://image2url.com/r2/bucket1/images/1775989344409-4135c041-1855-4695-9b26-4a6d81d95fa4.png',
             'glass':        'https://image2url.com/r2/bucket2/images/1775988752766-43820564-09e1-46ab-8e7f-ba8e800ffef5.png',
+            'ombre':        'https://www.image2url.com/r2/default/images/1777194852686-83747425-1fbb-47e5-a607-bf4231f031ca.png',
         };
 
         const THEMES = {
