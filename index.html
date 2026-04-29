@@ -15736,9 +15736,9 @@
         // ── Table de probabilités ──────────────────────────────────
         const _SCRATCH_REWARDS = [
             // OR petite quantité
-            { type:'gold', w:50,  gold:()=> Math.floor((500 + Math.random()*4500)),         emoji:'💰', label:'OR',        sub:()=> '+' + _scratchPending.amount.toLocaleString() + ' 💰' },
+            { type:'gold', w:22.9,  gold:()=> Math.floor((500 + Math.random()*4500)),         emoji:'💰', label:'OR',        sub:()=> '+' + _scratchPending.amount.toLocaleString() + ' 💰' },
             // OR moyenne
-            { type:'gold', w:15,  gold:()=> Math.floor((5000 + Math.random()*15000)),        emoji:'💰', label:'OR',        sub:()=> '+' + _scratchPending.amount.toLocaleString() + ' 💰' },
+            { type:'gold', w:10,  gold:()=> Math.floor((5000 + Math.random()*15000)),        emoji:'💰', label:'OR',        sub:()=> '+' + _scratchPending.amount.toLocaleString() + ' 💰' },
             // OR grosse
             { type:'gold', w:5,   gold:()=> Math.floor((20000 + Math.random()*30000)),       emoji:'💰', label:'OR',        sub:()=> '+' + _scratchPending.amount.toLocaleString() + ' 💰' },
             // Chance ×4 — 10 minutes
@@ -15750,15 +15750,17 @@
             // Carte Commune
             { type:'card', w:10,  rarity:'common',        emoji:'🃏', label:'CARTE COMMUNE',   sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
             // Carte Rare
-            { type:'card', w:8,   rarity:'rare',          emoji:'🃏', label:'CARTE RARE',      sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
+            { type:'card', w:5,   rarity:'rare',          emoji:'🃏', label:'CARTE RARE',      sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
             // Carte Épique
-            { type:'card', w:7,   rarity:'epic',          emoji:'🃏', label:'CARTE ÉPIQUE',    sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
+            { type:'card', w:6,   rarity:'epic',          emoji:'🃏', label:'CARTE ÉPIQUE',    sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
             // Carte Légendaire
-            { type:'card', w:6,   rarity:'legendary',     emoji:'🃏', label:'CARTE LÉGENDAIRE',sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
+            { type:'card', w:7,   rarity:'legendary',     emoji:'🃏', label:'CARTE LÉGENDAIRE',sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
             // Carte Mythique ou plus (mythic/brainrot_god/secret/og/limited/no)
-            { type:'card', w:5,   rarity:'mythic',        emoji:'🃏', label:'CARTE MYTHIQUE',  sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
+            { type:'card', w:8,   rarity:'mythic',        emoji:'🃏', label:'CARTE MYTHIQUE',  sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
             // Carte Brainrot God ou mieux
-            { type:'card', w:4,   rarity:'brainrot_god',  emoji:'🃏', label:'BRAINROT GOD !',  sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
+            { type:'card', w:6,   rarity:'brainrot_god',  emoji:'🃏', label:'BRAINROT GOD !',  sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
+            // Carte Secret (5%)
+            { type:'card', w:5, rarity:'secret',            emoji:'👑', label:'CARTE SECRET !!',    sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
             // OG ou plus (~0.1%)
             { type:'card', w:0.1, rarity:'og',            emoji:'👑', label:'CARTE OG !!!',    sub:()=> _scratchPending.card ? _scratchPending.card.name : '' },
         ];
