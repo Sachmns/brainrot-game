@@ -5586,6 +5586,7 @@
                 <button class="miam-mut-btn diamond" onclick="miamSelectMutation('diamond')">💎 DIAMANT</button>
                 <button class="miam-mut-btn rainbow" onclick="miamSelectMutation('rainbow')">🌈 RAINBOW</button>
                 <button class="miam-mut-btn" onclick="miamSelectMutation('chocolate')" style="background:linear-gradient(135deg,rgba(59,26,0,0.6),rgba(139,69,19,0.3));border:2px solid rgba(210,105,30,0.5);color:#D2691E;">💩 CACA</button>
+                <button class="miam-mut-btn" onclick="miamSelectMutation('dark')" style="background:linear-gradient(135deg,rgba(20,20,20,0.8),rgba(60,60,60,0.4));border:2px solid rgba(150,150,150,0.5);color:#aaaaaa;">⚫ DARK</button>
             </div>
             <div class="miam-progress" id="miamProgress">0 / 5 cartes sélectionnées</div>
             <div class="miam-slots-grid" id="miamSlotsGrid"></div>
@@ -6179,6 +6180,7 @@
                             <option value="diamond">💎 DIAMANT</option>
                             <option value="rainbow">🌈 RAINBOW</option>
                             <option value="chocolate">💩 CACA</option>
+                            <option value="dark">⚫ DARK</option>
                         </select>
                     </div>
                     <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -6202,6 +6204,7 @@
                             <option value="diamond">💎 DIAMANT</option>
                             <option value="rainbow">🌈 RAINBOW</option>
                             <option value="chocolate">💩 CACA</option>
+                            <option value="dark">⚫ DARK</option>
                         </select>
                     </div>
                     <button class="admin-btn blue" onclick="adminForceCardOne()" style="margin-top:4px;">🎯 Forcer pour ce joueur</button>
@@ -6361,6 +6364,18 @@
                         </div>
                     </div>
 
+                    <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(0,0,0,0.3);border:1px solid rgba(33,32,32,0.5);border-radius:14px;margin-bottom:10px;">
+                        <div style="font-size:1.4em;">⚫</div>
+                        <div style="flex:1;">
+                            <div style="color:#888888;font-weight:900;font-size:0.9em;letter-spacing:1px;">MUTATION DARK</div>
+                            <div style="color:#555;font-size:0.7em;margin-top:2px;">Taux actuel : <span id="adminMutationDarkCurrent" style="color:#888888;font-weight:900;">5%</span></div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                            <input class="admin-input" id="adminMutationDarkInput" type="number" value="5" min="0" max="100" step="0.1" style="width:70px;padding:6px 8px;font-size:0.9em;text-align:center;">
+                            <span style="color:#888888;font-size:0.8em;">%</span>
+                        </div>
+                    </div>
+
                     <button class="admin-btn" onclick="adminSaveMutationRates()" style="background:linear-gradient(180deg,#b8860b,#7a5800);box-shadow:0 4px 0 #3a2800;border:2px solid rgba(255,215,0,0.4);margin-top:4px;">💾 Sauvegarder les taux</button>
                     <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminMutationStatus"></div>
                 </div>
@@ -6376,6 +6391,7 @@
                             <option value="diamond">💎 DIAMANT</option>
                             <option value="rainbow">🌈 RAINBOW</option>
                             <option value="chocolate">💩 CACA</option>
+                            <option value="dark">⚫ DARK</option>
                         </select>
                         <input id="adminMutBoostDuration" class="admin-input" type="number" value="300" min="10" style="width:80px;padding:6px 8px;font-size:0.82em;text-align:center;" placeholder="sec">
                         <span style="color:#888;font-size:0.72em;">secondes</span>
@@ -6477,6 +6493,7 @@
                 <button id="adminBookTabDiamond" onclick="adminBookSwitchTab('diamond')" style="padding:5px 12px;border-radius:20px;border:1px solid rgba(0,191,255,0.3);background:rgba(0,0,0,0.4);color:#888;font-size:0.72em;font-weight:900;cursor:pointer;">💎 DIAMANT</button>
                 <button id="adminBookTabRainbow" onclick="adminBookSwitchTab('rainbow')" style="padding:5px 12px;border-radius:20px;border:1px solid rgba(200,0,255,0.3);background:rgba(0,0,0,0.4);color:#888;font-size:0.72em;font-weight:900;cursor:pointer;">🌈 RAINBOW</button>
                 <button id="adminBookTabChocolate" onclick="adminBookSwitchTab('chocolate')" style="padding:5px 12px;border-radius:20px;border:1px solid rgba(210,105,30,0.3);background:rgba(0,0,0,0.4);color:#888;font-size:0.72em;font-weight:900;cursor:pointer;">💩 CACA</button>
+                <button id="adminBookTabDark" onclick="adminBookSwitchTab('dark')" style="padding:5px 12px;border-radius:20px;border:1px solid rgba(84,82,82,0.3);background:rgba(0,0,0,0.4);color:#888;font-size:0.72em;font-weight:900;cursor:pointer;">⚫ DARK</button>
             </div>
             <div class="admin-book-filter" id="adminBookFilter"></div>
             <div class="admin-book-grid" id="adminBookGrid"></div>
@@ -6493,6 +6510,10 @@
             <button class="quest-close-btn" onclick="closeQuests()">✕ Fermer les Quêtes</button>
         </div>
     </div>
+
+    </div><!-- fin admin-panel -->
+</div><!-- fin admin-overlay -->
+
 
     <header>
         <h1 id="gameTitle">⚔️ BRAINROT ⚔️</h1>
@@ -6724,6 +6745,7 @@
                 <button class="book-tab-btn diamond-tab" id="bookTabDiamond" onclick="switchBookTab('diamond')">💎 DIAMANT</button>
                 <button class="book-tab-btn rainbow-tab" id="bookTabRainbow" onclick="switchBookTab('rainbow')">🌈 RAINBOW</button>
                 <button class="book-tab-btn" id="bookTabChocolate" onclick="switchBookTab('chocolate')" style="background:linear-gradient(135deg,#3b1a00,#8B4513);border-color:rgba(210,105,30,0.6);color:#D2691E;">💩 CACA</button>
+                <button class="book-tab-btn" id="bookTabDark" onclick="switchBookTab('dark')" style="background:linear-gradient(135deg,#111,#333);border-color:rgba(150,150,150,0.6);color:#aaaaaa;">⚫ DARK</button>
             </div>
             <button class="book-close-btn" onclick="closeBook()">✕ Fermer le Livre</button>
             <div id="bookContent"></div>
@@ -7486,14 +7508,15 @@
                     const cardKey = r.rarity + '|' + r.name;
                     // Si cette carte est la carte forcée ET qu'une mutation est forcée, l'appliquer
                     if (_forcedMut && r._isForcedCard) {
-                        r.isGold = false; r.isDiamond = false; r.isRainbow = false; r.isChocolate = false;
+                        r.isGold = false; r.isDiamond = false; r.isRainbow = false; r.isChocolate = false; r.isDark = false
                         if (_forcedMut === 'rainbow') { r.isRainbow = true; r.isNewRainbow = !unlockedRainbowCards.has(cardKey); }
                         else if (_forcedMut === 'diamond') { r.isDiamond = true; r.isNewDiamond = !unlockedDiamondCards.has(cardKey); }
                         else if (_forcedMut === 'gold') { r.isGold = true; r.isNewGold = !unlockedGoldCards.has(cardKey); }
                         else if (_forcedMut === 'chocolate') { r.isChocolate = true; r.isNewChocolate = !unlockedChocolateCards.has(cardKey); }
+                        else if (_forcedMut === 'dark') { r.isDark = true; r.isNewDark = !unlockedDarkCards.has(cardKey); }
                     } else {
                         const roll = Math.random();
-                        const _rR = _getMutRate('rainbow'), _rD = _getMutRate('diamond'), _rG = _getMutRate('gold'), _rC = _getMutRate('chocolate');
+                        const _rR = _getMutRate('rainbow'), _rD = _getMutRate('diamond'), _rG = _getMutRate('gold'), _rC = _getMutRate('chocolate'), _rS = _getMutRate('dark');
                         if (roll < _rR) {
                             r.isRainbow = true;
                             r.isNewRainbow = !unlockedRainbowCards.has(cardKey);
@@ -7506,6 +7529,9 @@
                         } else if (roll < _rR + _rD + _rG + _rC) {
                             r.isChocolate = true;
                             r.isNewChocolate = !unlockedChocolateCards.has(cardKey);
+                        } else if (roll < _rR + _rD + _rG + _rC + _rS) {
+                            r.isDark = true;
+                            r.isNewDark = !unlockedDarkCards.has(cardKey);
                         }
                     }
                 }
@@ -7770,10 +7796,10 @@
                 }
                 
                 card.innerHTML = `
-                    <div class="reward-image-container" style="${reward.isRainbow ? 'background:radial-gradient(circle,rgba(200,0,255,0.15),transparent);border-radius:50%;' : reward.isDiamond ? 'background:radial-gradient(circle,rgba(0,191,255,0.15),transparent);border-radius:50%;' : reward.isGold ? 'background:radial-gradient(circle,rgba(255,215,0,0.15),transparent);border-radius:50%;' : ''}">
-                        <img src="${reward.img}" alt="${reward.name}" class="reward-image" onerror="this.style.display='none'" style="${reward.isRainbow ? 'filter:drop-shadow(0 0 16px rgba(200,0,255,1)) drop-shadow(0 0 6px rgba(0,200,255,0.7)) saturate(1.8) brightness(1.15);animation:rainbowImgPulse 2s linear infinite;' : reward.isDiamond ? 'filter:drop-shadow(0 0 16px rgba(0,191,255,1)) drop-shadow(0 0 6px rgba(0,120,200,0.7)) hue-rotate(180deg) saturate(2) brightness(1.1);' : reward.isGold ? 'filter:drop-shadow(0 0 16px rgba(255,215,0,1)) drop-shadow(0 0 6px rgba(255,165,0,0.7)) sepia(0.4) saturate(2) brightness(1.1);' : reward.isChocolate ? 'filter:drop-shadow(0 0 16px rgba(139,69,19,1)) drop-shadow(0 0 6px rgba(210,105,30,0.7)) sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85);' : ''}">
+                    <div class="reward-image-container" style="${reward.isRainbow ? 'background:radial-gradient(circle,rgba(200,0,255,0.15),transparent);border-radius:50%;' : reward.isDiamond ? 'background:radial-gradient(circle,rgba(0,191,255,0.15),transparent);border-radius:50%;' : reward.isGold ? 'background:radial-gradient(circle,rgba(255,215,0,0.15),transparent);border-radius:50%;' : reward.isDark ? 'background:radial-gradient(circle,rgba(0,0,0,0.7),rgba(30,30,30,0.3));border-radius:50%;' : ''}">
+                        <img src="${reward.img}" alt="${reward.name}" class="reward-image" onerror="this.style.display='none'" style="${reward.isRainbow ? 'filter:drop-shadow(0 0 16px rgba(200,0,255,1)) drop-shadow(0 0 6px rgba(0,200,255,0.7)) saturate(1.8) brightness(1.15);animation:rainbowImgPulse 2s linear infinite;' : reward.isDiamond ? 'filter:drop-shadow(0 0 16px rgba(0,191,255,1)) drop-shadow(0 0 6px rgba(0,120,200,0.7)) hue-rotate(180deg) saturate(2) brightness(1.1);' : reward.isGold ? 'filter:drop-shadow(0 0 16px rgba(255,215,0,1)) drop-shadow(0 0 6px rgba(255,165,0,0.7)) sepia(0.4) saturate(2) brightness(1.1);' : reward.isChocolate ? 'filter:drop-shadow(0 0 16px rgba(139,69,19,1)) drop-shadow(0 0 6px rgba(210,105,30,0.7)) sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85);' : reward.isDark ? 'filter:grayscale(0.5) brightness(0.65) contrast(1.2) drop-shadow(0 0 18px rgba(0,0,0,1)) drop-shadow(0 0 8px rgba(100,100,100,0.7));' : ''}">
                     </div>
-                    <div class="reward-name" style="${reward.isRainbow ? 'background:linear-gradient(90deg,#ff0000,#ff9900,#ffff00,#00cc00,#00bfff,#9900ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;' : reward.isDiamond ? 'color:#00bfff;text-shadow:0 0 12px rgba(0,191,255,0.7);' : reward.isGold ? 'color:#ffd700;text-shadow:0 0 12px rgba(255,215,0,0.7);' : reward.isChocolate ? 'color:#D2691E;text-shadow:0 0 12px rgba(139,69,19,0.8);' : ''}">${reward.name}</div>
+                    <div class="reward-name" style="${reward.isRainbow ? 'background:linear-gradient(90deg,#ff0000,#ff9900,#ffff00,#00cc00,#00bfff,#9900ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;' : reward.isDiamond ? 'color:#00bfff;text-shadow:0 0 12px rgba(0,191,255,0.7);' : reward.isGold ? 'color:#ffd700;text-shadow:0 0 12px rgba(255,215,0,0.7);' : reward.isChocolate ? 'color:#D2691E;text-shadow:0 0 12px rgba(139,69,19,0.8);' : reward.isDark ? 'color:#888888;text-shadow:0 0 12px rgba(0,0,0,0.9),0 0 6px rgba(150,150,150,0.4);' : ''}">${reward.name}</div>
                     ${reward.isRainbow ? '<div style="background:linear-gradient(90deg,#ff0000,#ff9900,#ffff00,#00cc00,#00bfff,#9900ff,#ff0000);background-size:300%;animation:rainbowBadgeShift 1.5s linear infinite;color:#fff;font-size:0.78em;font-weight:900;padding:4px 12px;border-radius:10px;margin-top:4px;letter-spacing:1px;display:inline-block;box-shadow:0 0 12px rgba(200,100,255,0.8);text-shadow:0 0 4px rgba(0,0,0,0.8);">🌈 MUTATION RAINBOW</div>' : ''}
                     ${reward.isRainbow && reward.isNewRainbow ? '<div style="background:linear-gradient(90deg,#ff0000,#9900ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:0.82em;font-weight:900;margin-top:4px;">🌈 NOUVELLE CARTE RAINBOW !</div>' : ''}
                     ${reward.isDiamond ? '<div style="background:linear-gradient(90deg,#005f8a,#00bfff,#e0f8ff,#00bfff,#005f8a);background-size:200%;animation:diamondBadgeShift 2s linear infinite;color:#003a5c;font-size:0.78em;font-weight:900;padding:4px 12px;border-radius:10px;margin-top:4px;letter-spacing:1px;display:inline-block;box-shadow:0 0 10px rgba(0,191,255,0.6);">💎 MUTATION DIAMANT</div>' : ''}
@@ -7782,9 +7808,11 @@
                     ${reward.isGold && reward.isNewGold ? '<div style="color:#ffd700;font-size:0.82em;font-weight:900;margin-top:4px;text-shadow:0 0 8px rgba(255,215,0,0.8);">⭐ NOUVELLE CARTE GOLD DÉBLOQUÉE ⭐</div>' : ''}
                     ${reward.isChocolate ? '<div style="background:linear-gradient(90deg,#3b1a00,#8B4513,#D2691E,#8B4513,#3b1a00);background-size:200%;animation:chocolateBadgeShift 2s linear infinite;color:#fff;font-size:0.78em;font-weight:900;padding:4px 12px;border-radius:10px;margin-top:4px;letter-spacing:1px;display:inline-block;box-shadow:0 0 10px rgba(139,69,19,0.6);">💩 MUTATION CACA</div>' : ''}
                     ${reward.isChocolate && reward.isNewChocolate ? '<div style="color:#D2691E;font-size:0.82em;font-weight:900;margin-top:4px;text-shadow:0 0 8px rgba(139,69,19,0.8);">💩 NOUVELLE CARTE CACA !</div>' : ''}
+                    ${reward.isDark ? '<div style="background:linear-gradient(90deg,#111111,#333333,#555555,#333333,#111111);background-size:200%;animation:darkBadgeShift 2s linear infinite;color:#aaaaaa;font-size:0.78em;font-weight:900;padding:4px 12px;border-radius:10px;margin-top:4px;letter-spacing:1px;display:inline-block;box-shadow:0 0 10px rgba(33,32,32,0.6);">⚫ MUTATION DARK</div>' : ''}
+                    ${reward.isDark && reward.isNewDark ? '<div style="color:#aaaaaa;font-size:0.82em;font-weight:900;margin-top:4px;text-shadow:0 0 8px rgba(180,32,32,0.8);">⚫ NOUVELLE CARTE DARK !</div>' : ''}
                     ${reward.isNew ? '<div style="color: #4ecb71; font-size: 0.9em; font-weight: bold; margin-top: 5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">✨ NOUVELLE CARTE DÉBLOQUÉE ✨</div>' : ''}
                     <div class="reward-quantity">×${reward.quantity}</div>
-                    <span class="rarity-badge ${reward.rarity}" style="${reward.isRainbow ? 'background:linear-gradient(90deg,#ff0000,#ff9900,#ffff00,#00cc00,#00bfff,#9900ff);background-size:300%;animation:rainbowBadgeShift 1.5s linear infinite;color:#fff;font-weight:900;text-shadow:0 0 4px rgba(0,0,0,0.8);' : reward.isDiamond ? 'background:linear-gradient(90deg,#005f8a,#00bfff,#005f8a);color:#e0f8ff;font-weight:900;' : reward.isGold ? 'background:linear-gradient(90deg,#b8860b,#ffd700,#b8860b);color:#1a0a00;font-weight:900;' : reward.isChocolate ? 'background:linear-gradient(90deg,#3b1a00,#8B4513,#D2691E);color:#fff;font-weight:900;' : ''}">${reward.isRainbow ? '🌈 RAINBOW — ' : reward.isDiamond ? '💎 DIAMANT — ' : reward.isGold ? '✨ GOLD — ' : reward.isChocolate ? '💩 CACA — ' : ''}${getRarityText(reward.rarity)}</span>
+                    <span class="rarity-badge ${reward.rarity}" style="${reward.isRainbow ? 'background:linear-gradient(90deg,#ff0000,#ff9900,#ffff00,#00cc00,#00bfff,#9900ff);background-size:300%;animation:rainbowBadgeShift 1.5s linear infinite;color:#fff;font-weight:900;text-shadow:0 0 4px rgba(0,0,0,0.8);' : reward.isDiamond ? 'background:linear-gradient(90deg,#005f8a,#00bfff,#005f8a);color:#e0f8ff;font-weight:900;' : reward.isGold ? 'background:linear-gradient(90deg,#b8860b,#ffd700,#b8860b);color:#1a0a00;font-weight:900;' : reward.isChocolate ? 'background:linear-gradient(90deg,#3b1a00,#8B4513,#D2691E);color:#fff;font-weight:900;' : reward.isDark ? 'background:linear-gradient(90deg,#0a0a0a,#1e1e1e,#333333,#1e1e1e,#0a0a0a);color:#aaaaaa;font-weight:900;box-shadow:0 0 8px rgba(0,0,0,0.9);' : ''}">${reward.isRainbow ? '🌈 RAINBOW — ' : reward.isDiamond ? '💎 DIAMANT — ' : reward.isGold ? '✨ GOLD — ' : reward.isChocolate ? '💩 CACA — ' : reward.isDark ? '⚫ DARK — ' : ''}${getRarityText(reward.rarity)}</span>
                 `;
                 grid.appendChild(card);
             });
@@ -7814,9 +7842,10 @@
         let unlockedDiamondCards = new Map();
         let unlockedRainbowCards = new Map();
         let unlockedChocolateCards = new Map();
+        let unlockedDarkCards = new Map();
 
         // Taux de drop des mutations (modifiable par l'admin via Firebase)
-        window._mutationRates = { gold: 0.10, diamond: 0.075, rainbow: 0.01, chocolate: 0.067 };
+        window._mutationRates = { gold: 0.10, diamond: 0.075, rainbow: 0.01, chocolate: 0.067, dark: 0.05 };
 
         function updateStats(rewards) {
             stats.totalChests++;
@@ -7845,7 +7874,7 @@
                         }
                         return;
                     }
-                    const hasMutation = reward.isGold || reward.isDiamond || reward.isRainbow || reward.isChocolate;
+                    const hasMutation = reward.isGold || reward.isDiamond || reward.isRainbow || reward.isChocolate || reward.isDark;
                     const isNewCard = !hasMutation && !unlockedCards.has(cardKey);
                     if (!hasMutation) {
                         if (!unlockedCards.has(cardKey)) {
@@ -7900,6 +7929,15 @@
                             updateDailyProgress('unlock', 1, reward.rarity);
                         }
                         unlockedChocolateCards.set(cardKey, unlockedChocolateCards.get(cardKey) + 1);
+                    }
+                    if (reward.isDark) {
+                        const isNewDark = !unlockedDarkCards.has(cardKey);
+                        if (isNewDark) {
+                            unlockedDarkCards.set(cardKey, 0);
+                            stats.totalCards++;
+                            updateDailyProgress('unlock', 1, reward.rarity);
+                        }
+                        unlockedDarkCards.set(cardKey, unlockedDarkCards.get(cardKey) + 1);
                     }
                 }
             });
@@ -8137,8 +8175,10 @@
             let isNewRainbow = false;
             let isChocolate = false;
             let isNewChocolate = false;
+            let isDark = false;
+            let isNewDark = false;
             const _roll = Math.random();
-            const _bR = _getMutRate('rainbow'), _bD = _getMutRate('diamond'), _bG = _getMutRate('gold'), _bC = _getMutRate('chocolate');
+            const _bR = _getMutRate('rainbow'), _bD = _getMutRate('diamond'), _bG = _getMutRate('gold'), _bC = _getMutRate('chocolate'), _bS = _getMutRate('dark');
             if (_roll < _bR) {
                 isRainbow = true;
                 isNewRainbow = !unlockedRainbowCards.has(cardKey);
@@ -8159,11 +8199,16 @@
                 isNewChocolate = !unlockedChocolateCards.has(cardKey);
                 if (isNewChocolate) { unlockedChocolateCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, rarity); }
                 unlockedChocolateCards.set(cardKey, unlockedChocolateCards.get(cardKey) + 1);
+            } else if (_roll < _bR + _bD + _bG + _bC + _bS) {
+                isDark = true;
+                isNewDark = !unlockedDarkCards.has(cardKey);
+                if (isNewDark) { unlockedDarkCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, rarity); }
+                unlockedDarkCards.set(cardKey, unlockedDarkCards.get(cardKey) + 1);
             }
 
             // Ajouter en normal SEULEMENT si pas de mutation
             let isNew = false;
-            const _hasMutShop = isGold || isDiamond || isRainbow || isChocolate;
+            const _hasMutShop = isGold || isDiamond || isRainbow || isChocolate || isDark;
             if (!_hasMutShop) {
                 if (!unlockedCards.has(cardKey)) {
                     unlockedCards.set(cardKey, 0);
@@ -8194,7 +8239,7 @@
 
             // Lancer l'animation de suspense
             showShopSuspense(rarity, () => {
-                showCardReveal(card, rarity, isNew, isGold, isNewGold, isDiamond, isNewDiamond, isRainbow, isNewRainbow, isChocolate, isNewChocolate);
+                showCardReveal(card, rarity, isNew, isGold, isNewGold, isDiamond, isNewDiamond, isRainbow, isNewRainbow, isChocolate, isNewChocolate, isDark, isNewDark);
             });
         }
 
@@ -8286,7 +8331,7 @@
             }, 5800);
         }
 
-        function showCardReveal(card, rarity, isNew, isGold, isNewGold, isDiamond, isNewDiamond, isRainbow, isNewRainbow, isChocolate, isNewChocolate) {
+        function showCardReveal(card, rarity, isNew, isGold, isNewGold, isDiamond, isNewDiamond, isRainbow, isNewRainbow, isChocolate, isNewChocolate, isDark, isNewDark) {
             const overlay = document.getElementById('cardRevealOverlay');
             const image = document.getElementById('revealCardImage');
             const name = document.getElementById('revealCardName');
@@ -8308,13 +8353,15 @@
                 image.style.filter = 'drop-shadow(0 0 24px rgba(255,215,0,1)) drop-shadow(0 0 8px rgba(255,165,0,0.8)) sepia(0.4) saturate(2) brightness(1.1)';
             } else if (isChocolate) {
                 image.style.filter = 'drop-shadow(0 0 24px rgba(139,69,19,1)) drop-shadow(0 0 8px rgba(210,105,30,0.8)) sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85)';
+            } else if (isDark) {
+                image.style.filter = 'grayscale(0.5) brightness(0.65) contrast(1.2) drop-shadow(0 0 24px rgba(0,0,0,1)) drop-shadow(0 0 10px rgba(100,100,100,0.7))';
             } else {
                 image.style.filter = '';
             }
             name.textContent = card.name;
             name.style.opacity = '0';
-            name.style.color = isRainbow ? '' : isDiamond ? '#00bfff' : isGold ? '#ffd700' : isChocolate ? '#D2691E' : '';
-            name.style.textShadow = isRainbow ? '' : isDiamond ? '0 0 20px rgba(0,191,255,0.8)' : isGold ? '0 0 20px rgba(255,215,0,0.8)' : isChocolate ? '0 0 20px rgba(139,69,19,0.9)' : '';
+            name.style.color = isRainbow ? '' : isDiamond ? '#00bfff' : isGold ? '#ffd700' : isChocolate ? '#aaaaaa' : isDark ? '#aaaaaa' : '';
+            name.style.textShadow = isRainbow ? '' : isDiamond ? '0 0 20px rgba(0,191,255,0.8)' : isGold ? '0 0 20px rgba(255,215,0,0.8)' : isChocolate ? '0 0 20px rgba(80,80,80,0.9)' : isDark ? '0 0 20px rgba(150,150,150,0.6)' : '';
             if (isRainbow) {
                 name.style.background = 'linear-gradient(90deg,#ff0000,#ff9900,#ffff00,#00cc00,#00bfff,#9900ff)';
                 name.style.webkitBackgroundClip = 'text';
@@ -8325,20 +8372,26 @@
                 name.style.webkitTextFillColor = '';
             }
             // Badge "nouvelle carte"
-            const showNewBadge = isNew || isNewGold || isNewDiamond || isNewRainbow || isNewChocolate;
+            const showNewBadge = isNew || isNewGold || isNewDiamond || isNewRainbow || isNewChocolate || isNewDark;
             if (isNewRainbow && !isNew) newBadge.innerHTML = '🌈 NOUVELLE CARTE RAINBOW !';
             else if (isNewDiamond && !isNew) newBadge.innerHTML = '💎 NOUVELLE CARTE DIAMANT !';
             else if (isNewGold && !isNew) newBadge.innerHTML = '⭐ NOUVELLE CARTE GOLD DÉBLOQUÉE ⭐';
             else if (isNewChocolate && !isNew) newBadge.innerHTML = '💩 NOUVELLE CARTE CACA !';
+            else if (isNewDark && !isNew) newBadge.innerHTML = '⚫ NOUVELLE CARTE DARK !';
             else newBadge.innerHTML = '✨ NOUVELLE CARTE DÉBLOQUÉE ✨';
-            newBadge.style.color = isNewRainbow ? '#cc44ff' : isNewDiamond ? '#00bfff' : isNewGold ? '#ffd700' : isNewChocolate ? '#D2691E' : '#4ecb71';
+            newBadge.style.color = isNewRainbow ? '#cc44ff' : isNewDiamond ? '#00bfff' : isNewGold ? '#ffd700' : isNewChocolate ? '#aaaaaa' : isNewDark ? '#888888' : '#4ecb71';
             newBadge.style.display = showNewBadge ? 'block' : 'none';
             newBadge.style.opacity = '0';
             if (isChocolate) {
                 rarityBadge.textContent = '💩 CACA — ' + getRarityText(rarity);
                 rarityBadge.className = 'card-reveal-rarity rarity-badge ' + rarity;
-                rarityBadge.style.cssText = 'background:linear-gradient(90deg,#3b1a00,#8B4513,#D2691E,#8B4513,#3b1a00);background-size:200%;animation:chocolateBadgeShift 2s linear infinite;color:#fff;font-weight:900;text-shadow:0 1px 3px rgba(0,0,0,0.8);opacity:0;';
+                rarityBadge.style.cssText = 'background:linear-gradient(90deg,#3b1a00,#444444,#aaaaaa,#444444,#3b1a00);background-size:200%;animation:chocolateBadgeShift 2s linear infinite;color:#fff;font-weight:900;text-shadow:0 1px 3px rgba(0,0,0,0.8);opacity:0;';
                 overlay.style.background = 'radial-gradient(ellipse at center,rgba(30,10,0,0.98) 0%,rgba(0,0,0,0.99) 100%)';
+            } else if (isDark) {
+                rarityBadge.textContent = '⚫ DARK — ' + getRarityText(rarity);
+                rarityBadge.className = 'card-reveal-rarity rarity-badge ' + rarity;
+                rarityBadge.style.cssText = 'background:linear-gradient(90deg,#111111,#333333,#555555,#333333,#111111);background-size:200%;animation:diamondBadgeShift 3s linear infinite;color:#aaaaaa;font-weight:900;text-shadow:0 0 4px rgba(0,0,0,0.9);letter-spacing:2px;opacity:0;';
+                overlay.style.background = 'radial-gradient(ellipse at center,rgba(10,10,10,0.98) 0%,rgba(0,0,0,0.99) 100%)';
             } else if (isRainbow) {
                 rarityBadge.textContent = '🌈 RAINBOW — ' + getRarityText(rarity);
                 rarityBadge.className = 'card-reveal-rarity rarity-badge ' + rarity;
@@ -8430,6 +8483,7 @@
             document.getElementById('bookTabGold').classList.toggle('active', tab === 'gold');
             document.getElementById('bookTabDiamond').classList.toggle('active', tab === 'diamond');
             document.getElementById('bookTabRainbow').classList.toggle('active', tab === 'rainbow');
+            document.getElementById('bookTabDark').classList.toggle('active', tab === 'dark');
             const _chocBtn = document.getElementById('bookTabChocolate');
             if (_chocBtn) { _chocBtn.style.background = tab === 'chocolate' ? 'linear-gradient(135deg,#8B4513,#D2691E)' : 'linear-gradient(135deg,#3b1a00,#8B4513)'; _chocBtn.style.opacity = tab === 'chocolate' ? '1' : '0.7'; }
             renderBook();
@@ -8573,6 +8627,45 @@
                     content.appendChild(grid);
                 });
                 subtitle.textContent = `💩 ${totalUnlocked} / ${totalAll} cartes CACA débloquées`;
+
+            } else if (_currentBookTab === 'dark') {
+                // ── Onglet DARK ──
+                const darkHeader = document.createElement('div');
+                darkHeader.style.cssText = 'text-align:center;margin-bottom:20px;padding:14px 20px;background:linear-gradient(135deg,rgba(10,10,10,0.8),rgba(40,40,40,0.2));border-radius:16px;border:2px solid rgba(80,80,80,0.4);';
+                darkHeader.innerHTML = '<div style="color:#888888;font-size:1.1em;font-weight:900;letter-spacing:2px;">⚫ MUTATION DARK</div><div style="color:#555555;font-size:0.85em;margin-top:6px;">5% de chance — Une carte DARK débloquée = +1 au classement !</div>';
+                content.appendChild(darkHeader);
+                sections.forEach(section => {
+                    const cards = cardImages[section.key];
+                    if (!cards || cards.length === 0) return;
+                    if (section.key === 'admin_exclusive') return;
+                    totalAll += cards.length;
+                    const title = document.createElement('div');
+                    title.className = 'book-section-title';
+                    title.style.cssText = 'background:linear-gradient(90deg,transparent,rgba(56,54,53,0.15),transparent);border-bottom:3px solid rgba(80,80,80,0.4);';
+                    title.innerHTML = `<span style="color:#888888;">⚫ ${section.label}</span>`;
+                    content.appendChild(title);
+                    const grid = document.createElement('div');
+                    grid.className = 'book-grid';
+                    cards.forEach(card => {
+                        const cardKey = section.key + '|' + card.name;
+                        const darkCount = unlockedDarkCards.get(cardKey) || 0;
+                        const isUnlocked = darkCount > 0;
+                        if (isUnlocked) totalUnlocked++;
+                        const div = document.createElement('div');
+                        div.className = `book-card ${isUnlocked ? 'unlocked ' + section.key : 'locked'}`;
+                        if (isUnlocked) div.style.cssText = 'border-color:rgba(80,80,80,0.6);box-shadow:0 0 12px rgba(56,54,53,0.5);';
+                        div.innerHTML = `
+                            <span class="lock-icon">${isUnlocked ? '⚫' : '🔒'}</span>
+                            <img src="${card.img}" alt="${card.name}" onerror="this.style.display='none'" style="${isUnlocked ? 'filter:sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85);' : 'filter:grayscale(100%);'}">
+                            <div class="card-name" style="${isUnlocked ? 'color:#999999;' : ''}">${card.name}</div>
+                            ${isUnlocked ? '<span style="background:linear-gradient(90deg,#111111,#444444,#666666);color:#cccccc;font-size:0.62em;font-weight:900;padding:2px 8px;border-radius:8px;margin-top:3px;display:inline-block;">⚫ DARK</span>' : ''}
+                            ${isUnlocked && darkCount > 1 ? `<div style="color:#888;font-size:0.9em;font-weight:bold;margin-top:3px;">x${darkCount}</div>` : ''}
+                        `;
+                        grid.appendChild(div);
+                    });
+                    content.appendChild(grid);
+                });
+                subtitle.textContent = `⚫ ${totalUnlocked} / ${totalAll} cartes DARK débloquées`;
 
             } else if (_currentBookTab === 'rainbow') {
                 // ── Onglet RAINBOW ──
@@ -8857,7 +8950,7 @@
         function getTotalBookCards() {
             let total = 0;
             ['common','rare','epic','legendary','mythic','brainrot_god','secret','og','limited','no'].forEach(k => {
-                if (cardImages[k]) total += cardImages[k].length * 5; // normale + GOLD + DIAMANT + RAINBOW + CHOCOLAT
+                if (cardImages[k]) total += cardImages[k].length * 6; // normale + GOLD + DIAMANT + RAINBOW + CHOCOLAT + DARK
             });
             return total;
         }
@@ -8872,6 +8965,7 @@
                     if (unlockedDiamondCards.has(ck)) unlocked++; // DIAMANT
                     if (unlockedRainbowCards.has(ck))    unlocked++; // RAINBOW
                     if (unlockedChocolateCards.has(ck)) unlocked++; // CHOCOLAT
+                    if (unlockedDarkCards.has(ck)) unlocked++; // DARK
                 });
             });
             return unlocked;
@@ -9129,6 +9223,7 @@
                 unlockedDiamondCards: Array.from(unlockedDiamondCards.entries()),
                 unlockedRainbowCards: Array.from(unlockedRainbowCards.entries()),
                 unlockedChocolateCards: Array.from(unlockedChocolateCards.entries()),
+                unlockedDarkCards: Array.from(unlockedDarkCards.entries()),
                 secretsUnlocked: Array.from(stats.secretsUnlocked),
                 questProgress: questProgress,
                 dailyState: dailyState,
@@ -9174,6 +9269,7 @@
                 if (save.unlockedDiamondCards) unlockedDiamondCards = new Map(save.unlockedDiamondCards);
                 if (save.unlockedRainbowCards) unlockedRainbowCards = new Map(save.unlockedRainbowCards);
                 if (save.unlockedChocolateCards) unlockedChocolateCards = new Map(save.unlockedChocolateCards);
+                if (save.unlockedDarkCards) unlockedDarkCards = new Map(save.unlockedDarkCards);
                 if (save.secretsUnlocked) stats.secretsUnlocked = new Set(save.secretsUnlocked);
                 if (save.questProgress) questProgress = save.questProgress;
                 if (save.dailyState) dailyState = save.dailyState;
@@ -9198,7 +9294,8 @@
                     + unlockedGoldCards.size
                     + unlockedDiamondCards.size
                     + unlockedRainbowCards.size
-                    + unlockedChocolateCards.size;
+                    + unlockedChocolateCards.size
+                    + unlockedDarkCards.size;
                 stats.totalCards = Math.max(save.stats.totalCards || 0, _countFromMapsLocal);
                 document.getElementById('totalChests').textContent = stats.totalChests;
                 document.getElementById('totalCards').textContent = stats.totalCards;
@@ -9590,7 +9687,7 @@
             firebaseDB.ref('players/' + key + '/removeMutedCard').on('value', snap => {
                 const d = snap.val();
                 if (!d || !d.k || !d.m) return;
-                const mutMaps = { gold: unlockedGoldCards, diamond: unlockedDiamondCards, rainbow: unlockedRainbowCards, chocolate: unlockedChocolateCards };
+                const mutMaps = { gold: unlockedGoldCards, diamond: unlockedDiamondCards, rainbow: unlockedRainbowCards, chocolate: unlockedChocolateCards, dark: unlockedDarkCards };
                 const targetMap = mutMaps[d.m];
                 if (targetMap) {
                     const count = targetMap.get(d.k) || 0;
@@ -9764,6 +9861,7 @@
             unlockedDiamondCards.forEach(() => unlocked++); // les cartes DIAMANT aussi
             unlockedRainbowCards.forEach(() => unlocked++); // les cartes RAINBOW aussi
             unlockedChocolateCards.forEach(() => unlocked++); // les cartes CHOCOLAT aussi
+            unlockedDarkCards.forEach(() => unlocked++); // les cartes DARK aussi
             firebaseDB.ref('players/' + key + '/stats').set({
                 totalChests: stats.totalChests,
                 totalCards: stats.totalCards,
@@ -9783,7 +9881,7 @@
             firebaseDB.ref('players/' + key + '/cards').set(Object.keys(cardsObj).length > 0 ? cardsObj : null);
             // Sync les cartes mutées pour le livre admin
             const mutedObj = {};
-            const _mutMaps = { gold: unlockedGoldCards, diamond: unlockedDiamondCards, rainbow: unlockedRainbowCards, chocolate: unlockedChocolateCards };
+            const _mutMaps = { gold: unlockedGoldCards, diamond: unlockedDiamondCards, rainbow: unlockedRainbowCards, chocolate: unlockedChocolateCards, dark: unlockedDarkCards };
             Object.entries(_mutMaps).forEach(([mutType, map]) => {
                 map.forEach((count, cardKey) => {
                     if (count > 0) {
@@ -9966,6 +10064,13 @@
                     if (el) el.textContent = (d.chocolate * 100).toFixed(1) + '%';
                     const inp = document.getElementById('adminMutationChocolateInput');
                     if (inp) inp.value = (d.chocolate * 100).toFixed(1);
+                }
+                if (typeof d.dark === 'number') {
+                    window._mutationRates.dark = d.dark;
+                    const el = document.getElementById('adminMutationDarkCurrent');
+                    if (el) el.textContent = (d.dark * 100).toFixed(1) + '%';
+                    const inp = document.getElementById('adminMutationDarkInput');
+                    if (inp) inp.value = (d.dark * 100).toFixed(1);
                 }
             });
 
@@ -10283,7 +10388,7 @@
         // BOOST ×2 MUTATION
         // ════════════════════════════════════════════════
         window._mutBoostActive     = false;
-        window._mutBoostMut        = null;   // 'gold' | 'diamond' | 'rainbow' | 'chocolate'
+        window._mutBoostMut        = null;   // 'gold' | 'diamond' | 'rainbow' | 'chocolate' | 'dark'
         window._mutBoostExpiry     = 0;
         window._mutBoostMultiplier = 2;      // 2 | 3 | 4
         let _mutBoostInterval      = null;
@@ -10293,6 +10398,7 @@
             diamond:   { emoji: '💎', label: 'DIAMANT', color: '#00bfff' },
             rainbow:   { emoji: '🌈', label: 'RAINBOW', color: '#cc44ff' },
             chocolate: { emoji: '💩', label: 'CACA',    color: '#D2691E' },
+            dark:      { emoji: '⚫', label: 'DARK',    color: '#888888' },
         };
 
         function _applyMutBoost(mut, expiry, multiplier) {
@@ -10947,18 +11053,18 @@
 
         function adminBookSwitchTab(tab) {
             _adminBookMutTab = tab;
-            ['normal','gold','diamond','rainbow','chocolate'].forEach(function(t) {
+            ['normal','gold','diamond','rainbow','chocolate','dark'].forEach(function(t) {
                 const btn = document.getElementById('adminBookTab' + t.charAt(0).toUpperCase() + t.slice(1));
                 if (!btn) return;
-                const colors = { normal:'rgba(255,0,64,0.15)', gold:'rgba(255,215,0,0.15)', diamond:'rgba(0,191,255,0.15)', rainbow:'rgba(200,0,255,0.15)', chocolate:'rgba(139,69,19,0.2)' };
-                const borders = { normal:'rgba(255,0,64,0.4)', gold:'rgba(255,215,0,0.4)', diamond:'rgba(0,191,255,0.4)', rainbow:'rgba(200,0,255,0.4)', chocolate:'rgba(210,105,30,0.5)' };
-                const textColors = { normal:'#ff4466', gold:'#ffd700', diamond:'#00bfff', rainbow:'#cc44ff', chocolate:'#D2691E' };
+                const colors = { normal:'rgba(255,0,64,0.15)', gold:'rgba(255,215,0,0.15)', diamond:'rgba(0,191,255,0.15)', rainbow:'rgba(200,0,255,0.15)', chocolate:'rgba(139,69,19,0.2)', dark:'rgba(33,32,32,0.2)' };
+                const borders = { normal:'rgba(255,0,64,0.4)', gold:'rgba(255,215,0,0.4)', diamond:'rgba(0,191,255,0.4)', rainbow:'rgba(200,0,255,0.4)', chocolate:'rgba(210,105,30,0.5)', dark:'rgba(84,82,82,0.5)' };
+                const textColors = { normal:'#ff4466', gold:'#ffd700', diamond:'#00bfff', rainbow:'#cc44ff', chocolate:'#D2691E', dark:'#383635' };
                 if (t === tab) { btn.style.background = colors[t]; btn.style.borderColor = borders[t]; btn.style.color = textColors[t]; }
                 else { btn.style.background = 'rgba(0,0,0,0.4)'; btn.style.borderColor = 'rgba(255,255,255,0.1)'; btn.style.color = '#888'; }
             });
             if (window._adminBookCurrentData) {
                 _adminBookFilter = 'all';
-                _renderAdminBook(window._adminBookCurrentData.pseudo, window._adminBookCurrentData.playerCards, window._adminBookCurrentData.goldCards, window._adminBookCurrentData.diamondCards, window._adminBookCurrentData.rainbowCards, window._adminBookCurrentData.chocolateCards);
+                _renderAdminBook(window._adminBookCurrentData.pseudo, window._adminBookCurrentData.playerCards, window._adminBookCurrentData.goldCards, window._adminBookCurrentData.diamondCards, window._adminBookCurrentData.rainbowCards, window._adminBookCurrentData.chocolateCards, window._adminBookCurrentData.darkCards);
             }
         }
 
@@ -10977,7 +11083,7 @@
                     if (entry && entry.k) playerCards.set(entry.k, entry.c || 0);
                 });
                 // Lire les cartes mutées depuis players/{key}/mutedCards (accessible par l'admin)
-                let goldCards = new Map(), diamondCards = new Map(), rainbowCards = new Map(), chocolateCards = new Map();
+                let goldCards = new Map(), diamondCards = new Map(), rainbowCards = new Map(), chocolateCards = new Map(), darkCards = new Map();
                 const mutedData = data.mutedCards || {};
                 Object.values(mutedData).forEach(function(entry) {
                     if (!entry || !entry.k || !entry.m) return;
@@ -10985,23 +11091,24 @@
                     else if (entry.m === 'diamond') diamondCards.set(entry.k, entry.c || 0);
                     else if (entry.m === 'rainbow') rainbowCards.set(entry.k, entry.c || 0);
                     else if (entry.m === 'chocolate') chocolateCards.set(entry.k, entry.c || 0);
+                    else if (entry.m === 'dark') darkCards.set(entry.k, entry.c || 0);
                 });
                 _adminBookFilter = 'all';
                 _adminBookMutTab = 'normal';
                 adminBookSwitchTab('normal');
-                window._adminBookCurrentData = { pseudo, playerCards, goldCards, diamondCards, rainbowCards, chocolateCards };
-                _renderAdminBook(pseudo, playerCards, goldCards, diamondCards, rainbowCards, chocolateCards);
+                window._adminBookCurrentData = { pseudo, playerCards, goldCards, diamondCards, rainbowCards, chocolateCards, darkCards };
+                _renderAdminBook(pseudo, playerCards, goldCards, diamondCards, rainbowCards, chocolateCards, darkCards);
                 document.getElementById('adminBookModal').classList.add('open');
             }).catch(e => adminStatus('Erreur : ' + e.message));
         }
 
-        function _renderAdminBook(pseudo, playerCards, goldCards, diamondCards, rainbowCards, chocolateCards) {
+        function _renderAdminBook(pseudo, playerCards, goldCards, diamondCards, rainbowCards, chocolateCards, darkCards) {
             goldCards = goldCards || new Map(); diamondCards = diamondCards || new Map(); rainbowCards = rainbowCards || new Map();
             const RARITY_COLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff', og:'#c8a000', limited:'#ff59e7', hero:'#ffca18', evolution:'#6a00ff', champions:'#f1fc74', no:'#ff0000', admin_exclusive:'#ff0040' };
             const RARITY_LABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limitée', hero:'Héros', evolution:'Évolution', champions:'Champions', no:'Impossible', admin_exclusive:'ADMIN' };
-            const mutMap = { normal: playerCards, gold: goldCards, diamond: diamondCards, rainbow: rainbowCards, chocolate: chocolateCards || new Map() };
-            const mutColors = { normal: null, gold: '#ffd700', diamond: '#00bfff', rainbow: '#cc44ff', chocolate: '#D2691E' };
-            const mutBadge = { normal: '', gold: '✨', diamond: '💎', rainbow: '🌈', chocolate: '💩' };
+            const mutMap = { normal: playerCards, gold: goldCards, diamond: diamondCards, rainbow: rainbowCards, chocolate: chocolateCards, dark: darkCards || new Map() };
+            const mutColors = { normal: null, gold: '#ffd700', diamond: '#00bfff', rainbow: '#cc44ff', chocolate: '#D2691E', dark: '#383635' };
+            const mutBadge = { normal: '', gold: '✨', diamond: '💎', rainbow: '🌈', chocolate: '💩', dark: '⚫' };
             const curMap = mutMap[_adminBookMutTab] || playerCards;
             const mutCol = mutColors[_adminBookMutTab];
             const mutB = mutBadge[_adminBookMutTab];
@@ -11797,6 +11904,7 @@
             if (mut === 'diamond')  return unlockedDiamondCards;
             if (mut === 'rainbow')  return unlockedRainbowCards;
             if (mut === 'chocolate') return unlockedChocolateCards;
+            if (mut === 'dark') return unlockedDarkCards;
             return new Map();
         }
 
@@ -11806,6 +11914,7 @@
             diamond:   { label: '💎 DIAMANT',   color: '#88ccff', glow: 'rgba(136,204,255,0.8)' },
             rainbow:   { label: '🌈 RAINBOW',   color: '#ff80ff', glow: 'rgba(255,128,255,0.8)' },
             chocolate: { label: '💩 CACA',  color: '#D2691E', glow: 'rgba(139,69,19,0.9)' },
+            dark:      { label: '⚫ DARK',  color: '#888888', glow: 'rgba(80,80,80,0.7)' },
         };
 
         function _miamShowButton(expiry) {
@@ -12419,15 +12528,17 @@
             diamond:   unlockedDiamondCards,
             rainbow:   unlockedRainbowCards,
             chocolate: unlockedChocolateCards,
+            dark: unlockedDarkCards,
         });
-        const TRADE_MUT_LABELS  = { normal:'Normal', gold:'✨ GOLD', diamond:'💎 DIAMANT', rainbow:'🌈 RAINBOW', chocolate:'💩 CACA' };
-        const TRADE_MUT_COLORS  = { normal:'#ccc', gold:'#ffd700', diamond:'#00bfff', rainbow:'#cc44ff', chocolate:'#D2691E' };
+        const TRADE_MUT_LABELS  = { normal:'Normal', gold:'✨ GOLD', diamond:'💎 DIAMANT', rainbow:'🌈 RAINBOW', chocolate:'💩 CACA', dark:'⚫ DARK' };
+        const TRADE_MUT_COLORS  = { normal:'#ccc', gold:'#ffd700', diamond:'#00bfff', rainbow:'#cc44ff', chocolate:'#D2691E', dark:'#383635' };
         const TRADE_MUT_FILTERS = {
             normal:    '',
             gold:      'sepia(0.4) saturate(2) brightness(1.1) drop-shadow(0 0 6px #ffd700)',
             diamond:   'hue-rotate(180deg) saturate(2) brightness(1.1) drop-shadow(0 0 6px #00bfff)',
             rainbow:   'saturate(1.8) brightness(1.15) drop-shadow(0 0 6px #cc44ff)',
             chocolate: 'sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85) drop-shadow(0 0 6px #8B4513)',
+            dark: 'grayscale(0.5) brightness(0.65) contrast(1.2) drop-shadow(0 0 8px rgba(0,0,0,1)) drop-shadow(0 0 4px rgba(100,100,100,0.6))',
         };
 
         // ── État local ──────────────────────────────────────
@@ -14949,7 +15060,7 @@
             autoSave();
 
             // Tirage — utilise les taux effectifs (avec boost ×2 si actif)
-            const _iR = _getMutRate('rainbow'), _iD = _getMutRate('diamond'), _iC = _getMutRate('chocolate'), _iG = _getMutRate('gold');
+            const _iR = _getMutRate('rainbow'), _iD = _getMutRate('diamond'), _iC = _getMutRate('chocolate'), _iG = _getMutRate('gold'), _iS = _getMutRate('dark');
             const roll   = Math.random();
             let mutation = null; // null = aucune mutation
 
@@ -14961,6 +15072,8 @@
                 mutation = 'chocolate';
             } else if (roll < _iR + _iD + _iC + _iG) {
                 mutation = 'gold';
+            } else if (roll < _iR + _iD + _iC + _iG + _iS) {
+                mutation = 'dark';
             }
 
             // Appliquer la mutation
@@ -14974,6 +15087,7 @@
                     diamond:   unlockedDiamondCards,
                     rainbow:   unlockedRainbowCards,
                     chocolate: unlockedChocolateCards,
+                    dark: unlockedDarkCards,
                 }[mutation];
 
                 if (mutMap) {
@@ -14993,14 +15107,15 @@
             }
 
             // Afficher le résultat
-            const MUT_LABELS = { gold: '✨ MUTATION GOLD', diamond: '💎 MUTATION DIAMANT', rainbow: '🌈 MUTATION RAINBOW', chocolate: '💩 MUTATION CACA' };
-            const MUT_COLORS = { gold: '#ffd700', diamond: '#00bfff', rainbow: '#cc44ff', chocolate: '#D2691E' };
-            const MUT_BG     = { gold: 'rgba(255,215,0,0.15)', diamond: 'rgba(0,191,255,0.15)', rainbow: 'rgba(204,68,255,0.15)', chocolate: 'rgba(210,105,30,0.15)' };
+            const MUT_LABELS = { gold: '✨ MUTATION GOLD', diamond: '💎 MUTATION DIAMANT', rainbow: '🌈 MUTATION RAINBOW', chocolate: '💩 MUTATION CACA', dark: '⚫ MUTATION DARK'  };
+            const MUT_COLORS = { gold: '#ffd700', diamond: '#00bfff', rainbow: '#cc44ff', chocolate: '#D2691E', dark: '#383635' };
+            const MUT_BG     = { gold: 'rgba(255,215,0,0.15)', diamond: 'rgba(0,191,255,0.15)', rainbow: 'rgba(204,68,255,0.15)', chocolate: 'rgba(210,105,30,0.15)', dark: 'rgba(33,32,32,0.15)' };
             const MUT_FILTERS = {
                 gold:      'sepia(0.4) saturate(2) brightness(1.1) drop-shadow(0 0 8px #ffd700)',
                 diamond:   'hue-rotate(180deg) saturate(2) brightness(1.1) drop-shadow(0 0 8px #00bfff)',
                 rainbow:   'saturate(1.8) brightness(1.15) drop-shadow(0 0 8px #cc44ff)',
                 chocolate: 'sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85) drop-shadow(0 0 8px #8B4513)',
+                dark: 'grayscale(0.8) brightness(0.5) contrast(1.3) drop-shadow(0 0 8px #000000)',
             };
 
             // Lancer l'animation — le résultat est révélé à la fin
@@ -15211,6 +15326,7 @@
                  + (unlockedDiamondCards.get(key) || 0)
                  + (unlockedRainbowCards.get(key) || 0)
                  + (unlockedChocolateCards.get(key) || 0);
+                 + (unlockedDarkCards.get(key) || 0);
         }
 
         function _renderCraftRecipes() {
@@ -15266,7 +15382,7 @@
             recipe.ingredients.forEach(function(ing) {
                 const key = ing.key;
                 let remaining = ing.qty || 1;
-                const maps = [unlockedCards, unlockedGoldCards, unlockedDiamondCards, unlockedRainbowCards, unlockedChocolateCards];
+                const maps = [unlockedCards, unlockedGoldCards, unlockedDiamondCards, unlockedRainbowCards, unlockedChocolateCards, unlockedDarkCards];
                 for (const map of maps) {
                     if (remaining <= 0) break;
                     const cur = map.get(key) || 0;
@@ -15286,12 +15402,13 @@
                 craftMutation = recipe.result.mutation;
             } else {
                 // Utilise _getMutRate() pour respecter le boost ×2 si actif
-                const _cR = _getMutRate('rainbow'), _cD = _getMutRate('diamond'), _cG = _getMutRate('gold'), _cC = _getMutRate('chocolate');
+                const _cR = _getMutRate('rainbow'), _cD = _getMutRate('diamond'), _cG = _getMutRate('gold'), _cC = _getMutRate('chocolate'), _cS = _getMutRate('dark');
                 const roll = Math.random();
                 if (roll < _cR)                         craftMutation = 'rainbow';
                 else if (roll < _cR + _cD)              craftMutation = 'diamond';
                 else if (roll < _cR + _cD + _cC)        craftMutation = 'chocolate';
                 else if (roll < _cR + _cD + _cC + _cG)  craftMutation = 'gold';
+                else if (roll < _cR + _cD + _cC + _cG + _cS)  craftMutation = 'dark';
             }
             // Ajouter la carte craftée dans la bonne Map
             let resultIsNew = false;
@@ -15410,13 +15527,14 @@
         function showCraftReveal(recipe, isNew, craftMutation) {
             var RCOLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#ffffff', og:'#c8a000', limited:'#ff59e7', hero:'#ffca18', evolution:'#6a00ff', champions:'#f1fc74', no:'#ff0000', admin_exclusive:'#ff0040' };
             var RLABELS = { common:'Commune', rare:'Rare', epic:'\u00c9pique', legendary:'L\u00e9gendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limit\u00e9e', hero:'H\u00e9ros', evolution:'\u00c9volution', champions:'Champions', no:'Impossible', admin_exclusive:'ADMIN' };
-            var MUT_ICONS = { gold:'✨', diamond:'💎', rainbow:'🌈', chocolate:'💩' };
-            var MUT_COLS  = { gold:'#ffd700', diamond:'#00bfff', rainbow:'#cc44ff', chocolate:'#D2691E' };
+            var MUT_ICONS = { gold:'✨', diamond:'💎', rainbow:'🌈', chocolate:'💩', dark:'⚫' };
+            var MUT_COLS  = { gold:'#ffd700', diamond:'#00bfff', rainbow:'#cc44ff', chocolate:'#D2691E', dark:'#383635' };
             var MUT_FILTERS = {
                 gold:      'drop-shadow(0 0 30px #ffd700) drop-shadow(0 0 60px #ffd70088) sepia(0.4) saturate(2) brightness(1.1)',
                 diamond:   'drop-shadow(0 0 30px #00bfff) drop-shadow(0 0 60px #00bfff88) hue-rotate(180deg) saturate(2) brightness(1.1)',
                 rainbow:   'drop-shadow(0 0 30px #cc44ff) drop-shadow(0 0 60px #cc44ff88) saturate(1.8) brightness(1.15)',
-                chocolate: 'drop-shadow(0 0 30px #8B4513) drop-shadow(0 0 60px #8B451388) sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85)'
+                chocolate: 'drop-shadow(0 0 30px #8B4513) drop-shadow(0 0 60px #8B451388) sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85)',
+                dark: 'grayscale(1) brightness(0.5) contrast(1.3) drop-shadow(0 0 30px rgba(0,0,0,0.9)) drop-shadow(0 0 60px rgba(80,80,80,0.4))'
             };
 
             document.getElementById('craftAnimPhase').style.display = 'none';
@@ -15551,7 +15669,7 @@
                     '</div>' +
                     '<div class="craft-adm-row">' +
                         _buildCardSelect('cr_key_' + ri, resKey, 'flex:1;') +
-                        '<select id="cr_mut_' + ri + '" class="craft-adm-input" style="font-size:0.72em;background:#0a0015;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;padding:3px 5px;"><option value="none">— Mut.</option><option value="gold">✨ Gold</option><option value="diamond">💎 Dia.</option><option value="rainbow">🌈 Rain.</option><option value="chocolate">💩 Caca.</option></select>' +
+                        '<select id="cr_mut_' + ri + '" class="craft-adm-input" style="font-size:0.72em;background:#0a0015;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;padding:3px 5px;"><option value="none">— Mut.</option><option value="gold">✨ Gold</option><option value="diamond">💎 Dia.</option><option value="rainbow">🌈 Rain.</option><option value="chocolate">💩 Caca.</option><option value="dark">⚫ Dark.</option></select>' +
                     '</div>' +
                     '<div style="color:#555;font-size:0.65em;font-weight:900;letter-spacing:2px;margin:8px 0 4px;">INGRÉDIENTS</div>';
 
@@ -15560,7 +15678,7 @@
                     html +=
                         '<div class="craft-adm-row">' +
                             _buildCardSelect('ci_key_' + ri + '_' + ii, ingKey, 'flex:1;') +
-                            '<select id="ci_mut_' + ri + '_' + ii + '" class="craft-adm-input" style="font-size:0.72em;background:#0a0015;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;padding:3px 5px;"><option value="none">— Mut.</option><option value="gold">✨ Gold</option><option value="diamond">💎 Dia.</option><option value="rainbow">🌈 Rain.</option><option value="chocolate">💩 Caca.</option></select>' +
+                            '<select id="ci_mut_' + ri + '_' + ii + '" class="craft-adm-input" style="font-size:0.72em;background:#0a0015;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;padding:3px 5px;"><option value="none">— Mut.</option><option value="gold">✨ Gold</option><option value="diamond">💎 Dia.</option><option value="rainbow">🌈 Rain.</option><option value="chocolate">💩 Caca.</option><option value="dark">⚫ Dark.</option></select>' +
                             '<input id="ci_qty_' + ri + '_' + ii + '" class="craft-adm-input" type="number" min="1" value="' + (ing.qty||1) + '" style="width:42px;text-align:center;" placeholder="Qté">' +
                             '<button onclick="craftAdminRemoveIng(' + ri + ',' + ii + ')" style="background:none;border:none;color:rgba(231,76,60,0.6);cursor:pointer;font-size:1em;">✕</button>' +
                         '</div>';
@@ -15902,7 +16020,7 @@
                     // Afficher la carte obtenue
                     if (typeof showRewards === 'function') {
                         setTimeout(() => {
-                            const fake = [{ card, rarity, isGold:false, isDiamond:false, isRainbow:false, isChocolate:false }];
+                            const fake = [{ card, rarity, isGold:false, isDiamond:false, isRainbow:false, isChocolate:false, isDark:false }];
                             // showRewards attend les récompenses dans le format du jeu
                             // Utiliser l'affichage simple via openingModal si disponible
                             const om = document.getElementById('openingModal');
@@ -15984,6 +16102,7 @@
                 if (save.unlockedDiamondCards) unlockedDiamondCards = new Map(save.unlockedDiamondCards);
                 if (save.unlockedRainbowCards) unlockedRainbowCards = new Map(save.unlockedRainbowCards);
                 if (save.unlockedChocolateCards) unlockedChocolateCards = new Map(save.unlockedChocolateCards);
+                if (save.unlockedDarkCards) unlockedDarkCards = new Map(save.unlockedDarkCards);
                 if (save.secretsUnlocked) stats.secretsUnlocked = new Set(save.secretsUnlocked);
                 if (save.questProgress) questProgress = save.questProgress;
                 if (save.dailyState)    dailyState    = save.dailyState;
@@ -16001,7 +16120,8 @@
                     + unlockedGoldCards.size
                     + unlockedDiamondCards.size
                     + unlockedRainbowCards.size
-                    + unlockedChocolateCards.size;
+                    + unlockedChocolateCards.size
+                    + unlockedDarkCards.size;
                 const _savedCards = save.stats?.totalCards || 0;
                 // Prendre le max : si la save est à 0 mais les Maps ont des cartes, utiliser les Maps
                 stats.totalCards = Math.max(_savedCards, _countFromMaps);
@@ -16125,6 +16245,7 @@
             unlockedDiamondCards = new Map();
             unlockedRainbowCards = new Map();
             unlockedChocolateCards = new Map();
+            unlockedDarkCards = new Map();
             questProgress     = {};
             dailyState        = null;
             personalLuck      = 0;
@@ -16245,8 +16366,10 @@
                 let isNewRainbow = false;
                 let isChocolate = false;
                 let isNewChocolate = false;
+                let isDark = false;
+                let isNewDark = false;
                 const _roll10 = Math.random();
-                const _tR = _getMutRate('rainbow'), _tD = _getMutRate('diamond'), _tG = _getMutRate('gold'), _tC = _getMutRate('chocolate');
+                const _tR = _getMutRate('rainbow'), _tD = _getMutRate('diamond'), _tG = _getMutRate('gold'), _tC = _getMutRate('chocolate'), _tS = _getMutRate('dark');
                 if (_roll10 < _tR) {
                     isRainbow = true;
                     isNewRainbow = !unlockedRainbowCards.has(cardKey);
@@ -16267,9 +16390,14 @@
                     isNewChocolate = !unlockedChocolateCards.has(cardKey);
                     if (isNewChocolate) { unlockedChocolateCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, _buyTenSelected); }
                     unlockedChocolateCards.set(cardKey, unlockedChocolateCards.get(cardKey) + 1);
+                } else if (_roll10 < _tR + _tD + _tG + _tC + _tS) {
+                    isDark = true;
+                    isNewDark = !unlockedDarkCards.has(cardKey);
+                    if (isNewDark) { unlockedDarkCards.set(cardKey, 0); stats.totalCards++; updateDailyProgress('unlock', 1, _buyTenSelected); }
+                    unlockedDarkCards.set(cardKey, unlockedDarkCards.get(cardKey) + 1);
                 }
                 // Ajouter en normal SEULEMENT si pas de mutation
-                const _hasMut10 = isGold || isDiamond || isRainbow || isChocolate;
+                const _hasMut10 = isGold || isDiamond || isRainbow || isChocolate || isDark;
                 let wasNew = false;
                 if (!_hasMut10) {
                     wasNew = !unlockedCards.has(cardKey);
@@ -16279,7 +16407,7 @@
                         if (!stats.secretsUnlocked.has(cardKey)) { stats.secretsUnlocked.add(cardKey); stats.secretCount++; }
                     }
                 }
-                cards10.push({ card: card, rarity: _buyTenSelected, isNew: wasNew, isGold: isGold, isNewGold: isNewGold, isDiamond: isDiamond, isNewDiamond: isNewDiamond, isRainbow: isRainbow, isNewRainbow: isNewRainbow, isChocolate: isChocolate, isNewChocolate: isNewChocolate });
+                cards10.push({ card: card, rarity: _buyTenSelected, isNew: wasNew, isGold: isGold, isNewGold: isNewGold, isDiamond: isDiamond, isNewDiamond: isNewDiamond, isRainbow: isRainbow, isNewRainbow: isNewRainbow, isChocolate: isChocolate, isNewChocolate: isNewChocolate, isDark: isDark, isNewDark: isNewDark });
             }
             document.getElementById('totalGoldDisplay').textContent = stats.totalGold.toLocaleString();
             document.getElementById('shopGoldDisplay').textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
@@ -16306,21 +16434,25 @@
                 else if (item.isDiamond) div.style.cssText += ';box-shadow:0 0 18px rgba(0,191,255,0.8);background:linear-gradient(145deg,#002a42,#001828);';
                 else if (item.isGold) div.style.cssText += ';box-shadow:0 0 18px rgba(255,215,0,0.8);background:linear-gradient(145deg,#2a1a00,#1a1000);';
                 else if (item.isChocolate) div.style.cssText += ';box-shadow:0 0 18px rgba(139,69,19,0.8);background:linear-gradient(145deg,#1a0800,#0d0400);';
+                else if (item.isDark) div.style.cssText += ';box-shadow:0 0 18px rgba(0,0,0,0.9);background:linear-gradient(145deg,#1a1a1a,#0d0d0d);';
                 const imgStyle = item.isRainbow
                     ? 'filter:drop-shadow(0 0 10px rgba(200,0,255,1)) saturate(1.8) brightness(1.15);animation:rainbowImgPulse 2s linear infinite;'
                     : item.isDiamond ? 'filter:drop-shadow(0 0 10px rgba(0,191,255,1)) hue-rotate(180deg) saturate(2) brightness(1.1);'
                     : item.isGold ? 'filter:drop-shadow(0 0 10px rgba(255,215,0,1)) sepia(0.4) saturate(2) brightness(1.1);'
-                    : item.isChocolate ? 'filter:drop-shadow(0 0 10px rgba(139,69,19,1)) sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85);' : '';
+                    : item.isChocolate ? 'filter:drop-shadow(0 0 10px rgba(139,69,19,1)) sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85);'
+                    : item.isDark ? 'filter:drop-shadow(0 0 10px rgba(80,80,80,0.9)) brightness(0.35) contrast(1.4) saturate(0.15);' : '';
                 const nameStyle = item.isRainbow
                     ? 'background:linear-gradient(90deg,#ff0000,#ff9900,#ffff00,#00cc00,#00bfff,#9900ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;'
                     : item.isDiamond ? 'color:#00bfff;text-shadow:0 0 8px rgba(0,191,255,0.6);'
                     : item.isGold ? 'color:#ffd700;text-shadow:0 0 8px rgba(255,215,0,0.6);'
-                    : item.isChocolate ? 'color:#D2691E;text-shadow:0 0 8px rgba(139,69,19,0.7);' : '';
-                const mutLabel = item.isRainbow ? '🌈 RAINBOW — ' : item.isDiamond ? '💎 DIAMANT — ' : item.isGold ? '✨ GOLD — ' : item.isChocolate ? '💩 CACA — ' : '';
+                    : item.isChocolate ? 'color:#D2691E;text-shadow:0 0 8px rgba(139,69,19,0.7);'
+                    : item.isDark ? 'color:#888888;text-shadow:0 0 8px rgba(80,80,80,0.6);' : '';
+                const mutLabel = item.isRainbow ? '🌈 RAINBOW — ' : item.isDiamond ? '💎 DIAMANT — ' : item.isGold ? '✨ GOLD — ' : item.isChocolate ? '💩 CACA — ' : item.isDark ? '⚫ DARK — ' : '';
                 const newMutLabel = item.isNewRainbow ? '<div style="color:#cc44ff;font-size:0.58em;font-weight:900;margin-top:2px;">🌈 NOUVELLE RAINBOW</div>'
                     : item.isNewDiamond ? '<div style="color:#00bfff;font-size:0.58em;font-weight:900;margin-top:2px;">💎 NOUVEAU DIAMANT</div>'
                     : item.isNewGold ? '<div style="color:#ffd700;font-size:0.58em;font-weight:900;margin-top:2px;">⭐ NOUVELLE GOLD</div>'
-                    : item.isNewChocolate ? '<div style="color:#D2691E;font-size:0.58em;font-weight:900;margin-top:2px;">💩 NOUVEAU CACA</div>' : '';
+                    : item.isNewChocolate ? '<div style="color:#D2691E;font-size:0.58em;font-weight:900;margin-top:2px;">💩 NOUVEAU CACA</div>'
+                    : item.isNewDark ? '<div style="color:#888888;font-size:0.58em;font-weight:900;margin-top:2px;">⚫ NOUVEAU DARK</div>' : '';
                 div.innerHTML = '<img src="' + item.card.img + '" onerror="this.style.opacity=0.3"' + (imgStyle ? ' style="' + imgStyle + '"' : '') + '>' +
                     '<div class="xrn" style="' + nameStyle + '">' + item.card.name + '</div>' +
                     '<div class="xrr" style="color:' + col + '">' + mutLabel + lbl + '</div>' +
@@ -16355,15 +16487,18 @@
             const inpD = document.getElementById('adminMutationDiamondInput');
             const inpR = document.getElementById('adminMutationRainbowInput');
             const inpC = document.getElementById('adminMutationChocolateInput');
+            const inpDark = document.getElementById('adminMutationDarkInput');
             const valG = parseFloat(inpG.value);
             const valD = parseFloat(inpD.value);
             const valR = parseFloat(inpR.value);
             const valC = parseFloat(inpC ? inpC.value : 6.7);
+            const valDark = parseFloat(inpDark ? inpDark.value : 5);
             if (isNaN(valG) || valG < 0 || valG > 100) { adminMutationStatus('⚠️ Valeur GOLD invalide (0-100)'); return; }
             if (isNaN(valD) || valD < 0 || valD > 100) { adminMutationStatus('⚠️ Valeur DIAMANT invalide (0-100)'); return; }
             if (isNaN(valR) || valR < 0 || valR > 100) { adminMutationStatus('⚠️ Valeur RAINBOW invalide (0-100)'); return; }
             if (isNaN(valC) || valC < 0 || valC > 100) { adminMutationStatus('⚠️ Valeur CHOCOLAT invalide (0-100)'); return; }
-            firebaseDB.ref('admin/mutations').set({ gold: valG / 100, diamond: valD / 100, rainbow: valR / 100, chocolate: valC / 100 })
+            if (isNaN(valDark) || valDark < 0 || valDark > 100) { adminMutationStatus('⚠️ Valeur DARK invalide (0-100)'); return; }
+            firebaseDB.ref('admin/mutations').set({ gold: valG / 100, diamond: valD / 100, rainbow: valR / 100, chocolate: valC / 100, dark: valDark / 100 })
                 .then(() => { adminMutationStatus('✅ Taux mis à jour — Gold: ' + valG.toFixed(1) + '% | Diamant: ' + valD.toFixed(1) + '% | Rainbow: ' + valR.toFixed(1) + '% | Chocolat: ' + valC.toFixed(1) + '%'); })
                 .catch(e => adminMutationStatus('Erreur : ' + e.message));
         }
