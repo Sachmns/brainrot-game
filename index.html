@@ -2033,9 +2033,9 @@
         .book-card.diamond-card.unlocked img { filter:drop-shadow(0 0 6px rgba(0,191,255,0.8)) hue-rotate(160deg) saturate(1.5) brightness(1.05); }
         .book-card.diamond-card.locked img { filter:grayscale(100%) drop-shadow(0 0 4px rgba(0,60,100,0.5)); }
         .book-card.rainbow-card { background:linear-gradient(145deg,#1a0030,#0d0020); border:3px solid #660099; }
-        .book-card.rainbow-card.unlocked { border-color:transparent; border-width:3px; box-shadow:0 0 25px rgba(200,0,255,0.7),0 0 50px rgba(0,200,255,0.3); background:linear-gradient(145deg,#1f0040,#0f0025); animation:rainbowCardPulse 2s ease-in-out infinite; outline:3px solid transparent; }
+        .book-card.rainbow-card.unlocked { border-color:transparent; border-width:3px; box-shadow:0 0 25px rgba(200,0,255,0.7),0 0 50px rgba(0,200,255,0.3); background:linear-gradient(145deg,#1f0040,#0f0025); animation:rainbowCardPulse 2s ease-in-out infinite; outline:3px solid transparent; will-change:box-shadow; transform:translateZ(0); contain:paint; }
         @keyframes rainbowCardPulse { 0%{box-shadow:0 0 25px rgba(255,0,0,0.6),0 0 50px rgba(255,150,0,0.2);} 17%{box-shadow:0 0 25px rgba(255,180,0,0.6),0 0 50px rgba(0,255,100,0.2);} 33%{box-shadow:0 0 25px rgba(0,255,80,0.6),0 0 50px rgba(0,200,255,0.2);} 50%{box-shadow:0 0 25px rgba(0,180,255,0.6),0 0 50px rgba(100,0,255,0.2);} 67%{box-shadow:0 0 25px rgba(180,0,255,0.6),0 0 50px rgba(255,0,150,0.2);} 83%{box-shadow:0 0 25px rgba(255,0,150,0.6),0 0 50px rgba(255,0,0,0.2);} 100%{box-shadow:0 0 25px rgba(255,0,0,0.6),0 0 50px rgba(255,150,0,0.2);} }
-        .book-card.rainbow-card.unlocked img { filter:drop-shadow(0 0 10px rgba(200,0,255,0.9)) drop-shadow(0 0 6px rgba(0,200,255,0.6)) saturate(1.8) brightness(1.15); animation:rainbowImgPulse 2s linear infinite; }
+        .book-card.rainbow-card.unlocked img { filter:drop-shadow(0 0 10px rgba(200,0,255,0.9)) drop-shadow(0 0 6px rgba(0,200,255,0.6)) saturate(1.8) brightness(1.15); animation:rainbowImgPulse 2s linear infinite; will-change:filter; transform:translateZ(0); }
         @keyframes rainbowImgPulse { 0%{filter:drop-shadow(0 0 10px rgba(255,0,0,0.9)) saturate(1.8) brightness(1.15);} 33%{filter:drop-shadow(0 0 10px rgba(0,255,100,0.9)) saturate(1.8) brightness(1.15);} 67%{filter:drop-shadow(0 0 10px rgba(0,100,255,0.9)) saturate(1.8) brightness(1.15);} 100%{filter:drop-shadow(0 0 10px rgba(255,0,0,0.9)) saturate(1.8) brightness(1.15);} }
         .book-card.rainbow-card.locked img { filter:grayscale(100%); }
         .book-tab-btn.diamond-tab { border-color:#005f8a; color:#00bfff; }
@@ -4682,6 +4682,26 @@
             0%   { background-position: 0% 50%; }
             50%  { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
+        }
+        @keyframes darkBadgeShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes darkImgPulse {
+            0%   { filter: brightness(0.45) contrast(1.4) saturate(0.08) drop-shadow(0 0 18px rgba(180,180,255,0.9)) drop-shadow(0 0 40px rgba(100,80,200,0.7)); }
+            25%  { filter: brightness(0.35) contrast(1.6) saturate(0.05) drop-shadow(0 0 30px rgba(200,180,255,1))   drop-shadow(0 0 60px rgba(120,80,255,0.9)); }
+            50%  { filter: brightness(0.45) contrast(1.4) saturate(0.08) drop-shadow(0 0 22px rgba(160,140,255,0.8)) drop-shadow(0 0 50px rgba(80,60,180,0.7)); }
+            75%  { filter: brightness(0.38) contrast(1.5) saturate(0.05) drop-shadow(0 0 35px rgba(220,200,255,1))   drop-shadow(0 0 70px rgba(140,100,255,0.9)); }
+            100% { filter: brightness(0.45) contrast(1.4) saturate(0.08) drop-shadow(0 0 18px rgba(180,180,255,0.9)) drop-shadow(0 0 40px rgba(100,80,200,0.7)); }
+        }
+        @keyframes darkCardPulse {
+            0%,100% { box-shadow: 0 0 20px rgba(120,80,255,0.5), 0 0 50px rgba(60,40,120,0.3), inset 0 0 20px rgba(80,60,180,0.1); }
+            50%     { box-shadow: 0 0 40px rgba(160,120,255,0.8), 0 0 80px rgba(80,60,180,0.5), inset 0 0 30px rgba(100,80,200,0.2); }
+        }
+        @keyframes darkAuraGlow {
+            0%,100% { text-shadow: 0 0 10px rgba(180,150,255,0.8), 0 0 25px rgba(100,80,200,0.5); color: #c4b0ff; }
+            50%     { text-shadow: 0 0 20px rgba(220,200,255,1),   0 0 45px rgba(140,100,255,0.7); color: #e0d4ff; }
         }
 
         /* ════ TRADE MACHINE ════ */
@@ -7808,7 +7828,7 @@
                     ${reward.isGold && reward.isNewGold ? '<div style="color:#ffd700;font-size:0.82em;font-weight:900;margin-top:4px;text-shadow:0 0 8px rgba(255,215,0,0.8);">⭐ NOUVELLE CARTE GOLD DÉBLOQUÉE ⭐</div>' : ''}
                     ${reward.isChocolate ? '<div style="background:linear-gradient(90deg,#3b1a00,#8B4513,#D2691E,#8B4513,#3b1a00);background-size:200%;animation:chocolateBadgeShift 2s linear infinite;color:#fff;font-size:0.78em;font-weight:900;padding:4px 12px;border-radius:10px;margin-top:4px;letter-spacing:1px;display:inline-block;box-shadow:0 0 10px rgba(139,69,19,0.6);">💩 MUTATION CACA</div>' : ''}
                     ${reward.isChocolate && reward.isNewChocolate ? '<div style="color:#D2691E;font-size:0.82em;font-weight:900;margin-top:4px;text-shadow:0 0 8px rgba(139,69,19,0.8);">💩 NOUVELLE CARTE CACA !</div>' : ''}
-                    ${reward.isDark ? '<div style="background:linear-gradient(90deg,#111111,#333333,#555555,#333333,#111111);background-size:200%;animation:darkBadgeShift 2s linear infinite;color:#aaaaaa;font-size:0.78em;font-weight:900;padding:4px 12px;border-radius:10px;margin-top:4px;letter-spacing:1px;display:inline-block;box-shadow:0 0 10px rgba(33,32,32,0.6);">⚫ MUTATION DARK</div>' : ''}
+                    ${reward.isDark ? '<div style="background:linear-gradient(90deg,#0a0010,#1a0030,#3d006a,#1a0030,#0a0010);background-size:200%;animation:darkBadgeShift 2s linear infinite;color:#c4b0ff;font-size:0.78em;font-weight:900;padding:4px 12px;border-radius:10px;margin-top:4px;letter-spacing:1px;display:inline-block;box-shadow:0 0 14px rgba(120,80,255,0.6),0 0 30px rgba(60,40,120,0.4);text-shadow:0 0 10px rgba(180,150,255,0.9);">⚫ MUTATION DARK</div>' : ''}
                     ${reward.isDark && reward.isNewDark ? '<div style="color:#aaaaaa;font-size:0.82em;font-weight:900;margin-top:4px;text-shadow:0 0 8px rgba(180,32,32,0.8);">⚫ NOUVELLE CARTE DARK !</div>' : ''}
                     ${reward.isNew ? '<div style="color: #4ecb71; font-size: 0.9em; font-weight: bold; margin-top: 5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">✨ NOUVELLE CARTE DÉBLOQUÉE ✨</div>' : ''}
                     <div class="reward-quantity">×${reward.quantity}</div>
@@ -8354,14 +8374,16 @@
             } else if (isChocolate) {
                 image.style.filter = 'drop-shadow(0 0 24px rgba(139,69,19,1)) drop-shadow(0 0 8px rgba(210,105,30,0.8)) sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85)';
             } else if (isDark) {
-                image.style.filter = 'grayscale(0.5) brightness(0.65) contrast(1.2) drop-shadow(0 0 24px rgba(0,0,0,1)) drop-shadow(0 0 10px rgba(100,100,100,0.7))';
+                image.style.filter = '';
+                image.style.animation = 'darkImgPulse 2.2s ease-in-out infinite';
             } else {
                 image.style.filter = '';
             }
             name.textContent = card.name;
             name.style.opacity = '0';
-            name.style.color = isRainbow ? '' : isDiamond ? '#00bfff' : isGold ? '#ffd700' : isChocolate ? '#aaaaaa' : isDark ? '#aaaaaa' : '';
-            name.style.textShadow = isRainbow ? '' : isDiamond ? '0 0 20px rgba(0,191,255,0.8)' : isGold ? '0 0 20px rgba(255,215,0,0.8)' : isChocolate ? '0 0 20px rgba(80,80,80,0.9)' : isDark ? '0 0 20px rgba(150,150,150,0.6)' : '';
+            name.style.color = isRainbow ? '' : isDiamond ? '#00bfff' : isGold ? '#ffd700' : isChocolate ? '#aaaaaa' : isDark ? '#c4b0ff' : '';
+            name.style.textShadow = isRainbow ? '' : isDiamond ? '0 0 20px rgba(0,191,255,0.8)' : isGold ? '0 0 20px rgba(255,215,0,0.8)' : isChocolate ? '0 0 20px rgba(80,80,80,0.9)' : isDark ? '0 0 15px rgba(180,150,255,0.9), 0 0 35px rgba(100,80,200,0.6)' : '';
+            if (isDark) { name.style.animation = 'darkAuraGlow 2s ease-in-out infinite'; } else { name.style.animation = ''; }
             if (isRainbow) {
                 name.style.background = 'linear-gradient(90deg,#ff0000,#ff9900,#ffff00,#00cc00,#00bfff,#9900ff)';
                 name.style.webkitBackgroundClip = 'text';
@@ -8390,8 +8412,8 @@
             } else if (isDark) {
                 rarityBadge.textContent = '⚫ DARK — ' + getRarityText(rarity);
                 rarityBadge.className = 'card-reveal-rarity rarity-badge ' + rarity;
-                rarityBadge.style.cssText = 'background:linear-gradient(90deg,#111111,#333333,#555555,#333333,#111111);background-size:200%;animation:diamondBadgeShift 3s linear infinite;color:#aaaaaa;font-weight:900;text-shadow:0 0 4px rgba(0,0,0,0.9);letter-spacing:2px;opacity:0;';
-                overlay.style.background = 'radial-gradient(ellipse at center,rgba(10,10,10,0.98) 0%,rgba(0,0,0,0.99) 100%)';
+                rarityBadge.style.cssText = 'background:linear-gradient(90deg,#0a0010,#1a0030,#2d0050,#1a0030,#0a0010);background-size:200%;animation:darkBadgeShift 2s linear infinite;color:#c4b0ff;font-weight:900;letter-spacing:2px;text-shadow:0 0 12px rgba(180,150,255,0.9),0 0 30px rgba(100,80,200,0.6);box-shadow:0 0 20px rgba(120,80,255,0.4),0 0 50px rgba(60,40,120,0.2);opacity:0;';
+                overlay.style.background = 'radial-gradient(ellipse at center,rgba(10,5,25,0.99) 0%,rgba(0,0,10,1) 100%)';
             } else if (isRainbow) {
                 rarityBadge.textContent = '🌈 RAINBOW — ' + getRarityText(rarity);
                 rarityBadge.className = 'card-reveal-rarity rarity-badge ' + rarity;
@@ -8416,12 +8438,13 @@
             
             // Créer les particules
             particles.innerHTML = '';
-            const pCount = (isRainbow || isDiamond) ? 35 : isGold ? 30 : 20;
+            const pCount = (isRainbow || isDiamond) ? 35 : isGold ? 30 : isDark ? 28 : 20;
             for (let i = 0; i < pCount; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'reveal-particle';
                 if (isRainbow) particle.textContent = ['🌈','✨','⭐','💫'][i % 4];
                 else if (isDiamond) particle.textContent = i % 2 === 0 ? '💎' : '✨';
+                else if (isDark) particle.textContent = ['⚫','🌑','✦','★','◆'][i % 5];
                 else particle.textContent = isGold ? (i % 2 === 0 ? '⭐' : '✨') : '✨';
                 const angle = (Math.PI * 2 * i) / pCount;
                 const distance = 200 + Math.random() * 120;
@@ -8431,6 +8454,11 @@
                 particle.style.setProperty('--y', y + 'px');
                 particle.style.left = '50%';
                 particle.style.top = '50%';
+                if (isDark) {
+                    const darkCols = ['#c4b0ff','#9b80ff','#7060cc','#e0d4ff','#a088dd'];
+                    particle.style.color = darkCols[i % darkCols.length];
+                    particle.style.textShadow = '0 0 8px rgba(160,130,255,0.9), 0 0 20px rgba(100,80,200,0.6)';
+                }
                 particles.appendChild(particle);
             }
             
@@ -8631,8 +8659,8 @@
             } else if (_currentBookTab === 'dark') {
                 // ── Onglet DARK ──
                 const darkHeader = document.createElement('div');
-                darkHeader.style.cssText = 'text-align:center;margin-bottom:20px;padding:14px 20px;background:linear-gradient(135deg,rgba(10,10,10,0.8),rgba(40,40,40,0.2));border-radius:16px;border:2px solid rgba(80,80,80,0.4);';
-                darkHeader.innerHTML = '<div style="color:#888888;font-size:1.1em;font-weight:900;letter-spacing:2px;">⚫ MUTATION DARK</div><div style="color:#555555;font-size:0.85em;margin-top:6px;">5% de chance — Une carte DARK débloquée = +1 au classement !</div>';
+                darkHeader.style.cssText = 'text-align:center;margin-bottom:20px;padding:14px 20px;background:linear-gradient(135deg,rgba(10,5,25,0.9),rgba(30,15,60,0.5));border-radius:16px;border:2px solid rgba(120,80,255,0.4);box-shadow:0 0 20px rgba(80,50,180,0.25);';
+                darkHeader.innerHTML = '<div style="color:#c4b0ff;font-size:1.1em;font-weight:900;letter-spacing:2px;text-shadow:0 0 15px rgba(160,130,255,0.8),0 0 30px rgba(100,80,200,0.5);">⚫ MUTATION DARK</div><div style="color:#7060aa;font-size:0.85em;margin-top:6px;">5% de chance — Une carte DARK débloquée = +1 au classement !</div>';
                 content.appendChild(darkHeader);
                 sections.forEach(section => {
                     const cards = cardImages[section.key];
@@ -8653,13 +8681,13 @@
                         if (isUnlocked) totalUnlocked++;
                         const div = document.createElement('div');
                         div.className = `book-card ${isUnlocked ? 'unlocked ' + section.key : 'locked'}`;
-                        if (isUnlocked) div.style.cssText = 'border-color:rgba(80,80,80,0.6);box-shadow:0 0 12px rgba(56,54,53,0.5);';
+                        if (isUnlocked) div.style.cssText = 'border-color:rgba(120,80,255,0.7);box-shadow:0 0 16px rgba(100,70,200,0.5),0 0 35px rgba(60,40,120,0.25);animation:darkCardPulse 2.5s ease-in-out infinite;will-change:box-shadow;transform:translateZ(0);contain:paint;';
                         div.innerHTML = `
                             <span class="lock-icon">${isUnlocked ? '⚫' : '🔒'}</span>
-                            <img src="${card.img}" alt="${card.name}" onerror="this.style.display='none'" style="${isUnlocked ? 'filter:sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85);' : 'filter:grayscale(100%);'}">
-                            <div class="card-name" style="${isUnlocked ? 'color:#999999;' : ''}">${card.name}</div>
-                            ${isUnlocked ? '<span style="background:linear-gradient(90deg,#111111,#444444,#666666);color:#cccccc;font-size:0.62em;font-weight:900;padding:2px 8px;border-radius:8px;margin-top:3px;display:inline-block;">⚫ DARK</span>' : ''}
-                            ${isUnlocked && darkCount > 1 ? `<div style="color:#888;font-size:0.9em;font-weight:bold;margin-top:3px;">x${darkCount}</div>` : ''}
+                            <img src="${card.img}" alt="${card.name}" onerror="this.style.display='none'" style="${isUnlocked ? 'animation:darkImgPulse 2.5s ease-in-out infinite;will-change:filter;transform:translateZ(0);' : 'filter:grayscale(100%);'}">
+                            <div class="card-name" style="${isUnlocked ? 'color:#c4b0ff;text-shadow:0 0 10px rgba(160,130,255,0.7);animation:darkAuraGlow 2.5s ease-in-out infinite;' : ''}">${card.name}</div>
+                            ${isUnlocked ? '<span style="background:linear-gradient(90deg,#0a0010,#1a0030,#3d006a,#1a0030,#0a0010);background-size:200%;animation:darkBadgeShift 2s linear infinite;color:#c4b0ff;font-size:0.62em;font-weight:900;padding:2px 8px;border-radius:8px;margin-top:3px;display:inline-block;box-shadow:0 0 10px rgba(120,80,255,0.5);text-shadow:0 0 8px rgba(180,150,255,0.8);">⚫ DARK</span>' : ''}
+                            ${isUnlocked && darkCount > 1 ? `<div style="color:#c4b0ff;font-size:0.9em;font-weight:bold;margin-top:3px;text-shadow:0 0 8px rgba(160,130,255,0.7);">x${darkCount}</div>` : ''}
                         `;
                         grid.appendChild(div);
                     });
