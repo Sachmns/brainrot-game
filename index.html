@@ -2953,6 +2953,10 @@
             position: relative;
             z-index: 1;
             transition: opacity 0.3s;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-user-drag: none;
+            pointer-events: none;
         }
         .quiz-rarity-tag {
             position: absolute;
@@ -4242,6 +4246,70 @@
         .craft-adm-recipe { background:rgba(0,0,0,0.3); border:1px solid rgba(0,255,136,0.12); border-radius:12px; padding:12px; margin-bottom:10px; }
         .craft-adm-row { display:flex; gap:6px; align-items:center; margin-bottom:5px; flex-wrap:wrap; }
         .craft-adm-input { background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:8px; color:#fff; padding:5px 8px; font-size:0.75em; outline:none; }
+
+        /* ═══ CARTES LIMITÉES CRAFT ═══ */
+        .craft-recipe-card { position:relative; }
+
+        /* Carte limitée : contour multicolore animé + mise en valeur */
+        .craft-recipe-card.limited-card {
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            background-color: rgba(10,5,20,0.75);
+        }
+        .craft-recipe-card.limited-card::before {
+            content:''; position:absolute; inset:-2px; border-radius:18px; z-index:0;
+            background: linear-gradient(90deg,#ff0080,#ff8800,#ffff00,#00ff88,#00cfff,#8855ff,#ff0080);
+            background-size: 300% 100%;
+            animation: climRainbow 2.5s linear infinite;
+        }
+        .craft-recipe-card.limited-card::after {
+            content:''; position:absolute; inset:1px; border-radius:16px; z-index:1;
+            background: rgba(10,5,20,0.92);
+        }
+        .craft-recipe-card.limited-card > * { position:relative; z-index:2; }
+        @keyframes climRainbow {
+            0%   { background-position:0% 50%; }
+            100% { background-position:300% 50%; }
+        }
+        /* Sold-out : border rouge pulsant */
+        .craft-recipe-card.limited-card.sold-out-card::before {
+            background: linear-gradient(90deg,#ff0000,#880000,#ff3300,#880000,#ff0000);
+            background-size: 300% 100%;
+            animation: climRainbow 1s linear infinite;
+        }
+
+        .clim-badge {
+            display:inline-flex; align-items:center; gap:4px;
+            padding:2px 9px; border-radius:20px; font-size:0.64em; font-weight:900;
+            border:1px solid rgba(255,100,0,0.5); color:#ff8844;
+            background:rgba(255,60,0,0.10); margin-top:5px; letter-spacing:0.5px;
+        }
+        .clim-badge.low  { border-color:rgba(255,30,30,0.7); color:#ff3333; animation:climPulse 1.2s ease-in-out infinite; }
+        .clim-badge.sold { border-color:rgba(160,0,0,0.8); color:#ff1111; background:rgba(70,0,0,0.30); }
+        @keyframes climPulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+
+        /* SOLD OUT overlay */
+        .clim-soldout-wrap {
+            position:absolute; inset:0; border-radius:16px; z-index:10;
+            background:rgba(0,0,0,0.82);
+            display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+            pointer-events:none;
+        }
+        .clim-soldout-label { color:#ff1111; font-size:1.5em; font-weight:900; letter-spacing:4px; text-shadow:0 0 20px #ff000099; }
+        .clim-soldout-timer { color:#888; font-size:0.70em; font-weight:700; }
+        /* Admin panel limited cards */
+        .clim-adm-row {
+            display:flex; align-items:center; gap:8px;
+            padding:9px 11px; border-radius:10px; margin-bottom:7px;
+            background:rgba(0,0,0,0.28); border:1px solid rgba(255,80,0,0.18);
+        }
+        .clim-adm-img  { width:36px; height:36px; object-fit:contain; border-radius:6px; flex-shrink:0; background:rgba(0,0,0,0.3); }
+        .clim-adm-info { flex:1; min-width:0; }
+        .clim-adm-name { color:#fff; font-size:0.76em; font-weight:900; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .clim-adm-rar  { color:#ff8844; font-size:0.63em; font-weight:700; }
+        .clim-adm-stock { font-size:0.75em; font-weight:900; color:#00ff88; min-width:80px; text-align:center; }
+        .clim-adm-del  { background:rgba(231,76,60,0.1); border:1px solid rgba(231,76,60,0.3); border-radius:7px; color:#e74c3c; padding:3px 9px; cursor:pointer; font-size:0.7em; white-space:nowrap; font-weight:900; }
 
         /* ═══ CRAFT ANIMATION OVERLAY ═══ */
         .craft-anim-overlay {
@@ -5630,9 +5698,17 @@
         <div class="miam-anim-text" id="miamAnimText">FUSION EN COURS...</div>
         <div class="miam-anim-bar-wrap"><div class="miam-anim-bar" id="miamAnimBar" style="width:0%"></div></div>
         <div class="miam-reveal-phase" id="miamRevealPhase">
-            <div class="miam-reveal-card"><img id="miamRevealImg" src="" onerror="this.style.opacity=0.3"></div>
-            <div class="miam-reveal-name" id="miamRevealName"></div>
-            <div class="miam-reveal-mut" id="miamRevealMut"></div>
+            <!-- Conteneur des 2 cartes côte à côte -->
+            <div id="miamRevealCardsRow" style="display:flex;flex-direction:row;align-items:flex-start;justify-content:center;gap:18px;">
+                <!-- Carte 1 (principale) -->
+                <div id="miamRevealCard1" style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+                    <div class="miam-reveal-card"><img id="miamRevealImg" src="" onerror="this.style.opacity=0.3"></div>
+                    <div class="miam-reveal-name" id="miamRevealName"></div>
+                    <div class="miam-reveal-mut" id="miamRevealMut"></div>
+                </div>
+                <!-- Carte 2 (bonus) — cachée par défaut, affichée par JS -->
+                <div id="miamRevealCard2" style="display:none;flex-direction:column;align-items:center;gap:6px;"></div>
+            </div>
             <button class="miam-reveal-close" onclick="closeMiamAnim()">✨ RÉCUPÉRER</button>
         </div>
     </div>
@@ -5742,7 +5818,8 @@
                 <div class="quiz-img-wrapper">
                     <div class="quiz-rarity-tag" id="quizRarityTag"></div>
                     <div class="quiz-silhouette-badge" id="quizSilhouetteBadge">🕶️ ×1.5 OR</div>
-                    <img class="quiz-img" id="quizImg" src="" alt="brainrot">
+                    <img class="quiz-img" id="quizImg" src="" alt="" draggable="false">
+                    <div id="quizImgShield" style="position:absolute;inset:0;z-index:10;-webkit-user-select:none;user-select:none;"></div>
                 </div>
                 <div class="quiz-choices" id="quizChoices"></div>
                 <div class="quiz-reward-line">✅ Trouve la bonne réponse</div>
@@ -6054,6 +6131,44 @@
                     </div>
                 </div>
 
+
+                <!-- ══ CARTES LIMITÉES CRAFT MACHINE ══ -->
+                <div class="admin-section" style="border-color:rgba(255,80,0,0.40);background:rgba(255,40,0,0.03);">
+                    <div class="admin-section-title" style="color:#ff7733;">🔥 Cartes limitées — Craft Machine</div>
+                    <div style="color:#553300;font-size:0.72em;margin-bottom:12px;">
+                        Stock global partagé entre tous les joueurs.<br>
+                        Transaction Firebase atomique — zéro duplication.
+                    </div>
+
+                    <!-- Formulaire ajout -->
+                    <div style="background:rgba(0,0,0,0.25);border:1px solid rgba(255,80,0,0.18);border-radius:11px;padding:11px;margin-bottom:10px;">
+                        <div style="color:#ff7733;font-size:0.70em;font-weight:900;margin-bottom:8px;letter-spacing:1px;">➕ AJOUTER / RECHARGER UNE CARTE LIMITÉE</div>
+
+                        <!-- Carte résultat + stock -->
+                        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:7px;">
+                            <select id="climAdmSelect" class="craft-adm-input" style="flex:1;min-width:150px;"></select>
+                            <input id="climAdmQty" type="number" min="1" value="10" class="craft-adm-input" style="width:62px;text-align:center;" placeholder="Stock">
+                        </div>
+
+                        <!-- Ingrédients -->
+                        <div style="color:#555;font-size:0.65em;font-weight:900;letter-spacing:2px;margin:8px 0 5px;">INGRÉDIENTS (optionnels)</div>
+                        <div id="climAdmIngList"></div>
+                        <button onclick="climAdmAddIng()" style="margin-bottom:8px;padding:3px 11px;background:rgba(255,80,0,0.07);border:1px solid rgba(255,80,0,0.25);border-radius:7px;color:#ff7733;font-size:0.70em;cursor:pointer;">➕ Ajouter un ingrédient</button>
+
+                        <div style="display:flex;gap:6px;">
+                            <button class="admin-btn" onclick="climAdmAdd()"
+                                style="background:linear-gradient(180deg,#7a2800,#3d1000);border:2px solid rgba(255,80,0,0.40);color:#ff8844;font-size:0.80em;flex:1;">
+                                ➕ Ajouter / Recharger
+                            </button>
+                        </div>
+                        <div id="climAdmStatus" style="color:#00ff88;font-size:0.70em;min-height:14px;margin-top:6px;"></div>
+                    </div>
+
+                    <!-- Liste live -->
+                    <div id="climAdmList">
+                        <div style="color:#333;font-size:0.75em;padding:6px 0;">Aucune carte limitée configurée.</div>
+                    </div>
+                </div>
 
                 <!-- Événements programmés -->
                 <div class="admin-section" style="border-color:rgba(255,170,0,0.4);background:rgba(255,140,0,0.03);">
@@ -7282,7 +7397,8 @@
                 { name: 'Rubrikiko', img: 'https://static.wikia.nocookie.net/stealabr/images/9/9f/Rubrikiko.png/revision/latest/scale-to-width-down/150?cb=20260510142334' },
                 { name: 'Sammyni Cakini', img: 'https://static.wikia.nocookie.net/stealabr/images/1/1f/Sammyni_Cakini.png/revision/latest/scale-to-width-down/101?cb=20260524140721' },
                 { name: 'Jelly Moby', img: 'https://static.wikia.nocookie.net/stealabr/images/a/ad/Jelly_Moby.png/revision/latest/scale-to-width-down/150?cb=20260523050636' },
-                { name: 'Dragon Aquanini', img: 'https://static.wikia.nocookie.net/stealabr/images/2/2f/Dragon_aquanini2.png/revision/latest/scale-to-width-down/150?cb=20260603100501' }
+                { name: 'Dragon Aquanini', img: 'https://static.wikia.nocookie.net/stealabr/images/2/2f/Dragon_aquanini2.png/revision/latest/scale-to-width-down/150?cb=20260603100501' },
+                { name: 'Caylusaurus', img: 'https://static.wikia.nocookie.net/stealabr/images/e/e7/Dragon_Caylusini.png/revision/latest/scale-to-width-down/268?cb=20260606223127' }
              ],
               og: [
                 { name: "Strawberry Elephant", img: 'https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest/scale-to-width-down/144?cb=20250830235735' },
@@ -7841,10 +7957,10 @@
                 }
                 
                 card.innerHTML = `
-                    <div class="reward-image-container" style="${reward.isRainbow ? 'background:radial-gradient(circle,rgba(200,0,255,0.15),transparent);border-radius:50%;' : reward.isDiamond ? 'background:radial-gradient(circle,rgba(0,191,255,0.15),transparent);border-radius:50%;' : reward.isGold ? 'background:radial-gradient(circle,rgba(255,215,0,0.15),transparent);border-radius:50%;' : reward.isDark ? 'background:radial-gradient(circle,rgba(0,0,0,0.7),rgba(30,30,30,0.3));border-radius:50%;' : ''}">
-                        <img src="${reward.img}" alt="${reward.name}" class="reward-image" onerror="this.style.display='none'" style="${reward.isRainbow ? 'filter:drop-shadow(0 0 16px rgba(200,0,255,1)) drop-shadow(0 0 6px rgba(0,200,255,0.7)) saturate(1.8) brightness(1.15);animation:rainbowImgPulse 2s linear infinite;' : reward.isDiamond ? 'filter:drop-shadow(0 0 16px rgba(0,191,255,1)) drop-shadow(0 0 6px rgba(0,120,200,0.7)) hue-rotate(180deg) saturate(2) brightness(1.1);' : reward.isGold ? 'filter:drop-shadow(0 0 16px rgba(255,215,0,1)) drop-shadow(0 0 6px rgba(255,165,0,0.7)) sepia(0.4) saturate(2) brightness(1.1);' : reward.isChocolate ? 'filter:drop-shadow(0 0 16px rgba(139,69,19,1)) drop-shadow(0 0 6px rgba(210,105,30,0.7)) sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85);' : reward.isDark ? 'filter:grayscale(0.5) brightness(0.65) contrast(1.2) drop-shadow(0 0 18px rgba(0,0,0,1)) drop-shadow(0 0 8px rgba(100,100,100,0.7));' : ''}">
+                    <div class="reward-image-container" style="${reward.isRainbow ? 'background:radial-gradient(circle,rgba(200,0,255,0.15),transparent);border-radius:50%;' : reward.isDiamond ? 'background:radial-gradient(circle,rgba(0,191,255,0.15),transparent);border-radius:50%;' : reward.isGold ? 'background:radial-gradient(circle,rgba(255,215,0,0.15),transparent);border-radius:50%;' : reward.isDark ? '' : ''}">
+                        <img src="${reward.img}" alt="${reward.name}" class="reward-image" onerror="this.style.display='none'" style="${reward.isRainbow ? 'filter:drop-shadow(0 0 16px rgba(200,0,255,1)) drop-shadow(0 0 6px rgba(0,200,255,0.7)) saturate(1.8) brightness(1.15);animation:rainbowImgPulse 2s linear infinite;' : reward.isDiamond ? 'filter:drop-shadow(0 0 16px rgba(0,191,255,1)) drop-shadow(0 0 6px rgba(0,120,200,0.7)) hue-rotate(180deg) saturate(2) brightness(1.1);' : reward.isGold ? 'filter:drop-shadow(0 0 16px rgba(255,215,0,1)) drop-shadow(0 0 6px rgba(255,165,0,0.7)) sepia(0.4) saturate(2) brightness(1.1);' : reward.isChocolate ? 'filter:drop-shadow(0 0 16px rgba(139,69,19,1)) drop-shadow(0 0 6px rgba(210,105,30,0.7)) sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85);' : reward.isDark ? 'filter:none;animation:darkImgPulse 2.2s ease-in-out infinite;' : ''}">
                     </div>
-                    <div class="reward-name" style="${reward.isRainbow ? 'background:linear-gradient(90deg,#ff0000,#ff9900,#ffff00,#00cc00,#00bfff,#9900ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;' : reward.isDiamond ? 'color:#00bfff;text-shadow:0 0 12px rgba(0,191,255,0.7);' : reward.isGold ? 'color:#ffd700;text-shadow:0 0 12px rgba(255,215,0,0.7);' : reward.isChocolate ? 'color:#D2691E;text-shadow:0 0 12px rgba(139,69,19,0.8);' : reward.isDark ? 'color:#888888;text-shadow:0 0 12px rgba(0,0,0,0.9),0 0 6px rgba(150,150,150,0.4);' : ''}">${reward.name}</div>
+                    <div class="reward-name" style="${reward.isRainbow ? 'background:linear-gradient(90deg,#ff0000,#ff9900,#ffff00,#00cc00,#00bfff,#9900ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;' : reward.isDiamond ? 'color:#00bfff;text-shadow:0 0 12px rgba(0,191,255,0.7);' : reward.isGold ? 'color:#ffd700;text-shadow:0 0 12px rgba(255,215,0,0.7);' : reward.isChocolate ? 'color:#D2691E;text-shadow:0 0 12px rgba(139,69,19,0.8);' : reward.isDark ? 'color:#c4b0ff;text-shadow:0 0 15px rgba(180,150,255,0.9),0 0 35px rgba(100,80,200,0.6);animation:darkAuraGlow 2s ease-in-out infinite;' : ''}">${reward.name}</div>
                     ${reward.isRainbow ? '<div style="background:linear-gradient(90deg,#ff0000,#ff9900,#ffff00,#00cc00,#00bfff,#9900ff,#ff0000);background-size:300%;animation:rainbowBadgeShift 1.5s linear infinite;color:#fff;font-size:0.78em;font-weight:900;padding:4px 12px;border-radius:10px;margin-top:4px;letter-spacing:1px;display:inline-block;box-shadow:0 0 12px rgba(200,100,255,0.8);text-shadow:0 0 4px rgba(0,0,0,0.8);">🌈 MUTATION RAINBOW</div>' : ''}
                     ${reward.isRainbow && reward.isNewRainbow ? '<div style="background:linear-gradient(90deg,#ff0000,#9900ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:0.82em;font-weight:900;margin-top:4px;">🌈 NOUVELLE CARTE RAINBOW !</div>' : ''}
                     ${reward.isDiamond ? '<div style="background:linear-gradient(90deg,#005f8a,#00bfff,#e0f8ff,#00bfff,#005f8a);background-size:200%;animation:diamondBadgeShift 2s linear infinite;color:#003a5c;font-size:0.78em;font-weight:900;padding:4px 12px;border-radius:10px;margin-top:4px;letter-spacing:1px;display:inline-block;box-shadow:0 0 10px rgba(0,191,255,0.6);">💎 MUTATION DIAMANT</div>' : ''}
@@ -8709,7 +8825,7 @@
                         if (isUnlocked) div.style.cssText = 'border-color:rgba(120,80,255,0.7);box-shadow:0 0 16px rgba(100,70,200,0.5),0 0 35px rgba(60,40,120,0.25);animation:darkCardPulse 2.5s ease-in-out infinite;will-change:box-shadow;transform:translateZ(0);contain:paint;';
                         div.innerHTML = `
                             <span class="lock-icon">${isUnlocked ? '⚫' : '🔒'}</span>
-                            <img src="${card.img}" alt="${card.name}" onerror="this.style.display='none'" style="${isUnlocked ? 'animation:darkImgPulse 2.5s ease-in-out infinite;will-change:filter;transform:translateZ(0);' : 'filter:grayscale(100%);'}">
+                            <img src="${card.img}" alt="${card.name}" onerror="this.style.display='none'" style="${isUnlocked ? 'filter:none;animation:darkImgPulse 2.2s ease-in-out infinite;' : 'filter:grayscale(100%);'}">
                             <div class="card-name" style="${isUnlocked ? 'color:#c4b0ff;text-shadow:0 0 10px rgba(160,130,255,0.7);animation:darkAuraGlow 2.5s ease-in-out infinite;' : ''}">${card.name}</div>
                             ${isUnlocked ? '<span style="background:linear-gradient(90deg,#0a0010,#1a0030,#3d006a,#1a0030,#0a0010);background-size:200%;animation:darkBadgeShift 2s linear infinite;color:#c4b0ff;font-size:0.62em;font-weight:900;padding:2px 8px;border-radius:8px;margin-top:3px;display:inline-block;box-shadow:0 0 10px rgba(120,80,255,0.5);text-shadow:0 0 8px rgba(180,150,255,0.8);">⚫ DARK</span>' : ''}
                             ${isUnlocked && darkCount > 1 ? `<div style="color:#c4b0ff;font-size:0.9em;font-weight:bold;margin-top:3px;text-shadow:0 0 8px rgba(160,130,255,0.7);">x${darkCount}</div>` : ''}
@@ -10791,6 +10907,10 @@
             adminRefreshDashboard();
             loadAdminNotepad();
             craftAdminLoad();
+            climInit();
+            _climAdmIngredients = [];
+            _climAdmPopulateSelect();
+            _climAdmRenderIngList();
             buildAdminBanCardGrid();
             _schedRenderList();
             // Charger l'URL actuelle du coffre dans le champ
@@ -11980,7 +12100,7 @@
             // Message broadcast une seule fois par activation
             if (!_miamBroadcastShown) {
                 _miamBroadcastShown = true;
-                showBroadcast('🍖 TIMOTÉ EST LÀ ET IL VEUT MANGER: DES PATES, UN TASTY CROUSTY, DU RIZ, DU POULET, UN BURGER, BURGER KING, LA PLAZA MAYOR, DES BRAINROTS, MADAME CHAUVIN, KENDJI GIRAC, UN PAIN AU CHOCOLAT, MARTIN(INSHALLAH), TON AME, LE CODE DU JEU(CHIANT), UN COMMENTAIRE YOUTUBE SHORT, UNE FAUTE DORTOGRAFE, UN PADDLE, LA LUNE, DE LA VIANDE, LA MUTATION DIAMANT, UN BON PIED, ANTOINE, UN BUS ALÉOP, UNE ANNÉE LUMIÈRE, LE SON, MOUSIEUR, LE CUISTO, LA FRENCH MURDER, UN GROUPE CLASSE, DES OIGNONS, LENNI LOGNON, MR MERCIERTASTYCROUSTY92I, UNE ENCEINTE JBL, NAPS, SOPHIE RAIN, LE 67 KID, CHATGPT, LA FUSE MACHINE, PALPER DU RIZ, UN PC PORTABLE !', Date.now());
+                showBroadcast('🍖 TIMOTÉ EST LÀ ET IL VEUT MANGER: DES PATES, UN TASTY CROUSTY, DU RIZ, DU POULET, UN BURGER, BURGER KING, LA PLAZA MAYOR, DES BRAINROTS, MADAME CHAUVIN, KENDJI GIRAC, UN PAIN AU CHOCOLAT, MARTIN(INSHALLAH), TON AME, LE CODE DU JEU(CHIANT), UN COMMENTAIRE YOUTUBE SHORT, UNE FAUTE DORTOGRAFE, UN PADDLE, LA LUNE, DE LA VIANDE, LA MUTATION DIAMANT, UN BON PIED, ANTOINE, UN BUS ALÉOP, UNE ANNÉE LUMIÈRE, LE SON, MOUSIEUR, LE CUISTO, LA FRENCH MURDER, UN GROUPE CLASSE, DES OIGNONS, LENNI LOGNON, MR MERCIERTASTYCROUSTY92I, UNE ENCEINTE JBL, NAPS, SOPHIE RAIN, LE 67 KID, CHATGPT, LA FUSE MACHINE, PALPER DU RIZ, UN PC PORTABLE, PEAKY BLINDERS, DEX, INDEX.HTML, UNE GRANDE ROUE, UNE CLÉ USB !', Date.now());
             }
             // Mettre à jour le statut admin si panel ouvert
             const st = document.getElementById('adminMiamStatus');
@@ -12310,22 +12430,15 @@
                         mutEl.style.color  = meta.color;
                         mutEl.style.textShadow = '0 0 15px ' + meta.glow;
 
-                        // Carte 2 — afficher juste en dessous si disponible
-                        let card2El = document.getElementById('miamRevealCard2');
-                        if (!card2El) {
-                            card2El = document.createElement('div');
-                            card2El.id = 'miamRevealCard2';
-                            card2El.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.12);';
-                            revPhase.appendChild(card2El);
-                        }
-                        if (reward2) {
+                        // Carte 2 — afficher côte à côte avec la carte 1
+                        const card2El = document.getElementById('miamRevealCard2');
+                        if (reward2 && card2El) {
                             card2El.innerHTML =
-                                '<div style="color:#aaa;font-size:0.72em;font-weight:900;letter-spacing:2px;">✨ BONUS</div>' +
-                                '<img src="' + (reward2.img || '') + '" style="width:80px;height:80px;object-fit:contain;border-radius:10px;" onerror="this.style.opacity=0.3">' +
-                                '<div style="font-weight:900;font-size:0.9em;color:' + meta.color + ';text-shadow:0 0 12px ' + meta.glow + ';">' + reward2.name + '</div>' +
-                                '<div style="font-size:0.72em;font-weight:900;color:' + meta.color + ';">' + meta.label + '</div>';
+                                '<div class="miam-reveal-card"><img src="' + (reward2.img || '') + '" style="animation:miamReveal 0.5s cubic-bezier(0.34,1.56,0.64,1);" onerror="this.style.opacity=0.3"></div>' +
+                                '<div class="miam-reveal-name" style="color:#fff;">' + reward2.name + '</div>' +
+                                '<div class="miam-reveal-mut" style="color:' + meta.color + ';text-shadow:0 0 15px ' + meta.glow + ';">' + meta.label + '</div>';
                             card2El.style.display = 'flex';
-                        } else {
+                        } else if (card2El) {
                             card2El.style.display = 'none';
                         }
 
@@ -14533,6 +14646,14 @@
             el._t = setTimeout(() => { el.textContent = ''; }, 4000);
         }
 
+        // Bloquer clic droit sur l'image du quiz (tous modes)
+        window.addEventListener('load', () => {
+            const _qImg    = document.getElementById('quizImg');
+            const _qShield = document.getElementById('quizImgShield');
+            if (_qImg)    _qImg.addEventListener('contextmenu',    e => e.preventDefault());
+            if (_qShield) _qShield.addEventListener('contextmenu', e => e.preventDefault());
+        });
+
         // Init Firebase au chargement
         window.addEventListener('load', () => {
             initFirebase();
@@ -14942,12 +15063,15 @@
         const CRAFT_RCOLS = { common:'#8a8a8a', rare:'#ff9500', epic:'#a349a4', legendary:'#ffd700', mythic:'#ff4dff', brainrot_god:'#9b59b6', secret:'#fff', og:'#ffd700', limited:'#ff59e7', no:'#ff0000', admin_exclusive:'#ff0040' };
         let _craftRecipes = [];   // chargés depuis Firebase
         let _craftSelected = null;
+        let _craftSelectedRecipe = null; // recette sélectionnée (inclut cartes limitées)
 
         function openCraft() {
             _craftSelected = null;
+            _craftSelectedRecipe = null;
             document.getElementById('craftBtnMain').disabled = true;
             document.getElementById('craftStatusMsg').textContent = '';
             document.getElementById('craftModal').classList.add('open');
+            climInit();  // démarrer le listener stock limité si pas encore fait
             if (firebaseDB) {
                 firebaseDB.ref('admin/craftRecipes').once('value').then(function(snap) {
                     const val = snap.val();
@@ -14962,6 +15086,7 @@
 
         function closeCraft() {
             _craftSelected = null;
+            _craftSelectedRecipe = null;
             document.getElementById('craftModal').classList.remove('open');
             // Fermer l'animation de craft si elle tourne encore
             const animOverlay = document.getElementById('craftAnimOverlay');
@@ -15386,7 +15511,16 @@
         }
 
         function _craftCanMake(recipe) {
-            if (!recipe || !recipe.ingredients || !recipe.ingredients.length) return false;
+            if (!recipe) return false;
+            var rKey = recipe.result ? (recipe.result.key || (recipe.result.rarity + '|' + recipe.result.name)) : '';
+            var stock = rKey ? _climGetStock(rKey) : -1;
+            // Si stock limité à 0 : jamais craftable
+            if (stock === 0) return false;
+            // Vérifier les ingrédients (qu'il y en ait ou non)
+            if (!recipe.ingredients || !recipe.ingredients.length) {
+                // Aucun ingrédient : craftable si non limitée OU si stock > 0
+                return stock !== 0; // -1 (non limitée) ou >0
+            }
             return recipe.ingredients.every(function(ing) {
                 return (_craftGetIngCount(ing)) >= (ing.qty || 1);
             });
@@ -15406,53 +15540,171 @@
 
         function _renderCraftRecipes() {
             const list = document.getElementById('craftRecipesList');
-            if (!_craftRecipes.length) {
+
+            // ── 1. Construire recettes virtuelles pour cartes limitées sans recette normale ──
+            var _limitedExtra = [];
+            var _limitedKeys  = {}; // cardKey → safeKey
+            Object.keys(_climCards).forEach(function(sk) {
+                var e = _climCards[sk];
+                if (!e || typeof e.stock !== 'number') return;
+                var cKey = e.cardKey || (e.rarity + '|' + e.name);
+                _limitedKeys[cKey] = sk;
+                var hasNormalRecipe = _craftRecipes.some(function(r) {
+                    if (!r || !r.result) return false;
+                    return (r.result.key || (r.result.rarity + '|' + r.result.name)) === cKey;
+                });
+                if (!hasNormalRecipe) {
+                    var storedIngredients = Array.isArray(e.ingredients) ? e.ingredients : [];
+                    _limitedExtra.push({
+                        result: { name: e.name, rarity: e.rarity || 'common', img: e.img || '', key: cKey },
+                        ingredients: storedIngredients,
+                        _isLimitedOnly: true
+                    });
+                }
+            });
+
+            // ── 2. Cartes limitées EN HAUT, normales en bas ───────────────────────────────
+            var _limitedRecipes = [];
+            var _normalRecipes  = [];
+            _craftRecipes.forEach(function(r) {
+                if (!r || !r.result) return;
+                var rk = r.result.key || (r.result.rarity + '|' + r.result.name);
+                if (_limitedKeys.hasOwnProperty(rk)) _limitedRecipes.push(r);
+                else _normalRecipes.push(r);
+            });
+            _limitedExtra.forEach(function(r){ _limitedRecipes.push(r); });
+            var _allRecipes = _limitedRecipes.concat(_normalRecipes);
+
+            if (!_allRecipes.length) {
                 list.innerHTML = '<div class="craft-empty">Aucune recette disponible.</div>';
                 return;
             }
             list.innerHTML = '';
-            _craftRecipes.forEach(function(recipe, idx) {
+
+            _allRecipes.forEach(function(recipe, idx) {
                 if (!recipe || !recipe.result || !recipe.result.name) return;
+                // Si carte sold-out depuis plus de 10s : ne plus l'afficher du tout
+                var _preCheckRk = recipe.result.key || (recipe.result.rarity + '|' + recipe.result.name);
+                var _preCheckSk = _climKey(_preCheckRk);
+                var _preCheckE  = _climCards[_preCheckSk];
+                if (_preCheckE && _preCheckE.stock === 0 && _preCheckE.soldAt) {
+                    if (Date.now() - _preCheckE.soldAt >= 10000) return; // expirée → skip
+                }
                 const col = CRAFT_RCOLS[recipe.result.rarity] || '#aaa';
                 const canMake = _craftCanMake(recipe);
                 const div = document.createElement('div');
-                div.className = 'craft-recipe-card' + (_craftSelected === idx ? ' selected' : '');
-                const resultKey = recipe.result.key || (recipe.result.rarity + '|' + recipe.result.name);
-                const isNew = !unlockedCards.has(resultKey);
+
+                var _thisRk2 = recipe.result.key || (recipe.result.rarity + '|' + recipe.result.name);
+                var _selRk2  = _craftSelectedRecipe ? (_craftSelectedRecipe.result.key || (_craftSelectedRecipe.result.rarity + '|' + _craftSelectedRecipe.result.name)) : null;
+
+                const resultKeyForStock = _thisRk2;
+                const stockVal  = _climGetStock(resultKeyForStock);
+                const isSoldOut = stockVal === 0;
+                const isLimited = stockVal >= 0;
+                const sk        = isLimited ? _climKey(resultKeyForStock) : null;
+                const soldAt    = (sk && _climCards[sk]) ? (_climCards[sk].soldAt || null) : null;
+                const effectiveCanMake = canMake && !isSoldOut;
+                const isNew = !unlockedCards.has(resultKeyForStock);
+
+                // Classes CSS : carte limitée → rainbow border ; sold out → rouge
+                var cardClass = 'craft-recipe-card';
+                if (isLimited) cardClass += ' limited-card';
+                if (isSoldOut) cardClass += ' sold-out-card';
+                if (_selRk2 && _selRk2 === _thisRk2) cardClass += ' selected';
+                div.className = cardClass;
+
+                // ID stable pour cibler la carte depuis le countdown
+                if (sk) div.id = 'clim_card_' + sk;
+
                 div.innerHTML =
                     '<div class="craft-recipe-header">' +
                         (recipe.result.img ? '<img class="craft-recipe-img" src="' + recipe.result.img + '" onerror="this.style.opacity=0.3">' : '') +
                         '<div style="flex:1">' +
-                            '<div class="craft-recipe-name">\u2192 ' + recipe.result.name + (isNew ? ' <span style="color:#ffe066;font-size:0.78em;font-weight:900;background:rgba(255,220,0,0.13);border:1px solid rgba(255,220,0,0.35);border-radius:6px;padding:1px 6px;vertical-align:middle;">NOUVEAU ✨</span>' : '') + '</div>' +
+                            '<div class="craft-recipe-name">→ ' + recipe.result.name + (isNew ? ' <span style="color:#ffe066;font-size:0.78em;font-weight:900;background:rgba(255,220,0,0.13);border:1px solid rgba(255,220,0,0.35);border-radius:6px;padding:1px 6px;vertical-align:middle;">NOUVEAU ✨</span>' : '') + '</div>' +
                             '<div class="craft-recipe-rarity" style="color:' + col + '">' + (recipe.result.rarity || '') + '</div>' +
+                            (isLimited ? _climBadgeHtml(resultKeyForStock) : '') +
                         '</div>' +
-                        '<div style="font-size:0.72em;font-weight:900;color:' + (canMake ? '#00ff88' : '#e74c3c') + '">' + (canMake ? '\u2705 Craftable' : '\u274c Manque') + '</div>' +
+                        '<div style="font-size:0.72em;font-weight:900;color:' + (effectiveCanMake ? '#00ff88' : '#e74c3c') + '">' +
+                            (isSoldOut ? '❌ SOLD OUT' : (effectiveCanMake ? '✅ Craftable' : '❌ Manque')) +
+                        '</div>' +
                     '</div>' +
                     '<div class="craft-ingredients-row">' +
-                        (recipe.ingredients || []).map(function(ing) {
-                            const has = (_craftGetIngCount(ing)) >= (ing.qty || 1);
-                            return '<span class="craft-ing-tag ' + (has ? 'ok' : 'nope') + '">' + ing.name + ' \u00d7' + (ing.qty || 1) + '</span>';
-                        }).join('') +
+                        (recipe.ingredients && recipe.ingredients.length
+                            ? recipe.ingredients.map(function(ing) {
+                                const has = (_craftGetIngCount(ing)) >= (ing.qty || 1);
+                                return '<span class="craft-ing-tag ' + (has ? 'ok' : 'nope') + '">' + ing.name + ' ×' + (ing.qty || 1) + '</span>';
+                              }).join('')
+                            : ''
+                        ) +
                     '</div>';
-                div.onclick = function() {
-                    _craftSelected = idx;
-                    document.getElementById('craftBtnMain').disabled = !canMake;
-                    document.getElementById('craftStatusMsg').textContent = '';
-                    _renderCraftRecipes();
-                };
+
+                (function(capturedRecipe, capturedIdx) {
+                    div.onclick = function() {
+                        if (isSoldOut) return;
+                        _craftSelected = capturedIdx;
+                        _craftSelectedRecipe = capturedRecipe;
+                        document.getElementById('craftBtnMain').disabled = !effectiveCanMake;
+                        document.getElementById('craftStatusMsg').textContent = '';
+                        _renderCraftRecipes();
+                    };
+                })(recipe, idx);
+
                 list.appendChild(div);
+
+                // Appliquer l'overlay SOLD OUT (sans gérer le countdown ici)
+                if (isSoldOut && sk) {
+                    _climApplySoldOutOverlay(div, sk, soldAt);
+                }
             });
         }
 
         function doCraft() {
             if (_craftSelected === null) return;
-            const recipe = _craftRecipes[_craftSelected];
+            // Utiliser _craftSelectedRecipe (inclut les cartes limitées sans recette normale)
+            const recipe = _craftSelectedRecipe || _craftRecipes[_craftSelected];
+            if (!recipe) return;
             const statusEl = document.getElementById('craftStatusMsg');
             if (!_craftCanMake(recipe)) {
                 statusEl.style.color = '#e74c3c';
                 statusEl.textContent = 'Ingr\u00e9dients manquants !';
                 return;
             }
+            // ── Vérification stock limité ──────────────────────────
+            const _rKeyForLim = recipe.result.key || (recipe.result.rarity + '|' + recipe.result.name);
+            const _stockNow   = _climGetStock(_rKeyForLim);
+            if (_stockNow === 0) {
+                statusEl.style.color = '#e74c3c';
+                statusEl.textContent = '\u274c SOLD OUT — Plus de stock disponible !';
+                return;
+            }
+            // Si carte limitée : transaction atomique d'abord, craft ensuite
+            if (_stockNow > 0) {
+                var _sk = _climKey(_rKeyForLim);
+                document.getElementById('craftBtnMain').disabled = true;
+                statusEl.style.color = '#ffaa00';
+                statusEl.textContent = '\u23F3 V\u00E9rification du stock…';
+                _climDoCraftAtomic(recipe, _rKeyForLim, _sk, function(newStock) {
+                    // Stock décrémenté avec succès → lancer le vrai craft
+                    statusEl.textContent = '';
+                    _doCraftLogic(recipe);
+                    // Broadcast pour tous
+                    var pseudo = localStorage.getItem('tradePseudo') || 'Un joueur';
+                    _climBroadcastCraft(pseudo, recipe.result.name, newStock);
+                }, function(errMsg) {
+                    statusEl.style.color = '#e74c3c';
+                    statusEl.textContent = '\u274c ' + errMsg;
+                    document.getElementById('craftBtnMain').disabled = false;
+                    _renderCraftRecipes();
+                });
+                return;   // sortir — _doCraftLogic sera appelé dans le callback
+            }
+            // Carte non limitée → craft direct
+            _doCraftLogic(recipe);
+        }
+
+        // Logique de craft pure (ingrédients + mutation + animation)
+        function _doCraftLogic(recipe) {
+            const statusEl = document.getElementById('craftStatusMsg');
             // Consommer les ingrédients (toute mutation acceptée — on consomme dans l'ordre : normal, gold, diamond, rainbow)
             recipe.ingredients.forEach(function(ing) {
                 const key = ing.key;
@@ -15520,6 +15772,7 @@
             startCraftAnimation(recipe, resultIsNew, craftMutation);
             document.getElementById('craftBtnMain').disabled = true;
             _craftSelected = null;
+            _craftSelectedRecipe = null;
         }
 
         var _craftAnimLightningInterval = null;
@@ -15800,6 +16053,361 @@
                 .then(function(){ adminStatus('\u2705 Recettes sauv\u00e9es !'); _craftAdminData = saved; })
                 .catch(function(e){ adminStatus('Erreur : ' + e.message); });
         }
+
+        // ════════════════════════════════════════════════════════════
+        //  SYSTÈME CARTES LIMITÉES — CRAFT MACHINE
+        //  Firebase path : admin/limitedCraftCards/{safeKey}
+        //    { cardKey, name, rarity, img, stock }
+        //  Chaque craft utilise une transaction atomique Firebase.
+        //  Notifications broadcast pour tous les joueurs.
+        // ════════════════════════════════════════════════════════════
+
+        var _climCards = {};            // cache local : safeKey → { cardKey, name, rarity, img, stock, soldAt? }
+        var _climListener = null;       // ref Firebase listener
+        var _climNotifJoinTs = Date.now();
+        var _climNotifLastTs = 0;
+        // _climSoldTimers supprimé : le soldAt Firebase pilote le countdown pour tous les joueurs
+
+        // ── Clé Firebase sécurisée (sans . # $ / [ ]) ────────────
+        function _climKey(cardKey) {
+            return String(cardKey).replace(/[.#$\/\[\]]/g, '_');
+        }
+
+        // ── Initialisation : listener temps réel ─────────────────
+        function climInit() {
+            if (!firebaseDB || _climListener) return;
+            _climListener = firebaseDB.ref('admin/limitedCraftCards');
+            _climListener.on('value', function(snap) {
+                var prev = _climCards;
+                _climCards = snap.val() || {};
+
+                // Détecter les cartes soldAt (stock=0, soldAt présent)
+                // Lancer le countdown pour CE joueur (même s'il rejoint en cours de partie)
+                Object.keys(_climCards).forEach(function(sk) {
+                    var e = _climCards[sk];
+                    if (!e || e.stock !== 0 || !e.soldAt) return;
+                    var prevEntry = prev[sk];
+                    var elapsed = Date.now() - e.soldAt;
+                    // Si dans la fenêtre des 10s ET soldAt nouveau ou pas encore de countdown
+                    if (elapsed < 10000) {
+                        if (!prevEntry || prevEntry.soldAt !== e.soldAt || !_climActiveCountdowns[sk]) {
+                            _climStartSoldOutCountdown(sk, e.soldAt);
+                        }
+                    }
+                    // Si >10s : le render s'occupera de supprimer la carte visuellement
+                });
+
+                // Rafraîchir l'UI craft si ouvert
+                if (document.getElementById('craftModal').classList.contains('open')) {
+                    _renderCraftRecipes();
+                }
+                // Rafraîchir l'admin si visible
+                _climAdmRender();
+            });
+
+            // Listener broadcast craft limité (tous joueurs)
+            firebaseDB.ref('admin/limitedCraftNotif').on('value', function(snap) {
+                var d = snap.val();
+                if (!d || !d.ts) return;
+                if (d.ts <= _climNotifJoinTs) return;
+                if (d.ts <= _climNotifLastTs) return;
+                _climNotifLastTs = d.ts;
+                var left = d.stockLeft;
+                var msg = '\uD83D\uDC51 ' + d.pseudo + ' a craft ' + d.cardName +
+                          ' ! (plus que ' + left + ' restant' + (left > 1 ? 's' : '') + ')';
+                showBroadcast(msg, d.ts);
+            });
+        }
+
+        // ── Stock d'une carte (−1 = pas limitée) ─────────────────
+        function _climGetStock(cardKey) {
+            var sk = _climKey(cardKey);
+            if (!_climCards.hasOwnProperty(sk)) return -1;   // pas limitée
+            var e = _climCards[sk];
+            return (e && typeof e.stock === 'number') ? e.stock : 0;
+        }
+
+        // ── Badge HTML stock (injecté dans _renderCraftRecipes) ──
+        function _climBadgeHtml(cardKey) {
+            var stock = _climGetStock(cardKey);
+            if (stock < 0) return '';                         // pas limitée → rien
+            if (stock === 0) return '<div class="clim-badge sold">❌ SOLD OUT</div>';
+            if (stock <= 3)  return '<div class="clim-badge low">🔥 ' + stock + ' restant' + (stock > 1 ? 's' : '') + '</div>';
+            return '<div class="clim-badge">🔥 Stock limité : ' + stock + '</div>';
+        }
+
+        // ── Countdown SOLD OUT piloté par soldAt Firebase ────────
+        // Appelé dès qu'on détecte un nouveau soldAt sur une carte.
+        // Calcule le temps restant depuis soldAt (10s total).
+        // Fonctionne pour TOUS les joueurs, même ceux qui rejoignent en cours.
+        var _climActiveCountdowns = {}; // sk → intervalId
+
+        function _climStartSoldOutCountdown(sk, soldAt) {
+            // Annuler un éventuel countdown précédent pour ce sk
+            if (_climActiveCountdowns[sk]) {
+                clearInterval(_climActiveCountdowns[sk]);
+                delete _climActiveCountdowns[sk];
+            }
+
+            var DURATION = 10000; // 10 secondes
+
+            function tick() {
+                var elapsed = Date.now() - soldAt;
+                var remaining = Math.ceil((DURATION - elapsed) / 1000);
+
+                // Mettre à jour tous les timers visibles pour ce sk
+                var tEl = document.getElementById('clim_t_' + sk);
+                if (tEl) tEl.textContent = remaining > 0 ? 'Retrait dans ' + remaining + 's' : 'Retrait dans 0s';
+
+                if (elapsed >= DURATION) {
+                    clearInterval(_climActiveCountdowns[sk]);
+                    delete _climActiveCountdowns[sk];
+                    // Retirer la carte du DOM
+                    var cardEl = document.getElementById('clim_card_' + sk);
+                    if (cardEl && cardEl.parentNode) {
+                        cardEl.parentNode.removeChild(cardEl);
+                    }
+                    // Nettoyer si liste vide
+                    var lst = document.getElementById('craftRecipesList');
+                    if (lst && lst.querySelectorAll('.craft-recipe-card').length === 0) {
+                        lst.innerHTML = '<div class="craft-empty">Aucune recette disponible.</div>';
+                    }
+                }
+            }
+
+            // Lancer immédiatement puis chaque seconde
+            tick();
+            _climActiveCountdowns[sk] = setInterval(tick, 500);
+        }
+
+        // ── Applique l'overlay SOLD OUT sur un div de carte ───────
+        // (appelé depuis _renderCraftRecipes, ne gère PAS le countdown)
+        function _climApplySoldOutOverlay(cardDiv, safeKey, soldAt) {
+            // Ne pas doubler l'overlay
+            if (cardDiv.querySelector('.clim-soldout-wrap')) return;
+
+            cardDiv.style.pointerEvents = 'none';
+            cardDiv.classList.add('sold-out-card');
+
+            var elapsed   = soldAt ? Date.now() - soldAt : 0;
+            var remaining = Math.max(0, Math.ceil((10000 - elapsed) / 1000));
+
+            var ov = document.createElement('div');
+            ov.className = 'clim-soldout-wrap';
+            ov.innerHTML =
+                '<div class="clim-soldout-label">SOLD OUT</div>' +
+                '<div class="clim-soldout-timer" id="clim_t_' + safeKey + '">Retrait dans ' + remaining + 's</div>';
+            cardDiv.appendChild(ov);
+
+            // Si soldAt existe déjà mais pas encore de countdown actif → en lancer un
+            if (soldAt && !_climActiveCountdowns[safeKey]) {
+                _climStartSoldOutCountdown(safeKey, soldAt);
+            }
+        }
+
+        // ── Craft limité : transaction atomique Firebase ──────────
+        // Quand stock → 0, écrit soldAt (timestamp ms) pour que TOUS les joueurs
+        // déclenchent le countdown depuis le même instant.
+        function _climDoCraftAtomic(recipe, cardKey, safeKey, onSuccess, onFail) {
+            var ref = firebaseDB.ref('admin/limitedCraftCards/' + safeKey);
+            ref.transaction(function(current) {
+                if (current === null) return;   // carte retirée entre-temps → annuler
+                var s = (current && typeof current.stock === 'number') ? current.stock : 0;
+                if (s <= 0) return;             // stock vide → annuler
+                current.stock = s - 1;
+                if (current.stock === 0) {
+                    current.soldAt = Date.now(); // timestamp : déclenche countdown chez tous
+                }
+                return current;
+            }, function(error, committed, snapshot) {
+                if (error)     { onFail('Erreur Firebase : ' + error.message); return; }
+                if (!committed){ onFail('SOLD OUT'); return; }
+                var newStock = snapshot.val() ? snapshot.val().stock : 0;
+                onSuccess(newStock);
+            });
+        }
+
+        // ── Broadcast "craft limité" pour tous les joueurs ────────
+        function _climBroadcastCraft(pseudo, cardName, stockLeft) {
+            if (!firebaseDB) return;
+            firebaseDB.ref('admin/limitedCraftNotif').set({
+                pseudo: pseudo, cardName: cardName, stockLeft: stockLeft, ts: Date.now()
+            });
+        }
+
+        // ── Broadcast "ajout admin" pour tous les joueurs ─────────
+        function _climBroadcastAdd(qty, cardName) {
+            if (!firebaseDB) return;
+            var msg = qty > 1
+                ? qty + ' ' + cardName + ' ONT \u00C9T\u00C9 AJOUT\u00C9S \u00C0 LA CRAFT MACHINE'
+                : '1 ' + cardName + ' A \u00C9T\u00C9 AJOUT\u00C9 \u00C0 LA CRAFT MACHINE';
+            firebaseDB.ref('admin/broadcast').set({ msg: '\uD83D\uDD25 ' + msg, ts: Date.now() });
+        }
+
+        // ════ Admin : remplir le select avec toutes les cartes ════
+        function _climAdmPopulateSelect() {
+            var sel = document.getElementById('climAdmSelect');
+            if (!sel) return;
+            var RARITY_ORDER  = ['common','rare','epic','legendary','mythic','brainrot_god','secret','og','limited','no','admin_exclusive'];
+            var RARITY_LABELS = { common:'Commune', rare:'Rare', epic:'\u00C9pique', legendary:'L\u00E9gendaire',
+                                  mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret',
+                                  og:'OG', limited:'Limit\u00E9e', no:'Impossible', admin_exclusive:'ADMIN' };
+            sel.innerHTML = '<option value="">-- Choisir une carte --</option>';
+            RARITY_ORDER.forEach(function(rar) {
+                var cards = (window.cardImages || {})[rar] || [];
+                if (!cards.length) return;
+                var grp = document.createElement('optgroup');
+                grp.label = RARITY_LABELS[rar] || rar;
+                cards.forEach(function(c) {
+                    var opt = document.createElement('option');
+                    opt.value = rar + '|' + c.name;
+                    opt.textContent = c.name;
+                    grp.appendChild(opt);
+                });
+                sel.appendChild(grp);
+            });
+        }
+
+        // ════ Admin : rendu liste cartes limitées (temps réel) ════
+        function _climAdmRender() {
+            var container = document.getElementById('climAdmList');
+            if (!container) return;
+            var keys = Object.keys(_climCards);
+            if (!keys.length) {
+                container.innerHTML = '<div style="color:#333;font-size:0.75em;padding:6px 0;">Aucune carte limit\u00E9e configur\u00E9e.</div>';
+                return;
+            }
+            container.innerHTML = '';
+            keys.forEach(function(sk) {
+                var e = _climCards[sk];
+                if (!e) return;
+                var stock = (typeof e.stock === 'number') ? e.stock : 0;
+                var ings  = (e.ingredients && Array.isArray(e.ingredients)) ? e.ingredients : [];
+                var ingsHtml = ings.length
+                    ? ings.map(function(ing){ return '<span style="background:rgba(255,80,0,0.1);border:1px solid rgba(255,80,0,0.3);border-radius:10px;color:#ff9966;font-size:0.62em;font-weight:900;padding:1px 6px;">' + ing.name + ' ×' + (ing.qty||1) + '</span>'; }).join(' ')
+                    : '<span style="color:#444;font-size:0.62em;">aucun ingrédient</span>';
+                var row = document.createElement('div');
+                row.className = 'clim-adm-row';
+                row.innerHTML =
+                    (e.img ? '<img class="clim-adm-img" src="' + e.img + '" onerror="this.style.display=\'none\'">' : '<div class="clim-adm-img"></div>') +
+                    '<div class="clim-adm-info" style="flex:1;">' +
+                        '<div class="clim-adm-name">' + (e.name || sk) + '</div>' +
+                        '<div class="clim-adm-rar">' + (e.rarity || '') + '</div>' +
+                        '<div style="margin-top:3px;display:flex;flex-wrap:wrap;gap:3px;">' + ingsHtml + '</div>' +
+                    '</div>' +
+                    '<div class="clim-adm-stock">' +
+                        '<span style="font-size:1.1em;">' + stock + '</span>' +
+                        '<span style="font-size:0.6em;display:block;color:#007744;">restant' + (stock !== 1 ? 's' : '') + '</span>' +
+                    '</div>' +
+                    '<button class="clim-adm-del" onclick="climAdmDelete(\'' + sk + '\')">🗑 Supprimer</button>';
+                container.appendChild(row);
+            });
+        }
+
+        // ════ Admin : gestion des ingrédients dans le formulaire ══
+        var _climAdmIngredients = []; // [{ key, qty }]
+
+        function climAdmAddIng() {
+            _climAdmIngredients.push({ key: '', qty: 1 });
+            _climAdmRenderIngList();
+        }
+
+        function climAdmRemoveIng(idx) {
+            _climAdmIngredients.splice(idx, 1);
+            _climAdmRenderIngList();
+        }
+
+        function _climAdmRenderIngList() {
+            var container = document.getElementById('climAdmIngList');
+            if (!container) return;
+            container.innerHTML = '';
+            _climAdmIngredients.forEach(function(ing, idx) {
+                var row = document.createElement('div');
+                row.className = 'craft-adm-row';
+                // Réutilise _buildCardSelect qui génère le select de toutes les cartes
+                row.innerHTML =
+                    _buildCardSelect('climAdmIng_key_' + idx, ing.key, 'flex:1;') +
+                    '<input id="climAdmIng_qty_' + idx + '" class="craft-adm-input" type="number" min="1" value="' + (ing.qty || 1) + '" style="width:52px;text-align:center;" placeholder="Qté">' +
+                    '<button onclick="climAdmRemoveIng(' + idx + ')" style="background:none;border:none;color:rgba(231,76,60,0.7);cursor:pointer;font-size:1em;padding:0 4px;">✕</button>';
+                container.appendChild(row);
+            });
+        }
+
+        function _climAdmCollectIngredients() {
+            // Lit les valeurs actuelles du DOM
+            var result = [];
+            _climAdmIngredients.forEach(function(ing, idx) {
+                var keyEl = document.getElementById('climAdmIng_key_' + idx);
+                var qtyEl = document.getElementById('climAdmIng_qty_' + idx);
+                var k   = keyEl ? keyEl.value : '';
+                var qty = qtyEl ? (parseInt(qtyEl.value) || 1) : 1;
+                if (!k) return; // ignorer les lignes sans carte choisie
+                var parts = k.split('|');
+                var rar   = parts[0];
+                var name  = parts.slice(1).join('|');
+                result.push({ key: k, rarity: rar, name: name, qty: qty });
+            });
+            return result;
+        }
+
+        // ════ Admin : ajouter / recharger une carte limitée ══════
+        function climAdmAdd() {
+            if (!firebaseDB) { _climAdmStatus('\u26A0\uFE0F Firebase non connect\u00E9'); return; }
+            var sel = document.getElementById('climAdmSelect');
+            var qty = parseInt((document.getElementById('climAdmQty') || {}).value) || 0;
+            var cKey = sel ? sel.value : '';
+            if (!cKey)  { _climAdmStatus('\u26A0\uFE0F Choisis une carte'); return; }
+            if (qty < 1){ _climAdmStatus('\u26A0\uFE0F Stock minimum : 1'); return; }
+
+            var parts   = cKey.split('|');
+            var rar     = parts[0];
+            var name    = parts.slice(1).join('|');
+            var imgCard = ((window.cardImages || {})[rar] || []).find(function(c){ return c.name === name; });
+            var img     = imgCard ? imgCard.img : '';
+            var sk      = _climKey(cKey);
+
+            // Lire les ingrédients depuis le DOM
+            var ingredients = _climAdmCollectIngredients();
+
+            firebaseDB.ref('admin/limitedCraftCards/' + sk).transaction(function(current) {
+                if (current === null) {
+                    return { cardKey: cKey, name: name, rarity: rar, img: img, stock: qty, ingredients: ingredients };
+                }
+                current.stock = (current.stock || 0) + qty;
+                // Mettre à jour les ingrédients si une liste est fournie
+                if (ingredients.length > 0) {
+                    current.ingredients = ingredients;
+                } else if (!current.ingredients) {
+                    current.ingredients = [];
+                }
+                return current;
+            }, function(error, committed) {
+                if (error || !committed) {
+                    _climAdmStatus('\u274C Erreur : ' + (error ? error.message : 'annul\u00E9'));
+                    return;
+                }
+                _climAdmStatus('\u2705 ' + name + ' — stock +' + qty + ' ajout\u00E9s');
+                _climBroadcastAdd(qty, name);
+            });
+        }
+
+        // ════ Admin : supprimer une carte limitée ════════════════
+        function climAdmDelete(sk) {
+            if (!firebaseDB) return;
+            if (_climActiveCountdowns[sk]) { clearInterval(_climActiveCountdowns[sk]); delete _climActiveCountdowns[sk]; }
+            firebaseDB.ref('admin/limitedCraftCards/' + sk).remove()
+                .then(function(){ _climAdmStatus('\uD83D\uDDD1 Carte supprim\u00E9e'); })
+                .catch(function(e){ _climAdmStatus('\u274C ' + e.message); });
+        }
+
+        function _climAdmStatus(msg) {
+            var el = document.getElementById('climAdmStatus');
+            if (!el) return;
+            el.textContent = msg;
+            clearTimeout(el._t);
+            el._t = setTimeout(function(){ el.textContent = ''; }, 4000);
+        }
+
         // ═══ FIN CRAFT MACHINE ═══
 
         createStars();
@@ -16517,13 +17125,13 @@
                     : item.isDiamond ? 'filter:drop-shadow(0 0 10px rgba(0,191,255,1)) hue-rotate(180deg) saturate(2) brightness(1.1);'
                     : item.isGold ? 'filter:drop-shadow(0 0 10px rgba(255,215,0,1)) sepia(0.4) saturate(2) brightness(1.1);'
                     : item.isChocolate ? 'filter:drop-shadow(0 0 10px rgba(139,69,19,1)) sepia(1) saturate(2.5) hue-rotate(15deg) brightness(0.85);'
-                    : item.isDark ? 'filter:drop-shadow(0 0 10px rgba(80,80,80,0.9)) brightness(0.35) contrast(1.4) saturate(0.15);' : '';
+                    : item.isDark ? 'filter:none;animation:darkImgPulse 2.2s ease-in-out infinite;' : '';
                 const nameStyle = item.isRainbow
                     ? 'background:linear-gradient(90deg,#ff0000,#ff9900,#ffff00,#00cc00,#00bfff,#9900ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;'
                     : item.isDiamond ? 'color:#00bfff;text-shadow:0 0 8px rgba(0,191,255,0.6);'
                     : item.isGold ? 'color:#ffd700;text-shadow:0 0 8px rgba(255,215,0,0.6);'
                     : item.isChocolate ? 'color:#D2691E;text-shadow:0 0 8px rgba(139,69,19,0.7);'
-                    : item.isDark ? 'color:#888888;text-shadow:0 0 8px rgba(80,80,80,0.6);' : '';
+                    : item.isDark ? 'color:#c4b0ff;text-shadow:0 0 15px rgba(180,150,255,0.9),0 0 35px rgba(100,80,200,0.6);animation:darkAuraGlow 2s ease-in-out infinite;' : '';
                 const mutLabel = item.isRainbow ? '🌈 RAINBOW — ' : item.isDiamond ? '💎 DIAMANT — ' : item.isGold ? '✨ GOLD — ' : item.isChocolate ? '💩 CACA — ' : item.isDark ? '⚫ DARK — ' : '';
                 const newMutLabel = item.isNewRainbow ? '<div style="color:#cc44ff;font-size:0.58em;font-weight:900;margin-top:2px;">🌈 NOUVELLE RAINBOW</div>'
                     : item.isNewDiamond ? '<div style="color:#00bfff;font-size:0.58em;font-weight:900;margin-top:2px;">💎 NOUVEAU DIAMANT</div>'
