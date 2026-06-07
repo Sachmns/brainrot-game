@@ -1217,6 +1217,157 @@
             font-weight: 900;
         }
 
+        /* ── Thème Brevet ── */
+        /* ── Thème Brevet ── */
+        /* Fond façon cahier : crème avec lignes bleues en filigrane */
+        body.theme-brevet::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background:
+                repeating-linear-gradient(
+                    transparent,
+                    transparent 27px,
+                    rgba(100,150,220,0.18) 27px,
+                    rgba(100,150,220,0.18) 28px
+                ),
+                linear-gradient(135deg, #f5f0e8 0%, #ede8da 50%, #e8e0ce 100%);
+        }
+        body.theme-brevet {
+            --theme-bg-from:     #f0ead8;
+            --theme-bg-to:       #e0d8c4;
+            --theme-border:      #2e6da4;
+            --theme-accent:      #2e6da4;
+            --theme-particle:    #2e6da4;
+            --theme-glow:        rgba(30,100,180,0.3);
+            background: #ede8da !important;
+        }
+        /* Header : vert tableau noir */
+        body.theme-brevet header {
+            background: linear-gradient(180deg, #2d5a27 0%, #1e3d1a 100%) !important;
+            border-bottom-color: #4a8a40 !important;
+            box-shadow: 0 4px 20px rgba(20,60,20,0.6), 0 0 40px rgba(30,80,30,0.25) !important;
+        }
+        /* Coffre : aspect feuille blanche */
+        body.theme-brevet .chest-main {
+            background: linear-gradient(145deg, #fdfaf2 0%, #f5f0e4 100%) !important;
+            border-color: #2e6da4 !important;
+            box-shadow: 0 15px 40px rgba(20,60,140,0.2), 0 0 30px rgba(30,80,160,0.1) !important;
+        }
+        body.theme-brevet .chest-main:hover {
+            border-color: #1a4d82 !important;
+            box-shadow: 0 20px 50px rgba(20,60,140,0.3) !important;
+        }
+        body.theme-brevet .chest-name {
+            color: #1a3a6a !important;
+            text-shadow: 1px 1px 0 rgba(255,255,255,0.8) !important;
+            font-family: Georgia, 'Times New Roman', serif !important;
+        }
+        body.theme-brevet .chest-description { color: #3a5a2a !important; }
+        /* Bouton ouvrir : crayon rouge */
+        body.theme-brevet .open-btn {
+            background: linear-gradient(180deg, #c0392b 0%, #922b21 100%) !important;
+            color: #ffffff !important;
+            border: 3px solid #e74c3c !important;
+            box-shadow: 0 8px 0 #5a1510, 0 0 20px rgba(180,40,30,0.4) !important;
+            font-weight: 900 !important;
+        }
+        body.theme-brevet .open-btn:hover {
+            background: linear-gradient(180deg, #d44235 0%, #a93226 100%) !important;
+            border-color: #f05a4a !important;
+        }
+        /* Cartes récompense : feuille lignée */
+        body.theme-brevet .reward-card {
+            background: linear-gradient(145deg, #fdfaf2 0%, #f0ead8 100%) !important;
+            border-color: #2e6da4 !important;
+        }
+        /* Stats : tableau vert pâle */
+        body.theme-brevet .stats {
+            background: linear-gradient(145deg, #eaf4e8 0%, #d8ecd4 100%) !important;
+            border-color: #4a8a40 !important;
+        }
+        body.theme-brevet .stat-card {
+            background: linear-gradient(145deg, #fdfaf2 0%, #f5f0e4 100%) !important;
+            border-color: rgba(46,109,164,0.5) !important;
+            box-shadow: 0 4px 0 rgba(20,60,120,0.2) !important;
+        }
+        /* Livre des cartes */
+        body.theme-brevet .book-card {
+            background: linear-gradient(145deg, #fdfaf2 0%, #f0ead8 100%) !important;
+            border-color: #2e6da4 !important;
+        }
+        body.theme-brevet .book-tab-btn {
+            border-color: #2e6da4 !important;
+            color: #1a3a6a !important;
+            background: rgba(200,220,255,0.3) !important;
+        }
+        body.theme-brevet .book-tab-btn.active {
+            background: linear-gradient(145deg, #2d5a27, #1e3d1a) !important;
+            border-color: #4a8a40 !important;
+            color: #d4f0cc !important;
+        }
+        /* Sidebar : feuille crème */
+        body.theme-brevet .sidebar-btn, body.theme-brevet .quest-sidebar-btn {
+            background: linear-gradient(145deg, #f5f0e4, #ede8da) !important;
+            border-color: #2e6da4 !important;
+            color: #1a3a6a !important;
+        }
+        body.theme-brevet .sidebar-btn:hover, body.theme-brevet .quest-sidebar-btn:hover {
+            border-color: #c0392b !important;
+            color: #8b1a12 !important;
+        }
+        /* Modals — exclure #modal (coffre) qui doit rester sombre */
+        body.theme-brevet .save-modal-box,
+        body.theme-brevet .auth-box,
+        body.theme-brevet .trade-modal-box,
+        body.theme-brevet .quest-modal-content,
+        body.theme-brevet .shop-modal,
+        body.theme-brevet .scratch-modal,
+        body.theme-brevet .admin-overlay-box {
+            background: linear-gradient(145deg, #fdfaf2 0%, #f0ead8 100%) !important;
+            border-color: #2e6da4 !important;
+        }
+        /* Boutique */
+        body.theme-brevet .shop-item {
+            background: linear-gradient(145deg, #fdfaf2 0%, #f0ead8 100%) !important;
+            border-color: #2e6da4 !important;
+        }
+        body.theme-brevet .shop-item:hover { border-color: #c0392b !important; }
+        /* Boutons génériques : vert tableau */
+        body.theme-brevet .save-btn {
+            background: linear-gradient(180deg, #2d5a27 0%, #1e3d1a 100%) !important;
+            color: #d4f0cc !important;
+            border-color: #4a8a40 !important;
+        }
+        /* Titres : Georgia, encre bleue */
+        body.theme-brevet h1 {
+            color: #1a3a6a !important;
+            text-shadow:
+                1px 1px 0 rgba(255,255,255,0.6),
+                0 0 15px rgba(30,80,180,0.25) !important;
+            font-family: Georgia, 'Times New Roman', serif !important;
+        }
+        body.theme-brevet .subtitle { color: #2d5a27 !important; }
+        body.theme-brevet .stat-label { color: #2e6da4 !important; }
+        body.theme-brevet .stat-number { color: #c0392b !important; text-shadow: none !important; font-family: Georgia, 'Times New Roman', serif !important; }
+        body.theme-brevet .chest-title  { color: #1a3a6a !important; font-family: Georgia, 'Times New Roman', serif !important; }
+        body.theme-brevet .chest-subtitle { color: #2d5a27 !important; }
+
+        .theme-banner.brevet {
+            background: linear-gradient(90deg, #1e3d1a, #2d5a27, #3d7a33, #2d5a27, #1e3d1a);
+            background-size: 300% 100%;
+            color: #d4f0cc;
+            box-shadow: 0 3px 20px rgba(20,70,20,0.6), inset 0 1px 0 rgba(100,200,80,0.3);
+            animation: bannerShift 4s linear infinite;
+            text-shadow: 0 0 10px rgba(100,220,80,0.5), 0 1px 0 rgba(0,0,0,0.6);
+            letter-spacing: 4px;
+            border-bottom: 3px solid #c0392b;
+            font-weight: 900;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
         /* Bannière de thème actif */
         .theme-banner {
             display: none;
@@ -6058,6 +6209,7 @@
                         <button class="admin-btn" onclick="adminSetTheme('chaos')" style="background:linear-gradient(180deg,#ff0040,#7700ff);box-shadow:0 4px 0 #330000;border:2px solid #ffff00;color:#fff;font-weight:900;letter-spacing:1px;animation:chaosBtn 0.2s steps(1) infinite;">💥 Chaos</button>
                         <button class="admin-btn" onclick="adminSetTheme('glass')" style="background:linear-gradient(180deg,rgba(255,255,255,0.75),rgba(180,225,255,0.6));box-shadow:0 4px 0 rgba(100,180,255,0.3),inset 0 1px 0 rgba(255,255,255,0.9);border:2px solid rgba(150,210,255,0.8);color:#1a5a8a;font-weight:900;backdrop-filter:blur(8px);">🧊 Glass</button>
                         <button class="admin-btn" onclick="adminSetTheme('ombre')" style="background:linear-gradient(180deg,#111111,#050505);box-shadow:0 4px 0 #000000;border:2px solid #2a2a2a;color:#555555;font-weight:900;letter-spacing:2px;">🖤 Ombre</button>
+                        <button class="admin-btn" onclick="adminSetTheme('brevet')" style="background:linear-gradient(180deg,#2d5a27,#1e3d1a);box-shadow:0 4px 0 #0a1a08;border:2px solid #4a8a40;color:#d4f0cc;font-weight:900;font-family:Georgia,serif;letter-spacing:1px;border-bottom:3px solid #c0392b;">📝 Brevet</button>
                     </div>
                     <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminThemeStatus">Thème actuel : Défaut</div>
                 </div>
@@ -6242,6 +6394,7 @@
                                 <option value="chaos">💥 Chaos</option>
                                 <option value="glass">🧊 Glass</option>
                                 <option value="ombre">🖤 Ombre</option>
+                                <option value="brevet">📝 Brevet</option>
                             </select>
                         </div>
 
@@ -11625,6 +11778,7 @@
             'chaos':        'https://image2url.com/r2/bucket1/images/1775989344409-4135c041-1855-4695-9b26-4a6d81d95fa4.png',
             'glass':        'https://image2url.com/r2/bucket2/images/1775988752766-43820564-09e1-46ab-8e7f-ba8e800ffef5.png',
             'ombre':        'https://www.image2url.com/r2/default/images/1777194852686-83747425-1fbb-47e5-a607-bf4231f031ca.png',
+            'brevet':       'https://www.image2url.com/r2/default/images/1780848960486-8ec25537-4889-428e-bd8d-cc240d4996d7.png',
         };
 
         const THEMES = {
@@ -11740,6 +11894,12 @@
                 banner: '🖤 ░ O M B R E ░ 🖤',
                 bannerClass: 'ombre',
                 particles: { color: '#333333', emoji: ['🖤','🌑','👤','🕷️','🪦','🌫️','🏴','💀','🌚'], count: 60, glow: 'rgba(20,20,20,0.95)' }
+            },
+            'brevet': {
+                label: '📝 Brevet',
+                banner: '📝 ✏️ BREVET DES COLLÈGES ✏️ 📝',
+                bannerClass: 'brevet',
+                particles: { color: '#2272b8', emoji: ['📝','✏️','📐','📏','📚','🎒','🖊️','📖','🔬','📊','🏫','✏️'], count: 80, glow: 'rgba(30,100,200,0.6)' }
             }
         };
 
@@ -12636,7 +12796,8 @@
             const THEME_LABELS = { '':'Défaut', 'saint-patrick':'Saint Patrick', 'printemps':'Printemps',
                 'minecraft':'Minecraft', 'unchained':'Unchained', 'inazuma':'Inazuma Eleven',
                 'or':'Or', 'diamant':'Diamant', 'rainbow':'Rainbow', 'paques':'Pâques',
-                'chocolat':'CACA', 'mitrox':'MITROX', 'anniversaire':'Anniversaire' };
+                'chocolat':'CACA', 'mitrox':'MITROX', 'anniversaire':'Anniversaire',
+                'brevet':'Brevet' };
 
             list.innerHTML = '';
 
