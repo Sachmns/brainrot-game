@@ -4398,6 +4398,26 @@
         .craft-adm-row { display:flex; gap:6px; align-items:center; margin-bottom:5px; flex-wrap:wrap; }
         .craft-adm-input { background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); border-radius:8px; color:#fff; padding:5px 8px; font-size:0.75em; outline:none; }
 
+        /* ── Card Search Picker (admin craft) ── */
+        .csp-wrap { position:relative; flex:1; min-width:0; }
+        .csp-input-row { display:flex; align-items:center; gap:4px; background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:3px 6px; cursor:text; }
+        .csp-input-row:focus-within { border-color:rgba(0,255,136,0.5); box-shadow:0 0 0 2px rgba(0,255,136,0.08); }
+        .csp-thumb { width:22px; height:22px; object-fit:contain; border-radius:4px; flex-shrink:0; display:none; }
+        .csp-thumb.show { display:block; }
+        .csp-text { flex:1; background:transparent; border:none; outline:none; color:#fff; font-size:0.75em; min-width:0; }
+        .csp-clear { background:none; border:none; color:rgba(255,255,255,0.3); cursor:pointer; font-size:0.85em; padding:0 2px; flex-shrink:0; line-height:1; }
+        .csp-clear:hover { color:#e74c3c; }
+        .csp-dropdown { position:absolute; top:calc(100% + 3px); left:0; right:0; background:#0d1a10; border:1px solid rgba(0,255,136,0.25); border-radius:10px; max-height:220px; overflow-y:auto; z-index:99999; box-shadow:0 8px 24px rgba(0,0,0,0.8); }
+        .csp-dropdown::-webkit-scrollbar { width:4px; }
+        .csp-dropdown::-webkit-scrollbar-thumb { background:rgba(0,255,136,0.2); border-radius:2px; }
+        .csp-group-label { color:rgba(0,255,136,0.5); font-size:0.6em; font-weight:900; letter-spacing:2px; padding:5px 10px 2px; text-transform:uppercase; }
+        .csp-item { display:flex; align-items:center; gap:7px; padding:5px 10px; cursor:pointer; transition:background 0.1s; }
+        .csp-item:hover, .csp-item.highlighted { background:rgba(0,255,136,0.1); }
+        .csp-item img { width:26px; height:26px; object-fit:contain; border-radius:5px; flex-shrink:0; }
+        .csp-item-name { color:#fff; font-size:0.75em; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .csp-item-rar { font-size:0.6em; font-weight:900; color:rgba(255,255,255,0.35); flex-shrink:0; }
+        .csp-empty { color:#444; font-size:0.72em; padding:10px; text-align:center; }
+
         /* ═══ CARTES LIMITÉES CRAFT ═══ */
         .craft-recipe-card { position:relative; }
 
@@ -6298,7 +6318,7 @@
 
                         <!-- Carte résultat + stock -->
                         <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:7px;">
-                            <select id="climAdmSelect" class="craft-adm-input" style="flex:1;min-width:150px;"></select>
+                            <div id="climAdmSelectWrap" style="flex:1;min-width:150px;"></div>
                             <input id="climAdmQty" type="number" min="1" value="10" class="craft-adm-input" style="width:62px;text-align:center;" placeholder="Stock">
                         </div>
 
@@ -6609,10 +6629,10 @@
                         <div style="font-size:1.4em;">✨</div>
                         <div style="flex:1;">
                             <div style="color:#ffd700;font-weight:900;font-size:0.9em;letter-spacing:1px;">MUTATION GOLD</div>
-                            <div style="color:#555;font-size:0.7em;margin-top:2px;">Taux actuel : <span id="adminMutationGoldCurrent" style="color:#ffd700;font-weight:900;">10%</span></div>
+                            <div style="color:#555;font-size:0.7em;margin-top:2px;">Taux actuel : <span id="adminMutationGoldCurrent" style="color:#ffd700;font-weight:900;">15%</span></div>
                         </div>
                         <div style="display:flex;align-items:center;gap:6px;">
-                            <input class="admin-input" id="adminMutationGoldInput" type="number" value="10" min="0" max="100" step="0.1" style="width:70px;padding:6px 8px;font-size:0.9em;text-align:center;">
+                            <input class="admin-input" id="adminMutationGoldInput" type="number" value="15" min="0" max="100" step="0.1" style="width:70px;padding:6px 8px;font-size:0.9em;text-align:center;">
                             <span style="color:#ffd700;font-size:0.8em;">%</span>
                         </div>
                     </div>
@@ -6621,10 +6641,10 @@
                         <div style="font-size:1.4em;">💎</div>
                         <div style="flex:1;">
                             <div style="color:#00bfff;font-weight:900;font-size:0.9em;letter-spacing:1px;">MUTATION DIAMANT</div>
-                            <div style="color:#555;font-size:0.7em;margin-top:2px;">Taux actuel : <span id="adminMutationDiamondCurrent" style="color:#00bfff;font-weight:900;">7.5%</span></div>
+                            <div style="color:#555;font-size:0.7em;margin-top:2px;">Taux actuel : <span id="adminMutationDiamondCurrent" style="color:#00bfff;font-weight:900;">10%</span></div>
                         </div>
                         <div style="display:flex;align-items:center;gap:6px;">
-                            <input class="admin-input" id="adminMutationDiamondInput" type="number" value="7.5" min="0" max="100" step="0.1" style="width:70px;padding:6px 8px;font-size:0.9em;text-align:center;">
+                            <input class="admin-input" id="adminMutationDiamondInput" type="number" value="10" min="0" max="100" step="0.1" style="width:70px;padding:6px 8px;font-size:0.9em;text-align:center;">
                             <span style="color:#00bfff;font-size:0.8em;">%</span>
                         </div>
                     </div>
@@ -8159,7 +8179,7 @@
         let unlockedDarkCards = new Map();
 
         // Taux de drop des mutations (modifiable par l'admin via Firebase)
-        window._mutationRates = { gold: 0.10, diamond: 0.075, rainbow: 0.01, chocolate: 0.067, dark: 0.05 };
+        window._mutationRates = { gold: 0.15, diamond: 0.10, rainbow: 0.01, chocolate: 0.067, dark: 0.05 };
 
         function updateStats(rewards) {
             stats.totalChests++;
@@ -8872,7 +8892,7 @@
                 // ── Onglet DIAMANT ──
                 const diamondHeader = document.createElement('div');
                 diamondHeader.style.cssText = 'text-align:center;margin-bottom:20px;padding:14px 20px;background:linear-gradient(135deg,rgba(0,60,100,0.5),rgba(0,191,255,0.1));border-radius:16px;border:2px solid rgba(0,191,255,0.3);';
-                diamondHeader.innerHTML = '<div style="color:#00bfff;font-size:1.1em;font-weight:900;letter-spacing:2px;">💎 MUTATION DIAMANT</div><div style="color:#005f8a;font-size:0.85em;margin-top:6px;">Chaque carte a 7.5% de chance d\'apparaître en version DIAMANT. Une carte DIAMANT débloquée = +1 au classement !</div>';
+                diamondHeader.innerHTML = '<div style="color:#00bfff;font-size:1.1em;font-weight:900;letter-spacing:2px;">💎 MUTATION DIAMANT</div><div style="color:#005f8a;font-size:0.85em;margin-top:6px;">Chaque carte a 10% de chance d\'apparaître en version DIAMANT. Une carte DIAMANT débloquée = +1 au classement !</div>';
                 content.appendChild(diamondHeader);
 
                 sections.forEach(section => {
@@ -9036,7 +9056,7 @@
                 // ── Onglet GOLD ──
                 const goldHeader = document.createElement('div');
                 goldHeader.style.cssText = 'text-align:center;margin-bottom:20px;padding:14px 20px;background:linear-gradient(135deg,rgba(80,50,0,0.5),rgba(184,134,11,0.15));border-radius:16px;border:2px solid rgba(255,215,0,0.3);';
-                goldHeader.innerHTML = '<div style="color:#ffd700;font-size:1.1em;font-weight:900;letter-spacing:2px;">✨ MUTATION GOLD</div><div style="color:#b8860b;font-size:0.85em;margin-top:6px;">Chaque carte a 10% de chance d\'apparaître en version GOLD dans les coffres ou à la boutique. Une carte GOLD débloquée = +1 au classement !</div>';
+                goldHeader.innerHTML = '<div style="color:#ffd700;font-size:1.1em;font-weight:900;letter-spacing:2px;">✨ MUTATION GOLD</div><div style="color:#b8860b;font-size:0.85em;margin-top:6px;">Chaque carte a 15% de chance d\'apparaître en version GOLD dans les coffres ou à la boutique. Une carte GOLD débloquée = +1 au classement !</div>';
                 content.appendChild(goldHeader);
 
                 sections.forEach(section => {
@@ -10358,6 +10378,23 @@
             firebaseDB.ref('admin/mutations').on('value', snap => {
                 const d = snap.val();
                 if (!d) return;
+
+                // Migration automatique : si Firebase contient encore les anciens taux
+                // gold=0.10 ou diamond=0.075, on écrase avec les nouvelles valeurs
+                const needsMigration =
+                    (typeof d.gold    === 'number' && Math.abs(d.gold    - 0.10)  < 0.0001) ||
+                    (typeof d.diamond === 'number' && Math.abs(d.diamond - 0.075) < 0.0001);
+                if (needsMigration) {
+                    firebaseDB.ref('admin/mutations').set({
+                        gold:      typeof d.gold    === 'number' && Math.abs(d.gold    - 0.10)  < 0.0001 ? 0.15 : d.gold,
+                        diamond:   typeof d.diamond === 'number' && Math.abs(d.diamond - 0.075) < 0.0001 ? 0.10 : d.diamond,
+                        rainbow:   typeof d.rainbow   === 'number' ? d.rainbow   : 0.01,
+                        chocolate: typeof d.chocolate === 'number' ? d.chocolate : 0.067,
+                        dark:      typeof d.dark      === 'number' ? d.dark      : 0.05
+                    });
+                    return; // Le listener sera re-déclenché par le set() ci-dessus
+                }
+
                 if (typeof d.gold === 'number') {
                     window._mutationRates.gold = d.gold;
                     // Mettre à jour l'affichage dans le panel admin si ouvert
@@ -16125,23 +16162,168 @@
             });
         }
 
-        // Construit un <select> avec toutes les cartes de cardImages, groupées par rareté
+        // ── Card Search Picker ──────────────────────────────────────
+        // _buildCardSelect(id, selectedKey, style)
+        // Génère un champ de recherche avec image + nom. Le hidden input
+        // garde le même id que l'ancien <select> → aucune autre fonction modifiée.
         function _buildCardSelect(id, selectedKey, style) {
-            const RARITY_ORDER = ['common','rare','epic','legendary','mythic','brainrot_god','secret','og','limited','no','admin_exclusive'];
-            const RARITY_LABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limitée', no:'Impossible', admin_exclusive:'ADMIN' };
-            let opts = '<option value="">-- Choisir une carte --</option>';
+            var RARITY_ORDER  = ['common','rare','epic','legendary','mythic','brainrot_god','secret','og','limited','no','admin_exclusive'];
+            var RARITY_LABELS = { common:'Commune', rare:'Rare', epic:'Épique', legendary:'Légendaire', mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret', og:'OG', limited:'Limitée', no:'Impossible', admin_exclusive:'ADMIN' };
+            // Trouver le nom + image de la carte pré-sélectionnée
+            var selName = '', selImg = '';
+            if (selectedKey) {
+                var _sp = selectedKey.split('|');
+                var _r  = _sp[0], _n = _sp.slice(1).join('|');
+                var _fc = (_r && cardImages[_r]) ? (cardImages[_r].find(function(c){ return c.name === _n; }) || null) : null;
+                selName = _n || '';
+                selImg  = _fc ? (_fc.img || '') : '';
+            }
+            // Construire la liste de toutes les cartes (stockée en JS, pas dans le DOM)
+            var allItems = [];
             RARITY_ORDER.forEach(function(rar) {
-                const cards = cardImages[rar] || [];
-                if (!cards.length) return;
-                opts += '<optgroup label="' + (RARITY_LABELS[rar]||rar) + '">';
-                cards.forEach(function(c) {
-                    const key = rar + '|' + c.name;
-                    opts += '<option value="' + key + '"' + (selectedKey === key ? ' selected' : '') + '>' + c.name + '</option>';
+                (cardImages[rar] || []).forEach(function(c) {
+                    allItems.push({ key: rar + '|' + c.name, name: c.name, img: c.img || '', rar: RARITY_LABELS[rar] || rar });
                 });
-                opts += '</optgroup>';
             });
-            return '<select id="' + id + '" class="craft-adm-input" style="' + (style||'flex:1;') + '">' + opts + '</select>';
+            // Stocker dans window avec un identifiant unique pour éviter les attributs géants
+            window._cspData = window._cspData || {};
+            window._cspData[id] = allItems;
+            return (
+                '<div class="csp-wrap" data-cspid="' + id + '">' +
+                    '<input type="hidden" id="' + id + '" value="' + (selectedKey || '') + '">' +
+                    '<div class="csp-input-row" onclick="_cspFocus(this)">' +
+                        '<img class="csp-thumb' + (selImg ? ' show' : '') + '" src="' + (selImg || '') + '" onerror="this.classList.remove(\'show\')">' +
+                        '<input class="csp-text" type="text" placeholder="Rechercher une carte..." value="' + selName.replace(/"/g,'&quot;').replace(/'/g,'&#39;') + '" autocomplete="off"' +
+                            ' oninput="_cspInput(this)" onfocus="_cspOpen(this)" onblur="_cspBlur(this)">' +
+                        '<button class="csp-clear" tabindex="-1" onmousedown="_cspClear(event,this)" title="Effacer">&#x2715;</button>' +
+                    '</div>' +
+                    '<div class="csp-dropdown" style="display:none;"></div>' +
+                '</div>'
+            );
         }
+
+        // ── Card Search Picker — fonctions globales ──────────────
+        function _cspGetWrap(el) { return el.closest('.csp-wrap'); }
+        function _cspFocus(row) { var t = row.querySelector('.csp-text'); if (t) { t.focus(); _cspOpen(t); } }
+
+        function _cspOpen(input) {
+            var wrap = _cspGetWrap(input);
+            if (!wrap) return;
+            // Fermer tous les autres dropdowns ouverts
+            document.querySelectorAll('.csp-dropdown').forEach(function(d) {
+                if (d !== wrap.querySelector('.csp-dropdown')) d.style.display = 'none';
+            });
+            _cspRenderDropdown(wrap, input.value.trim());
+        }
+
+        function _cspInput(input) {
+            var wrap = _cspGetWrap(input);
+            if (!wrap) return;
+            // L'utilisateur tape → effacer la sélection cachée
+            wrap.querySelector('input[type=hidden]').value = '';
+            var thumb = wrap.querySelector('.csp-thumb');
+            if (thumb) { thumb.src = ''; thumb.classList.remove('show'); }
+            _cspRenderDropdown(wrap, input.value.trim());
+        }
+
+        function _cspBlur(input) {
+            setTimeout(function() {
+                var wrap = _cspGetWrap(input);
+                if (!wrap) return;
+                var dd = wrap.querySelector('.csp-dropdown');
+                if (dd) dd.style.display = 'none';
+                // Si rien sélectionné, vider le texte
+                var hidden = wrap.querySelector('input[type=hidden]');
+                if (hidden && !hidden.value) input.value = '';
+            }, 200);
+        }
+
+        function _cspClear(e, btn) {
+            e.preventDefault();
+            var wrap = _cspGetWrap(btn);
+            if (!wrap) return;
+            wrap.querySelector('input[type=hidden]').value = '';
+            var txt = wrap.querySelector('.csp-text');
+            if (txt) { txt.value = ''; txt.focus(); }
+            var thumb = wrap.querySelector('.csp-thumb');
+            if (thumb) { thumb.src = ''; thumb.classList.remove('show'); }
+            _cspRenderDropdown(wrap, '');
+        }
+
+        function _cspRenderDropdown(wrap, query) {
+            var dd = wrap.querySelector('.csp-dropdown');
+            if (!dd) return;
+            // Récupérer les items depuis window._cspData (pas depuis le DOM)
+            var cspid = wrap.getAttribute('data-cspid');
+            var items = (window._cspData && window._cspData[cspid]) ? window._cspData[cspid] : [];
+            var q = query.toLowerCase().trim();
+            var filtered = q
+                ? items.filter(function(it) { return it.name.toLowerCase().includes(q) || it.rar.toLowerCase().includes(q); })
+                : items;
+            dd.innerHTML = '';
+            if (!filtered.length) {
+                dd.innerHTML = '<div class="csp-empty">Aucune carte trouvée</div>';
+                dd.style.display = 'block';
+                return;
+            }
+            // Grouper par rareté
+            var byRar = {};
+            var rarOrder = [];
+            filtered.forEach(function(it) {
+                if (!byRar[it.rar]) { byRar[it.rar] = []; rarOrder.push(it.rar); }
+                byRar[it.rar].push(it);
+            });
+            rarOrder.forEach(function(rar) {
+                var grpLabel = document.createElement('div');
+                grpLabel.className = 'csp-group-label';
+                grpLabel.textContent = rar;
+                dd.appendChild(grpLabel);
+                byRar[rar].forEach(function(it) {
+                    var item = document.createElement('div');
+                    item.className = 'csp-item';
+                    var img = document.createElement('img');
+                    img.src = it.img || '';
+                    img.loading = 'lazy';
+                    img.onerror = function(){ this.style.opacity = '0.2'; };
+                    var nameEl = document.createElement('span');
+                    nameEl.className = 'csp-item-name';
+                    nameEl.textContent = it.name;
+                    var rarEl = document.createElement('span');
+                    rarEl.className = 'csp-item-rar';
+                    rarEl.textContent = it.rar;
+                    item.appendChild(img);
+                    item.appendChild(nameEl);
+                    item.appendChild(rarEl);
+                    item.addEventListener('mousedown', function(e) {
+                        e.preventDefault();
+                        _cspSelect(wrap, it);
+                    });
+                    dd.appendChild(item);
+                });
+            });
+            dd.style.display = 'block';
+        }
+
+        function _cspSelect(wrap, it) {
+            wrap.querySelector('input[type=hidden]').value = it.key;
+            var txt = wrap.querySelector('.csp-text');
+            if (txt) txt.value = it.name;
+            var thumb = wrap.querySelector('.csp-thumb');
+            if (thumb) {
+                thumb.src = it.img || '';
+                if (it.img) thumb.classList.add('show'); else thumb.classList.remove('show');
+            }
+            var dd = wrap.querySelector('.csp-dropdown');
+            if (dd) dd.style.display = 'none';
+        }
+
+        // Fermer les dropdowns si clic en dehors d'un picker
+        document.addEventListener('mousedown', function(e) {
+            if (!e.target.closest('.csp-wrap')) {
+                document.querySelectorAll('.csp-dropdown').forEach(function(d) { d.style.display = 'none'; });
+            }
+        });
+
 
         function _renderCraftAdmin() {
             const container = document.getElementById('craftAdminList');
@@ -16407,26 +16589,10 @@
 
         // ════ Admin : remplir le select avec toutes les cartes ════
         function _climAdmPopulateSelect() {
-            var sel = document.getElementById('climAdmSelect');
-            if (!sel) return;
-            var RARITY_ORDER  = ['common','rare','epic','legendary','mythic','brainrot_god','secret','og','limited','no','admin_exclusive'];
-            var RARITY_LABELS = { common:'Commune', rare:'Rare', epic:'\u00C9pique', legendary:'L\u00E9gendaire',
-                                  mythic:'Mythique', brainrot_god:'Brainrot God', secret:'Secret',
-                                  og:'OG', limited:'Limit\u00E9e', no:'Impossible', admin_exclusive:'ADMIN' };
-            sel.innerHTML = '<option value="">-- Choisir une carte --</option>';
-            RARITY_ORDER.forEach(function(rar) {
-                var cards = (window.cardImages || {})[rar] || [];
-                if (!cards.length) return;
-                var grp = document.createElement('optgroup');
-                grp.label = RARITY_LABELS[rar] || rar;
-                cards.forEach(function(c) {
-                    var opt = document.createElement('option');
-                    opt.value = rar + '|' + c.name;
-                    opt.textContent = c.name;
-                    grp.appendChild(opt);
-                });
-                sel.appendChild(grp);
-            });
+            var wrap = document.getElementById('climAdmSelectWrap');
+            if (!wrap) return;
+            // Injecter le picker de recherche (même id climAdmSelect → hidden input)
+            wrap.innerHTML = _buildCardSelect('climAdmSelect', '', 'width:100%;');
         }
 
         // ════ Admin : rendu liste cartes limitées (temps réel) ════
