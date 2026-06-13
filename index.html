@@ -6642,6 +6642,62 @@
                     <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminThemeStatus">Thème actuel : Défaut</div>
                 </div>
 
+                <!-- Thème aléatoire automatique -->
+                <div class="admin-section" id="adminRandomThemeSection" style="border-color:rgba(180,100,255,0.4);background:rgba(140,60,255,0.03);">
+                    <div class="admin-section-title" style="color:#bb88ff;">🎲 Thème aléatoire automatique</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:12px;">Change le thème automatiquement toutes les X minutes/heures parmi les thèmes disponibles (sauf ceux bannis). Synchronisé pour tous les joueurs.</div>
+
+                    <!-- Intervalle -->
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+                        <span style="color:#aaa;font-size:0.78em;white-space:nowrap;">Changer toutes les</span>
+                        <input id="rndThemeValue" type="number" min="1" value="10" class="admin-input" style="width:70px;padding:6px 8px;font-size:0.9em;text-align:center;">
+                        <select id="rndThemeUnit" class="admin-input" style="padding:6px 8px;font-size:0.82em;background:#0a0015;color:#fff;border:1px solid rgba(180,100,255,0.3);border-radius:8px;">
+                            <option value="60000">minutes</option>
+                            <option value="3600000">heures</option>
+                        </select>
+                    </div>
+
+                    <!-- Thèmes bannis -->
+                    <div style="color:#aaa;font-size:0.75em;margin-bottom:6px;font-weight:700;">🚫 Thèmes bannis (ne peuvent pas être tirés au sort) :</div>
+                    <div id="rndThemeBannedList" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;min-height:28px;padding:6px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.06);border-radius:8px;"></div>
+                    <select id="rndThemeBanSelect" class="admin-input" style="padding:6px 8px;font-size:0.82em;background:#0a0015;color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:8px;margin-bottom:6px;width:100%;">
+                        <option value="">— Choisir un thème à bannir —</option>
+                        <option value="">🔵 Défaut</option>
+                        <option value="saint-patrick">🍀 Saint Patrick</option>
+                        <option value="printemps">🌸 Printemps</option>
+                        <option value="minecraft">⛏️ Minecraft</option>
+                        <option value="unchained">⛓️ Unchained</option>
+                        <option value="inazuma">⚡ Inazuma Eleven</option>
+                        <option value="or">✨ Or</option>
+                        <option value="diamant">💎 Diamant</option>
+                        <option value="rainbow">🌈 Rainbow</option>
+                        <option value="paques">🐣 Pâques</option>
+                        <option value="chocolat">💩 CACA</option>
+                        <option value="mitrox">🎮 MITROX</option>
+                        <option value="anniversaire">🎂 Anniversaire</option>
+                        <option value="ete">☀️ Été</option>
+                        <option value="bonbon">🍬 Bonbon</option>
+                        <option value="glitch">⚡ Glitch</option>
+                        <option value="chaos">💥 Chaos</option>
+                        <option value="glass">🧊 Glass</option>
+                        <option value="ombre">🖤 Ombre</option>
+                        <option value="brevet">📝 Brevet</option>
+                        <option value="countdown-1h">🟢 Countdown 1H</option>
+                        <option value="countdown-30min">🟡 Countdown 30MIN</option>
+                        <option value="countdown-15min">🟠 Countdown 15MIN</option>
+                        <option value="countdown-5min">🔴 Countdown 5MIN</option>
+                    </select>
+                    <button class="admin-btn" onclick="rndThemeBanAdd()" style="background:rgba(0,0,0,0.4);border:1px solid rgba(255,80,80,0.4);color:#ff8888;font-size:0.8em;margin-bottom:10px;">🚫 Bannir ce thème</button>
+
+                    <!-- Boutons ON/OFF -->
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                        <button class="admin-btn" id="rndThemeStartBtn" onclick="rndThemeStart()" style="background:linear-gradient(180deg,#4a00aa,#220060);box-shadow:0 4px 0 #0e0030;border:2px solid rgba(180,100,255,0.5);color:#cc88ff;">▶ Activer</button>
+                        <button class="admin-btn" id="rndThemeStopBtn" onclick="rndThemeStop()" style="background:linear-gradient(180deg,#3a0a0a,#1a0505);box-shadow:0 4px 0 #0a0000;border:2px solid rgba(231,76,60,0.4);color:#e74c3c;">⏹ Désactiver</button>
+                        <button class="admin-btn" onclick="rndThemeNow()" style="background:rgba(0,0,0,0.3);border:1px solid rgba(180,100,255,0.3);color:#aa88ff;font-size:0.8em;">🎲 Changer maintenant</button>
+                    </div>
+                    <div style="color:#555;font-size:0.72em;margin-top:8px;" id="rndThemeStatus">Statut : inactif</div>
+                </div>
+
                 <!-- Image du coffre -->
                 <div class="admin-section">
                     <div class="admin-section-title">🎁 Image du coffre</div>
@@ -11020,6 +11076,9 @@
                 refreshAdminPlayerLists();
             });
 
+            // Thème aléatoire — écoute en temps réel
+            _listenRandomTheme();
+
             // Événements programmés
             firebaseDB.ref('admin/scheduledEvents').on('value', snap => {
                 window._scheduledEvents = snap.val() || {};
@@ -12532,6 +12591,173 @@
                 }
             }
         }
+
+        // ════════════════════════════════════════════════════
+        // THÈME ALÉATOIRE AUTOMATIQUE
+        // ════════════════════════════════════════════════════
+        var _rndThemeInterval = null;   // setInterval local côté admin
+        var _rndThemeBanned   = [];     // liste des thèmes bannis (synchro Firebase)
+        var _rndThemeActive   = false;  // état actif/inactif
+
+        // Toutes les clés de thèmes disponibles (sans les countdown, bannis par défaut optionnel)
+        var _ALL_THEME_KEYS = Object.keys(THEMES);
+
+        // Écoute Firebase — synchro de la config randomTheme pour tous les clients
+        // (appelé après initFirebase, dans listenAdminCommands)
+        function _listenRandomTheme() {
+            if (!firebaseDB) return;
+            firebaseDB.ref('admin/randomTheme').on('value', function(snap) {
+                var d = snap.val();
+                if (!d || !d.active) {
+                    // Désactivé — arrêter le timer si on est admin
+                    _rndThemeActive = false;
+                    _rndThemeBanned = (d && d.bannedThemes) ? d.bannedThemes : [];
+                    if (_rndThemeInterval) { clearInterval(_rndThemeInterval); _rndThemeInterval = null; }
+                    _rndThemeRenderStatus();
+                    _rndThemeRenderBanned();
+                    return;
+                }
+                _rndThemeActive   = true;
+                _rndThemeBanned   = d.bannedThemes || [];
+                var intervalMs    = d.intervalMs  || 600000;
+                _rndThemeRenderStatus(d);
+                _rndThemeRenderBanned();
+
+                // Seul l'onglet admin qui a activé le timer gère le setInterval
+                // (le flag _rndThemeIsOwner est mis à true par rndThemeStart())
+                // → Les autres clients ne démarrent PAS de timer, ils subissent juste admin/theme
+                if (window._rndThemeIsOwner) {
+                    // Redémarrer l'interval avec la nouvelle config
+                    if (_rndThemeInterval) clearInterval(_rndThemeInterval);
+                    _rndThemeInterval = setInterval(function() {
+                        _rndThemePickAndApply();
+                    }, intervalMs);
+                }
+            });
+        }
+
+        // Tire un thème aléatoire non banni et l'applique via Firebase
+        function _rndThemePickAndApply() {
+            var available = _ALL_THEME_KEYS.filter(function(k) {
+                return _rndThemeBanned.indexOf(k) === -1;
+            });
+            if (!available.length) {
+                adminStatus('⚠️ Tous les thèmes sont bannis — thème aléatoire impossible.');
+                return;
+            }
+            var pick = available[Math.floor(Math.random() * available.length)];
+            adminSetTheme(pick);
+        }
+
+        // Activer le thème aléatoire
+        function rndThemeStart() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            var val   = parseInt(document.getElementById('rndThemeValue').value) || 10;
+            var unit  = parseInt(document.getElementById('rndThemeUnit').value)  || 60000;
+            var ms    = val * unit;
+            if (ms < 5000) { adminStatus('⚠️ Intervalle minimum : 5 secondes'); return; }
+
+            // Marquer cet onglet comme propriétaire du timer
+            window._rndThemeIsOwner = true;
+
+            firebaseDB.ref('admin/randomTheme').set({
+                active:      true,
+                intervalMs:  ms,
+                bannedThemes: _rndThemeBanned,
+                startedAt:   Date.now()
+            }).then(function() {
+                // Démarrer le timer local immédiatement
+                if (_rndThemeInterval) clearInterval(_rndThemeInterval);
+                _rndThemeInterval = setInterval(function() {
+                    _rndThemePickAndApply();
+                }, ms);
+                // Changer le thème une première fois tout de suite
+                _rndThemePickAndApply();
+                var label = val + ' ' + (unit === 3600000 ? 'heure(s)' : 'minute(s)');
+                adminStatus('✅ Thème aléatoire activé — changement toutes les ' + label);
+            }).catch(function(e) { adminStatus('Erreur : ' + e.message); });
+        }
+
+        // Désactiver
+        function rndThemeStop() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            window._rndThemeIsOwner = false;
+            if (_rndThemeInterval) { clearInterval(_rndThemeInterval); _rndThemeInterval = null; }
+            firebaseDB.ref('admin/randomTheme').set({ active: false, bannedThemes: _rndThemeBanned })
+                .then(function() { adminStatus('⏹ Thème aléatoire désactivé.'); })
+                .catch(function(e) { adminStatus('Erreur : ' + e.message); });
+        }
+
+        // Changer manuellement maintenant (sans relancer le timer)
+        function rndThemeNow() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            _rndThemePickAndApply();
+        }
+
+        // Bannir un thème
+        function rndThemeBanAdd() {
+            var sel = document.getElementById('rndThemeBanSelect');
+            var val = sel ? sel.value : '';
+            // val peut être '' pour le thème Défaut
+            if (_rndThemeBanned.indexOf(val) !== -1) { adminStatus('⚠️ Ce thème est déjà banni.'); return; }
+            _rndThemeBanned.push(val);
+            _rndThemeSaveBanned();
+            _rndThemeRenderBanned();
+        }
+
+        // Débannir un thème
+        function rndThemeUnban(key) {
+            _rndThemeBanned = _rndThemeBanned.filter(function(k) { return k !== key; });
+            _rndThemeSaveBanned();
+            _rndThemeRenderBanned();
+        }
+
+        // Sauvegarder la liste des bannis dans Firebase (sans toucher au reste)
+        function _rndThemeSaveBanned() {
+            if (!firebaseDB) return;
+            firebaseDB.ref('admin/randomTheme/bannedThemes').set(_rndThemeBanned).catch(function(){});
+        }
+
+        // Afficher les thèmes bannis dans le panel
+        function _rndThemeRenderBanned() {
+            var container = document.getElementById('rndThemeBannedList');
+            if (!container) return;
+            container.innerHTML = '';
+            if (!_rndThemeBanned.length) {
+                container.innerHTML = '<span style="color:#444;font-size:0.72em;font-style:italic;">Aucun thème banni</span>';
+                return;
+            }
+            _rndThemeBanned.forEach(function(key) {
+                var label = (THEMES[key] ? THEMES[key].label : key) || '🔵 Défaut';
+                var tag = document.createElement('span');
+                tag.style.cssText = 'display:inline-flex;align-items:center;gap:4px;background:rgba(255,80,80,0.1);border:1px solid rgba(255,80,80,0.3);border-radius:6px;padding:2px 8px;color:#ff8888;font-size:0.72em;cursor:pointer;';
+                tag.innerHTML = '🚫 ' + label + ' <span style="color:#ff4444;font-weight:900;margin-left:2px;">✕</span>';
+                tag.onclick = function() { rndThemeUnban(key); };
+                tag.title = 'Cliquer pour débannir';
+                container.appendChild(tag);
+            });
+        }
+
+        // Afficher le statut
+        function _rndThemeRenderStatus(d) {
+            var el = document.getElementById('rndThemeStatus');
+            if (!el) return;
+            if (!_rndThemeActive) {
+                el.textContent = 'Statut : ⏹ Inactif';
+                el.style.color = '#555';
+                return;
+            }
+            var ms = d && d.intervalMs ? d.intervalMs : 0;
+            var label = ms >= 3600000
+                ? (ms / 3600000).toFixed(1) + ' heure(s)'
+                : (ms / 60000).toFixed(0) + ' minute(s)';
+            el.textContent = '▶ Actif — changement toutes les ' + label;
+            el.style.color = '#bb88ff';
+        }
+
+        // ════════════════════════════════════════════════════
+        // FIN THÈME ALÉATOIRE
+        // ════════════════════════════════════════════════════
 
         function adminSetTheme(themeId) {
             if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
