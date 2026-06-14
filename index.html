@@ -5805,6 +5805,10 @@
         .ab-tempban-level { color: #330000; font-size: 0.7em; letter-spacing: 2px; }
         @keyframes abTempPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
 
+        /* Pendant un ban temporaire (niveau ≥2), seuls le Livre des Cartes et le bouton Compte
+           (changer de compte) restent cliquables et visibles au-dessus de l'overlay noir */
+        .ab-exempt { z-index: 1000000 !important; pointer-events: auto !important; }
+
         /* Toast notification légère (slowdown) */
         .ab-toast {
             position: fixed; bottom: 80px; left: 50%;
@@ -7809,7 +7813,10 @@
                 { name: 'Lumaca Malefica', img: 'https://static.wikia.nocookie.net/stealabr/images/a/a1/Lumaca_Malefica.png/revision/latest/scale-to-width-down/135?cb=20260510004733' },
                 { name: 'Cola Cat', img: 'https://static.wikia.nocookie.net/stealabr/images/2/2e/Cola_Cat.png/revision/latest/scale-to-width-down/150?cb=20260412145705' },
                 { name: 'Tenini Ballini', img: 'https://static.wikia.nocookie.net/stealabr/images/4/45/Tenini_Ballini.png/revision/latest/scale-to-width-down/150?cb=20260412145413' },
-                { name: 'Robo Grafito', img: 'https://static.wikia.nocookie.net/stealabr/images/f/f5/Robo_Grafito.png/revision/latest/scale-to-width-down/150?cb=20260510004744' }
+                { name: 'Robo Grafito', img: 'https://static.wikia.nocookie.net/stealabr/images/f/f5/Robo_Grafito.png/revision/latest/scale-to-width-down/150?cb=20260510004744' },
+                { name: 'Tortugini Sandcastlini', img: 'https://static.wikia.nocookie.net/stealabr/images/e/ee/Tortuginni_Sandcastlini.png/revision/latest/scale-to-width-down/268?cb=20260613232102' },
+                { name: 'Lemonita Splashita', img: 'https://static.wikia.nocookie.net/stealabr/images/3/35/Lemon.png/revision/latest/scale-to-width-down/268?cb=20260524045204' },
+                { name: 'Flippo Marino', img: 'https://static.wikia.nocookie.net/stealabr/images/0/01/Flippo_Marino.png/revision/latest/scale-to-width-down/268?cb=20260523235027' }
             ],
             secret: [
                 { name: 'Garama and Madundung', img: 'https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png/revision/latest/scale-to-width-down/150?cb=20250816022557' },
@@ -8053,7 +8060,19 @@
                 { name: 'Sammyni Cakini', img: 'https://static.wikia.nocookie.net/stealabr/images/1/1f/Sammyni_Cakini.png/revision/latest/scale-to-width-down/101?cb=20260524140721' },
                 { name: 'Jelly Moby', img: 'https://static.wikia.nocookie.net/stealabr/images/a/ad/Jelly_Moby.png/revision/latest/scale-to-width-down/150?cb=20260523050636' },
                 { name: 'Dragon Aquanini', img: 'https://static.wikia.nocookie.net/stealabr/images/2/2f/Dragon_aquanini2.png/revision/latest/scale-to-width-down/150?cb=20260603100501' },
-                { name: 'Caylusaurus', img: 'https://static.wikia.nocookie.net/stealabr/images/e/e7/Dragon_Caylusini.png/revision/latest/scale-to-width-down/268?cb=20260606223127' }
+                { name: 'Caylusaurus', img: 'https://static.wikia.nocookie.net/stealabr/images/e/e7/Dragon_Caylusini.png/revision/latest/scale-to-width-down/268?cb=20260606223127' },
+                { name: 'Craburger', img: 'https://static.wikia.nocookie.net/stealabr/images/2/26/Craburger.png/revision/latest/scale-to-width-down/268?cb=20260613212354' },
+                { name: 'Rocketini Frostini', img: 'https://static.wikia.nocookie.net/stealabr/images/8/83/Rocketini_Frostini.png/revision/latest?cb=20260613204109' },
+                { name: 'Octoball', img: 'https://xstealabrainrot.com/wp-content/uploads/2026/06/Captura_de_tela_2026-06-13_161016-removebg-preview-300x199.png' },
+                { name: 'Sushi Inu', img: 'https://static.wikia.nocookie.net/stealabr/images/5/58/Inuplacehold.png/revision/latest/scale-to-width-down/267?cb=20260613201607' },
+                { name: 'Girafini Raftini', img: 'https://static.wikia.nocookie.net/stealabr/images/8/8a/UnknownBrainrot.png/revision/latest/scale-to-width-down/268?cb=20251112220842' },
+                { name: 'Frullato Framingo', img: 'https://static.wikia.nocookie.net/stealabr/images/1/1c/Frullato_Framingo.png/revision/latest?cb=20260614024721' },
+                { name: 'Los Fruits', img: 'https://static.wikia.nocookie.net/stealabr/images/f/f5/Los_Fruits_yay.jpeg/revision/latest/scale-to-width-down/268?cb=20260614002121' },
+                { name: 'Sand Sand Sand', img: 'https://static.wikia.nocookie.net/stealabr/images/8/8d/Sand_Sand_Sand.png/revision/latest/scale-to-width-down/268?cb=20260613205827' },
+                { name: 'Bearito Cabinito', img: 'https://static.wikia.nocookie.net/stealabr/images/2/2c/Bearo_Houso.png/revision/latest/scale-to-width-down/268?cb=20260611230420' },
+                { name: 'Venuspino', img: 'https://static.wikia.nocookie.net/stealabr/images/0/0c/Venuspino.png/revision/latest/scale-to-width-down/268?cb=20260613211003' },
+                { name: 'Kraken', img: 'https://static.wikia.nocookie.net/stealabr/images/d/d3/Kraken.png/revision/latest/scale-to-width-down/268?cb=20260612230508' },
+                { name: 'Chicleteira Boardeira', img: 'https://static.wikia.nocookie.net/stealabr/images/9/90/Chicleteira_Boardeira.png/revision/latest/scale-to-width-down/268?cb=20260611230434' }
              ],
               og: [
                 { name: "Strawberry Elephant", img: 'https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest/scale-to-width-down/144?cb=20250830235735' },
@@ -8096,7 +8115,8 @@
             { name: 'Festive Lucky Block', img: 'https://static.wikia.nocookie.net/stealabr/images/2/24/FestiveLuckyBlockRealF4Leak.png/revision/latest?cb=20251130105118' },
             { name: 'Heart Lucky Block', img: 'https://static.wikia.nocookie.net/stealabr/images/2/23/LoveBlock.png/revision/latest?cb=20260207092901' },
             { name: 'Leprechaun Lucky Block', img: 'https://static.wikia.nocookie.net/stealabr/images/1/19/Leprechaun_Lucky_Block.png/revision/latest/thumbnail/width/360/height/450?cb=20260314192929' },
-            { name: 'Egg Lucky Block', img: 'https://static.wikia.nocookie.net/stealabr/images/a/a4/EggBlock.png/revision/latest/scale-to-width-down/268?cb=20260405230823' }
+            { name: 'Egg Lucky Block', img: 'https://static.wikia.nocookie.net/stealabr/images/a/a4/EggBlock.png/revision/latest/scale-to-width-down/268?cb=20260405230823' },
+            { name: 'Octo Lucky Block', img: 'https://static.wikia.nocookie.net/stealabr/images/b/b3/Summer_Lucky_Block.png/revision/latest/scale-to-width-down/268?cb=20260610190636' }
         ];
 
         const chestRewards = {
@@ -10477,9 +10497,12 @@
                 }
             });
             setTimeout(_scratchCheckAndShow, 900);
-            // Écouter le ban temporaire
+            // Écouter le ban temporaire (admin panel)
             firebaseDB.ref('players/' + key + '/banned').on('value', snap => {
-                window._playerBanned = snap.val() === true;
+                const isBanned = snap.val() === true;
+                window._playerBanned = isBanned;
+                if (isBanned) _abShowAdminBan();
+                else          _abHideAdminBan();
             });
             // Écouter le ban permanent
             firebaseDB.ref('players/' + key + '/perma_banned').on('value', snap => {
@@ -10974,6 +10997,9 @@
                 _applyShopDiscount(d.pct || 0, expiry);
             });
 
+            // Thème aléatoire — écoute en temps réel (attaché une seule fois)
+            _listenRandomTheme();
+
             } // fin bloc _globalListenersAttached
 
             // ── Listener ticket admin broadcast (pour tous) ──
@@ -11075,9 +11101,6 @@
                 window._adminPlayerList = players;
                 refreshAdminPlayerLists();
             });
-
-            // Thème aléatoire — écoute en temps réel
-            _listenRandomTheme();
 
             // Événements programmés
             firebaseDB.ref('admin/scheduledEvents').on('value', snap => {
@@ -12595,7 +12618,7 @@
         // ════════════════════════════════════════════════════
         // THÈME ALÉATOIRE AUTOMATIQUE
         // ════════════════════════════════════════════════════
-        var _rndThemeInterval = null;   // setInterval local côté admin
+        var _rndThemeTimeout  = null;   // setTimeout unique, auto-replanifié via nextSwitchAt
         var _rndThemeBanned   = [];     // liste des thèmes bannis (synchro Firebase)
         var _rndThemeActive   = false;  // état actif/inactif
 
@@ -12603,36 +12626,58 @@
         var _ALL_THEME_KEYS = Object.keys(THEMES);
 
         // Écoute Firebase — synchro de la config randomTheme pour tous les clients
-        // (appelé après initFirebase, dans listenAdminCommands)
+        // (appelé une seule fois, dans le bloc _globalListenersAttached)
         function _listenRandomTheme() {
             if (!firebaseDB) return;
             firebaseDB.ref('admin/randomTheme').on('value', function(snap) {
                 var d = snap.val();
+
+                // On repart toujours d'un seul setTimeout actif (évite les doublons)
+                if (_rndThemeTimeout) { clearTimeout(_rndThemeTimeout); _rndThemeTimeout = null; }
+
                 if (!d || !d.active) {
-                    // Désactivé — arrêter le timer si on est admin
                     _rndThemeActive = false;
                     _rndThemeBanned = (d && d.bannedThemes) ? d.bannedThemes : [];
-                    if (_rndThemeInterval) { clearInterval(_rndThemeInterval); _rndThemeInterval = null; }
                     _rndThemeRenderStatus();
                     _rndThemeRenderBanned();
                     return;
                 }
-                _rndThemeActive   = true;
-                _rndThemeBanned   = d.bannedThemes || [];
-                var intervalMs    = d.intervalMs  || 600000;
+
+                _rndThemeActive = true;
+                _rndThemeBanned = d.bannedThemes || [];
+                var intervalMs  = d.intervalMs || 600000;
                 _rndThemeRenderStatus(d);
                 _rndThemeRenderBanned();
 
-                // Seul l'onglet admin qui a activé le timer gère le setInterval
-                // (le flag _rndThemeIsOwner est mis à true par rndThemeStart())
-                // → Les autres clients ne démarrent PAS de timer, ils subissent juste admin/theme
-                if (window._rndThemeIsOwner) {
-                    // Redémarrer l'interval avec la nouvelle config
-                    if (_rndThemeInterval) clearInterval(_rndThemeInterval);
-                    _rndThemeInterval = setInterval(function() {
-                        _rndThemePickAndApply();
-                    }, intervalMs);
-                }
+                // Planifier le prochain changement à partir de nextSwitchAt (timestamp Firebase partagé)
+                var nextSwitchAt = d.nextSwitchAt || (Date.now() + intervalMs);
+                var delay = Math.max(0, nextSwitchAt - Date.now());
+                _rndThemeTimeout = setTimeout(_rndThemeTryAdvance, delay + 200);
+            });
+        }
+
+        // Tente de faire avancer la rotation de thème.
+        // Tous les clients connectés planifient cet appel à la même échéance, mais une
+        // transaction Firebase garantit qu'un seul d'entre eux effectue réellement le
+        // changement — les autres abandonnent (committed=false) et se resynchronisent
+        // automatiquement via le listener .on('value') ci-dessus (nouveau nextSwitchAt).
+        function _rndThemeTryAdvance() {
+            if (!firebaseDB) return;
+            firebaseDB.ref('admin/randomTheme').transaction(function(current) {
+                if (!current || !current.active) return; // abort — désactivé entre-temps
+                var now = Date.now();
+                var nextSwitchAt = current.nextSwitchAt || 0;
+                if (now < nextSwitchAt - 100) return; // abort — déjà géré par un autre client
+                var intervalMs = current.intervalMs || 600000;
+                var updated = Object.assign({}, current);
+                updated.nextSwitchAt = now + intervalMs;
+                return updated;
+            }, function(error, committed, snapshot) {
+                if (error || !committed) return; // un autre client a déjà géré ce changement
+                var d = snapshot.val();
+                if (!d || !d.active) return;
+                _rndThemeBanned = d.bannedThemes || [];
+                _rndThemePickAndApply();
             });
         }
 
@@ -12657,20 +12702,13 @@
             var ms    = val * unit;
             if (ms < 5000) { adminStatus('⚠️ Intervalle minimum : 5 secondes'); return; }
 
-            // Marquer cet onglet comme propriétaire du timer
-            window._rndThemeIsOwner = true;
-
             firebaseDB.ref('admin/randomTheme').set({
-                active:      true,
-                intervalMs:  ms,
+                active:       true,
+                intervalMs:   ms,
                 bannedThemes: _rndThemeBanned,
-                startedAt:   Date.now()
+                startedAt:    Date.now(),
+                nextSwitchAt: Date.now() + ms
             }).then(function() {
-                // Démarrer le timer local immédiatement
-                if (_rndThemeInterval) clearInterval(_rndThemeInterval);
-                _rndThemeInterval = setInterval(function() {
-                    _rndThemePickAndApply();
-                }, ms);
                 // Changer le thème une première fois tout de suite
                 _rndThemePickAndApply();
                 var label = val + ' ' + (unit === 3600000 ? 'heure(s)' : 'minute(s)');
@@ -12681,17 +12719,25 @@
         // Désactiver
         function rndThemeStop() {
             if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
-            window._rndThemeIsOwner = false;
-            if (_rndThemeInterval) { clearInterval(_rndThemeInterval); _rndThemeInterval = null; }
+            if (_rndThemeTimeout) { clearTimeout(_rndThemeTimeout); _rndThemeTimeout = null; }
             firebaseDB.ref('admin/randomTheme').set({ active: false, bannedThemes: _rndThemeBanned })
                 .then(function() { adminStatus('⏹ Thème aléatoire désactivé.'); })
                 .catch(function(e) { adminStatus('Erreur : ' + e.message); });
         }
 
-        // Changer manuellement maintenant (sans relancer le timer)
+        // Changer manuellement maintenant (sans casser le timer automatique)
         function rndThemeNow() {
             if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
             _rndThemePickAndApply();
+            // Repousser le prochain changement automatique pour éviter un double changement rapide
+            if (_rndThemeActive) {
+                firebaseDB.ref('admin/randomTheme').once('value').then(function(snap) {
+                    var d = snap.val();
+                    if (!d || !d.active) return;
+                    var intervalMs = d.intervalMs || 600000;
+                    firebaseDB.ref('admin/randomTheme/nextSwitchAt').set(Date.now() + intervalMs);
+                });
+            }
         }
 
         // Bannir un thème
@@ -15224,6 +15270,7 @@
                 _abState.sanctionUntil = 0;
                 document.getElementById('abTempbanOverlay').classList.remove('show');
                 document.body.style.pointerEvents = '';
+                _abSetExempt(false);
                 _abSave();
             }
             if (_abState.warnActive && now >= _abState.warnUntil) {
@@ -15431,6 +15478,52 @@
             document.getElementById('abWarnOverlay').classList.remove('show');
         }
 
+        // ── Exceptions pendant un ban temporaire : Livre des Cartes + bouton Compte
+        // restent cliquables/visibles au-dessus de l'overlay (les joueurs peuvent
+        // consulter leur collection et changer de compte, mais rien d'autre).
+        const _AB_EXEMPT_SELECTORS = ['.book-btn', '#bookModal', '#authTopBtn', '#authOverlay'];
+        function _abSetExempt(active) {
+            _AB_EXEMPT_SELECTORS.forEach(function(sel) {
+                const el = document.querySelector(sel);
+                if (!el) return;
+                if (active) el.classList.add('ab-exempt');
+                else el.classList.remove('ab-exempt');
+            });
+        }
+
+        // ── Ban temporaire admin panel ───────────────────────────────────
+        // Affiche l'overlay de suspension et laisse Livre + Compte accessibles.
+        // Distinct de _abShowTempban (anti-abus auto) : pas de timer, message admin.
+        function _abShowAdminBan() {
+            const overlay = document.getElementById('abTempbanOverlay');
+            if (!overlay) return;
+            // Texte spécifique ban admin
+            const title   = document.getElementById('abTempbanTitle');
+            const sub     = document.getElementById('abTempbanSub');
+            const lvlEl   = document.getElementById('abTempbanLevel');
+            const timerEl = document.getElementById('abTempbanTimer');
+            if (title)   title.textContent  = 'ACCÈS TEMPORAIREMENT SUSPENDU';
+            if (sub)     sub.textContent    = 'Un administrateur a suspendu ton accès. Contacte-le pour plus d\'infos.';
+            if (lvlEl)   lvlEl.textContent  = 'BAN ADMIN';
+            if (timerEl) timerEl.textContent = '';
+            // Bloquer toute interaction sauf exemptions
+            document.body.style.pointerEvents = 'none';
+            overlay.style.pointerEvents = 'all';
+            _abSetExempt(true);
+            overlay.classList.add('show');
+        }
+
+        function _abHideAdminBan() {
+            // Ne lever le ban que si aucun ban auto (anti-abus) n'est actif
+            if (_abState && _abState.sanctionUntil && _abState.sanctionUntil > Date.now()) return;
+            const overlay = document.getElementById('abTempbanOverlay');
+            if (!overlay) return;
+            overlay.classList.remove('show');
+            document.body.style.pointerEvents = '';
+            overlay.style.pointerEvents = '';
+            _abSetExempt(false);
+        }
+
         function _abShowTempban(level) {
             const overlay = document.getElementById('abTempbanOverlay');
             const title   = document.getElementById('abTempbanTitle');
@@ -15439,6 +15532,7 @@
             const timerEl = document.getElementById('abTempbanTimer');
             document.body.style.pointerEvents = 'none';
             overlay.style.pointerEvents = 'all';
+            _abSetExempt(true);
 
             const msgs = {
                 2: ['ACCÈS TEMPORAIREMENT SUSPENDU', 'Comportement anormal détecté. Pause obligatoire :'],
