@@ -2772,6 +2772,32 @@
         .x10-reveal-card .xrnew { color:#4ecb71; font-size:0.58em; font-weight:900; }
         .shop-x10-btn { display:block; width:calc(100% - 0px); margin:10px 0 0 0; padding:13px 16px; background:linear-gradient(180deg,#1a4a1a,#0d2a0d); border:2px solid rgba(46,204,113,0.4); border-radius:14px; color:#2ecc71; font-size:0.82em; font-weight:900; cursor:pointer; text-align:center; font-family:'Arial Black',Arial,sans-serif; letter-spacing:1px; transition:all 0.2s; box-shadow:0 4px 0 #051505; }
         .shop-x10-btn:hover { border-color:#2ecc71; background:linear-gradient(180deg,#1f5a1f,#0f330f); transform:translateY(-1px); }
+
+        /* ═══ CODE PROMO — BOUTIQUE ═══ */
+        .shop-promo-box {
+            display:flex; gap:8px; align-items:center; margin: 8px 0 4px;
+            background:rgba(0,255,200,0.05); border:1px solid rgba(0,255,200,0.25);
+            border-radius:14px; padding:9px 10px;
+        }
+        .shop-promo-input {
+            flex:1; min-width:0; background:rgba(0,0,0,0.4); border:1px solid rgba(0,255,200,0.25);
+            border-radius:10px; color:#fff; padding:10px 12px; font-size:0.85em;
+            font-weight:900; letter-spacing:2px; text-transform:uppercase; outline:none;
+            font-family:'Arial Black',Arial,sans-serif;
+        }
+        .shop-promo-input::placeholder { color:rgba(255,255,255,0.25); letter-spacing:1px; text-transform:none; font-weight:400; }
+        .shop-promo-btn {
+            background:linear-gradient(180deg,#00997a,#005a47); border:2px solid rgba(0,255,200,0.4);
+            border-radius:10px; color:#00ffc8; font-size:0.8em; font-weight:900; letter-spacing:1px;
+            padding:10px 16px; cursor:pointer; box-shadow:0 4px 0 #00271f; transition:all 0.2s;
+            font-family:'Arial Black',Arial,sans-serif; white-space:nowrap;
+        }
+        .shop-promo-btn:hover  { transform:translateY(-1px); border-color:#00ffc8; }
+        .shop-promo-btn:active { transform:translateY(1px); box-shadow:0 1px 0 #00271f; }
+        .shop-promo-btn:disabled { opacity:0.5; cursor:not-allowed; }
+        .shop-promo-msg { font-size:0.7em; font-weight:700; text-align:center; min-height:14px; margin:4px 0 6px; }
+        .shop-promo-msg.ok  { color:#00ff88; }
+        .shop-promo-msg.err { color:#ff5555; }
         .shop-close-btn {
             background: linear-gradient(180deg, #c0392b 0%, #922b21 100%);
             color: white;
@@ -5858,57 +5884,178 @@
         .lb-score-sub { color: #7db8ff; font-size: 0.68em; font-weight: 400; margin-left: 4px; }
 
         /* ── Force Reload Overlay ── */
+        /* ══════════════════════════════════════════
+           FORCE RELOAD OVERLAY — Animation "mise à jour live"
+           ══════════════════════════════════════════ */
         #forceReloadOverlay {
             display: none;
             position: fixed; inset: 0; z-index: 99999;
-            background: #0a0010;
+            background: #000508;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 28px;
+            gap: 0;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
         }
         #forceReloadOverlay.show { display: flex; }
+
+        /* Fond : lignes de code qui défilent */
+        .frl-code-bg {
+            position: absolute; inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            opacity: 0.13;
+        }
+        .frl-code-col {
+            position: absolute;
+            top: -100%;
+            font-size: 10px;
+            color: #00ff88;
+            white-space: pre;
+            line-height: 1.5;
+            animation: frlCodeFall linear infinite;
+        }
+        @keyframes frlCodeFall {
+            0%   { transform: translateY(0); }
+            100% { transform: translateY(200vh); }
+        }
+
+        /* Scan-line horizontale qui balaie */
+        .frl-scanline {
+            position: absolute; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(0,255,136,0.6), transparent);
+            animation: frlScan 2.5s linear infinite;
+            pointer-events: none;
+            z-index: 2;
+        }
+        @keyframes frlScan {
+            0%   { top: -3px; opacity: 0; }
+            5%   { opacity: 1; }
+            95%  { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* Vignette coins sombres */
+        .frl-vignette {
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.85) 100%);
+            pointer-events: none; z-index: 1;
+        }
+
+        /* Contenu central */
+        .frl-center {
+            position: relative; z-index: 3;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 22px;
+            width: 90%; max-width: 480px;
+        }
+
+        /* Badge "UPDATE" clignotant */
+        .frl-badge {
+            background: #00ff88;
+            color: #000;
+            font-size: 0.62em;
+            font-weight: 900;
+            letter-spacing: 4px;
+            padding: 3px 14px;
+            border-radius: 4px;
+            animation: frlBadgeBlink 0.8s step-end infinite;
+        }
+        @keyframes frlBadgeBlink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+        /* Logo */
         .frl-logo {
-            font-size: 3.5em;
-            animation: frlPulse 1s ease-in-out infinite;
+            font-size: 3.2em;
+            filter: drop-shadow(0 0 20px rgba(0,255,136,0.8)) drop-shadow(0 0 40px rgba(0,200,100,0.4));
+            animation: frlPulse 1.4s ease-in-out infinite;
         }
         @keyframes frlPulse {
-            0%, 100% { transform: scale(1);   opacity: 1;   }
-            50%       { transform: scale(1.12); opacity: 0.7; }
+            0%,100% { transform: scale(1);    filter: drop-shadow(0 0 20px rgba(0,255,136,0.8)); }
+            50%      { transform: scale(1.08); filter: drop-shadow(0 0 40px rgba(0,255,136,1)) drop-shadow(0 0 60px rgba(0,200,255,0.5)); }
         }
+
+        /* Titre principal */
         .frl-title {
             color: #fff;
-            font-size: 1.15em;
+            font-size: 1.1em;
             font-weight: 900;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             text-transform: uppercase;
             text-align: center;
+            text-shadow: 0 0 20px rgba(0,255,136,0.6);
         }
-        .frl-sub {
-            color: rgba(255,255,255,0.35);
-            font-size: 0.72em;
-            letter-spacing: 1px;
-            text-align: center;
+
+        /* Terminal de logs */
+        .frl-terminal {
+            width: 100%;
+            background: rgba(0,255,136,0.04);
+            border: 1px solid rgba(0,255,136,0.2);
+            border-radius: 8px;
+            padding: 10px 14px;
+            min-height: 110px;
+            max-height: 110px;
+            overflow: hidden;
+            display: flex; flex-direction: column;
+            gap: 2px;
         }
+        .frl-log-line {
+            font-size: 0.68em;
+            color: #00ff88;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.2s, transform 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .frl-log-line.visible { opacity: 1; transform: translateY(0); }
+        .frl-log-line.dim     { opacity: 0.35; }
+        .frl-log-line.warn    { color: #ffd700; }
+        .frl-log-line.ok      { color: #00ff88; }
+        .frl-log-line.info    { color: #00cfff; }
+
+        /* Barre de progression */
+        .frl-bar-header {
+            width: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 5px;
+        }
+        .frl-bar-label { color: rgba(255,255,255,0.5); font-size: 0.62em; letter-spacing: 1px; }
+        .frl-bar-pct   { color: #00ff88; font-size: 0.72em; font-weight: 900; }
         .frl-bar-wrap {
-            width: 220px;
-            height: 6px;
-            background: rgba(255,255,255,0.07);
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.06);
             border-radius: 99px;
             overflow: hidden;
+            border: 1px solid rgba(0,255,136,0.15);
         }
         .frl-bar {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, #7b2fff, #ff59e7);
+            background: linear-gradient(90deg, #00ff88, #00cfff, #7b2fff);
             border-radius: 99px;
-            animation: frlLoad 3.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            box-shadow: 0 0 12px rgba(0,255,136,0.6), 0 0 25px rgba(0,200,255,0.3);
+            transition: width 0.3s ease;
+            position: relative;
         }
-        @keyframes frlLoad {
-            0%   { width: 0%; }
-            60%  { width: 75%; }
-            85%  { width: 92%; }
-            100% { width: 100%; }
+        .frl-bar::after {
+            content: '';
+            position: absolute; right: 0; top: -3px; bottom: -3px;
+            width: 4px; border-radius: 2px;
+            background: #fff;
+            box-shadow: 0 0 8px 2px rgba(255,255,255,0.9);
+        }
+
+        /* Sous-titre */
+        .frl-sub {
+            color: rgba(255,255,255,0.28);
+            font-size: 0.62em;
+            letter-spacing: 2px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
         }
 
         </style>
@@ -5926,10 +6073,29 @@
 
     <!-- Overlay rechargement forcé par admin -->
     <div id="forceReloadOverlay">
-        <div class="frl-logo">🎮</div>
-        <div class="frl-title">Mise à jour en cours…</div>
-        <div class="frl-bar-wrap"><div class="frl-bar"></div></div>
-        <div class="frl-sub">Le jeu va se relancer automatiquement</div>
+        <!-- Fond code qui tombe -->
+        <div class="frl-code-bg" id="frlCodeBg"></div>
+        <!-- Scan-line -->
+        <div class="frl-scanline"></div>
+        <!-- Vignette -->
+        <div class="frl-vignette"></div>
+        <!-- Contenu -->
+        <div class="frl-center">
+            <div class="frl-badge">⚡ UPDATE IN PROGRESS</div>
+            <div class="frl-logo">🎮</div>
+            <div class="frl-title" id="frlTitle">Mise à jour en cours…</div>
+            <!-- Terminal logs -->
+            <div class="frl-terminal" id="frlTerminal"></div>
+            <!-- Barre de progression -->
+            <div style="width:100%;">
+                <div class="frl-bar-header">
+                    <span class="frl-bar-label">CHARGEMENT</span>
+                    <span class="frl-bar-pct" id="frlPct">0%</span>
+                </div>
+                <div class="frl-bar-wrap"><div class="frl-bar" id="frlBar"></div></div>
+            </div>
+            <div class="frl-sub" id="frlSub">Initialisation du système…</div>
+        </div>
     </div>
 
     <!-- Bouton connexion haut droite -->
@@ -7102,6 +7268,42 @@
                     <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminShopDiscountStatus"></div>
                 </div>
 
+                <!-- CODES PROMO -->
+                <div class="admin-section" style="border-color:rgba(0,255,200,0.4);background:rgba(0,255,200,0.03);margin-top:10px;">
+                    <div class="admin-section-title" style="color:#00ffc8;">🎟️ Codes Promo</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:12px;">Stock global partagé entre tous les joueurs — transaction Firebase atomique. Chaque joueur ne peut utiliser un code qu'une seule fois.</div>
+
+                    <!-- Formulaire ajout / édition -->
+                    <div style="background:rgba(0,0,0,0.25);border:1px solid rgba(0,255,200,0.18);border-radius:11px;padding:11px;margin-bottom:10px;">
+                        <div style="color:#00ffc8;font-size:0.70em;font-weight:900;margin-bottom:8px;letter-spacing:1px;">➕ CRÉER / MODIFIER UN CODE</div>
+
+                        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:7px;">
+                            <input id="promoAdmCode" type="text" class="craft-adm-input" style="flex:1;min-width:140px;text-transform:uppercase;" placeholder="CODE (ex: FREE100)" maxlength="24">
+                            <input id="promoAdmUses" type="number" min="1" value="100" class="craft-adm-input" style="width:90px;text-align:center;" placeholder="Utilisations">
+                        </div>
+
+                        <div style="color:#555;font-size:0.65em;font-weight:900;letter-spacing:2px;margin:8px 0 5px;">RÉCOMPENSE</div>
+                        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:7px;">
+                            <input id="promoAdmGold" type="number" min="0" value="0" class="craft-adm-input" style="width:130px;" placeholder="💰 Or offert">
+                        </div>
+
+                        <!-- Multi-cartes -->
+                        <div style="color:#555;font-size:0.65em;font-weight:900;letter-spacing:2px;margin:6px 0 5px;">🎴 CARTES OFFERTES <span style="color:#333;font-weight:400;letter-spacing:0;">(tu peux en ajouter plusieurs)</span></div>
+                        <div id="promoAdmCardsContainer" style="display:flex;flex-direction:column;gap:5px;margin-bottom:6px;"></div>
+                        <button type="button" onclick="promoAdmAddCardRow()" style="background:rgba(0,255,200,0.06);border:1px dashed rgba(0,255,200,0.25);border-radius:7px;color:#00ffc8;font-size:0.70em;padding:4px 10px;cursor:pointer;width:100%;margin-bottom:8px;">➕ Ajouter une carte</button>
+
+                        <div style="display:flex;gap:6px;">
+                            <button class="admin-btn" onclick="promoAdmSave()" style="background:linear-gradient(180deg,#006655,#00332b);border:2px solid rgba(0,255,200,0.4);color:#00ffc8;font-size:0.80em;flex:1;">💾 Créer / Mettre à jour le code</button>
+                        </div>
+                        <div id="promoAdmStatus" style="color:#00ff88;font-size:0.70em;min-height:14px;margin-top:6px;"></div>
+                    </div>
+
+                    <!-- Liste live -->
+                    <div id="promoAdmList">
+                        <div style="color:#333;font-size:0.75em;padding:6px 0;">Aucun code promo configuré.</div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- ONGLET MUTATIONS -->
@@ -7402,6 +7604,13 @@
                 <div class="shop-sale-label">SUR TOUTE LA BOUTIQUE</div>
                 <div class="shop-sale-timer" id="shopSaleTimer">⏱ --:--</div>
             </div>
+
+            <!-- Code promo -->
+            <div class="shop-promo-box">
+                <input id="promoCodeInput" class="shop-promo-input" type="text" placeholder="Code promo" maxlength="24" autocomplete="off" onkeydown="if(event.key==='Enter'){ event.preventDefault(); redeemPromoCode(); }">
+                <button id="promoRedeemBtn" class="shop-promo-btn" onclick="redeemPromoCode()">🎟️ Valider</button>
+            </div>
+            <div class="shop-promo-msg" id="promoCodeMsg"></div>
 
             <div class="shop-items">
                 <div class="shop-item common" onclick="buyCard('common')">
@@ -8929,6 +9138,7 @@
             document.getElementById('shopGoldDisplay').textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
             refreshShopLuckItem();
             _updateShopBannedState();
+            promoInit();
         }
 
         function _updateShopBannedState() {
@@ -10876,17 +11086,114 @@
             firebaseDB.ref('admin/forceReload').on('value', snap => {
                 const d = snap.val();
                 if (!d || !d.ts) return;
-                if (d.ts <= _joinTsReload) return; // commande antérieure à la connexion, on ignore
-                // Afficher l'overlay de chargement
+                if (d.ts <= _joinTsReload) return;
+
+                // ── Afficher l'overlay ──
                 const overlay = document.getElementById('forceReloadOverlay');
                 overlay.classList.add('show');
-                // Réinitialiser la barre pour que l'animation reparte à zéro
-                const bar = overlay.querySelector('.frl-bar');
-                bar.style.animation = 'none';
-                bar.offsetWidth; // reflow pour forcer le reset
-                bar.style.animation = '';
-                // Recharger après ~3.6s (la barre atteint 100% en 3.5s)
-                setTimeout(() => { location.reload(); }, 3600);
+
+                // ── Durée totale : 11 secondes ──
+                const TOTAL_MS = 11000;
+
+                // ── Générer les colonnes de code en fond ──
+                const bg = document.getElementById('frlCodeBg');
+                if (bg && !bg.dataset.built) {
+                    bg.dataset.built = '1';
+                    const CHARS = '01アイウエオカキクケコサシスセソタチツテトabcdefghijklmnopqrstuvwxyz0123456789#@$%&<>();{}[]=>+';
+                    const cols = Math.ceil(window.innerWidth / 14);
+                    for (let c = 0; c < cols; c++) {
+                        const col = document.createElement('div');
+                        col.className = 'frl-code-col';
+                        col.style.left = (c * 14) + 'px';
+                        col.style.animationDuration = (6 + Math.random() * 8) + 's';
+                        col.style.animationDelay    = (-Math.random() * 10) + 's';
+                        col.style.opacity            = (0.4 + Math.random() * 0.6).toFixed(2);
+                        let txt = '';
+                        for (let r = 0; r < 60; r++) txt += CHARS[Math.floor(Math.random()*CHARS.length)] + '\n';
+                        col.textContent = txt;
+                        bg.appendChild(col);
+                    }
+                }
+
+                // ── Séquence de logs ──
+                const LOGS = [
+                    { t:  300, cls:'info', txt:'[SYS]  Connexion au serveur Brainrot…' },
+                    { t:  700, cls:'ok',   txt:'[OK]   Authentification validée ✓' },
+                    { t: 1100, cls:'info', txt:'[SYS]  Chargement des ressources joueurs…' },
+                    { t: 1600, cls:'warn', txt:'[UPD]  Patch 2.4.1 détecté — application…' },
+                    { t: 2100, cls:'ok',   txt:'[OK]   Cartes synchronisées (2 847 entrées) ✓' },
+                    { t: 2700, cls:'info', txt:'[SYS]  Recalcul des probabilités de drop…' },
+                    { t: 3300, cls:'warn', txt:'[UPD]  Mise à jour Firebase Rules…' },
+                    { t: 3900, cls:'ok',   txt:'[OK]   Index des mutations reconstruit ✓' },
+                    { t: 4500, cls:'info', txt:'[SYS]  Vérification intégrité des données…' },
+                    { t: 5200, cls:'ok',   txt:'[OK]   Coffres & récompenses validés ✓' },
+                    { t: 5900, cls:'warn', txt:'[UPD]  Déploiement assets graphiques…' },
+                    { t: 6600, cls:'ok',   txt:'[OK]   Thèmes & animations chargés ✓' },
+                    { t: 7300, cls:'info', txt:'[SYS]  Purge du cache local…' },
+                    { t: 8000, cls:'ok',   txt:'[OK]   Cache réinitialisé ✓' },
+                    { t: 8700, cls:'warn', txt:'[UPD]  Finalisation de la mise à jour…' },
+                    { t: 9500, cls:'ok',   txt:'[OK]   Système prêt — relancement imminent ✓' },
+                ];
+
+                const SUBTITLES = [
+                    { t:    0, txt:'Initialisation du système…' },
+                    { t: 2000, txt:'Application des correctifs…' },
+                    { t: 5000, txt:'Synchronisation des données…' },
+                    { t: 8000, txt:'Finalisation en cours…' },
+                    { t: 9800, txt:'✅ Mise à jour terminée !' },
+                ];
+
+                const terminal = document.getElementById('frlTerminal');
+                const bar      = document.getElementById('frlBar');
+                const pctEl    = document.getElementById('frlPct');
+                const subEl    = document.getElementById('frlSub');
+
+                // Reset
+                if (terminal) terminal.innerHTML = '';
+                if (bar)  bar.style.width = '0%';
+                if (pctEl) pctEl.textContent = '0%';
+
+                // Logs
+                LOGS.forEach(({ t, cls, txt }) => {
+                    setTimeout(() => {
+                        if (!terminal) return;
+                        const line = document.createElement('div');
+                        line.className = 'frl-log-line ' + cls;
+                        line.textContent = txt;
+                        terminal.appendChild(line);
+                        requestAnimationFrame(() => line.classList.add('visible'));
+                        // Griser les vieilles lignes
+                        const lines = terminal.querySelectorAll('.frl-log-line');
+                        lines.forEach((l, i) => { if (i < lines.length - 4) l.classList.add('dim'); });
+                        // Scroll vers le bas
+                        terminal.scrollTop = terminal.scrollHeight;
+                    }, t);
+                });
+
+                // Sous-titres
+                SUBTITLES.forEach(({ t, txt }) => {
+                    setTimeout(() => { if (subEl) subEl.textContent = txt; }, t);
+                });
+
+                // Barre de progression par paliers réalistes
+                const PCT_STEPS = [
+                    { t:   200, p:  3 },{ t:   600, p:  8 },{ t:  1000, p: 14 },
+                    { t:  1500, p: 22 },{ t:  2000, p: 30 },{ t:  2600, p: 39 },
+                    { t:  3200, p: 47 },{ t:  3800, p: 54 },{ t:  4400, p: 61 },
+                    { t:  5100, p: 67 },{ t:  5800, p: 73 },{ t:  6500, p: 79 },
+                    { t:  7200, p: 84 },{ t:  7900, p: 88 },{ t:  8600, p: 92 },
+                    { t:  9200, p: 95 },{ t:  9700, p: 97 },{ t: 10200, p: 99 },
+                    { t: 10700, p:100 },
+                ];
+                PCT_STEPS.forEach(({ t, p }) => {
+                    setTimeout(() => {
+                        if (bar)  bar.style.width  = p + '%';
+                        if (pctEl) pctEl.textContent = p + '%';
+                    }, t);
+                });
+
+                // Recharger après 11s
+                setTimeout(() => { location.reload(); }, TOTAL_MS);
             });
 
             // Pop-up admin globale
@@ -11631,6 +11938,9 @@
             _climAdmIngredients = [];
             _climAdmPopulateSelect();
             _climAdmRenderIngList();
+            promoInit();
+            _promoAdmPopulateCardSelect('');
+            _promoAdmRender();
             buildAdminBanCardGrid();
             _schedRenderList();
             // Charger l'URL actuelle du coffre dans le champ
@@ -17663,6 +17973,369 @@
         }
 
         // ═══ FIN CRAFT MACHINE ═══
+
+        // ════════════════════════════════════════════════════════════
+        //  CODES PROMO
+        // ════════════════════════════════════════════════════════════
+
+        var _promoCodes = {};            // cache local : safeKey → { code, reward, maxUses, usedCount, usedBy }
+        var _promoListenerAttached = false;
+
+        // ── Clé Firebase sécurisée pour un code ───────────────────
+        function _promoKey(code) {
+            return String(code).trim().toUpperCase().replace(/[.#$\/\[\]]/g, '_');
+        }
+
+        // ── Initialisation : listener temps réel (joueurs + admin) ──
+        function promoInit() {
+            if (!firebaseDB || _promoListenerAttached) return;
+            _promoListenerAttached = true;
+            firebaseDB.ref('admin/promoCodes').on('value', function(snap) {
+                _promoCodes = snap.val() || {};
+                _promoAdmRender();
+            });
+        }
+
+        // ── Applique la récompense d'un code promo au joueur ───────
+        function _applyPromoReward(reward) {
+            var parts = [];
+            reward = reward || {};
+
+            // Or
+            if (reward.gold && reward.gold > 0) {
+                stats.totalGold += reward.gold;
+                parts.push('💰 ' + reward.gold.toLocaleString());
+            }
+
+            // Cartes — support nouveau format (cards[]) et ancien (card)
+            var cardsToApply = [];
+            if (Array.isArray(reward.cards) && reward.cards.length) {
+                cardsToApply = reward.cards;
+            } else if (reward.card && reward.card.rarity && reward.card.name) {
+                cardsToApply = [reward.card]; // rétrocompat anciens codes
+            }
+
+            var mutLabels = { gold:'✨ ', diamond:'💎 ', rainbow:'🌈 ', chocolate:'💩 ', dark:'⚫ ' };
+
+            cardsToApply.forEach(function(cardReward) {
+                if (!cardReward || !cardReward.rarity || !cardReward.name) return;
+                var rk  = cardReward.key || (cardReward.rarity + '|' + cardReward.name);
+                var mut = cardReward.mutation || 'none';
+                var targetMap = unlockedCards;
+                if      (mut === 'gold')      targetMap = unlockedGoldCards;
+                else if (mut === 'diamond')   targetMap = unlockedDiamondCards;
+                else if (mut === 'rainbow')   targetMap = unlockedRainbowCards;
+                else if (mut === 'chocolate') targetMap = unlockedChocolateCards;
+                else if (mut === 'dark')      targetMap = unlockedDarkCards;
+
+                var isNewCard = !targetMap.has(rk);
+                if (isNewCard) {
+                    stats.totalCards++;
+                    if (mut === 'none') {
+                        var rar = cardReward.rarity;
+                        if (cardImages[rar] && !cardImages[rar].find(function(c){ return c.name === cardReward.name; })) {
+                            cardImages[rar].push({ name: cardReward.name, img: cardReward.img || '' });
+                        }
+                        if (rar === 'secret' && stats.secretsUnlocked && !stats.secretsUnlocked.has(rk)) {
+                            stats.secretsUnlocked.add(rk); stats.secretCount++;
+                        }
+                    }
+                    targetMap.set(rk, 0);
+                }
+                targetMap.set(rk, targetMap.get(rk) + 1);
+                parts.push('🎴 ' + (mutLabels[mut] || '') + cardReward.name);
+            });
+
+            // Rafraîchir l'affichage
+            var goldDisp = document.getElementById('totalGoldDisplay');
+            if (goldDisp) goldDisp.textContent = stats.totalGold.toLocaleString();
+            var sg = document.getElementById('shopGoldDisplay');
+            if (sg) sg.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
+            var cardsDisp = document.getElementById('totalCards');
+            if (cardsDisp) cardsDisp.textContent = stats.totalCards;
+            autoSave();
+
+            return parts.length ? parts.join(' + ') : 'Récompense appliquée';
+        }
+
+        // ── Affiche un message dans la boutique ────────────────────
+        function _promoShopStatus(msg, cls) {
+            var el = document.getElementById('promoCodeMsg');
+            if (!el) return;
+            el.textContent = msg;
+            el.className = 'shop-promo-msg' + (cls ? (' ' + cls) : '');
+            clearTimeout(el._t);
+            el._t = setTimeout(function(){ el.textContent = ''; el.className = 'shop-promo-msg'; }, 5000);
+        }
+
+        // ── Joueur : utiliser un code promo ─────────────────────────
+        // Transaction Firebase obligatoire : vérifie ET consomme le stock ET
+        // marque le joueur comme ayant utilisé ce code, en une seule opération
+        // atomique. Empêche toute duplication / double-utilisation / désync.
+        function redeemPromoCode() {
+            var input = document.getElementById('promoCodeInput');
+            var raw   = input ? input.value : '';
+            var code  = raw.trim().toUpperCase();
+            if (!code) { _promoShopStatus('⚠️ Entre un code promo', 'err'); return; }
+
+            if (!firebaseDB) { _promoShopStatus('⚠️ Connexion au serveur en cours, réessaie...', 'err'); return; }
+
+            var myPseudo = localStorage.getItem('tradePseudo') || '';
+            if (!myPseudo) { _promoShopStatus('⚠️ Pseudo introuvable, recharge la page.', 'err'); return; }
+            var safePlayer = encodeURIComponent(myPseudo).replace(/[.#$\/\[\]]/g, '_');
+            var sk = _promoKey(code);
+
+            var btn = document.getElementById('promoRedeemBtn');
+            if (btn) btn.disabled = true;
+
+            firebaseDB.ref('admin/promoCodes/' + sk).transaction(function(current) {
+                if (current === null) return;                 // abort — code inexistant
+                if (current.usedBy && current.usedBy[safePlayer]) return; // abort — déjà utilisé par ce joueur
+                var used = current.usedCount || 0;
+                var max  = current.maxUses || 0;
+                if (used >= max) return;                       // abort — stock épuisé
+                current.usedCount = used + 1;
+                if (!current.usedBy) current.usedBy = {};
+                current.usedBy[safePlayer] = Date.now();
+                return current;
+            }, function(error, committed, snapshot) {
+                if (btn) btn.disabled = false;
+                if (error) {
+                    _promoShopStatus('❌ Erreur réseau, réessaie.', 'err');
+                    return;
+                }
+                if (!committed) {
+                    // Déterminer la raison précise du refus pour informer le joueur
+                    firebaseDB.ref('admin/promoCodes/' + sk).once('value').then(function(s2) {
+                        var d = s2.val();
+                        if (!d) { _promoShopStatus('❌ Code invalide.', 'err'); return; }
+                        if (d.usedBy && d.usedBy[safePlayer]) { _promoShopStatus('⚠️ Tu as déjà utilisé ce code.', 'err'); return; }
+                        _promoShopStatus('❌ Ce code n\'a plus d\'utilisations disponibles.', 'err');
+                    }).catch(function(){ _promoShopStatus('❌ Code invalide ou épuisé.', 'err'); });
+                    return;
+                }
+                // Succès — appliquer la récompense
+                var d = snapshot.val();
+                var rewardMsg = _applyPromoReward(d ? d.reward : null);
+                _promoShopStatus('✅ Code activé ! ' + rewardMsg, 'ok');
+                playSound('epic');
+                if (input) input.value = '';
+            });
+        }
+
+        // ── Admin : construire le sélecteur de carte pour la récompense ──
+        // ── Admin : gestion des lignes de cartes (multi-cartes) ────
+        var _promoAdmCardRowCount = 0;
+
+        function promoAdmAddCardRow(cardKey, mutation) {
+            var container = document.getElementById('promoAdmCardsContainer');
+            if (!container) return;
+            var idx = _promoAdmCardRowCount++;
+            var row = document.createElement('div');
+            row.id = 'promoCardRow_' + idx;
+            row.style.cssText = 'display:flex;gap:5px;align-items:center;flex-wrap:wrap;background:rgba(0,0,0,0.2);border:1px solid rgba(0,255,200,0.12);border-radius:8px;padding:6px 8px;';
+            row.innerHTML =
+                '<div id="promoCardPickerWrap_' + idx + '" style="flex:1;min-width:130px;"></div>' +
+                '<select id="promoAdmMutation_' + idx + '" class="craft-adm-input" style="width:110px;">' +
+                    '<option value="none">Normal</option>' +
+                    '<option value="gold">✨ Gold</option>' +
+                    '<option value="diamond">💎 Diamant</option>' +
+                    '<option value="rainbow">🌈 Rainbow</option>' +
+                    '<option value="chocolate">💩 Caca</option>' +
+                    '<option value="dark">⚫ Dark</option>' +
+                '</select>' +
+                '<button type="button" onclick="promoAdmRemoveCardRow(' + idx + ')" style="background:none;border:none;color:rgba(231,76,60,0.7);font-size:1.1em;cursor:pointer;flex-shrink:0;padding:0 2px;">✕</button>';
+            container.appendChild(row);
+            // Injecter le picker de carte
+            var wrap = document.getElementById('promoCardPickerWrap_' + idx);
+            if (wrap) wrap.innerHTML = _buildCardSelect('promoAdmCard_' + idx, cardKey || '', 'width:100%;');
+            // Pré-sélectionner la mutation si fournie
+            if (mutation) {
+                var mutSel = document.getElementById('promoAdmMutation_' + idx);
+                if (mutSel) mutSel.value = mutation;
+            }
+        }
+
+        function promoAdmRemoveCardRow(idx) {
+            var row = document.getElementById('promoCardRow_' + idx);
+            if (row) row.remove();
+        }
+
+        function _promoAdmPopulateCardSelect(selectedKey) {
+            // Compat ancienne version — désormais géré par promoAdmAddCardRow
+        }
+
+        // ── Admin : créer ou mettre à jour un code promo ────────────
+        function promoAdmSave() {
+            if (!firebaseDB) { _promoAdmStatus('⚠️ Firebase non connecté'); return; }
+
+            var codeEl = document.getElementById('promoAdmCode');
+            var usesEl = document.getElementById('promoAdmUses');
+            var goldEl = document.getElementById('promoAdmGold');
+
+            var code    = codeEl ? codeEl.value.trim().toUpperCase() : '';
+            var maxUses = parseInt(usesEl ? usesEl.value : '') || 0;
+            var gold    = parseInt(goldEl ? goldEl.value : '') || 0;
+
+            if (!code)       { _promoAdmStatus('⚠️ Entre un nom de code'); return; }
+            if (maxUses < 1) { _promoAdmStatus('⚠️ Le nombre d\'utilisations doit être ≥ 1'); return; }
+
+            // Collecter toutes les lignes de cartes
+            var cards = [];
+            var container = document.getElementById('promoAdmCardsContainer');
+            if (container) {
+                var rows = container.querySelectorAll('[id^="promoCardRow_"]');
+                rows.forEach(function(row) {
+                    var idxMatch = row.id.match(/promoCardRow_(\d+)/);
+                    if (!idxMatch) return;
+                    var idx = idxMatch[1];
+                    var cardEl  = document.getElementById('promoAdmCard_' + idx);
+                    var mutEl   = document.getElementById('promoAdmMutation_' + idx);
+                    var cardKey = cardEl ? cardEl.value : '';
+                    var mutation = mutEl ? mutEl.value : 'none';
+                    if (!cardKey) return; // ligne vide ignorée
+                    var parts   = cardKey.split('|');
+                    var rar     = parts[0];
+                    var name    = parts.slice(1).join('|');
+                    var imgCard = (cardImages[rar] || []).find(function(c){ return c.name === name; });
+                    cards.push({ key: cardKey, rarity: rar, name: name, img: imgCard ? (imgCard.img || '') : '', mutation: mutation || 'none' });
+                });
+            }
+
+            if (gold <= 0 && !cards.length) { _promoAdmStatus('⚠️ Définis une récompense (or et/ou au moins une carte)'); return; }
+
+            var reward = {};
+            if (gold > 0)    reward.gold  = gold;
+            if (cards.length) reward.cards = cards;
+
+            var sk = _promoKey(code);
+            firebaseDB.ref('admin/promoCodes/' + sk).transaction(function(current) {
+                if (current === null) {
+                    return { code: code, reward: reward, maxUses: maxUses, usedCount: 0, usedBy: {} };
+                }
+                current.code    = code;
+                current.reward  = reward;
+                current.maxUses = maxUses;
+                if (!current.usedCount) current.usedCount = 0;
+                if (!current.usedBy)   current.usedBy = {};
+                return current;
+            }, function(error, committed) {
+                if (error || !committed) {
+                    _promoAdmStatus('❌ Erreur : ' + (error ? error.message : 'annulé'));
+                    return;
+                }
+                _promoAdmStatus('✅ Code "' + code + '" enregistré !');
+                if (codeEl) codeEl.value = '';
+                if (usesEl) usesEl.value = 100;
+                if (goldEl) goldEl.value = 0;
+                // Vider les lignes de cartes
+                if (container) container.innerHTML = '';
+                _promoAdmCardRowCount = 0;
+            });
+        }
+
+        // ── Admin : charger un code existant dans le formulaire ─────
+        function promoAdmEdit(sk) {
+            var e = _promoCodes[sk];
+            if (!e) return;
+            var codeEl = document.getElementById('promoAdmCode');
+            var usesEl = document.getElementById('promoAdmUses');
+            var goldEl = document.getElementById('promoAdmGold');
+            if (codeEl) codeEl.value = e.code || '';
+            if (usesEl) usesEl.value = e.maxUses || 1;
+            if (goldEl) goldEl.value = (e.reward && e.reward.gold) || 0;
+
+            // Vider les lignes existantes
+            var container = document.getElementById('promoAdmCardsContainer');
+            if (container) container.innerHTML = '';
+            _promoAdmCardRowCount = 0;
+
+            // Recharger les cartes — support ancien format (reward.card) et nouveau (reward.cards)
+            var cardsToLoad = [];
+            if (e.reward) {
+                if (Array.isArray(e.reward.cards) && e.reward.cards.length) {
+                    cardsToLoad = e.reward.cards;
+                } else if (e.reward.card) {
+                    cardsToLoad = [e.reward.card]; // rétrocompat
+                }
+            }
+            cardsToLoad.forEach(function(c) {
+                promoAdmAddCardRow(c.key || (c.rarity + '|' + c.name), c.mutation || 'none');
+            });
+
+            _promoAdmStatus('✏️ Édition de "' + (e.code || sk) + '" — modifie puis clique "Créer / Mettre à jour"');
+        }
+
+        // ── Admin : supprimer un code promo ──────────────────────────
+        function promoAdmDelete(sk) {
+            if (!firebaseDB) return;
+            var e = _promoCodes[sk];
+            if (!confirm('Supprimer le code promo "' + (e ? e.code : sk) + '" ?')) return;
+            firebaseDB.ref('admin/promoCodes/' + sk).remove()
+                .then(function(){ _promoAdmStatus('🗑 Code supprimé'); })
+                .catch(function(e){ _promoAdmStatus('❌ ' + e.message); });
+        }
+
+        // ── Admin : rendu de la liste des codes (temps réel) ─────────
+        function _promoAdmRender() {
+            var container = document.getElementById('promoAdmList');
+            if (!container) return;
+            var keys = Object.keys(_promoCodes);
+            if (!keys.length) {
+                container.innerHTML = '<div style="color:#333;font-size:0.75em;padding:6px 0;">Aucun code promo configuré.</div>';
+                return;
+            }
+            var mutLabels = { gold:'✨', diamond:'💎', rainbow:'🌈', chocolate:'💩', dark:'⚫' };
+            container.innerHTML = '';
+            keys.forEach(function(sk) {
+                var e = _promoCodes[sk];
+                if (!e) return;
+                var used = e.usedCount || 0;
+                var max  = e.maxUses  || 0;
+                var remaining = Math.max(0, max - used);
+
+                var rewardParts = [];
+                if (e.reward) {
+                    if (e.reward.gold) rewardParts.push('💰 ' + e.reward.gold.toLocaleString());
+                    // Nouveau format (cards[]) + rétrocompat (card)
+                    var cardsList = [];
+                    if (Array.isArray(e.reward.cards) && e.reward.cards.length) cardsList = e.reward.cards;
+                    else if (e.reward.card) cardsList = [e.reward.card];
+                    cardsList.forEach(function(c) {
+                        var mut = c.mutation || 'none';
+                        var pre = (mut !== 'none' && mutLabels[mut]) ? (mutLabels[mut] + ' ') : '';
+                        rewardParts.push('🎴 ' + pre + c.name);
+                    });
+                }
+                var rewardHtml = rewardParts.length ? rewardParts.join(' + ') : '<span style="color:#444;">aucune récompense</span>';
+
+                var row = document.createElement('div');
+                row.className = 'clim-adm-row';
+                row.style.borderColor = 'rgba(0,255,200,0.18)';
+                row.innerHTML =
+                    '<div class="clim-adm-info" style="flex:1;">' +
+                        '<div class="clim-adm-name" style="color:#00ffc8;">🎟️ ' + (e.code || sk) + '</div>' +
+                        '<div style="font-size:0.68em;color:#aaa;margin-top:2px;">' + rewardHtml + '</div>' +
+                    '</div>' +
+                    '<div class="clim-adm-stock" style="color:#00ffc8;">' +
+                        '<span style="font-size:1.0em;">' + remaining + ' / ' + max + '</span>' +
+                        '<span style="font-size:0.6em;display:block;color:#007766;">restant' + (remaining !== 1 ? 's' : '') + '</span>' +
+                    '</div>' +
+                    '<button onclick="promoAdmEdit(\'' + sk + '\')" style="background:rgba(0,200,255,0.08);border:1px solid rgba(0,200,255,0.3);border-radius:7px;color:#00c8ff;font-size:0.7em;padding:5px 9px;cursor:pointer;margin-right:4px;font-weight:900;white-space:nowrap;">✏️ Éditer</button>' +
+                    '<button class="clim-adm-del" onclick="promoAdmDelete(\'' + sk + '\')">🗑 Supprimer</button>';
+                container.appendChild(row);
+            });
+        }
+
+        function _promoAdmStatus(msg) {
+            var el = document.getElementById('promoAdmStatus');
+            if (!el) return;
+            el.textContent = msg;
+            clearTimeout(el._t);
+            el._t = setTimeout(function(){ el.textContent = ''; }, 4000);
+        }
+
+        // ═══ FIN CODES PROMO ═══
 
         createStars();
 
