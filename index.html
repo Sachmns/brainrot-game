@@ -2999,27 +2999,123 @@
         .shop-x10-btn:hover { border-color:#2ecc71; background:linear-gradient(180deg,#1f5a1f,#0f330f); transform:translateY(-1px); }
 
         /* ═══ CODE PROMO — BOUTIQUE ═══ */
+        /* Bouton carré flottant à droite (PC uniquement, quand la place le permet) */
         .shop-promo-box {
-            display:flex; justify-content:flex-end; margin: 8px 0 4px; position:relative;
+            position: fixed;
+            top: 50%;
+            right: 52px;
+            transform: translateY(-50%);
+            z-index: 4100;
         }
         .shop-promo-toggle {
-            display:flex; align-items:center; gap:6px;
-            background:linear-gradient(180deg,#00997a,#005a47); border:2px solid rgba(0,255,200,0.4);
-            border-radius:12px; color:#00ffc8; font-size:0.78em; font-weight:900; letter-spacing:1px;
-            padding:9px 14px; cursor:pointer; box-shadow:0 4px 0 #00271f; transition:all 0.2s;
-            font-family:'Arial Black',Arial,sans-serif; white-space:nowrap;
+            display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+            width:128px; height:128px;
+            background:linear-gradient(180deg,#00d4a8,#00997a 45%,#005a47); border:3px solid #00ffc8;
+            border-radius:22px; color:#fff; font-size:0.82em; font-weight:900; letter-spacing:1px;
+            padding:10px; cursor:pointer; transition:all 0.2s;
+            font-family:'Arial Black',Arial,sans-serif;
+            box-shadow:0 6px 0 #00271f, 0 0 0 rgba(0,255,200,0.6);
+            text-shadow:0 1px 3px rgba(0,0,0,0.5);
+            animation: promoBtnPulse 2s ease-in-out infinite;
         }
-        .shop-promo-toggle:hover  { transform:translateY(-1px); border-color:#00ffc8; }
-        .shop-promo-toggle:active { transform:translateY(1px); box-shadow:0 1px 0 #00271f; }
-        .shop-promo-popover {
-            position:absolute; top:calc(100% + 8px); right:0; z-index:40;
-            display:none; flex-direction:column; gap:8px;
-            background:rgba(0,20,16,0.97); border:1px solid rgba(0,255,200,0.3);
-            border-radius:14px; padding:12px; width:240px;
-            box-shadow:0 10px 30px rgba(0,0,0,0.6), 0 0 20px rgba(0,255,200,0.08);
+        .shop-promo-toggle:hover  { transform:translateY(-2px) scale(1.04); border-color:#fff; filter:brightness(1.1); }
+        .shop-promo-toggle:active { transform:translateY(2px) scale(0.98); box-shadow:0 2px 0 #00271f; }
+        .shop-promo-toggle-img {
+            width:60px; height:60px; object-fit:contain; border-radius:10px; flex-shrink:0;
+            filter:drop-shadow(0 0 6px rgba(0,255,200,0.6));
         }
-        .shop-promo-popover.open { display:flex; }
-        .shop-promo-popover-row { display:flex; gap:6px; align-items:center; }
+        #promoToggleEmoji { font-size:2.2em; line-height:1; }
+        @keyframes promoBtnPulse {
+            0%, 100% { box-shadow:0 6px 0 #00271f, 0 0 0px rgba(0,255,200,0.5); }
+            50%      { box-shadow:0 6px 0 #00271f, 0 0 26px rgba(0,255,200,0.85); }
+        }
+        /* Sous 1200px de large : pas assez de place à droite du contenu (max-width:960px)
+           → on repasse le bouton en haut de la boutique, format pilule normal */
+        @media (max-width: 1199px) {
+            .shop-promo-box {
+                position: static;
+                top: auto; right: auto; transform: none;
+                display:flex; justify-content:flex-end; margin: 10px 0 6px;
+            }
+            .shop-promo-toggle {
+                flex-direction: row; width: auto; height: auto;
+                padding: 14px 22px; border-radius: 16px; font-size: 0.98em; gap: 9px;
+            }
+            .shop-promo-toggle-img { width:26px; height:26px; border-radius:6px; }
+            #promoToggleEmoji { font-size: 1em; }
+        }
+
+        /* ═══ INTERFACE CODE PROMO — vraie modale centrée ═══ */
+        .promo-modal {
+            display: none;
+            position: fixed; inset: 0; z-index: 9500;
+            background: rgba(0,8,6,0.82);
+            backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .promo-modal.open { display: flex; }
+        .promo-modal-box {
+            width: 100%; max-width: 380px;
+            background: linear-gradient(160deg, #00251d 0%, #001310 100%);
+            border: 3px solid #00ffc8;
+            border-radius: 24px;
+            padding: 28px 26px 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 50px rgba(0,255,200,0.18);
+            position: relative;
+            animation: promoModalIn 0.25s cubic-bezier(0.18,0.89,0.32,1.28);
+        }
+        @keyframes promoModalIn {
+            from { opacity:0; transform:scale(0.88) translateY(10px); }
+            to   { opacity:1; transform:scale(1) translateY(0); }
+        }
+        .promo-modal-close {
+            position: absolute; top: 14px; right: 16px;
+            background: rgba(255,255,255,0.08); border: none;
+            color: #aef0e0; width: 30px; height: 30px; border-radius: 50%;
+            font-size: 1.1em; line-height: 1; cursor: pointer; transition: all 0.15s;
+        }
+        .promo-modal-close:hover { background: rgba(255,80,80,0.25); color: #fff; transform: rotate(90deg); }
+        .promo-modal-icon {
+            width: 64px; height: 64px; object-fit: contain; display: block; margin: 0 auto 8px;
+            filter: drop-shadow(0 0 10px rgba(0,255,200,0.5));
+        }
+        .promo-modal-emoji { font-size: 2.6em; text-align: center; display: block; margin-bottom: 6px; }
+        .promo-modal-title {
+            color: #fff; font-size: 1.25em; font-weight: 900; letter-spacing: 1px;
+            text-align: center; margin-bottom: 4px;
+            font-family: 'Arial Black', Arial, sans-serif;
+            text-shadow: 0 0 12px rgba(0,255,200,0.5);
+        }
+        .promo-modal-sub {
+            color: rgba(174,240,224,0.65); font-size: 0.78em; text-align: center;
+            margin-bottom: 20px; line-height: 1.4;
+        }
+        .promo-modal-input {
+            width: 100%; box-sizing: border-box;
+            background: rgba(0,0,0,0.45); border: 2px solid rgba(0,255,200,0.3);
+            border-radius: 12px; color: #fff; padding: 16px 14px; font-size: 1.1em;
+            font-weight: 900; letter-spacing: 3px; text-transform: uppercase; text-align: center;
+            outline: none; font-family: 'Arial Black', Arial, sans-serif;
+            transition: border-color 0.2s;
+        }
+        .promo-modal-input:focus { border-color: #00ffc8; }
+        .promo-modal-input::placeholder { color: rgba(255,255,255,0.22); letter-spacing: 1px; text-transform: none; font-weight: 400; }
+        .promo-modal-submit {
+            width: 100%; margin-top: 14px;
+            background: linear-gradient(180deg,#00d4a8,#00997a 50%,#005a47); border: 3px solid #00ffc8;
+            border-radius: 14px; color: #fff; font-size: 1em; font-weight: 900; letter-spacing: 1.5px;
+            padding: 15px; cursor: pointer; transition: all 0.2s;
+            font-family: 'Arial Black', Arial, sans-serif;
+            box-shadow: 0 5px 0 #00271f;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        .promo-modal-submit:hover  { transform: translateY(-2px); filter: brightness(1.1); }
+        .promo-modal-submit:active { transform: translateY(2px); box-shadow: 0 1px 0 #00271f; }
+        .promo-modal-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+        .promo-modal-msg { font-size: 0.78em; font-weight: 700; text-align: center; min-height: 18px; margin-top: 12px; }
+        .promo-modal-msg.ok  { color: #00ff88; }
+        .promo-modal-msg.err { color: #ff5555; }
         .shop-promo-input {
             flex:1; min-width:0; background:rgba(0,0,0,0.4); border:1px solid rgba(0,255,200,0.25);
             border-radius:10px; color:#fff; padding:10px 12px; font-size:0.85em;
@@ -7240,6 +7336,7 @@
                                 <option value="gold">💰 Double or</option>
                                 <option value="theme">🎨 Thème</option>
                                 <option value="miam">🍖 MIAM</option>
+                                <option value="reload">🔄 Rechargement forcé</option>
                             </select>
                         </div>
 
@@ -7318,6 +7415,13 @@
                             <span style="color:#aaa;font-size:0.72em;align-self:center;">min</span>
                             <input class="admin-input" type="number" id="schedMiamSec" value="0" min="0" max="59" style="max-width:60px;">
                             <span style="color:#aaa;font-size:0.72em;align-self:center;">sec</span>
+                        </div>
+
+                        <!-- Paramètres Rechargement forcé -->
+                        <div id="schedParamsReload" style="margin-bottom:8px;display:none;">
+                            <div style="color:#cc88ff;font-size:0.68em;background:rgba(180,80,255,0.08);border:1px solid rgba(180,80,255,0.25);border-radius:10px;padding:8px 10px;">
+                                🔄 Force le rechargement de la page pour tous les joueurs connectés à l'heure programmée. Aucun réglage supplémentaire nécessaire.
+                            </div>
                         </div>
 
                         <!-- Date/heure de déclenchement -->
@@ -7860,13 +7964,23 @@
 
             <!-- Code promo -->
             <div class="shop-promo-box">
-                <button id="promoToggleBtn" class="shop-promo-toggle" onclick="togglePromoPopover()">🎟️ Code promo</button>
-                <div class="shop-promo-popover" id="promoPopover">
-                    <div class="shop-promo-popover-row">
-                        <input id="promoCodeInput" class="shop-promo-input" type="text" placeholder="Code promo" maxlength="24" autocomplete="off" onkeydown="if(event.key==='Enter'){ event.preventDefault(); redeemPromoCode(); }">
-                        <button id="promoRedeemBtn" class="shop-promo-btn" onclick="redeemPromoCode()">Valider</button>
-                    </div>
-                    <div class="shop-promo-msg" id="promoCodeMsg"></div>
+                <button id="promoToggleBtn" class="shop-promo-toggle" onclick="openPromoModal()">
+                    <img id="promoToggleImg" class="shop-promo-toggle-img" src="" alt="" style="display:none;" onerror="this.style.display='none';document.getElementById('promoToggleEmoji').style.display='inline';">
+                    <span id="promoToggleEmoji">🎟️</span> Code promo
+                </button>
+            </div>
+
+            <!-- Interface code promo — vraie modale centrée -->
+            <div class="promo-modal" id="promoModal" onclick="if(event.target===this) closePromoModal();">
+                <div class="promo-modal-box">
+                    <button class="promo-modal-close" onclick="closePromoModal()" aria-label="Fermer">✕</button>
+                    <img id="promoModalImg" class="promo-modal-icon" src="" alt="" style="display:none;" onerror="this.style.display='none';document.getElementById('promoModalEmoji').style.display='block';">
+                    <span id="promoModalEmoji" class="promo-modal-emoji">🎟️</span>
+                    <div class="promo-modal-title">Code promo</div>
+                    <div class="promo-modal-sub">Entre ton code ci-dessous pour débloquer ta récompense</div>
+                    <input id="promoCodeInput" class="promo-modal-input" type="text" placeholder="ENTRE TON CODE" maxlength="24" autocomplete="off" onkeydown="if(event.key==='Enter'){ event.preventDefault(); redeemPromoCode(); }">
+                    <button id="promoRedeemBtn" class="promo-modal-submit" onclick="redeemPromoCode()">✨ Valider le code</button>
+                    <div class="promo-modal-msg" id="promoCodeMsg"></div>
                 </div>
             </div>
 
@@ -8067,13 +8181,40 @@
         // Fonction son (stub - aucun son défini dans ce projet)
         function playSound(name) { /* pas de sons */ }
 
+        // ═══ IMAGE DU BOUTON "CODE PROMO" ═══
+        // Mets ici l'URL d'une image (PNG/JPG/GIF/WEBP) pour remplacer l'icône 🎟️.
+        // Laisse '' (vide) pour garder l'emoji par défaut.
+        // Exemple : const PROMO_BUTTON_IMAGE_URL = 'https://i.imgur.com/exemple.png';
+        const PROMO_BUTTON_IMAGE_URL = 'https://tr.rbxcdn.com/180DAY-9143c55b4686e78aa1df27838d2b3b1e/420/420/Image/Webp/noFilter';
+
+        (function _applyPromoButtonImage() {
+            if (!PROMO_BUTTON_IMAGE_URL) return;
+            document.addEventListener('DOMContentLoaded', function() {
+                var img = document.getElementById('promoToggleImg');
+                var emoji = document.getElementById('promoToggleEmoji');
+                if (img) {
+                    img.src = PROMO_BUTTON_IMAGE_URL;
+                    img.style.display = 'inline-block';
+                    if (emoji) emoji.style.display = 'none';
+                }
+                // Appliquer aussi la même image dans la modale d'interface
+                var modalImg = document.getElementById('promoModalImg');
+                var modalEmoji = document.getElementById('promoModalEmoji');
+                if (modalImg) {
+                    modalImg.src = PROMO_BUTTON_IMAGE_URL;
+                    modalImg.style.display = 'block';
+                    if (modalEmoji) modalEmoji.style.display = 'none';
+                }
+            });
+        })();
+
         // Images des cartes Clash Royale (API officielle)
         const cardImages = {
             common: [
                 { name: 'Noobini Pizzanini', img: 'https://static.wikia.nocookie.net/stealabr/images/8/83/Noobini_Pizzanini_NEW.png/revision/latest/scale-to-width-down/150?cb=20251125141732' },
                 { name: 'Tim cheese', img: 'https://static.wikia.nocookie.net/stealabr/images/1/11/Tim_Cheese.png/revision/latest/scale-to-width-down/80?cb=20250729184731' },
                 { name: 'Fruliflura', img: 'https://static.wikia.nocookie.net/stealabr/images/7/77/Fluriflura.png/revision/latest/scale-to-width-down/107?cb=20250729184916' },
-                { name: 'Lirili larila', img: 'https://static.wikia.nocookie.net/stealabr/images/c/c8/Liliri_Lalira.png/revision/latest/scale-to-width-down/150?cb=20250729184448' },
+                { name: 'Lirili larila', img: 'https://static.wikia.nocookie.net/stealabr/images/0/0f/Liril%C3%AC_Laril%C3%A0.png/revision/latest?cb=20260610102655' },
                 { name: 'Talpa Di Fero', img: 'https://static.wikia.nocookie.net/stealabr/images/b/b1/Talpa_Di_Fero.png/revision/latest/scale-to-width-down/120?cb=20250729185233' },
                 { name: 'Svinina Bombardino', img: 'https://static.wikia.nocookie.net/stealabr/images/2/26/Homicidio_doloso.png/revision/latest/scale-to-width-down/150?cb=20250729225915' },
                 { name: 'Pipi Kiwi', img: 'https://static.wikia.nocookie.net/stealabr/images/9/92/Pipi_Kiwi.png/revision/latest/scale-to-width-down/134?cb=20251023015503' },
@@ -8281,7 +8422,7 @@
                 { name: 'Cola Cat', img: 'https://static.wikia.nocookie.net/stealabr/images/2/2e/Cola_Cat.png/revision/latest/scale-to-width-down/150?cb=20260412145705' },
                 { name: 'Tenini Ballini', img: 'https://static.wikia.nocookie.net/stealabr/images/4/45/Tenini_Ballini.png/revision/latest/scale-to-width-down/150?cb=20260412145413' },
                 { name: 'Robo Grafito', img: 'https://static.wikia.nocookie.net/stealabr/images/f/f5/Robo_Grafito.png/revision/latest/scale-to-width-down/150?cb=20260510004744' },
-                { name: 'Tortugini Sandcastlini', img: 'https://static.wikia.nocookie.net/stealabr/images/e/ee/Tortuginni_Sandcastlini.png/revision/latest/scale-to-width-down/268?cb=20260613232102' },
+                { name: 'Tortuginni Sandcastlini', img: 'https://static.wikia.nocookie.net/stealabr/images/e/ee/Tortuginni_Sandcastlini.png/revision/latest/scale-to-width-down/268?cb=20260613232102' },
                 { name: 'Lemonita Splashita', img: 'https://static.wikia.nocookie.net/stealabr/images/3/35/Lemon.png/revision/latest/scale-to-width-down/268?cb=20260524045204' },
                 { name: 'Flippo Marino', img: 'https://static.wikia.nocookie.net/stealabr/images/0/01/Flippo_Marino.png/revision/latest/scale-to-width-down/268?cb=20260523235027' }
             ],
@@ -8529,17 +8670,18 @@
                 { name: 'Dragon Aquanini', img: 'https://static.wikia.nocookie.net/stealabr/images/2/2f/Dragon_aquanini2.png/revision/latest/scale-to-width-down/150?cb=20260603100501' },
                 { name: 'Caylusaurus', img: 'https://static.wikia.nocookie.net/stealabr/images/e/e7/Dragon_Caylusini.png/revision/latest/scale-to-width-down/268?cb=20260606223127' },
                 { name: 'Craburger', img: 'https://static.wikia.nocookie.net/stealabr/images/2/26/Craburger.png/revision/latest/scale-to-width-down/268?cb=20260613212354' },
-                { name: 'Rocketini Frostini', img: 'https://www.eldorado.gg/blog/wp-content/uploads/2026/06/Rocketini-Frostini-145x300.webp' },
+                { name: 'Rocketini Frostini', img: 'https://static.wikia.nocookie.net/stealabr/images/8/83/Rocketini_Frostini.png/revision/latest/thumbnail/width/360/height/360?cb=20260616042210' },
                 { name: 'Octoball', img: 'https://xstealabrainrot.com/wp-content/uploads/2026/06/Captura_de_tela_2026-06-13_161016-removebg-preview-300x199.png' },
                 { name: 'Sushi Inu', img: 'https://www.eldorado.gg/blog/wp-content/uploads/2026/06/Sushi-Inu-235x300.webp' },
                 { name: 'Girafini Raftini', img: 'https://www.eldorado.gg/blog/wp-content/uploads/2026/06/Girafini-Raftini-e1781461533478-300x300.webp' },
                 { name: 'Frullato Framingo', img: 'https://static.wikia.nocookie.net/stealabr/images/1/1c/Frullato_Framingo.png/revision/latest/scale-to-width-down/189?cb=20260614133645' },
-                { name: 'Los Fruits', img: 'https://www.eldorado.gg/blog/wp-content/uploads/2026/06/Los-Fruits-300x269.webp' },
+                { name: 'Los Fruits', img: 'https://static.wikia.nocookie.net/stealabr/images/d/dc/Los_Fruits.png/revision/latest?cb=20260616235111' },
                 { name: 'Sand Sand Sand', img: 'https://static.wikia.nocookie.net/stealabr/images/8/8d/Sand_Sand_Sand.png/revision/latest/scale-to-width-down/268?cb=20260613205827' },
                 { name: 'Bearito Cabinito', img: 'https://static.wikia.nocookie.net/stealabr/images/2/2c/Bearo_Houso.png/revision/latest/scale-to-width-down/268?cb=20260611230420' },
                 { name: 'Venuspino', img: 'https://static.wikia.nocookie.net/stealabr/images/0/0c/Venuspino.png/revision/latest/scale-to-width-down/268?cb=20260613211003' },
                 { name: 'Kraken', img: 'https://static.wikia.nocookie.net/stealabr/images/d/d3/Kraken.png/revision/latest/scale-to-width-down/268?cb=20260612230508' },
-                { name: 'Chicleteira Boardeira', img: 'https://static.wikia.nocookie.net/stealabr/images/9/90/Chicleteira_Boardeira.png/revision/latest/scale-to-width-down/268?cb=20260611230434' }
+                { name: 'Chicleteira Boardeira', img: 'https://static.wikia.nocookie.net/stealabr/images/2/25/Chicleteira_Surfeiteira.png/revision/latest/scale-to-width-down/1200?cb=20260620233922' },
+                { name: 'La Summer Grande', img: 'https://static.wikia.nocookie.net/stealabr/images/7/7d/La_Summer_Grande.png/revision/latest/scale-to-width-down/268?cb=20260620231507' }
              ],
               og: [
                 { name: "Strawberry Elephant", img: 'https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest/scale-to-width-down/144?cb=20250830235735' },
@@ -9163,7 +9305,7 @@
 
                     // Notification carte rare pour tous les joueurs connectés (avant tout return)
                     if (_RARE_ALERT_RARITIES.has(reward.rarity)) {
-                        const _mut = reward.isRainbow ? 'rainbow' : reward.isDiamond ? 'diamond' : reward.isGold ? 'gold' : 'normal';
+                        const _mut = reward.isRainbow ? 'rainbow' : reward.isDiamond ? 'diamond' : reward.isGold ? 'gold' : reward.isChocolate ? 'chocolate' : reward.isDark ? 'dark' : 'normal';
                         broadcastRareCard(reward.name, reward.rarity, _mut);
                     }
 
@@ -9535,7 +9677,7 @@
             autoSave();
 
             // Notification carte rare pour tous les joueurs connectés
-            const _buyMut = isRainbow ? 'rainbow' : isDiamond ? 'diamond' : isGold ? 'gold' : 'normal';
+            const _buyMut = isRainbow ? 'rainbow' : isDiamond ? 'diamond' : isGold ? 'gold' : isChocolate ? 'chocolate' : isDark ? 'dark' : 'normal';
             broadcastRareCard(card.name, rarity, _buyMut);
 
             // Hook quêtes d'achat
@@ -11755,7 +11897,7 @@
         const _RARE_ALERT_RARITIES = new Set(['og','limited','no','admin_exclusive']);
         const _RARE_ALERT_ICONS    = { og:'⭐', limited:'💎', no:'❤', admin_exclusive:'⚡' };
         const _RARE_ALERT_COLORS   = { og:'#ffd700', limited:'#ff59e7', no:'#ff4444', admin_exclusive:'#ff0040' };
-        const _MUT_LABELS          = { gold:'✨ GOLD', diamond:'💎 DIAMANT', rainbow:'🌈 RAINBOW', normal:'Normal' };
+        const _MUT_LABELS          = { gold:'✨ GOLD', diamond:'💎 DIAMANT', rainbow:'🌈 RAINBOW', chocolate:'💩 CACA', dark:'⚫ DARK', normal:'Normal' };
         let _lastRareAlertTs = 0;
 
         function showRareAlert(pseudo, cardName, rarity, mutation, ts) {
@@ -14019,7 +14161,7 @@
 
         // Label par défaut selon le type d'événement
         function _schedTypeLabel(type) {
-            return { luck:'🍀 CHANCE', gold:'💰 DOUBLE OR', theme:'🎨 NOUVEL ÉVÉNEMENT', miam:'🍖 MIAM' }[type] || '🎮 ÉVÉNEMENT';
+            return { luck:'🍀 CHANCE', gold:'💰 DOUBLE OR', theme:'🎨 NOUVEL ÉVÉNEMENT', miam:'🍖 MIAM', reload:'🔄 RECHARGEMENT FORCÉ' }[type] || '🎮 ÉVÉNEMENT';
         }
 
         // ── Repositionner les 3 bandeaux sans chevauchement ─────────
@@ -14183,15 +14325,18 @@
                         ts: Date.now()
                     }).catch(() => {});
                 }
+            } else if (ev.type === 'reload') {
+                firebaseDB.ref('admin/forceReload').set({ ts: Date.now() }).catch(() => {});
             }
         }
 
         function schedTypeChange() {
             const type = document.getElementById('schedType').value;
-            document.getElementById('schedParamsLuck').style.display  = type === 'luck'  ? 'flex' : 'none';
-            document.getElementById('schedParamsGold').style.display  = type === 'gold'  ? 'flex' : 'none';
-            document.getElementById('schedParamsTheme').style.display = type === 'theme' ? 'block': 'none';
-            document.getElementById('schedParamsMiam').style.display  = type === 'miam'  ? 'flex' : 'none';
+            document.getElementById('schedParamsLuck').style.display   = type === 'luck'   ? 'flex' : 'none';
+            document.getElementById('schedParamsGold').style.display   = type === 'gold'   ? 'flex' : 'none';
+            document.getElementById('schedParamsTheme').style.display  = type === 'theme'  ? 'block': 'none';
+            document.getElementById('schedParamsMiam').style.display   = type === 'miam'   ? 'flex' : 'none';
+            document.getElementById('schedParamsReload').style.display = type === 'reload' ? 'block': 'none';
         }
 
         // Toggle affichage des paramètres de compte à rebours
@@ -14230,6 +14375,8 @@
                 ev.miamMin = parseInt(document.getElementById('schedMiamMin').value) || 10;
                 ev.miamSec = parseInt(document.getElementById('schedMiamSec').value) || 0;
                 if ((ev.miamMin * 60 + ev.miamSec) <= 0) { _schedStatus('⚠️ Durée MIAM manquante'); return; }
+            } else if (type === 'reload') {
+                // Aucun paramètre supplémentaire nécessaire pour le rechargement forcé
             }
 
             // Compte à rebours optionnel
@@ -14290,7 +14437,7 @@
                 return;
             }
 
-            const TYPE_LABELS = { luck:'🍀 Chance', gold:'💰 Double or', theme:'🎨 Thème', miam:'🍖 MIAM' };
+            const TYPE_LABELS = { luck:'🍀 Chance', gold:'💰 Double or', theme:'🎨 Thème', miam:'🍖 MIAM', reload:'🔄 Rechargement forcé' };
             const THEME_LABELS = { '':'Défaut', 'saint-patrick':'Saint Patrick', 'printemps':'Printemps',
                 'minecraft':'Minecraft', 'unchained':'Unchained', 'inazuma':'Inazuma Eleven',
                 'or':'Or', 'diamant':'Diamant', 'rainbow':'Rainbow', 'paques':'Pâques',
@@ -14324,6 +14471,8 @@
                     detail = THEME_LABELS[ev.themeId || ''] || ev.themeId || 'Défaut';
                 } else if (ev.type === 'miam') {
                     detail = 'pendant ' + (ev.miamMin || 0) + 'min ' + (ev.miamSec || 0) + 's';
+                } else if (ev.type === 'reload') {
+                    detail = 'Recharge la page de tous les joueurs';
                 }
 
                 // Date/heure formatée
@@ -18349,30 +18498,32 @@
             var el = document.getElementById('promoCodeMsg');
             if (!el) return;
             el.textContent = msg;
-            el.className = 'shop-promo-msg' + (cls ? (' ' + cls) : '');
+            el.className = 'promo-modal-msg' + (cls ? (' ' + cls) : '');
             clearTimeout(el._t);
             el._t = setTimeout(function(){ el.textContent = ''; el.className = 'shop-promo-msg'; }, 5000);
         }
 
         // ── Joueur : afficher/masquer le popover de saisie du code promo ──
-        function togglePromoPopover() {
-            var pop = document.getElementById('promoPopover');
-            if (!pop) return;
-            var willOpen = !pop.classList.contains('open');
-            pop.classList.toggle('open', willOpen);
-            if (willOpen) {
-                var input = document.getElementById('promoCodeInput');
-                if (input) setTimeout(function(){ input.focus(); }, 0);
+        // ── Ouvrir / fermer l'interface code promo (vraie modale) ──
+        function openPromoModal() {
+            var modal = document.getElementById('promoModal');
+            if (!modal) return;
+            modal.classList.add('open');
+            var input = document.getElementById('promoCodeInput');
+            if (input) {
+                input.value = '';
+                setTimeout(function(){ input.focus(); }, 50);
             }
+            var msg = document.getElementById('promoCodeMsg');
+            if (msg) { msg.textContent = ''; msg.className = 'promo-modal-msg'; }
         }
-        // Fermer le popover si on clique en dehors
-        document.addEventListener('click', function(e) {
-            var pop = document.getElementById('promoPopover');
-            var box = document.querySelector('.shop-promo-box');
-            if (!pop || !box) return;
-            if (pop.classList.contains('open') && !box.contains(e.target)) {
-                pop.classList.remove('open');
-            }
+        function closePromoModal() {
+            var modal = document.getElementById('promoModal');
+            if (modal) modal.classList.remove('open');
+        }
+        // Fermer avec la touche Échap
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closePromoModal();
         });
 
         // ── Joueur : utiliser un code promo ─────────────────────────
