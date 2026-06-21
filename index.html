@@ -212,92 +212,403 @@
 
         /* ── Thème Inazuma Eleven ── */
         body.theme-inazuma {
-            --theme-bg-from:     #ffed62;
-            --theme-bg-to:       #feb833;
-            --theme-header-from: #003a8c;
-            --theme-header-to:   #001850;
-            --theme-border:      #006cb5;
-            --theme-accent:      #33ccff;
-            --theme-particle:    #66ddff;
-            --theme-glow:        rgba(0,170,255,0.45);
+            --theme-bg-from:     #ffd23f;
+            --theme-bg-to:       #ff8c1a;
+            --theme-header-from: #002a6e;
+            --theme-header-to:   #000d24;
+            --theme-border:      #00d4ff;
+            --theme-accent:      #00eaff;
+            --theme-particle:    #7df3ff;
+            --theme-glow:        rgba(0,212,255,0.55);
         }
         body.theme-inazuma header {
-            animation: ieGlowPulse 2s ease-in-out infinite;
-            border-bottom-color: #00aaff !important;
+            animation: ieGlowPulse 2.2s ease-in-out infinite;
+            border-bottom: 3px solid #00eaff !important;
+            background: linear-gradient(180deg, #003a8c 0%, #001233 60%, #000814 100%) !important;
+            position: relative;
+            overflow: hidden;
+        }
+        body.theme-inazuma header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(115deg, rgba(255,215,0,0.07) 0px, rgba(255,215,0,0.07) 2px, transparent 2px, transparent 26px);
+            pointer-events: none;
+            animation: ieStripeSlide 6s linear infinite;
+        }
+        @keyframes ieStripeSlide {
+            0%   { background-position: 0 0; }
+            100% { background-position: 300px 0; }
         }
         @keyframes ieGlowPulse {
             0%,100% {
-                box-shadow: 0 4px 20px rgba(0,0,0,0.8),
-                            0 0 30px rgba(0,170,255,0.4),
+                box-shadow: 0 4px 24px rgba(0,0,0,0.85),
+                            0 0 35px rgba(0,212,255,0.45),
                             0 0 0px rgba(255,215,0,0);
             }
             50% {
-                box-shadow: 0 4px 20px rgba(0,0,0,0.8),
-                            0 0 70px rgba(0,170,255,0.8),
-                            0 0 120px rgba(0,100,255,0.3),
-                            0 0 50px rgba(255,215,0,0.15);
+                box-shadow: 0 4px 24px rgba(0,0,0,0.85),
+                            0 0 85px rgba(0,234,255,0.9),
+                            0 0 150px rgba(0,140,255,0.4),
+                            0 0 60px rgba(255,215,0,0.25);
             }
         }
         body.theme-inazuma .chest-main {
-            border-color: #00aaff !important;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.8),
-                        0 0 40px rgba(0,170,255,0.5),
-                        0 0 80px rgba(0,100,255,0.2) !important;
+            border-color: #00eaff !important;
+            background: linear-gradient(160deg, rgba(0,40,90,0.4), rgba(0,10,25,0.6)) !important;
+            box-shadow: 0 18px 50px rgba(0,0,0,0.85),
+                        0 0 55px rgba(0,212,255,0.6),
+                        0 0 110px rgba(0,120,255,0.3),
+                        inset 0 0 40px rgba(0,200,255,0.08) !important;
+            animation: ieChestFloat 3.5s ease-in-out infinite;
+            overflow: visible !important;
+        }
+        @keyframes ieChestFloat {
+            0%,100% { transform: translateY(0); }
+            50%     { transform: translateY(-6px); }
         }
         body.theme-inazuma .stat-card {
-            border-color: rgba(0,170,255,0.5) !important;
-            background: linear-gradient(145deg, #001f4d 0%, #000c2a 100%) !important;
-            box-shadow: 0 0 15px rgba(0,170,255,0.15), 0 4px 0 rgba(0,0,0,0.6) !important;
+            border-color: rgba(0,234,255,0.55) !important;
+            background: linear-gradient(145deg, #002a6e 0%, #000814 100%) !important;
+            box-shadow: 0 0 18px rgba(0,212,255,0.25), 0 4px 0 rgba(0,0,0,0.6) !important;
         }
         body.theme-inazuma .open-btn {
-            background: linear-gradient(180deg, #33ccff 0%, #0055aa 100%) !important;
-            color: #000c1a !important;
-            border: 3px solid #80e8ff !important;
-            box-shadow: 0 8px 30px rgba(0,170,255,0.8), 0 0 50px rgba(0,100,255,0.3) !important;
+            background: linear-gradient(180deg, #ffd700 0%, #ff8c1a 45%, #00aaff 100%) !important;
+            color: #001233 !important;
+            border: 3px solid #fff6d0 !important;
+            box-shadow: 0 10px 35px rgba(0,212,255,0.7), 0 0 60px rgba(255,200,0,0.4) !important;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.4) !important;
+            animation: ieBtnShine 2.5s linear infinite;
+            background-size: 200% 200% !important;
+        }
+        @keyframes ieBtnShine {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         body.theme-inazuma h1 {
-            color: #80e8ff !important;
+            background: linear-gradient(180deg, #fff9d6 0%, #ffd700 35%, #00eaff 75%, #0090ff 100%) !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
             text-shadow:
-                3px 3px 0 #001a4d,
-                -1px -1px 0 #001a4d,
-                1px -1px 0 #001a4d,
-                -1px 1px 0 #001a4d,
-                0 0 30px rgba(0,170,255,0.9),
-                0 0 60px rgba(0,120,255,0.5),
-                0 0 6px rgba(255,215,0,0.3) !important;
+                0 0 30px rgba(0,212,255,0.9),
+                0 0 60px rgba(0,140,255,0.5),
+                0 0 14px rgba(255,215,0,0.5) !important;
+            animation: ieTitleGlow 2.5s ease-in-out infinite;
+            filter: drop-shadow(2px 3px 0 #001233);
+        }
+        @keyframes ieTitleGlow {
+            0%,100% { filter: drop-shadow(2px 3px 0 #001233) drop-shadow(0 0 6px rgba(0,212,255,0.4)); }
+            50%      { filter: drop-shadow(2px 3px 0 #001233) drop-shadow(0 0 22px rgba(0,234,255,0.9)); }
         }
         body.theme-inazuma .subtitle {
-            color: #33ccff !important;
-            text-shadow: 0 0 15px rgba(0,170,255,0.8) !important;
+            color: #7df3ff !important;
+            text-shadow: 0 0 18px rgba(0,212,255,0.9), 0 0 6px rgba(255,215,0,0.4) !important;
+            letter-spacing: 1px !important;
         }
-        /* Éclairs dorés animés en arrière-plan */
+        /* Éclairs dorés animés en arrière-plan, façon "super shot" */
         @keyframes ieBolt {
             0%   { opacity: 0; transform: scaleY(0) rotate(var(--r)); }
             10%  { opacity: 1; transform: scaleY(1) rotate(var(--r)); }
-            30%  { opacity: 0.6; }
+            30%  { opacity: 0.7; }
             50%  { opacity: 0; transform: scaleY(1) rotate(var(--r)); }
             100% { opacity: 0; }
         }
         .theme-inazuma-bolt {
             position: absolute;
-            width: 2px;
-            border-radius: 2px;
-            background: linear-gradient(180deg, transparent, #ffd700, #fffde0, #ffd700, transparent);
+            width: 3px;
+            border-radius: 3px;
+            background: linear-gradient(180deg, transparent, #00eaff, #fffde0, #ffd700, transparent);
             pointer-events: none;
             animation: ieBolt var(--dur) ease-out infinite;
             animation-delay: var(--delay);
-            box-shadow: 0 0 8px #ffd700, 0 0 16px rgba(255,215,0,0.5);
+            box-shadow: 0 0 10px #00eaff, 0 0 22px rgba(255,215,0,0.6), 0 0 36px rgba(0,170,255,0.4);
+        }
+        /* Anneau d'énergie façon "frappe spéciale", apparaît derrière le coffre */
+        @keyframes ieRingPulse {
+            0%   { transform: translate(-50%,-50%) scale(0.4); opacity: 0.9; }
+            100% { transform: translate(-50%,-50%) scale(2.6); opacity: 0; }
+        }
+        .theme-inazuma-ring {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            border: 3px solid rgba(0,234,255,0.6);
+            box-shadow: 0 0 25px rgba(0,212,255,0.5), inset 0 0 25px rgba(255,215,0,0.2);
+            pointer-events: none;
+            animation: ieRingPulse 2.4s ease-out infinite;
+            animation-delay: var(--ring-delay);
+            z-index: 0;
         }
         .theme-banner.inazuma {
-            background: linear-gradient(90deg, #000814, #001850, #003a8c, #00aaff, #33ccff, #00aaff, #003a8c, #001850, #000814);
+            background: linear-gradient(90deg, #000814, #002a6e, #0066cc, #00eaff, #ffd700, #00eaff, #0066cc, #002a6e, #000814);
             background-size: 300% 100%;
-            color: #e0f8ff;
-            box-shadow: 0 4px 30px rgba(0,170,255,0.9), 0 0 60px rgba(0,100,255,0.4);
+            color: #fff9d6;
+            box-shadow: 0 4px 35px rgba(0,212,255,0.9), 0 0 70px rgba(0,140,255,0.45);
             animation: bannerShift 3s linear infinite;
-            text-shadow: 0 0 20px rgba(100,220,255,1), 0 0 40px rgba(0,170,255,0.7);
+            text-shadow: 0 0 22px rgba(255,255,255,0.9), 0 0 45px rgba(0,212,255,0.8);
             letter-spacing: 5px;
-            border-bottom: 3px solid #00aaff;
+            border-bottom: 3px solid #00eaff;
             font-style: italic;
+            font-weight: 900;
+        }
+
+        /* ── Thème PC Gaming ── */
+        body.theme-pc {
+            --theme-bg-from:     #1a0030;
+            --theme-bg-to:       #050010;
+            --theme-header-from: #1a0a2e;
+            --theme-header-to:   #05000d;
+            --theme-border:      #ff00e6;
+            --theme-accent:      #00ffea;
+            --theme-particle:    #ff00e6;
+            --theme-glow:        rgba(0,255,234,0.6);
+        }
+        body.theme-pc header {
+            animation: pcRgbCycle 4s linear infinite;
+            border-bottom: 3px solid #00ffea !important;
+        }
+        @keyframes pcRgbCycle {
+            0%   { box-shadow: 0 4px 24px rgba(0,0,0,0.8), 0 0 40px rgba(255,0,230,0.7); border-bottom-color: #ff00e6; }
+            25%  { box-shadow: 0 4px 24px rgba(0,0,0,0.8), 0 0 40px rgba(0,255,234,0.7); border-bottom-color: #00ffea; }
+            50%  { box-shadow: 0 4px 24px rgba(0,0,0,0.8), 0 0 40px rgba(120,0,255,0.7); border-bottom-color: #7800ff; }
+            75%  { box-shadow: 0 4px 24px rgba(0,0,0,0.8), 0 0 40px rgba(0,255,90,0.7); border-bottom-color: #00ff5a; }
+            100% { box-shadow: 0 4px 24px rgba(0,0,0,0.8), 0 0 40px rgba(255,0,230,0.7); border-bottom-color: #ff00e6; }
+        }
+        body.theme-pc .chest-main {
+            border-color: #00ffea !important;
+            background: linear-gradient(160deg, #160024 0%, #03000a 100%) !important;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.85), 0 0 50px rgba(255,0,230,0.4), 0 0 90px rgba(0,255,234,0.25) !important;
+            animation: pcChestRgb 5s linear infinite;
+        }
+        @keyframes pcChestRgb {
+            0%,100% { border-color: #00ffea; }
+            25%     { border-color: #ff00e6; }
+            50%     { border-color: #7800ff; }
+            75%     { border-color: #00ff5a; }
+        }
+        body.theme-pc .stat-card {
+            border-color: rgba(0,255,234,0.5) !important;
+            background: linear-gradient(145deg, #160024 0%, #03000a 100%) !important;
+            box-shadow: 0 0 18px rgba(255,0,230,0.25), 0 4px 0 rgba(0,0,0,0.6) !important;
+        }
+        body.theme-pc .open-btn {
+            background: linear-gradient(90deg, #ff00e6, #00ffea, #7800ff, #ff00e6) !important;
+            background-size: 300% 100% !important;
+            animation: pcBtnRgb 3s linear infinite !important;
+            color: #050010 !important;
+            border: 3px solid #fff !important;
+            box-shadow: 0 8px 30px rgba(0,255,234,0.6), 0 0 50px rgba(255,0,230,0.4) !important;
+            font-weight: 900 !important;
+        }
+        @keyframes pcBtnRgb {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+        body.theme-pc h1 {
+            background: linear-gradient(90deg, #ff00e6, #00ffea, #7800ff, #00ff5a, #ff00e6) !important;
+            background-size: 300% 100% !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            animation: pcBtnRgb 3s linear infinite !important;
+            text-shadow: none !important;
+            filter: drop-shadow(0 0 18px rgba(0,255,234,0.6)) drop-shadow(0 0 8px rgba(255,0,230,0.5)) !important;
+        }
+        body.theme-pc .subtitle {
+            color: #00ffea !important;
+            text-shadow: 0 0 14px rgba(0,255,234,0.8), 0 0 6px rgba(255,0,230,0.5) !important;
+            letter-spacing: 2px !important;
+        }
+        /* "LEDs" RGB clignotantes en bordure d'écran */
+        .theme-pc-led {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 1;
+            animation: pcLedBlink var(--led-dur) ease-in-out infinite;
+            animation-delay: var(--led-delay);
+        }
+        @keyframes pcLedBlink {
+            0%,100% { opacity: 0.25; box-shadow: 0 0 6px currentColor; }
+            50%      { opacity: 1;    box-shadow: 0 0 16px currentColor, 0 0 28px currentColor; }
+        }
+        .theme-banner.pc {
+            background: linear-gradient(90deg, #ff00e6, #00ffea, #7800ff, #00ff5a, #ff00e6);
+            background-size: 300% 100%;
+            color: #fff;
+            box-shadow: 0 4px 30px rgba(0,255,234,0.7), 0 0 60px rgba(255,0,230,0.5);
+            animation: bannerShift 2.5s linear infinite;
+            text-shadow: 0 0 16px rgba(255,255,255,0.9), 0 0 30px rgba(0,255,234,0.7);
+            letter-spacing: 4px;
+            border-bottom: 3px solid #00ffea;
+            font-weight: 900;
+        }
+
+        /* ── Thème DEX (loup sombre) ── */
+        body.theme-dex {
+            --theme-bg-from:     #0a0a0c;
+            --theme-bg-to:       #000000;
+            --theme-header-from: #141416;
+            --theme-header-to:   #000000;
+            --theme-border:      #3a3a40;
+            --theme-accent:      #6a6a76;
+            --theme-particle:    #8a8a96;
+            --theme-glow:        rgba(120,120,140,0.35);
+        }
+        body.theme-dex header {
+            border-bottom: 2px solid #45454e !important;
+            background: linear-gradient(180deg, #161618 0%, #050505 100%) !important;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.95), 0 0 30px rgba(80,80,100,0.25) !important;
+        }
+        body.theme-dex .chest-main {
+            border-color: #4a4a54 !important;
+            background: linear-gradient(160deg, #131315 0%, #000000 100%) !important;
+            box-shadow: 0 18px 50px rgba(0,0,0,0.95), 0 0 40px rgba(90,90,110,0.25), inset 0 0 30px rgba(0,0,0,0.6) !important;
+        }
+        body.theme-dex .stat-card {
+            border-color: rgba(100,100,116,0.4) !important;
+            background: linear-gradient(145deg, #121214 0%, #000000 100%) !important;
+            box-shadow: 0 0 15px rgba(80,80,100,0.18), 0 4px 0 rgba(0,0,0,0.7) !important;
+        }
+        body.theme-dex .open-btn {
+            background: linear-gradient(180deg, #3a3a42 0%, #0a0a0c 100%) !important;
+            color: #c8c8d4 !important;
+            border: 3px solid #5a5a66 !important;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.9), 0 0 35px rgba(90,90,110,0.3) !important;
+        }
+        body.theme-dex h1 {
+            color: #d8d8e2 !important;
+            text-shadow:
+                2px 2px 0 #000,
+                -1px -1px 0 #000,
+                0 0 25px rgba(120,120,145,0.7),
+                0 0 50px rgba(60,60,80,0.5) !important;
+        }
+        body.theme-dex .subtitle {
+            color: #8a8a96 !important;
+            text-shadow: 0 0 12px rgba(100,100,120,0.6) !important;
+        }
+        /* Brume sombre rampante en fond */
+        @keyframes dexFogDrift {
+            0%   { transform: translateX(-10%) translateY(0); opacity: 0.5; }
+            50%  { transform: translateX(5%) translateY(-2%); opacity: 0.75; }
+            100% { transform: translateX(-10%) translateY(0); opacity: 0.5; }
+        }
+        .theme-dex-fog {
+            position: fixed;
+            inset: -10%;
+            z-index: 0;
+            pointer-events: none;
+            background: radial-gradient(ellipse at 20% 30%, rgba(60,60,75,0.18), transparent 60%),
+                        radial-gradient(ellipse at 80% 70%, rgba(40,40,55,0.18), transparent 60%);
+            animation: dexFogDrift 14s ease-in-out infinite;
+        }
+        /* Yeux de loup qui clignotent furtivement */
+        @keyframes dexEyesBlink {
+            0%, 88%, 100% { opacity: 0; }
+            90%, 96%       { opacity: 0.9; }
+        }
+        .theme-dex-eyes {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            font-size: 1.4em;
+            filter: drop-shadow(0 0 8px rgba(180,30,30,0.8));
+            animation: dexEyesBlink 9s ease-in-out infinite;
+            animation-delay: var(--eyes-delay);
+        }
+        .theme-banner.dex {
+            background: linear-gradient(90deg, #000000, #1a1a1e, #2e2e34, #1a1a1e, #000000);
+            background-size: 300% 100%;
+            color: #c8c8d4;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.95), 0 0 50px rgba(80,80,100,0.3);
+            animation: bannerShift 5s linear infinite;
+            text-shadow: 0 0 16px rgba(120,120,145,0.7);
+            letter-spacing: 5px;
+            border-bottom: 3px solid #45454e;
+            font-weight: 900;
+        }
+
+        /* ── Thème Rocket League ── */
+        body.theme-rocket {
+            --theme-bg-from:     #1a3a8c;
+            --theme-bg-to:       #ff6a00;
+            --theme-header-from: #0a1a4d;
+            --theme-header-to:   #001022;
+            --theme-border:      #ff8c1a;
+            --theme-accent:      #2266ff;
+            --theme-particle:    #ffaa33;
+            --theme-glow:        rgba(34,102,255,0.6);
+        }
+        body.theme-rocket header {
+            border-bottom: 3px solid #ff8c1a !important;
+            background: linear-gradient(180deg, #0a1a4d 0%, #001022 100%) !important;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.7), 0 0 40px rgba(34,102,255,0.45) !important;
+        }
+        body.theme-rocket .chest-main {
+            border-color: #ff8c1a !important;
+            background: linear-gradient(160deg, #122a70 0%, #050d22 100%) !important;
+            box-shadow: 0 16px 45px rgba(0,0,0,0.7), 0 0 50px rgba(255,140,26,0.45), 0 0 90px rgba(34,102,255,0.3) !important;
+            animation: rocketChestBoost 2.2s ease-in-out infinite;
+        }
+        @keyframes rocketChestBoost {
+            0%,100% { box-shadow: 0 16px 45px rgba(0,0,0,0.7), 0 0 50px rgba(255,140,26,0.45), 0 0 90px rgba(34,102,255,0.3); }
+            50%      { box-shadow: 0 16px 45px rgba(0,0,0,0.7), 0 0 75px rgba(255,170,50,0.7), 0 0 130px rgba(34,102,255,0.5); }
+        }
+        body.theme-rocket .stat-card {
+            border-color: rgba(255,140,26,0.45) !important;
+            background: linear-gradient(145deg, #0e2058 0%, #050d22 100%) !important;
+            box-shadow: 0 0 16px rgba(34,102,255,0.3), 0 4px 0 rgba(0,0,0,0.6) !important;
+        }
+        body.theme-rocket .open-btn {
+            background: linear-gradient(180deg, #ff8c1a 0%, #ff4d00 100%) !important;
+            color: #fff !important;
+            border: 3px solid #ffd27a !important;
+            box-shadow: 0 8px 28px rgba(255,140,26,0.7), 0 0 50px rgba(34,102,255,0.4) !important;
+            font-weight: 900 !important;
+        }
+        body.theme-rocket h1 {
+            color: #ffd27a !important;
+            text-shadow:
+                3px 3px 0 #0a1a4d,
+                -1px -1px 0 #0a1a4d,
+                0 0 25px rgba(255,140,26,0.8),
+                0 0 50px rgba(34,102,255,0.6) !important;
+        }
+        body.theme-rocket .subtitle {
+            color: #6a9aff !important;
+            text-shadow: 0 0 14px rgba(34,102,255,0.8) !important;
+        }
+        /* Traînées de boost façon voiture qui décolle */
+        @keyframes rocketTrail {
+            0%   { opacity: 0; transform: translateX(0) scaleX(0.3); }
+            15%  { opacity: 1; transform: translateX(0) scaleX(1); }
+            85%  { opacity: 0.8; }
+            100% { opacity: 0; transform: translateX(140px) scaleX(1.4); }
+        }
+        .theme-rocket-trail {
+            position: absolute;
+            height: 4px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, transparent, #ff8c1a, #ffd27a, #2266ff, transparent);
+            pointer-events: none;
+            animation: rocketTrail var(--dur) ease-in infinite;
+            animation-delay: var(--delay);
+            box-shadow: 0 0 10px #ff8c1a, 0 0 18px rgba(34,102,255,0.6);
+        }
+        .theme-banner.rocket {
+            background: linear-gradient(90deg, #001022, #0a1a4d, #2266ff, #ff8c1a, #2266ff, #0a1a4d, #001022);
+            background-size: 300% 100%;
+            color: #fff;
+            box-shadow: 0 4px 30px rgba(255,140,26,0.7), 0 0 60px rgba(34,102,255,0.5);
+            animation: bannerShift 3s linear infinite;
+            text-shadow: 0 0 18px rgba(255,210,122,0.9), 0 0 35px rgba(34,102,255,0.7);
+            letter-spacing: 4px;
+            border-bottom: 3px solid #ff8c1a;
+            font-weight: 900;
         }
 
         /* ── Thème Or ── */
@@ -4504,6 +4815,25 @@
         .admin-pwd-btn:hover { transform:translateY(-2px); }
         .admin-pwd-btn:active { transform:translateY(3px); box-shadow:0 2px 0 #3a0010; }
         .admin-pwd-err { color:#e74c3c; font-size:0.8em; margin-top:8px; min-height:16px; }
+
+        /* Modal confirmation 5 étapes — accès admin délégué */
+        .ga-confirm-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.97); z-index:199999; justify-content:center; align-items:center; }
+        .ga-confirm-overlay.open { display:flex; }
+        .ga-confirm-box { background:linear-gradient(145deg,#0a0015,#150025); border:3px solid #ff0040; border-radius:24px; padding:30px 26px; width:90%; max-width:400px; text-align:center; box-shadow:0 0 60px rgba(255,0,64,0.4); }
+        .ga-confirm-step { color:#664444; font-size:0.7em; font-weight:900; letter-spacing:2px; margin-bottom:10px; }
+        .ga-confirm-title { color:#ff0040; font-size:1.05em; font-weight:900; letter-spacing:1px; margin-bottom:4px; text-shadow:0 0 16px rgba(255,0,64,0.7); line-height:1.4; }
+        .ga-confirm-pseudo { color:#ff5566; font-size:1.3em; font-weight:900; margin-bottom:18px; text-shadow:0 0 12px rgba(255,85,102,0.6); word-break:break-word; }
+        .ga-confirm-btns { display:flex; gap:10px; margin-top:6px; }
+        .ga-confirm-btn-yes { flex:1; padding:13px; background:linear-gradient(180deg,#ff0040,#7a0020); color:#fff; border:none; border-radius:12px; font-size:0.9em; font-weight:900; cursor:pointer; letter-spacing:1px; text-transform:uppercase; font-family:'Arial Black',Arial,sans-serif; box-shadow:0 5px 0 #3a0010; transition:all 0.2s; }
+        .ga-confirm-btn-yes:hover { transform:translateY(-2px); }
+        .ga-confirm-btn-yes:active { transform:translateY(3px); box-shadow:0 2px 0 #3a0010; }
+        .ga-confirm-btn-no { flex:1; padding:13px; background:linear-gradient(180deg,#333,#1a1a1a); color:#aaa; border:none; border-radius:12px; font-size:0.9em; font-weight:900; cursor:pointer; letter-spacing:1px; text-transform:uppercase; font-family:'Arial Black',Arial,sans-serif; box-shadow:0 5px 0 #000; transition:all 0.2s; }
+        .ga-confirm-btn-no:hover { transform:translateY(-2px); }
+        .ga-confirm-btn-no:active { transform:translateY(3px); box-shadow:0 2px 0 #000; }
+        .ga-confirm-input { width:100%; background:rgba(0,0,0,0.5); border:2px solid rgba(255,0,64,0.4); border-radius:12px; color:#fff; padding:13px 16px; font-size:1.1em; font-family:'Arial Black',Arial,sans-serif; outline:none; box-sizing:border-box; text-align:center; letter-spacing:4px; margin-bottom:14px; }
+        .ga-confirm-input:focus { border-color:#ff0040; }
+        .ga-confirm-input::placeholder { letter-spacing:1px; color:#330010; font-family:Arial,sans-serif; font-size:0.85em; }
+        .ga-confirm-err { color:#e74c3c; font-size:0.8em; margin-top:8px; min-height:16px; }
         /* Stats brainrots */
 
         /* Écran bannissement permanent */
@@ -4986,6 +5316,56 @@
         }
         .incubator-sidebar-btn > span:first-child { font-size:1.7em; }
         .incubator-sidebar-btn > span:last-child  { color:#cc44ff; font-size:0.6em; font-weight:900; text-transform:uppercase; letter-spacing:0.5px; line-height:1.2; }
+
+        /* ═══ BOUTON ADMIN DÉLÉGUÉ (sidebar) ═══ */
+        .granted-admin-btn {
+            position:fixed; left:15px; top:calc(35% + 465px); z-index:1000;
+            display:none; flex-direction:column; align-items:center; gap:5px; cursor:pointer;
+            background:linear-gradient(180deg,#3a0000,#1a0000);
+            border:3px solid #ff2244;
+            border-radius:16px; padding:12px 8px;
+            box-shadow:0 6px 0 #1a0000, 0 8px 20px rgba(0,0,0,0.6), 0 0 18px rgba(255,34,68,0.4);
+            transition:all 0.2s; width:75px; text-align:center;
+            animation: grantedAdminPulse 2s ease-in-out infinite;
+        }
+        .granted-admin-btn.visible { display:flex; }
+        .granted-admin-btn:hover {
+            transform:scale(1.07);
+            box-shadow:0 6px 0 #1a0000, 0 8px 30px rgba(255,34,68,0.7), 0 0 30px rgba(255,34,68,0.5);
+        }
+        .granted-admin-btn > span:first-child { font-size:1.7em; }
+        .granted-admin-btn > span:last-child  { color:#ff5566; font-size:0.6em; font-weight:900; text-transform:uppercase; letter-spacing:0.5px; line-height:1.2; }
+        @keyframes grantedAdminPulse {
+            0%,100% { box-shadow:0 6px 0 #1a0000, 0 8px 20px rgba(0,0,0,0.6), 0 0 14px rgba(255,34,68,0.3); }
+            50%      { box-shadow:0 6px 0 #1a0000, 0 8px 20px rgba(0,0,0,0.6), 0 0 28px rgba(255,34,68,0.7); }
+        }
+
+        /* ═══ GESTION ADMINS DÉLÉGUÉS (admin panel) ═══ */
+        .ga-admin-row {
+            display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+            background:rgba(0,0,0,0.25); border:1px solid rgba(255,34,68,0.2);
+            border-radius:10px; padding:8px 10px; margin-bottom:6px;
+        }
+        .ga-admin-pseudo { flex:1; color:#fff; font-size:0.78em; font-weight:900; min-width:80px; }
+        .ga-admin-perms  { flex:2; color:#888; font-size:0.65em; line-height:1.5; min-width:120px; }
+        .ga-admin-del    { background:rgba(231,76,60,0.12); border:1px solid rgba(231,76,60,0.35); border-radius:8px; color:#e74c3c; padding:4px 10px; cursor:pointer; font-size:0.72em; flex-shrink:0; }
+        .ga-perm-checkbox { display:flex; align-items:center; gap:5px; font-size:0.72em; color:#aaa; cursor:pointer; white-space:nowrap; }
+        .ga-perm-checkbox input { accent-color:#ff2244; cursor:pointer; }
+        .ga-perm-group {
+            margin-bottom:8px; background:rgba(0,0,0,0.18); border:1px solid rgba(255,34,68,0.15);
+            border-radius:9px; padding:7px 9px;
+        }
+        .ga-perm-group-title {
+            display:flex; align-items:center; justify-content:space-between; gap:6px;
+            color:#ff7788; font-size:0.7em; font-weight:900; letter-spacing:0.5px;
+            margin-bottom:6px; cursor:pointer; user-select:none;
+        }
+        .ga-perm-group-toggle-all {
+            background:none; border:1px solid rgba(255,34,68,0.3); border-radius:6px;
+            color:#ff5566; font-size:0.62em; font-weight:900; padding:2px 7px; cursor:pointer;
+        }
+        .ga-perm-group-items { display:flex; flex-wrap:wrap; gap:5px 10px; }
+        .ga-perm-checkbox.feat { font-size:0.7em; }
 
         .incubator-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.96); z-index:7800; justify-content:center; align-items:center; }
         .incubator-modal.open { display:flex; }
@@ -6547,6 +6927,12 @@
         <span>INCUBATOR</span>
     </div>
 
+    <!-- Bouton ADMIN DÉLÉGUÉ (visible uniquement si accès accordé) -->
+    <div class="granted-admin-btn" id="grantedAdminBtn" onclick="openGrantedAdmin()" title="Accès Admin">
+        <span>🔐</span>
+        <span>ADMIN</span>
+    </div>
+
     <!-- Modal BRAINROT INCUBATOR -->
     <div class="incubator-modal" id="incubatorModal">
         <div class="incubator-panel">
@@ -6961,6 +7347,14 @@
         </div>
     </div>
 
+    <!-- Modal confirmation 5 étapes — donner un accès admin délégué -->
+    <div class="ga-confirm-overlay" id="gaConfirmOverlay">
+        <div class="ga-confirm-box">
+            <div class="ga-confirm-step" id="gaConfirmStep">ÉTAPE 1 / 5</div>
+            <div id="gaConfirmBody"></div>
+        </div>
+    </div>
+
     <div class="admin-overlay" id="adminOverlay">
         <div class="admin-panel">
             <button class="admin-close-btn" onclick="closeAdmin()">✕</button>
@@ -6980,7 +7374,7 @@
             <!-- ONGLET ANTI-ABUS -->
             <div class="admin-tab-panel" id="apanel-security">
 
-                <div class="admin-section" style="border-color:rgba(255,100,0,0.4);background:rgba(255,50,0,0.03);">
+                <div class="admin-section" data-ga-feat="security:antiabuse" style="border-color:rgba(255,100,0,0.4);background:rgba(255,50,0,0.03);">
                     <div class="admin-section-title" style="color:#ff6600;">🛡️ Système Anti-Abus</div>
                     <div style="color:#553300;font-size:0.72em;margin-bottom:12px;">Détection automatique des comportements suspects (macro, auto-click, spam). Les sanctions sont progressives et s'escaladent à chaque récidive.</div>
 
@@ -7022,14 +7416,38 @@
                     <div style="color:#884400;font-size:0.72em;font-weight:900;letter-spacing:1px;margin-bottom:6px;">📋 JOURNAL (en direct)</div>
                     <div class="ab-admin-log" id="abAdminLog"><div style="color:#443300;">En attente de données…</div></div>
                     <button class="admin-btn" onclick="abAdminClearLog()" style="margin-top:6px;background:rgba(40,20,0,0.5);border:1px solid rgba(150,80,0,0.3);font-size:0.72em;">🗑️ Effacer journal</button>
+                </div>
 
-                    <!-- Rechargement forcé -->
-                    <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,100,0,0.15);">
-                        <div style="color:#884400;font-size:0.72em;font-weight:900;letter-spacing:1px;margin-bottom:8px;">🔄 RECHARGEMENT FORCÉ</div>
-                        <div style="color:#553300;font-size:0.68em;margin-bottom:10px;">Force le rechargement de la page pour tous les joueurs connectés. Une animation de chargement s'affiche pendant ~3-4 secondes.</div>
-                        <button class="admin-btn" onclick="adminForceReloadAll()" style="background:linear-gradient(180deg,#1a0030,#0d0018);border:2px solid rgba(180,80,255,0.5);color:#cc88ff;font-size:0.82em;letter-spacing:1px;">🔄 Recharger la page de tous les joueurs</button>
-                        <div style="color:#664400;font-size:0.65em;margin-top:6px;" id="forceReloadAdminStatus"></div>
-                    </div>
+                <!-- Rechargement forcé — section indépendante (sœur, pas enfant de antiabuse) -->
+                <div class="admin-section" data-ga-feat="security:reload" style="border-color:rgba(180,80,255,0.4);background:rgba(150,60,255,0.03);margin-top:16px;">
+                    <div class="admin-section-title" style="color:#cc88ff;">🔄 RECHARGEMENT FORCÉ</div>
+                    <div style="color:#553300;font-size:0.68em;margin-bottom:10px;">Force le rechargement de la page pour tous les joueurs connectés. Une animation de chargement s'affiche pendant ~3-4 secondes.</div>
+                    <button class="admin-btn" onclick="adminForceReloadAll()" style="background:linear-gradient(180deg,#1a0030,#0d0018);border:2px solid rgba(180,80,255,0.5);color:#cc88ff;font-size:0.82em;letter-spacing:1px;">🔄 Recharger la page de tous les joueurs</button>
+                    <div style="color:#664400;font-size:0.65em;margin-top:6px;" id="forceReloadAdminStatus"></div>
+                </div>
+
+                <!-- Accès Admin Délégué — JAMAIS délégable, réservé au vrai admin -->
+                <div class="admin-section" data-ga-feat="__never_delegate__" style="border-color:rgba(255,34,68,0.5);background:rgba(255,34,68,0.04);margin-top:16px;">
+                        <div style="color:#ff2244;font-size:0.72em;font-weight:900;letter-spacing:1px;margin-bottom:6px;">🔐 ACCÈS ADMIN DÉLÉGUÉ</div>
+                        <div style="color:#553333;font-size:0.68em;margin-bottom:10px;">Donne à un joueur un accès partiel à l'admin panel, avec exactement les fonctionnalités que tu choisis. Retrait instantané en temps réel.</div>
+
+                        <!-- Formulaire d'ajout -->
+                        <div style="background:rgba(255,34,68,0.04);border:1px solid rgba(255,34,68,0.2);border-radius:10px;padding:10px;margin-bottom:10px;">
+                            <div style="color:#ff5566;font-size:0.68em;font-weight:900;letter-spacing:1px;margin-bottom:7px;">➕ AJOUTER UN ADMIN DÉLÉGUÉ</div>
+                            <div class="admin-player-list" id="adminPlayerListGrantedAdmin"></div>
+                            <input class="admin-input" id="gaAddPseudo" placeholder="Pseudo du joueur…" style="width:100%;margin-bottom:8px;margin-top:8px;">
+                            <div style="color:#664444;font-size:0.67em;font-weight:900;letter-spacing:1px;margin-bottom:6px;">FONCTIONNALITÉS AUTORISÉES</div>
+                            <div style="display:flex;gap:6px;margin-bottom:8px;">
+                                <button type="button" onclick="gaSelectAllPerms(true)" style="flex:1;background:rgba(0,200,80,0.08);border:1px solid rgba(0,200,80,0.3);border-radius:7px;color:#5fd98a;font-size:0.66em;font-weight:900;padding:4px;cursor:pointer;">✅ Tout cocher</button>
+                                <button type="button" onclick="gaSelectAllPerms(false)" style="flex:1;background:rgba(255,34,68,0.06);border:1px solid rgba(255,34,68,0.25);border-radius:7px;color:#ff7788;font-size:0.66em;font-weight:900;padding:4px;cursor:pointer;">❌ Tout décocher</button>
+                            </div>
+                            <div id="gaPermCheckboxes" style="max-height:280px;overflow-y:auto;padding:4px 2px;"></div>
+                            <button class="admin-btn" onclick="gaStartConfirmFlow()" style="background:linear-gradient(180deg,#880018,#440008);border:2px solid rgba(255,34,68,0.5);color:#ff5566;width:100%;margin-top:8px;">🔐 Donner l'accès</button>
+                        </div>
+
+                        <!-- Liste des admins délégués -->
+                        <div id="gaAdminList"><div style="color:#333;font-size:0.72em;">Aucun admin délégué.</div></div>
+                        <div style="color:#555;font-size:0.65em;margin-top:6px;" id="gaStatus"></div>
                 </div>
 
             </div>
@@ -7038,7 +7456,7 @@
             <div class="admin-tab-panel" id="apanel-events">
 
                 <!-- Chance globale -->
-                <div class="admin-section">
+                <div class="admin-section" data-ga-feat="events:luck-global">
                     <div class="admin-section-title">🍀 Chance globale pour TOUS</div>
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
                         <span style="color:#7dffb3;font-size:0.78em;white-space:nowrap;">Durée :</span>
@@ -7061,7 +7479,7 @@
                 </div>
 
                 <!-- Chance individuelle -->
-                <div class="admin-section" style="border-color:rgba(46,204,113,0.3);background:rgba(46,204,113,0.03);">
+                <div class="admin-section" data-ga-feat="events:luck-one" style="border-color:rgba(46,204,113,0.3);background:rgba(46,204,113,0.03);">
                     <div class="admin-section-title" style="color:#7dffb3;">🍀 Chance pour un joueur</div>
                     <div class="admin-player-list" id="adminPlayerListLuckOne"></div>
                     <div class="admin-row" style="margin-top:8px;flex-wrap:wrap;gap:6px;">
@@ -7088,7 +7506,7 @@
                 </div>
 
                 <!-- Double or -->
-                <div class="admin-section">
+                <div class="admin-section" data-ga-feat="events:double-gold">
                     <div class="admin-section-title">💰 Double or pour TOUS</div>
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
                         <span style="color:#ffd700;font-size:0.78em;white-space:nowrap;">Multiplicateur :</span>
@@ -7110,14 +7528,14 @@
                 </div>
 
                 <!-- Broadcast -->
-                <div class="admin-section">
+                <div class="admin-section" data-ga-feat="events:broadcast">
                     <div class="admin-section-title">📢 Message à tous les joueurs</div>
                     <input class="admin-input" id="adminBroadcastMsg" placeholder="Ton message…" maxlength="120">
                     <button class="admin-btn purple" onclick="adminBroadcast()">📡 Envoyer à tous</button>
                 </div>
 
                 <!-- Thème visuel -->
-                <div class="admin-section" style="border-color:rgba(255,128,192,0.4);background:rgba(255,80,180,0.03);">
+                <div class="admin-section" data-ga-feat="events:theme" style="border-color:rgba(255,128,192,0.4);background:rgba(255,80,180,0.03);">
                     <div class="admin-section-title" style="color:#ff80c0;">🎨 Thème visuel</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:10px;">Change l'ambiance visuelle du jeu pour tous les joueurs. Purement cosmétique.</div>
                     <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -7145,6 +7563,9 @@
                         <button class="admin-btn" onclick="adminSetTheme('coupe-monde')" style="background:linear-gradient(90deg,#0055a4 0%,#ffffff 50%,#ef4135 100%);box-shadow:0 4px 0 #003580;border:2px solid #ffd700;color:#0a1a3a;font-weight:900;">🇫🇷 Coupe du Monde</button>
                         <button class="admin-btn" onclick="adminSetTheme('money')" style="background:linear-gradient(180deg,#1f5c3c,#0d3320);box-shadow:0 4px 0 #021510;border:2px solid #f0c419;color:#f0c419;font-weight:900;">💰 Money</button>
                         <button class="admin-btn" onclick="adminSetTheme('tasty-crousty')" style="background:linear-gradient(180deg,#3d0030,#120009);box-shadow:0 4px 0 #000000;border:2px solid #ff2e9f;color:#fff;font-weight:900;">🍗 Tasty Crousty</button>
+                        <button class="admin-btn" onclick="adminSetTheme('pc')" style="background:linear-gradient(90deg,#ff00e6,#00ffea,#7800ff);background-size:200%;box-shadow:0 4px 0 #000000;border:2px solid #00ffea;color:#fff;font-weight:900;letter-spacing:1px;">🖥️ PC Gaming</button>
+                        <button class="admin-btn" onclick="adminSetTheme('dex')" style="background:linear-gradient(180deg,#2a2a30,#000000);box-shadow:0 4px 0 #000000;border:2px solid #5a5a66;color:#c8c8d4;font-weight:900;letter-spacing:1px;">🐺 DEX</button>
+                        <button class="admin-btn" onclick="adminSetTheme('rocket')" style="background:linear-gradient(180deg,#1a3a8c,#ff6a00);box-shadow:0 4px 0 #001022;border:2px solid #ff8c1a;color:#fff;font-weight:900;">🚀 Rocket League</button>
                         <button class="admin-btn" onclick="adminSetTheme('countdown-1h')"    style="background:linear-gradient(180deg,#005544,#001a14);box-shadow:0 4px 0 #000a08;border:2px solid #00cc99;color:#ccffee;font-weight:900;letter-spacing:1px;">🟢 1H</button>
                         <button class="admin-btn" onclick="adminSetTheme('countdown-30min')" style="background:linear-gradient(180deg,#aa7700,#443000);box-shadow:0 4px 0 #1a1200;border:2px solid #ffcc44;color:#fff8cc;font-weight:900;letter-spacing:1px;">🟡 30MIN</button>
                         <button class="admin-btn" onclick="adminSetTheme('countdown-15min')" style="background:linear-gradient(180deg,#cc2200,#550e00);box-shadow:0 4px 0 #1a0400;border:2px solid #ff6622;color:#ffddcc;font-weight:900;letter-spacing:1px;">🟠 15MIN</button>
@@ -7154,7 +7575,7 @@
                 </div>
 
                 <!-- Thème aléatoire automatique -->
-                <div class="admin-section" id="adminRandomThemeSection" style="border-color:rgba(180,100,255,0.4);background:rgba(140,60,255,0.03);">
+                <div class="admin-section" id="adminRandomThemeSection" data-ga-feat="events:theme-random" style="border-color:rgba(180,100,255,0.4);background:rgba(140,60,255,0.03);">
                     <div class="admin-section-title" style="color:#bb88ff;">🎲 Thème aléatoire automatique</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:12px;">Change le thème automatiquement toutes les X minutes/heures parmi les thèmes disponibles (sauf ceux bannis). Synchronisé pour tous les joueurs.</div>
 
@@ -7197,6 +7618,9 @@
                         <option value="coupe-monde">🇫🇷 Coupe du Monde</option>
                         <option value="money">💰 Money</option>
                         <option value="tasty-crousty">🍗 Tasty Crousty</option>
+                        <option value="pc">🖥️ PC Gaming</option>
+                        <option value="dex">🐺 DEX</option>
+                        <option value="rocket">🚀 Rocket League</option>
                         <option value="countdown-1h">🟢 Countdown 1H</option>
                         <option value="countdown-30min">🟡 Countdown 30MIN</option>
                         <option value="countdown-15min">🟠 Countdown 15MIN</option>
@@ -7214,7 +7638,7 @@
                 </div>
 
                 <!-- Image du coffre -->
-                <div class="admin-section">
+                <div class="admin-section" data-ga-feat="events:chest-img">
                     <div class="admin-section-title">🎁 Image du coffre</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:8px;">Change l'image du coffre pour tous les joueurs (même hors ligne).</div>
                     <input class="admin-input" id="adminChestUrl" placeholder="URL de l'image…" style="margin-bottom:8px;">
@@ -7225,7 +7649,7 @@
                 </div>
 
                 <!-- Cartes bannies des coffres -->
-                <div class="admin-section" style="border-color:rgba(255,100,0,0.4);background:rgba(255,80,0,0.03);">
+                <div class="admin-section" data-ga-feat="events:banned-cards" style="border-color:rgba(255,100,0,0.4);background:rgba(255,80,0,0.03);">
                     <div class="admin-section-title" style="color:#ff8040;">🚫 Cartes bannies des coffres</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:8px;">Ces cartes ne tombent plus en ouvrant des coffres. Elles restent disponibles en boutique, craft, etc.</div>
                     <div id="adminBannedCardsList" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;min-height:22px;"></div>
@@ -7235,7 +7659,7 @@
                 </div>
 
                 <!-- Bouton MIAM -->
-                <div class="admin-section" style="border-color:rgba(255,107,0,0.5);background:rgba(255,80,0,0.04);">
+                <div class="admin-section" data-ga-feat="events:miam" style="border-color:rgba(255,107,0,0.5);background:rgba(255,80,0,0.04);">
                     <div class="admin-section-title" style="color:#ff8040;">🍖 Bouton MIAM</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:10px;">Active un bouton "MIAM" sur l'écran de tous les joueurs pendant une durée définie. Le bouton ouvre la machine à fusion de mutations.</div>
                     <div class="admin-row" style="margin-bottom:8px;flex-wrap:wrap;gap:6px;">
@@ -7252,7 +7676,7 @@
                 </div>
 
                 <!-- Roue de la Fortune -->
-                <div class="admin-section" style="border-color:rgba(0,212,255,0.3);background:rgba(0,212,255,0.03);">
+                <div class="admin-section" data-ga-feat="events:wheel" style="border-color:rgba(0,212,255,0.3);background:rgba(0,212,255,0.03);">
                     <div class="admin-section-title" style="color:#00d4ff;">🎡 Roue de la Fortune</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:10px;">Modifie les segments en temps réel (total doit faire 100%)</div>
                     <div id="wheelAdminItems"></div>
@@ -7262,7 +7686,7 @@
                 </div>
 
                 <!-- Notepad admin -->
-                <div class="admin-section" style="border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);">
+                <div class="admin-section" data-ga-feat="events:notepad" style="border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);">
                     <div class="admin-section-title" style="color:#aaa;">📝 Message affiché (touche A)</div>
                     <textarea id="adminNotepadText" style="width:100%;box-sizing:border-box;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:#fff;padding:12px;font-size:0.82em;font-family:'Courier New',monospace;line-height:1.6;resize:vertical;min-height:120px;outline:none;" placeholder="Écris un message visible par tous les joueurs quand ils appuient sur A…" maxlength="5000"></textarea>
                     <div style="display:flex;gap:8px;margin-top:8px;">
@@ -7272,7 +7696,7 @@
                 </div>
 
                 <!-- Craft Machine recettes -->
-                <div class="admin-section" style="border-color:rgba(0,255,136,0.25);background:rgba(0,255,136,0.02);">
+                <div class="admin-section" data-ga-feat="events:craft-recipes" style="border-color:rgba(0,255,136,0.25);background:rgba(0,255,136,0.02);">
                     <div class="admin-section-title" style="color:#00ff88;">⚒️ Craft Machine — Recettes</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:10px;">Définis les recettes craftables par les joueurs</div>
                     <div id="craftAdminList"></div>
@@ -7284,7 +7708,7 @@
 
 
                 <!-- ══ CARTES LIMITÉES CRAFT MACHINE ══ -->
-                <div class="admin-section" style="border-color:rgba(255,80,0,0.40);background:rgba(255,40,0,0.03);">
+                <div class="admin-section" data-ga-feat="events:limited-cards" style="border-color:rgba(255,80,0,0.40);background:rgba(255,40,0,0.03);">
                     <div class="admin-section-title" style="color:#ff7733;">🔥 Cartes limitées — Craft Machine</div>
                     <div style="color:#553300;font-size:0.72em;margin-bottom:12px;">
                         Stock global partagé entre tous les joueurs.<br>
@@ -7322,7 +7746,7 @@
                 </div>
 
                 <!-- Événements programmés -->
-                <div class="admin-section" style="border-color:rgba(255,170,0,0.4);background:rgba(255,140,0,0.03);">
+                <div class="admin-section" data-ga-feat="events:scheduled" style="border-color:rgba(255,170,0,0.4);background:rgba(255,140,0,0.03);">
                     <div class="admin-section-title" style="color:#ffaa00;">📅 Événements programmés</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:12px;">Programme un événement à une date et heure précise. Il se déclenchera automatiquement pour tous les joueurs connectés.</div>
 
@@ -7400,6 +7824,9 @@
                                 <option value="coupe-monde">⚽ Coupe du Monde</option>
                                 <option value="money">💰 Money</option>
                                 <option value="tasty-crousty">🍗 Tasty Crousty</option>
+                                <option value="pc">🖥️ PC Gaming</option>
+                                <option value="dex">🐺 DEX</option>
+                                <option value="rocket">🚀 Rocket League</option>
                                 <option value="" disabled style="color:#333;">── Compte à rebours ──</option>
                                 <option value="countdown-1h">🔴 1H — Admin Abuse</option>
                                 <option value="countdown-30min">🟠 30MIN — Admin Abuse</option>
@@ -7456,7 +7883,7 @@
             <div class="admin-tab-panel" id="apanel-players">
 
                 <!-- Ticket à gratter — admin -->
-                <div class="admin-section" style="border-color:rgba(255,215,0,0.4);background:rgba(255,215,0,0.03);margin-bottom:10px;">
+                <div class="admin-section" data-ga-feat="players:scratch-ticket" style="border-color:rgba(255,215,0,0.4);background:rgba(255,215,0,0.03);margin-bottom:10px;">
                     <div class="admin-section-title" style="color:#ffd700;">🎟️ Ticket à Gratter</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:10px;">Envoie un ticket à gratter. Laisse vide pour tous les joueurs connectés.</div>
                     <div class="admin-player-list" id="adminPlayerListTicket"></div>
@@ -7468,7 +7895,7 @@
                 </div>
 
                 <!-- Donner or -->
-                <div class="admin-section">
+                <div class="admin-section" data-ga-feat="players:gold">
                     <div class="admin-section-title">💰 Donner de l'or</div>
                     <div class="admin-player-list" id="adminPlayerListGold"></div>
                     <div class="admin-row" style="margin-top:8px;">
@@ -7481,7 +7908,7 @@
                 </div>
 
                 <!-- Forcer carte -->
-                <div class="admin-section">
+                <div class="admin-section" data-ga-feat="players:force-card">
                     <div class="admin-section-title">🎴 Forcer une carte</div>
                     <div class="admin-rarity-filter" id="adminRarityFilter"></div>
                     <div class="admin-card-grid" id="adminCardGrid"></div>
@@ -7510,7 +7937,7 @@
                 </div>
 
                 <!-- Forcer carte joueur précis -->
-                <div class="admin-section">
+                <div class="admin-section" data-ga-feat="players:force-card-one">
                     <div class="admin-section-title">🎯 Forcer une carte — joueur précis</div>
                     <div class="admin-player-list" id="adminPlayerListForce"></div>
                     <input class="admin-input" id="adminForcePseudo" placeholder="Pseudo du joueur…" style="margin-top:8px;">
@@ -7529,7 +7956,7 @@
                 </div>
 
                 <!-- Carte ADMIN EXCLUSIVE -->
-                <div class="admin-section" style="border-color:rgba(255,0,64,0.5);background:rgba(255,0,64,0.05);">
+                <div class="admin-section" data-ga-feat="players:admin-card" style="border-color:rgba(255,0,64,0.5);background:rgba(255,0,64,0.05);">
                     <div class="admin-section-title" style="color:#ff4466;">⚡ Donner une carte ADMIN EXCLUSIVE</div>
                     <div class="admin-player-list" id="adminPlayerListAdminCard"></div>
                     <div class="admin-row" style="margin-top:8px;">
@@ -7541,7 +7968,7 @@
                 </div>
 
                 <!-- Malédiction -->
-                <div class="admin-section" style="border-color:rgba(100,0,150,0.5);background:rgba(80,0,120,0.05);">
+                <div class="admin-section" data-ga-feat="players:curse" style="border-color:rgba(100,0,150,0.5);background:rgba(80,0,120,0.05);">
                     <div class="admin-section-title" style="color:#cc44ff;">🪄 Malédiction</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:8px;">Le joueur maudit n'obtient que des Communes, peu importe la chance active.</div>
                     <div class="admin-player-list" id="adminPlayerListCurse"></div>
@@ -7555,7 +7982,7 @@
                 </div>
 
                 <!-- Ban temporaire -->
-                <div class="admin-section">
+                <div class="admin-section" data-ga-feat="players:ban-temp">
                     <div class="admin-section-title">🚫 Ban temporaire</div>
                     <div class="admin-player-list" id="adminPlayerListBan"></div>
                     <div class="admin-row" style="margin-top:8px;">
@@ -7566,7 +7993,7 @@
                 </div>
 
                 <!-- Ban permanent -->
-                <div class="admin-section" style="border-color:rgba(200,0,0,0.5);background:rgba(200,0,0,0.05);">
+                <div class="admin-section" data-ga-feat="players:ban-perma" style="border-color:rgba(200,0,0,0.5);background:rgba(200,0,0,0.05);">
                     <div class="admin-section-title" style="color:#ff4444;">💀 Ban DÉFINITIF</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:8px;">Le joueur verra un écran de bannissement et disparaîtra du classement.</div>
                     <div class="admin-player-list" id="adminPlayerListPermaBan"></div>
@@ -7578,7 +8005,7 @@
                 </div>
 
                 <!-- Stats joueur -->
-                <div class="admin-section">
+                <div class="admin-section" data-ga-feat="players:stats-book">
                     <div class="admin-section-title">📊 Stats et livre d'un joueur</div>
                     <div class="admin-player-list" id="adminPlayerListStats"></div>
                     <div class="admin-row" style="margin-top:8px;">
@@ -7601,14 +8028,14 @@
             <!-- ONGLET BOUTIQUE -->
             <div class="admin-tab-panel" id="apanel-shop">
 
-                <div class="admin-section">
+                <div class="admin-section" data-ga-feat="shop:prices">
                     <div class="admin-section-title">🏪 Prix de la boutique (temps réel)</div>
                     <div class="admin-shop-grid" id="adminShopGrid"></div>
                     <button class="admin-btn" onclick="adminResetShopPrices()" style="margin-top:10px;">↺ Réinitialiser les prix</button>
                 </div>
 
                 <!-- RÉDUCTION BOUTIQUE -->
-                <div class="admin-section" style="border-color:rgba(0,204,102,0.4);background:rgba(0,204,102,0.03);margin-top:10px;">
+                <div class="admin-section" data-ga-feat="shop:discount" style="border-color:rgba(0,204,102,0.4);background:rgba(0,204,102,0.03);margin-top:10px;">
                     <div class="admin-section-title" style="color:#00cc66;">🏷️ Réduction Globale Boutique</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:12px;">Applique une réduction sur tous les prix de la boutique. S'additionne au système de prix existant.</div>
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
@@ -7626,7 +8053,7 @@
                 </div>
 
                 <!-- CODES PROMO -->
-                <div class="admin-section" style="border-color:rgba(0,255,200,0.4);background:rgba(0,255,200,0.03);margin-top:10px;">
+                <div class="admin-section" data-ga-feat="shop:promo-codes" style="border-color:rgba(0,255,200,0.4);background:rgba(0,255,200,0.03);margin-top:10px;">
                     <div class="admin-section-title" style="color:#00ffc8;">🎟️ Codes Promo</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:12px;">Stock global partagé entre tous les joueurs — transaction Firebase atomique. Chaque joueur ne peut utiliser un code qu'une seule fois.</div>
 
@@ -7666,7 +8093,7 @@
             <!-- ONGLET MUTATIONS -->
             <div class="admin-tab-panel" id="apanel-mutations">
 
-                <div class="admin-section" style="border-color:rgba(255,215,0,0.4);background:rgba(255,215,0,0.03);">
+                <div class="admin-section" data-ga-feat="mutations:rates" style="border-color:rgba(255,215,0,0.4);background:rgba(255,215,0,0.03);">
                     <div class="admin-section-title" style="color:#ffd700;">🧬 Taux de drop des Mutations</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:14px;">Modifie les taux en temps réel pour tous les joueurs. Le taux s'applique à chaque carte obtenue (coffre ou boutique).</div>
 
@@ -7735,7 +8162,7 @@
                 </div>
 
                 <!-- BOOST x2 MUTATION -->
-                <div class="admin-section" style="border-color:rgba(180,80,255,0.4);background:rgba(180,80,255,0.03);margin-top:10px;">
+                <div class="admin-section" data-ga-feat="mutations:boost" style="border-color:rgba(180,80,255,0.4);background:rgba(180,80,255,0.03);margin-top:10px;">
                     <div class="admin-section-title" style="color:#cc44ff;">⚡ Boost ×2 Mutation</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:12px;">Double le taux de drop d'une mutation pour tous les joueurs (coffres, boutique, incubateur).</div>
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
@@ -7767,7 +8194,7 @@
             <!-- ONGLET STATS -->
             <div class="admin-tab-panel" id="apanel-stats">
 
-                <div class="admin-section">
+                <div class="admin-section" data-ga-feat="stats:global">
                     <div class="admin-section-title">🌍 Statistiques globales</div>
                     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
                         <div style="flex:1;min-width:120px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,0,64,0.2);border-radius:12px;padding:12px;text-align:center;">
@@ -7787,6 +8214,7 @@
                 </div>
 
                 <!-- Dashboard drop rates -->
+                <div data-ga-feat="stats:dashboard">
                 <div class="admin-section">
                     <div class="admin-section-title">📉 Taux de drop théoriques</div>
                     <div id="dashDropRates"></div>
@@ -7807,9 +8235,10 @@
                 </div>
 
                 <button class="admin-btn blue" onclick="adminRefreshDashboard()" style="margin-top:4px;font-size:0.8em;padding:9px;">🔄 Actualiser tout</button>
+                </div>
 
                 <!-- POP-UP ADMIN -->
-                <div class="admin-section" style="border-color:rgba(255,105,180,0.4);background:rgba(255,105,180,0.03);margin-top:12px;">
+                <div class="admin-section" data-ga-feat="stats:popup" style="border-color:rgba(255,105,180,0.4);background:rgba(255,105,180,0.03);margin-top:12px;">
                     <div class="admin-section-title" style="color:#ff69b4;">📣 Pop-up pour les joueurs</div>
                     <div style="color:#555;font-size:0.72em;margin-bottom:12px;">Affiche une pop-up avec image et texte sur l'écran des joueurs connectés.</div>
 
@@ -11707,6 +12136,11 @@
             // Thème aléatoire — écoute en temps réel (attaché une seule fois)
             _listenRandomTheme();
 
+            // Admin délégué — listener joueur (bouton rouge)
+            _gaListenForPlayer();
+            // Admin délégué — listener admin (liste)
+            _gaListenForAdmin();
+
             } // fin bloc _globalListenersAttached
 
             // ── Listener ticket admin broadcast (pour tous) ──
@@ -12289,7 +12723,7 @@
 
         function refreshAdminPlayerLists() {
             const players = window._adminPlayerList || [];
-            ['adminPlayerListGold', 'adminPlayerListForce', 'adminPlayerListBan', 'adminPlayerListStats', 'adminPlayerListPermaBan', 'adminPlayerListCurse', 'adminPlayerListLuckOne', 'adminPlayerListPopup', 'adminPlayerListTicket'].forEach(listId => {
+            ['adminPlayerListGold', 'adminPlayerListForce', 'adminPlayerListBan', 'adminPlayerListStats', 'adminPlayerListPermaBan', 'adminPlayerListCurse', 'adminPlayerListLuckOne', 'adminPlayerListPopup', 'adminPlayerListTicket', 'adminPlayerListGrantedAdmin'].forEach(listId => {
                 const el = document.getElementById(listId);
                 if (!el) return;
                 el.innerHTML = '';
@@ -12314,6 +12748,7 @@
                         if (listId === 'adminPlayerListLuckOne') document.getElementById('adminLuckOnePseudo').value = p;
                         if (listId === 'adminPlayerListPopup') document.getElementById('adminPopupPseudo').value = p;
                         if (listId === 'adminPlayerListTicket') document.getElementById('adminTicketTarget').value = p;
+                        if (listId === 'adminPlayerListGrantedAdmin') document.getElementById('gaAddPseudo').value = p;
                     };
                     el.appendChild(pill);
                 });
@@ -13060,6 +13495,9 @@
             'coupe-monde':  'https://www.image2url.com/r2/default/files/1781507159442-ef6272db-036c-4d78-8944-7ddfe0ac4073.png',
             'money':        'https://www.image2url.com/r2/default/files/1781507544842-fcc6af4a-1e26-4b48-b0b9-41c30c1445a2.png',
             'tasty-crousty': 'https://www.image2url.com/r2/default/files/1781540790589-f6e642e4-f584-473c-963a-32079e4cf9a4.png',
+            'pc':           'https://www.image2url.com/r2/default/images/1782065706359-bdac93f8-de3e-48a3-9f2b-16625ab844a2.png',
+            'dex':          'https://www.image2url.com/r2/default/images/1782065610992-f661bf6e-d1d2-4d0e-b4f3-42f7e2897967.jpg',
+            'rocket':       'https://www.image2url.com/r2/default/images/1782065765358-99157525-68aa-4f1f-be28-9cc45827851a.png',
             'countdown-1h': 'https://www.image2url.com/r2/default/files/1781091502738-323c99f3-4555-420e-9dd4-4ab409974d17.png',
             'countdown-30min': 'https://www.image2url.com/r2/default/files/1781091518116-52c9e181-805e-4e2a-98c3-1fb2d390c475.png',
             'countdown-15min': 'https://www.image2url.com/r2/default/files/1781091533430-8bf79c1e-9612-44c0-989a-eb4a656d84f3.png',
@@ -13210,6 +13648,24 @@
                 bannerClass: 'tasty-crousty',
                 particles: { color: '#ff2e9f', emoji: ['🍗','🍚','🌴','🔥','😋','🍽️','✨','🌅'], count: 85, glow: 'rgba(255,46,159,1)' }
             },
+            'pc': {
+                label: '🖥️ PC Gaming',
+                banner: '🖥️ ⚡ PC GAMING SETUP ⚡ 🖥️',
+                bannerClass: 'pc',
+                particles: { color: '#00ffea', emoji: ['🖥️','🎮','⌨️','🖱️','💡','⚡','🎧','🔥','💻'], count: 90, glow: 'rgba(0,255,234,1)' }
+            },
+            'dex': {
+                label: '🐺 DEX',
+                banner: '🐺 🌑 DEX 🌑 🐺',
+                bannerClass: 'dex',
+                particles: { color: '#6a6a76', emoji: ['🐺','🌑','⚫','🌫️','🦴','🌚','💀'], count: 55, glow: 'rgba(100,100,120,0.6)' }
+            },
+            'rocket': {
+                label: '🚀 Rocket League',
+                banner: '🚀 🟧🟦 ROCKET LEAGUE 🟦🟧 🚀',
+                bannerClass: 'rocket',
+                particles: { color: '#ff8c1a', emoji: ['🚀','⚽','🏎️','🟧','🟦','💥','🔥','🏆','⭐'], count: 85, glow: 'rgba(255,140,26,1)' }
+            },
             'countdown-1h': {
                 label: '🔴 1H — Admin Abuse',
                 banner: '🔴 ADMIN ABUSE DANS 1H 🔴',
@@ -13268,6 +13724,8 @@
             // Éclairs spéciaux pour Inazuma Eleven
             const oldBolts = document.querySelectorAll('.theme-inazuma-bolt');
             oldBolts.forEach(b => b.remove());
+            const oldRings = document.querySelectorAll('.theme-inazuma-ring');
+            oldRings.forEach(r => r.remove());
             if (themeId === 'inazuma') {
                 const starsBg = document.getElementById('starsBg');
                 if (starsBg) {
@@ -13282,6 +13740,74 @@
                         bolt.style.setProperty('--dur', (2 + Math.random() * 4).toFixed(2) + 's');
                         bolt.style.setProperty('--delay', '-' + (Math.random() * 5).toFixed(2) + 's');
                         starsBg.appendChild(bolt);
+                    }
+                }
+                const chestEl = document.querySelector('.chest-main');
+                if (chestEl) {
+                    for (let i = 0; i < 3; i++) {
+                        const ring = document.createElement('div');
+                        ring.className = 'theme-inazuma-ring';
+                        ring.style.setProperty('--ring-delay', '-' + (i * 0.8).toFixed(2) + 's');
+                        chestEl.appendChild(ring);
+                    }
+                }
+            }
+
+            // Nettoyage des effets spéciaux PC / DEX / Rocket League
+            document.querySelectorAll('.theme-pc-led, .theme-dex-fog, .theme-dex-eyes, .theme-rocket-trail').forEach(e => e.remove());
+
+            // LEDs RGB clignotantes sur les bords de l'écran — thème PC Gaming
+            if (themeId === 'pc') {
+                const colors = ['#ff00e6', '#00ffea', '#7800ff', '#00ff5a'];
+                for (let i = 0; i < 18; i++) {
+                    const led = document.createElement('div');
+                    led.className = 'theme-pc-led';
+                    const size = Math.floor(6 + Math.random() * 6);
+                    led.style.width = size + 'px';
+                    led.style.height = size + 'px';
+                    led.style.color = colors[i % colors.length];
+                    led.style.background = colors[i % colors.length];
+                    // Réparties le long des 4 bords de l'écran
+                    const edge = i % 4;
+                    if (edge === 0) { led.style.top = '0'; led.style.left = (Math.random() * 100) + '%'; }
+                    if (edge === 1) { led.style.bottom = '0'; led.style.left = (Math.random() * 100) + '%'; }
+                    if (edge === 2) { led.style.left = '0'; led.style.top = (Math.random() * 100) + '%'; }
+                    if (edge === 3) { led.style.right = '0'; led.style.top = (Math.random() * 100) + '%'; }
+                    led.style.setProperty('--led-dur', (1 + Math.random() * 1.5).toFixed(2) + 's');
+                    led.style.setProperty('--led-delay', '-' + (Math.random() * 2).toFixed(2) + 's');
+                    document.body.appendChild(led);
+                }
+            }
+
+            // Brume sombre + yeux de loup furtifs — thème DEX
+            if (themeId === 'dex') {
+                const fog = document.createElement('div');
+                fog.className = 'theme-dex-fog';
+                document.body.appendChild(fog);
+                for (let i = 0; i < 3; i++) {
+                    const eyes = document.createElement('div');
+                    eyes.className = 'theme-dex-eyes';
+                    eyes.textContent = '👁️👁️';
+                    eyes.style.left = (10 + Math.random() * 80) + '%';
+                    eyes.style.top  = (10 + Math.random() * 70) + '%';
+                    eyes.style.setProperty('--eyes-delay', '-' + (i * 3).toFixed(2) + 's');
+                    document.body.appendChild(eyes);
+                }
+            }
+
+            // Traînées de boost façon voiture — thème Rocket League
+            if (themeId === 'rocket') {
+                const starsBg = document.getElementById('starsBg');
+                if (starsBg) {
+                    for (let i = 0; i < 10; i++) {
+                        const trail = document.createElement('div');
+                        trail.className = 'theme-rocket-trail';
+                        trail.style.width = Math.floor(60 + Math.random() * 80) + 'px';
+                        trail.style.left = Math.floor(Math.random() * 80) + '%';
+                        trail.style.top  = Math.floor(Math.random() * 100) + '%';
+                        trail.style.setProperty('--dur', (1.5 + Math.random() * 2).toFixed(2) + 's');
+                        trail.style.setProperty('--delay', '-' + (Math.random() * 3).toFixed(2) + 's');
+                        starsBg.appendChild(trail);
                     }
                 }
             }
@@ -19540,6 +20066,434 @@
         function closeX10Reveal() {
             document.getElementById('x10RevealOverlay').classList.remove('open');
         }
+
+        // ═══════════════════════════════════════════════════════
+        // SYSTÈME ADMIN DÉLÉGUÉ
+        // Firebase : admin/grantedAdmins/{pseudo} = { perms:['events','shop',...] }
+        // Côté joueur : listener qui affiche/cache le bouton rouge
+        // Côté "admin délégué" : openGrantedAdmin() masque les onglets non autorisés
+        // Côté vrai admin : gaAddAdmin() / gaRemoveAdmin() / _gaRender()
+        // ═══════════════════════════════════════════════════════
+
+        var _gaCurrentPerms   = null;  // permissions du joueur courant (null = pas d'accès)
+        var _gaAdminOpen      = false; // vrai si le panel délégué est ouvert
+        var _gaAllAdmins      = {};    // cache Firebase admin/grantedAdmins
+
+        const GA_TAB_LABELS = {
+            events:   '🎮 Événements',
+            players:  '👥 Joueurs',
+            shop:     '🏪 Boutique',
+            mutations:'🧬 Mutations',
+            stats:    '📊 Stats',
+            security: '🛡️ Anti-Abus'
+        };
+        const GA_ALL_TABS = Object.keys(GA_TAB_LABELS);
+
+        // ── Définition de chaque fonctionnalité délégable, groupée par onglet ──
+        // clé = valeur exacte de data-ga-feat sur la section HTML correspondante.
+        // "__never_delegate__" n'apparaît jamais ici : la gestion des admins
+        // délégués reste strictement réservée au vrai admin.
+        const GA_FEATURES = {
+            events: [
+                { key:'events:luck-global',    label:'🍀 Chance globale (tous)' },
+                { key:'events:luck-one',       label:'🍀 Chance — un joueur' },
+                { key:'events:double-gold',    label:'💰 Double or (tous)' },
+                { key:'events:broadcast',      label:'📢 Message à tous' },
+                { key:'events:theme',          label:'🎨 Thème visuel' },
+                { key:'events:theme-random',   label:'🎲 Thème aléatoire auto' },
+                { key:'events:chest-img',      label:'🎁 Image du coffre' },
+                { key:'events:banned-cards',   label:'🚫 Cartes bannies des coffres' },
+                { key:'events:miam',           label:'🍖 Bouton MIAM' },
+                { key:'events:wheel',          label:'🎡 Roue de la Fortune' },
+                { key:'events:notepad',        label:'📝 Message touche A' },
+                { key:'events:craft-recipes',  label:'⚒️ Craft Machine — recettes' },
+                { key:'events:limited-cards',  label:'🔥 Cartes limitées craft' },
+                { key:'events:scheduled',      label:'📅 Événements programmés' },
+            ],
+            players: [
+                { key:'players:scratch-ticket', label:'🎟️ Ticket à gratter' },
+                { key:'players:gold',           label:'💰 Donner de l\'or' },
+                { key:'players:force-card',     label:'🎴 Forcer une carte (tous)' },
+                { key:'players:force-card-one', label:'🎯 Forcer une carte — joueur précis' },
+                { key:'players:admin-card',     label:'⚡ Carte ADMIN EXCLUSIVE' },
+                { key:'players:curse',          label:'🪄 Malédiction' },
+                { key:'players:ban-temp',       label:'🚫 Ban temporaire' },
+                { key:'players:ban-perma',      label:'💀 Ban définitif' },
+                { key:'players:stats-book',     label:'📊 Stats et livre d\'un joueur' },
+            ],
+            shop: [
+                { key:'shop:prices',       label:'🏪 Prix de la boutique' },
+                { key:'shop:discount',     label:'🏷️ Réduction globale' },
+                { key:'shop:promo-codes',  label:'🎟️ Codes promo' },
+            ],
+            mutations: [
+                { key:'mutations:rates', label:'🧬 Taux de drop' },
+                { key:'mutations:boost', label:'⚡ Boost ×2 mutation' },
+            ],
+            stats: [
+                { key:'stats:global',    label:'🌍 Statistiques globales' },
+                { key:'stats:dashboard', label:'📉 Dashboard (drop rates, cartes, top)' },
+                { key:'stats:popup',     label:'📣 Pop-up pour les joueurs' },
+            ],
+            security: [
+                { key:'security:antiabuse', label:'🛡️ Système Anti-Abus' },
+                { key:'security:reload',    label:'🔄 Rechargement forcé' },
+            ],
+        };
+        // Liste plate de toutes les clés de features valides
+        const GA_ALL_FEATURE_KEYS = Object.keys(GA_FEATURES).reduce(function(acc, tab) {
+            GA_FEATURES[tab].forEach(function(f) { acc.push(f.key); });
+            return acc;
+        }, []);
+
+        // ── Normalise une liste de perms enregistrée en Firebase vers une liste
+        // de clés de features. Gère la compatibilité avec l'ancien format
+        // (perms = noms d'onglets : "events", "players", …) en dépliant
+        // l'onglet vers TOUTES ses features — pour ne rien casser côté
+        // anciens admins délégués déjà enregistrés.
+        function _gaNormalizePerms(perms) {
+            if (!Array.isArray(perms)) return [];
+            var out = {};
+            perms.forEach(function(p) {
+                if (GA_FEATURES[p]) {
+                    // Ancien format : nom d'onglet → toutes ses features
+                    GA_FEATURES[p].forEach(function(f) { out[f.key] = true; });
+                } else if (GA_ALL_FEATURE_KEYS.indexOf(p) !== -1) {
+                    // Nouveau format : clé de feature précise
+                    out[p] = true;
+                }
+            });
+            return Object.keys(out);
+        }
+
+        // ── Construit dynamiquement les checkboxes groupées par onglet ──────
+        function _gaBuildPermCheckboxes() {
+            var container = document.getElementById('gaPermCheckboxes');
+            if (!container) return;
+            container.innerHTML = '';
+            GA_ALL_TABS.forEach(function(tab) {
+                var feats = GA_FEATURES[tab];
+                if (!feats || !feats.length) return;
+                var group = document.createElement('div');
+                group.className = 'ga-perm-group';
+                var title = document.createElement('div');
+                title.className = 'ga-perm-group-title';
+                title.innerHTML =
+                    '<span>' + GA_TAB_LABELS[tab] + '</span>' +
+                    '<button type="button" class="ga-perm-group-toggle-all" data-tab="' + tab + '">Tout (dé)cocher</button>';
+                group.appendChild(title);
+                var itemsWrap = document.createElement('div');
+                itemsWrap.className = 'ga-perm-group-items';
+                feats.forEach(function(f) {
+                    var label = document.createElement('label');
+                    label.className = 'ga-perm-checkbox feat';
+                    label.innerHTML = '<input type="checkbox" name="ga-perm" value="' + f.key + '">' + f.label;
+                    itemsWrap.appendChild(label);
+                });
+                group.appendChild(itemsWrap);
+                container.appendChild(group);
+                // Bouton "tout cocher/décocher" pour ce groupe précis
+                title.querySelector('.ga-perm-group-toggle-all').onclick = function(e) {
+                    e.stopPropagation();
+                    var boxes = itemsWrap.querySelectorAll('input[type="checkbox"]');
+                    var anyUnchecked = Array.prototype.some.call(boxes, function(b){ return !b.checked; });
+                    boxes.forEach(function(b) { b.checked = anyUnchecked; });
+                };
+            });
+        }
+
+        // ── Tout cocher / tout décocher, toutes features confondues ────────
+        function gaSelectAllPerms(checked) {
+            document.querySelectorAll('#gaPermCheckboxes input[name="ga-perm"]').forEach(function(cb) {
+                cb.checked = checked;
+            });
+        }
+
+        // Normaliser le pseudo (trim + toLowerCase) pour la clé Firebase
+        function _gaKey(pseudo) {
+            return pseudo.trim().replace(/[.#$\[\]\/]/g, '_');
+        }
+
+        // ── Listener Firebase côté joueur ─────────────────────────────────
+        function _gaListenForPlayer() {
+            if (!firebaseDB) return;
+            var pseudo = localStorage.getItem('tradePseudo') || '';
+            if (!pseudo) return;
+            var sk = _gaKey(pseudo);
+            firebaseDB.ref('admin/grantedAdmins/' + sk).on('value', function(snap) {
+                var d = snap.val();
+                var btn = document.getElementById('grantedAdminBtn');
+                var normalized = d && Array.isArray(d.perms) ? _gaNormalizePerms(d.perms) : [];
+                if (normalized.length) {
+                    _gaCurrentPerms = normalized;
+                    if (btn) btn.classList.add('visible');
+                } else {
+                    _gaCurrentPerms = null;
+                    if (btn) btn.classList.remove('visible');
+                    // Si le panel délégué est ouvert → le fermer immédiatement
+                    if (_gaAdminOpen) {
+                        _gaAdminOpen = false;
+                        var overlay = document.getElementById('adminOverlay');
+                        if (overlay) overlay.classList.remove('open');
+                    }
+                }
+            });
+        }
+
+        // ── Ouverture du panel admin en mode délégué ──────────────────────
+        function openGrantedAdmin() {
+            if (!_gaCurrentPerms || !_gaCurrentPerms.length) return;
+            _gaAdminOpen = true;
+            // Ouvrir le panel normalement
+            openAdmin();
+
+            // Déterminer, pour chaque onglet, s'il a au moins une feature autorisée
+            var tabHasAccess = {};
+            GA_ALL_TABS.forEach(function(tab) { tabHasAccess[tab] = false; });
+
+            // Masquer/afficher chaque section individuelle (data-ga-feat)
+            document.querySelectorAll('[data-ga-feat]').forEach(function(sec) {
+                var feat = sec.getAttribute('data-ga-feat');
+                if (feat === '__never_delegate__') {
+                    // Jamais visible en mode délégué, quoi qu'il arrive
+                    sec.style.display = 'none';
+                    return;
+                }
+                var allowed = _gaCurrentPerms.indexOf(feat) !== -1;
+                sec.style.display = allowed ? '' : 'none';
+                if (allowed) {
+                    var tab = feat.split(':')[0];
+                    if (tabHasAccess.hasOwnProperty(tab)) tabHasAccess[tab] = true;
+                }
+            });
+
+            // Masquer les onglets qui n'ont plus aucune feature visible
+            var firstAllowedTab = null;
+            GA_ALL_TABS.forEach(function(tab) {
+                var tabBtn = document.getElementById('atab-' + tab);
+                var allowed = tabHasAccess[tab];
+                if (tabBtn) tabBtn.style.display = allowed ? '' : 'none';
+                if (allowed && !firstAllowedTab) firstAllowedTab = tab;
+                // Le panel lui-même reste affiché (display géré par adminTab via .active) ;
+                // seules ses sections internes sont filtrées ci-dessus.
+            });
+
+            // Activer le premier onglet qui a au moins une feature autorisée
+            if (firstAllowedTab) adminTab(firstAllowedTab);
+        }
+
+        // Intercepter closeAdmin pour noter que le panel délégué est fermé
+        var _origCloseAdmin = null;
+        (function() {
+            _origCloseAdmin = closeAdmin;
+            closeAdmin = function() {
+                _gaAdminOpen = false;
+                // Restaurer la visibilité des onglets et de toutes les sections
+                // (important si le vrai admin ouvre ensuite le panel complet)
+                GA_ALL_TABS.forEach(function(tab) {
+                    var tabBtn = document.getElementById('atab-' + tab);
+                    if (tabBtn) tabBtn.style.display = '';
+                });
+                document.querySelectorAll('[data-ga-feat]').forEach(function(sec) {
+                    sec.style.display = '';
+                });
+                _origCloseAdmin();
+            };
+        })();
+
+        // ── Interface admin : ajouter un admin délégué ────────────────────
+        function gaAddAdmin() {
+            if (!firebaseDB) { _gaStatus('⚠️ Firebase non connecté'); return; }
+            var pseudo = document.getElementById('gaAddPseudo').value.trim();
+            if (!pseudo) { _gaStatus('⚠️ Entre un pseudo'); return; }
+            var checkboxes = document.querySelectorAll('#gaPermCheckboxes input[name="ga-perm"]:checked');
+            var perms = [];
+            checkboxes.forEach(function(cb) { perms.push(cb.value); });
+            if (!perms.length) { _gaStatus('⚠️ Coche au moins une fonctionnalité'); return; }
+            var sk = _gaKey(pseudo);
+            firebaseDB.ref('admin/grantedAdmins/' + sk).set({ pseudo: pseudo, perms: perms })
+                .then(function() {
+                    _gaStatus('✅ Accès donné à ' + pseudo + ' (' + perms.length + ' fonctionnalité' + (perms.length > 1 ? 's' : '') + ')');
+                    document.getElementById('gaAddPseudo').value = '';
+                    document.querySelectorAll('#gaPermCheckboxes input[name="ga-perm"]').forEach(function(cb){ cb.checked = false; });
+                })
+                .catch(function(e) { _gaStatus('❌ ' + e.message); });
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        // Confirmation à 5 étapes avant d'accorder un accès admin délégué.
+        // Les 4 premières étapes demandent juste une confirmation oui/non.
+        // La 5ème exige le mot de passe admin (même hash Firebase que
+        // checkAdminPassword) pour valider l'identité du vrai admin.
+        // ════════════════════════════════════════════════════════════════
+        var _gaConfirmPseudo = null; // pseudo capturé au lancement du flow
+        var _gaConfirmStepNum = 0;   // 1 à 5
+
+        function gaStartConfirmFlow() {
+            if (!firebaseDB) { _gaStatus('⚠️ Firebase non connecté'); return; }
+            var pseudo = document.getElementById('gaAddPseudo').value.trim();
+            if (!pseudo) { _gaStatus('⚠️ Entre un pseudo'); return; }
+            var checkboxes = document.querySelectorAll('#gaPermCheckboxes input[name="ga-perm"]:checked');
+            if (!checkboxes.length) { _gaStatus('⚠️ Coche au moins une fonctionnalité'); return; }
+            _gaConfirmPseudo = pseudo;
+            _gaConfirmStepNum = 1;
+            _gaRenderConfirmStep();
+            document.getElementById('gaConfirmOverlay').classList.add('open');
+        }
+
+        function _gaCloseConfirmFlow() {
+            document.getElementById('gaConfirmOverlay').classList.remove('open');
+            _gaConfirmPseudo = null;
+            _gaConfirmStepNum = 0;
+        }
+
+        function _gaRenderConfirmStep() {
+            var stepEl = document.getElementById('gaConfirmStep');
+            var bodyEl = document.getElementById('gaConfirmBody');
+            stepEl.textContent = 'ÉTAPE ' + _gaConfirmStepNum + ' / 5';
+
+            if (_gaConfirmStepNum <= 4) {
+                bodyEl.innerHTML =
+                    '<div class="ga-confirm-title">VEUX-TU VRAIMENT DONNER ACCÈS À</div>' +
+                    '<div class="ga-confirm-pseudo">' + _gaEscapeHtml(_gaConfirmPseudo) + '</div>' +
+                    '<div class="ga-confirm-title" style="font-size:0.85em;margin-bottom:18px;">À L\'ADMIN PANEL ?</div>' +
+                    '<div class="ga-confirm-btns">' +
+                        '<button class="ga-confirm-btn-no" onclick="_gaCloseConfirmFlow()">✕ Annuler</button>' +
+                        '<button class="ga-confirm-btn-yes" onclick="_gaConfirmNextStep()">✓ Oui</button>' +
+                    '</div>';
+            } else {
+                // 5ème étape : mot de passe admin obligatoire
+                bodyEl.innerHTML =
+                    '<div class="ga-confirm-title">CONFIRME TON IDENTITÉ POUR DONNER ACCÈS À</div>' +
+                    '<div class="ga-confirm-pseudo">' + _gaEscapeHtml(_gaConfirmPseudo) + '</div>' +
+                    '<input class="ga-confirm-input" id="gaConfirmPwdInput" type="password" placeholder="Mot de passe admin…" maxlength="20" autocomplete="off">' +
+                    '<div class="ga-confirm-btns">' +
+                        '<button class="ga-confirm-btn-no" onclick="_gaCloseConfirmFlow()">✕ Annuler</button>' +
+                        '<button class="ga-confirm-btn-yes" onclick="_gaConfirmCheckPasswordAndFinish()">🔓 Confirmer</button>' +
+                    '</div>' +
+                    '<div class="ga-confirm-err" id="gaConfirmErr"></div>';
+                setTimeout(function() {
+                    var inp = document.getElementById('gaConfirmPwdInput');
+                    if (inp) {
+                        inp.focus();
+                        inp.addEventListener('keydown', function(e) {
+                            if (e.key === 'Enter') _gaConfirmCheckPasswordAndFinish();
+                        });
+                    }
+                }, 100);
+            }
+        }
+
+        function _gaConfirmNextStep() {
+            _gaConfirmStepNum++;
+            _gaRenderConfirmStep();
+        }
+
+        // Échappe le pseudo pour éviter toute injection HTML dans l'affichage
+        function _gaEscapeHtml(str) {
+            var div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        async function _gaConfirmCheckPasswordAndFinish() {
+            var inp = document.getElementById('gaConfirmPwdInput');
+            var errEl = document.getElementById('gaConfirmErr');
+            var val = inp ? inp.value : '';
+            if (!val) return;
+
+            // Même logique de hash que checkAdminPassword — réutilise le hash
+            // stocké dans Firebase (admin/config/pwdHash), pour garantir que
+            // seul le vrai admin connaissant le mot de passe peut valider.
+            var inputHash;
+            try {
+                var encoder = new TextEncoder();
+                var data = encoder.encode(val);
+                var hashBuf = await crypto.subtle.digest('SHA-256', data);
+                inputHash = Array.from(new Uint8Array(hashBuf))
+                    .map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+            } catch (e) {
+                errEl.textContent = '❌ Erreur cryptographique';
+                return;
+            }
+
+            if (!firebaseDB) { errEl.textContent = '❌ Firebase non disponible'; return; }
+
+            errEl.textContent = '⏳ Vérification…';
+            firebaseDB.ref('admin/config/pwdHash').once('value').then(function(snap) {
+                var expected = snap.val();
+                if (!expected) { errEl.textContent = '❌ Configuration manquante dans Firebase'; return; }
+                var clean = String(expected).replace(/^"|"$/g, '').trim();
+                if (inputHash === clean) {
+                    // Mot de passe correct → on accorde réellement l'accès
+                    _gaCloseConfirmFlow();
+                    gaAddAdmin();
+                } else {
+                    errEl.textContent = '❌ Mot de passe incorrect';
+                    if (inp) { inp.value = ''; inp.focus(); }
+                    setTimeout(function() { if (errEl) errEl.textContent = ''; }, 2000);
+                }
+            }).catch(function() {
+                errEl.textContent = '❌ Erreur de lecture Firebase';
+            });
+        }
+
+        // ── Interface admin : supprimer un admin délégué ──────────────────
+        function gaRemoveAdmin(sk) {
+            if (!firebaseDB) return;
+            firebaseDB.ref('admin/grantedAdmins/' + sk).remove()
+                .then(function() { _gaStatus('✅ Accès retiré'); })
+                .catch(function(e) { _gaStatus('❌ ' + e.message); });
+        }
+
+        // ── Rendu de la liste des admins délégués ─────────────────────────
+        function _gaRender() {
+            var container = document.getElementById('gaAdminList');
+            if (!container) return;
+            var keys = Object.keys(_gaAllAdmins);
+            if (!keys.length) {
+                container.innerHTML = '<div style="color:#333;font-size:0.72em;">Aucun admin délégué.</div>';
+                return;
+            }
+            // Construit une map clé de feature → label, pour affichage lisible
+            var featLabelMap = {};
+            GA_ALL_TABS.forEach(function(tab) {
+                (GA_FEATURES[tab] || []).forEach(function(f) { featLabelMap[f.key] = f.label; });
+            });
+            container.innerHTML = '';
+            keys.forEach(function(sk) {
+                var e = _gaAllAdmins[sk];
+                if (!e) return;
+                var normalized = _gaNormalizePerms(e.perms || []);
+                var permsStr = normalized.length
+                    ? normalized.map(function(p){ return featLabelMap[p] || p; }).join(', ')
+                    : '(aucune)';
+                var row = document.createElement('div');
+                row.className = 'ga-admin-row';
+                row.innerHTML =
+                    '<div class="ga-admin-pseudo">👤 ' + (e.pseudo || sk) + '</div>' +
+                    '<div class="ga-admin-perms">' + permsStr + '</div>' +
+                    '<button class="ga-admin-del" onclick="gaRemoveAdmin(\'' + sk + '\')">🗑 Retirer</button>';
+                container.appendChild(row);
+            });
+        }
+
+        function _gaStatus(msg) {
+            var el = document.getElementById('gaStatus');
+            if (el) { el.textContent = msg; clearTimeout(el._t); el._t = setTimeout(function(){ el.textContent = ''; }, 4000); }
+        }
+
+        // ── Listener Firebase admin (liste complète) ──────────────────────
+        function _gaListenForAdmin() {
+            if (!firebaseDB) return;
+            firebaseDB.ref('admin/grantedAdmins').on('value', function(snap) {
+                _gaAllAdmins = snap.val() || {};
+                _gaRender();
+            });
+        }
+
+        // Construire les checkboxes dès que possible (panel admin présent dans le DOM dès le chargement)
+        _gaBuildPermCheckboxes();
 
         // ═══ ADMIN TABS ═══
         function adminTab(tab) {
