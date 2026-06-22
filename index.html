@@ -214,44 +214,12 @@
         body.theme-inazuma {
             --theme-bg-from:     #ffd23f;
             --theme-bg-to:       #ff8c1a;
-            --theme-header-from: #002a6e;
-            --theme-header-to:   #000d24;
+            --theme-header-from: #2a2a2a;
+            --theme-header-to:   #0a0a0a;
             --theme-border:      #00d4ff;
             --theme-accent:      #00eaff;
             --theme-particle:    #7df3ff;
-            --theme-glow:        rgba(0,212,255,0.55);
-        }
-        body.theme-inazuma header {
-            animation: ieGlowPulse 2.2s ease-in-out infinite;
-            border-bottom: 3px solid #00eaff !important;
-            background: linear-gradient(180deg, #003a8c 0%, #001233 60%, #000814 100%) !important;
-            position: relative;
-            overflow: hidden;
-        }
-        body.theme-inazuma header::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(115deg, rgba(255,215,0,0.07) 0px, rgba(255,215,0,0.07) 2px, transparent 2px, transparent 26px);
-            pointer-events: none;
-            animation: ieStripeSlide 6s linear infinite;
-        }
-        @keyframes ieStripeSlide {
-            0%   { background-position: 0 0; }
-            100% { background-position: 300px 0; }
-        }
-        @keyframes ieGlowPulse {
-            0%,100% {
-                box-shadow: 0 4px 24px rgba(0,0,0,0.85),
-                            0 0 35px rgba(0,212,255,0.45),
-                            0 0 0px rgba(255,215,0,0);
-            }
-            50% {
-                box-shadow: 0 4px 24px rgba(0,0,0,0.85),
-                            0 0 85px rgba(0,234,255,0.9),
-                            0 0 150px rgba(0,140,255,0.4),
-                            0 0 60px rgba(255,215,0,0.25);
-            }
+            --theme-glow:        rgba(255,215,0,0.35);
         }
         body.theme-inazuma .chest-main {
             border-color: #00eaff !important;
@@ -260,7 +228,8 @@
                         0 0 55px rgba(0,212,255,0.6),
                         0 0 110px rgba(0,120,255,0.3),
                         inset 0 0 40px rgba(0,200,255,0.08) !important;
-            animation: ieChestFloat 3.5s ease-in-out infinite;
+            animation: ieChestFloat 4s ease-in-out infinite;
+            will-change: transform;
             overflow: visible !important;
         }
         @keyframes ieChestFloat {
@@ -273,74 +242,27 @@
             box-shadow: 0 0 18px rgba(0,212,255,0.25), 0 4px 0 rgba(0,0,0,0.6) !important;
         }
         body.theme-inazuma .open-btn {
-            background: linear-gradient(180deg, #ffd700 0%, #ff8c1a 45%, #00aaff 100%) !important;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c1a 45%, #00aaff 100%) !important;
             color: #001233 !important;
             border: 3px solid #fff6d0 !important;
             box-shadow: 0 10px 35px rgba(0,212,255,0.7), 0 0 60px rgba(255,200,0,0.4) !important;
             text-shadow: 0 1px 0 rgba(255,255,255,0.4) !important;
-            animation: ieBtnShine 2.5s linear infinite;
-            background-size: 200% 200% !important;
-        }
-        @keyframes ieBtnShine {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
         body.theme-inazuma h1 {
-            background: linear-gradient(180deg, #fff9d6 0%, #ffd700 35%, #00eaff 75%, #0090ff 100%) !important;
-            -webkit-background-clip: text !important;
-            background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
+            color: #80e8ff !important;
             text-shadow:
+                3px 3px 0 #001233,
+                -1px -1px 0 #001233,
+                1px -1px 0 #001233,
+                -1px 1px 0 #001233,
                 0 0 30px rgba(0,212,255,0.9),
                 0 0 60px rgba(0,140,255,0.5),
-                0 0 14px rgba(255,215,0,0.5) !important;
-            animation: ieTitleGlow 2.5s ease-in-out infinite;
-            filter: drop-shadow(2px 3px 0 #001233);
-        }
-        @keyframes ieTitleGlow {
-            0%,100% { filter: drop-shadow(2px 3px 0 #001233) drop-shadow(0 0 6px rgba(0,212,255,0.4)); }
-            50%      { filter: drop-shadow(2px 3px 0 #001233) drop-shadow(0 0 22px rgba(0,234,255,0.9)); }
+                0 0 14px rgba(255,215,0,0.4) !important;
         }
         body.theme-inazuma .subtitle {
             color: #7df3ff !important;
             text-shadow: 0 0 18px rgba(0,212,255,0.9), 0 0 6px rgba(255,215,0,0.4) !important;
             letter-spacing: 1px !important;
-        }
-        /* Éclairs dorés animés en arrière-plan, façon "super shot" */
-        @keyframes ieBolt {
-            0%   { opacity: 0; transform: scaleY(0) rotate(var(--r)); }
-            10%  { opacity: 1; transform: scaleY(1) rotate(var(--r)); }
-            30%  { opacity: 0.7; }
-            50%  { opacity: 0; transform: scaleY(1) rotate(var(--r)); }
-            100% { opacity: 0; }
-        }
-        .theme-inazuma-bolt {
-            position: absolute;
-            width: 3px;
-            border-radius: 3px;
-            background: linear-gradient(180deg, transparent, #00eaff, #fffde0, #ffd700, transparent);
-            pointer-events: none;
-            animation: ieBolt var(--dur) ease-out infinite;
-            animation-delay: var(--delay);
-            box-shadow: 0 0 10px #00eaff, 0 0 22px rgba(255,215,0,0.6), 0 0 36px rgba(0,170,255,0.4);
-        }
-        /* Anneau d'énergie façon "frappe spéciale", apparaît derrière le coffre */
-        @keyframes ieRingPulse {
-            0%   { transform: translate(-50%,-50%) scale(0.4); opacity: 0.9; }
-            100% { transform: translate(-50%,-50%) scale(2.6); opacity: 0; }
-        }
-        .theme-inazuma-ring {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 140px; height: 140px;
-            border-radius: 50%;
-            border: 3px solid rgba(0,234,255,0.6);
-            box-shadow: 0 0 25px rgba(0,212,255,0.5), inset 0 0 25px rgba(255,215,0,0.2);
-            pointer-events: none;
-            animation: ieRingPulse 2.4s ease-out infinite;
-            animation-delay: var(--ring-delay);
-            z-index: 0;
         }
         .theme-banner.inazuma {
             background: linear-gradient(90deg, #000814, #002a6e, #0066cc, #00eaff, #ffd700, #00eaff, #0066cc, #002a6e, #000814);
@@ -6882,7 +6804,7 @@
     <div class="notepad-overlay" id="notepadOverlay">
         <div class="notepad-box">
             <div class="notepad-header">
-                <span class="notepad-title">📝 MESSAGE DE SACHMNS</span>
+                <span class="notepad-title">📝 MESSAGE SERVEUR</span>
                 <button class="notepad-close" onclick="closeNotepad()">✕</button>
             </div>
             <div class="notepad-content" id="notepadContent"><span class="notepad-empty">Aucun message pour le moment.</span></div>
@@ -7303,7 +7225,7 @@
 
     <!-- Broadcast Banner -->
     <div class="broadcast-banner" id="broadcastBanner">
-        <div class="bb-from">📢 MESSAGE DE SACHMNS</div>
+        <div class="bb-from">📢 MESSAGE SERVEUR</div>
         <div id="broadcastText"></div>
     </div>
 
@@ -8322,19 +8244,19 @@
     <div class="stats">
         <h2>📊 VOS STATISTIQUES</h2>
         <div class="stats-grid">
-            <div class="stat-card">
+            <div class="stat-card" style="grid-column: span 2;">
                 <div class="stat-number" id="totalChests">0</div>
                 <div class="stat-label">Coffres ouverts</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" style="display:none;">
                 <div class="stat-number" id="totalCards">0</div>
                 <div class="stat-label">Cartes obtenues</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" style="grid-column: span 2;">
                 <div class="stat-number" id="totalGoldDisplay">0</div>
                 <div class="stat-label">💰 Or total</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" style="display:none;">
                 <div class="stat-number" id="totalSecrets">0</div>
                 <div class="stat-label">🖤 Secrets obtenues</div>
             </div>
@@ -11904,6 +11826,8 @@
                 if (d.ts <= _lastAdminBroadcastTs) return; // déjà affiché
                 _lastAdminBroadcastTs = d.ts;
                 const banner = document.getElementById('broadcastBanner');
+                const fromEl = banner.querySelector('.bb-from');
+                if (fromEl) fromEl.textContent = d.from ? ('📢 MESSAGE DE ' + d.from.toUpperCase()) : '📢 MESSAGE SERVEUR';
                 document.getElementById('broadcastText').textContent = d.msg;
                 banner.classList.add('show');
                 clearTimeout(banner._hide);
@@ -12321,6 +12245,8 @@
             if (ts && ts <= _lastBroadcastTs) return;
             _lastBroadcastTs = ts || Date.now();
             const banner = document.getElementById('broadcastBanner');
+            const fromEl = banner.querySelector('.bb-from');
+            if (fromEl) fromEl.textContent = '📢 MESSAGE SERVEUR';
             document.getElementById('broadcastText').textContent = msg;
             banner.classList.add('show');
             clearTimeout(banner._hide);
@@ -12921,7 +12847,8 @@
             if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
             const msg = document.getElementById('adminBroadcastMsg').value.trim();
             if (!msg) { adminStatus('⚠️ Message vide'); return; }
-            firebaseDB.ref('admin/broadcast').set({ msg, ts: Date.now() })
+            const senderPseudo = localStorage.getItem('tradePseudo') || 'Admin';
+            firebaseDB.ref('admin/broadcast').set({ msg, ts: Date.now(), from: senderPseudo })
                 .then(() => { adminStatus('✅ Message envoyé !'); document.getElementById('adminBroadcastMsg').value = ''; })
                 .catch(e => adminStatus('Erreur : ' + e.message));
         }
@@ -13720,38 +13647,6 @@
 
             // Particules de fond
             _refreshThemeParticles(theme.particles);
-
-            // Éclairs spéciaux pour Inazuma Eleven
-            const oldBolts = document.querySelectorAll('.theme-inazuma-bolt');
-            oldBolts.forEach(b => b.remove());
-            const oldRings = document.querySelectorAll('.theme-inazuma-ring');
-            oldRings.forEach(r => r.remove());
-            if (themeId === 'inazuma') {
-                const starsBg = document.getElementById('starsBg');
-                if (starsBg) {
-                    for (let i = 0; i < 12; i++) {
-                        const bolt = document.createElement('div');
-                        bolt.className = 'theme-inazuma-bolt';
-                        const h = Math.floor(60 + Math.random() * 120);
-                        bolt.style.height = h + 'px';
-                        bolt.style.left   = Math.floor(Math.random() * 95) + '%';
-                        bolt.style.top    = Math.floor(Math.random() * 80) + '%';
-                        bolt.style.setProperty('--r', (Math.random() * 30 - 15) + 'deg');
-                        bolt.style.setProperty('--dur', (2 + Math.random() * 4).toFixed(2) + 's');
-                        bolt.style.setProperty('--delay', '-' + (Math.random() * 5).toFixed(2) + 's');
-                        starsBg.appendChild(bolt);
-                    }
-                }
-                const chestEl = document.querySelector('.chest-main');
-                if (chestEl) {
-                    for (let i = 0; i < 3; i++) {
-                        const ring = document.createElement('div');
-                        ring.className = 'theme-inazuma-ring';
-                        ring.style.setProperty('--ring-delay', '-' + (i * 0.8).toFixed(2) + 's');
-                        chestEl.appendChild(ring);
-                    }
-                }
-            }
 
             // Nettoyage des effets spéciaux PC / DEX / Rocket League
             document.querySelectorAll('.theme-pc-led, .theme-dex-fog, .theme-dex-eyes, .theme-rocket-trail').forEach(e => e.remove());
@@ -17402,9 +17297,14 @@
         function openNotepad() {
             // Charger le contenu depuis Firebase
             const el = document.getElementById('notepadContent');
+            const titleEl = document.querySelector('.notepad-title');
             if (firebaseDB) {
                 firebaseDB.ref('admin/notepad').once('value').then(snap => {
-                    const txt = snap.val();
+                    const raw = snap.val();
+                    // Compatibilité : raw peut être une ancienne string brute, ou un objet { text, from }
+                    const txt  = raw && typeof raw === 'object' ? raw.text : raw;
+                    const from = raw && typeof raw === 'object' ? raw.from : null;
+                    if (titleEl) titleEl.textContent = from ? ('📝 MESSAGE DE ' + from.toUpperCase()) : '📝 MESSAGE SERVEUR';
                     if (txt) { el.textContent = txt; el.querySelector && el.querySelector('.notepad-empty') && (el.innerHTML = txt.replace(/\n/g,'<br>')); }
                     else { el.innerHTML = '<span class="notepad-empty">Aucun message pour le moment.</span>'; }
                 });
@@ -17417,7 +17317,8 @@
         function adminSaveNotepad() {
             if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
             const txt = document.getElementById('adminNotepadText').value.trim();
-            firebaseDB.ref('admin/notepad').set(txt || null)
+            const authorPseudo = localStorage.getItem('tradePseudo') || 'Admin';
+            firebaseDB.ref('admin/notepad').set(txt ? { text: txt, from: authorPseudo } : null)
                 .then(() => adminStatus('✅ Message sauvegardé !'))
                 .catch(e => adminStatus('Erreur : ' + e.message));
         }
@@ -17431,8 +17332,10 @@
         function loadAdminNotepad() {
             if (!firebaseDB) return;
             firebaseDB.ref('admin/notepad').once('value').then(snap => {
+                const raw = snap.val();
+                const txt = raw && typeof raw === 'object' ? raw.text : raw;
                 const ta = document.getElementById('adminNotepadText');
-                if (ta) ta.value = snap.val() || '';
+                if (ta) ta.value = txt || '';
             });
         }
         document.addEventListener('keydown', function(e) {
