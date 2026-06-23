@@ -3231,7 +3231,29 @@
         .shop-x10-btn { display:block; width:calc(100% - 0px); margin:10px 0 0 0; padding:13px 16px; background:linear-gradient(180deg,#1a4a1a,#0d2a0d); border:2px solid rgba(46,204,113,0.4); border-radius:14px; color:#2ecc71; font-size:0.82em; font-weight:900; cursor:pointer; text-align:center; font-family:'Arial Black',Arial,sans-serif; letter-spacing:1px; transition:all 0.2s; box-shadow:0 4px 0 #051505; }
         .shop-x10-btn:hover { border-color:#2ecc71; background:linear-gradient(180deg,#1f5a1f,#0f330f); transform:translateY(-1px); }
 
-        /* ═══ CODE PROMO — BOUTIQUE ═══ */
+        /* ═══ SOUNDBOARD ADMIN ═══ */
+        .sb-grid {
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:8px; margin-bottom:10px;
+        }
+        .sb-btn {
+            display:flex; flex-direction:column; align-items:center; gap:4px;
+            background:linear-gradient(180deg,#1a0a30,#0d0520); border:2px solid rgba(180,80,255,0.35);
+            border-radius:12px; padding:10px 8px; cursor:pointer; transition:all 0.15s;
+            color:#cc88ff; font-size:0.75em; font-weight:900; text-align:center;
+            box-shadow:0 4px 0 rgba(0,0,0,0.4);
+        }
+        .sb-btn:hover  { border-color:#cc88ff; transform:translateY(-1px); box-shadow:0 5px 0 rgba(0,0,0,0.4),0 0 14px rgba(180,80,255,0.35); }
+        .sb-btn:active { transform:translateY(1px); box-shadow:0 1px 0 rgba(0,0,0,0.4); }
+        .sb-btn .sb-icon { font-size:1.6em; }
+        .sb-btn .sb-label { color:#ddb8ff; font-size:0.88em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:110px; }
+        .sb-btn.playing { border-color:#00ff88; box-shadow:0 4px 0 rgba(0,0,0,0.4),0 0 18px rgba(0,255,136,0.4); }
+        .sb-stop-btn {
+            background:linear-gradient(180deg,#3a0010,#1a0008); border:2px solid rgba(231,76,60,0.5);
+            border-radius:10px; color:#ff5566; font-size:0.78em; font-weight:900; padding:8px 14px;
+            cursor:pointer; box-shadow:0 4px 0 #110003; transition:all 0.15s;
+        }
+        .sb-stop-btn:hover  { border-color:#ff5566; transform:translateY(-1px); }
+        .sb-stop-btn:active { transform:translateY(1px); }
         /* Bouton carré flottant à droite (PC uniquement, quand la place le permet) */
         .shop-promo-box {
             position: fixed;
@@ -7682,6 +7704,7 @@
                                 <option value="gold">💰 Double or</option>
                                 <option value="theme">🎨 Thème</option>
                                 <option value="miam">🍖 MIAM</option>
+                                <option value="soundboard">🔊 Soundboard</option>
                                 <option value="reload">🔄 Rechargement forcé</option>
                             </select>
                         </div>
@@ -7766,6 +7789,15 @@
                             <span style="color:#aaa;font-size:0.72em;align-self:center;">sec</span>
                         </div>
 
+                        <!-- Paramètres Soundboard -->
+                        <div id="schedParamsSoundboard" style="margin-bottom:8px;display:none;">
+                            <select id="schedSoundId" class="admin-input" style="width:100%;margin-bottom:8px;"></select>
+                            <label style="display:inline-flex;align-items:center;gap:7px;cursor:pointer;">
+                                <input type="checkbox" id="schedSoundLoop" style="accent-color:#cc88ff;width:14px;height:14px;cursor:pointer;">
+                                <span style="color:#cc88ff;font-size:0.74em;font-weight:900;letter-spacing:1px;">🔁 EN BOUCLE</span>
+                            </label>
+                        </div>
+
                         <!-- Paramètres Rechargement forcé -->
                         <div id="schedParamsReload" style="margin-bottom:8px;display:none;">
                             <div style="color:#cc88ff;font-size:0.68em;background:rgba(180,80,255,0.08);border:1px solid rgba(180,80,255,0.25);border-radius:10px;padding:8px 10px;">
@@ -7803,6 +7835,20 @@
 
             <!-- ONGLET JOUEURS -->
             <div class="admin-tab-panel" id="apanel-players">
+
+
+                <!-- Soundboard -->
+                <div class="admin-section" data-ga-feat="players:soundboard">
+                    <div class="admin-section-title" style="color:#cc88ff;">🔊 Soundboard</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:10px;">Joue un son pour TOUS les joueurs connectés instantanément. Configure les sons dans le code (variable SOUNDBOARD_SOUNDS).</div>
+                    <div class="sb-grid" id="sbGrid"></div>
+                    <label style="display:inline-flex;align-items:center;gap:7px;cursor:pointer;margin-bottom:8px;padding:6px 10px;background:rgba(180,80,255,0.07);border:1px solid rgba(180,80,255,0.2);border-radius:20px;">
+                        <input type="checkbox" id="sbLoopCheck" style="accent-color:#cc88ff;width:14px;height:14px;cursor:pointer;">
+                        <span style="color:#cc88ff;font-size:0.75em;font-weight:900;letter-spacing:1px;">🔁 EN BOUCLE</span>
+                    </label>
+                    <button class="sb-stop-btn" onclick="sbStopAll()">🔇 Couper le son pour tous</button>
+                    <div style="color:#555;font-size:0.65em;margin-top:6px;" id="sbAdminStatus"></div>
+                </div>
 
                 <!-- Ticket à gratter — admin -->
                 <div class="admin-section" data-ga-feat="players:scratch-ticket" style="border-color:rgba(255,215,0,0.4);background:rgba(255,215,0,0.03);margin-bottom:10px;">
@@ -8531,6 +8577,32 @@
     <script>
         // Fonction son (stub - aucun son défini dans ce projet)
         function playSound(name) { /* pas de sons */ }
+
+        // ══════════════════════════════════════════════════════════
+        // SOUNDBOARD — Configuration des sons (onglet Événements)
+        // Pour ajouter/modifier un son :
+        //   1. Va sur catbox.moe → uploade ton fichier MP3
+        //   2. Copie l'URL directe obtenue (ex: https://files.catbox.moe/abc123.mp3)
+        //   3. Remplace l'url ci-dessous
+        //   4. Change icon (emoji) et label (nom affiché sur le bouton)
+        // Tu peux avoir jusqu'à 12 sons. Pour en désactiver un, mets url: ''
+        // ══════════════════════════════════════════════════════════
+        const SOUNDBOARD_SOUNDS = [
+            { icon:'🚨', label:'Alerte',      url:'https://www.image2url.com/r2/default/audio/1782128398718-8556565e-7dab-42ec-ae0c-fceefe5b7863.mp3' },
+            { icon:'🗣️', label:'FAH',         url:'https://www.image2url.com/r2/default/audio/1782128282031-d2ea0f16-16c3-41aa-a059-0385a96570ef.mp3' },
+            { icon:'💀', label:'OUF',    url:'https://www.image2url.com/r2/default/audio/1782128457790-b3f36665-bb4e-45ab-a362-90e4a86ab022.mp3' },
+            { icon:'🔥', label:'GET OUT',         url:'https://www.image2url.com/r2/default/audio/1782128505181-824dfb58-ff38-4421-8cc4-5836b137cfbf.mp3' },
+            { icon:'⚡', label:'BRAINROT RAP',      url:'https://www.image2url.com/r2/default/audio/1782128648686-bc9cb7ca-c699-4a8c-b116-e0db99f39c01.mp3' },
+            { icon:'🎵', label:'OUTRO',        url:'https://www.image2url.com/r2/default/audio/1782128757250-5b6d2e84-b6a5-4620-9a23-92ce4ae484f7.mp3' },
+            { icon:'💥', label:'ADMIN ABUSE',         url:'https://www.image2url.com/r2/default/audio/1782130189882-9e43bc4d-d365-417e-ac97-2864ea670738.mp3' },
+            { icon:'🏆', label:'FTG',     url:'https://www.image2url.com/r2/default/audio/1782130272604-bf870938-08d2-4bba-9257-56ddc83b5576.mp3' },
+            { icon:'😂', label:'FART',          url:'https://www.image2url.com/r2/default/audio/1782130246680-1ce76ab7-e989-482b-a131-b342fb0e0faa.mp3' },
+            { icon:'👻', label:'MITROX',          url:'https://www.image2url.com/r2/default/audio/1782130399554-a641df0a-5921-4b30-b39a-ce330f6fc741.mp3' },
+            { icon:'🎺', label:'NCS',      url:'https://mp3tourl.com/audio/1782130724610-89880e82-d1cb-4082-acbf-3f22e1ba41ef.mp3' },
+            { icon:'🌊', label:'MAJI DE KANSHA',        url:'https://mp3tourl.com/audio/1782130912377-d290d473-7964-47cb-9a99-64f3a9b9edfc.mp3' },
+            { icon:'🏝️', label:'TUNG TUNG GOD',        url:'https://mp3tourl.com/audio/1782209529061-417f8f09-5bca-4cef-82dc-747f3db78e99.mp3' },
+            { icon:'⚽', label:'IE best anime',        url:'https://mp3tourl.com/audio/1782210397035-77113618-7a75-4417-aacf-997064229bfa.mp3' },
+        ];
 
         // ═══ IMAGE DU BOUTON "CODE PROMO" ═══
         // Mets ici l'URL d'une image (PNG/JPG/GIF/WEBP) pour remplacer l'icône 🎟️.
@@ -12060,6 +12132,9 @@
             // Thème aléatoire — écoute en temps réel (attaché une seule fois)
             _listenRandomTheme();
 
+            // Soundboard — écoute en temps réel (joueurs)
+            _sbListenGlobal();
+
             // Admin délégué — listener joueur (bouton rouge)
             _gaListenForPlayer();
             // Admin délégué — listener admin (liste)
@@ -12841,6 +12916,96 @@
             firebaseDB.ref('players/' + key + '/adminPopup').set({ text, img, ts: Date.now() })
                 .then(() => { _adminPopupStatus('✅ Pop-up envoyée à ' + pseudo + ' !'); })
                 .catch(e => _adminPopupStatus('Erreur : ' + e.message));
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // SOUNDBOARD
+        // Firebase : admin/soundboard = { url, ts } → joue le son pour tous
+        //            admin/soundboard = { stop:true, ts } → coupe le son pour tous
+        // ═══════════════════════════════════════════════════════
+
+        var _sbCurrentAudio = null; // instance Audio en cours côté joueur
+        var _sbLastTs       = 0;    // timestamp du dernier événement traité
+
+        // Construire la grille de boutons dans l'admin panel
+        function sbBuildGrid() {
+            var grid = document.getElementById('sbGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            var hasSounds = false;
+            SOUNDBOARD_SOUNDS.forEach(function(s, i) {
+                if (!s.url) return; // bouton désactivé si pas d'URL
+                hasSounds = true;
+                var btn = document.createElement('div');
+                btn.className = 'sb-btn';
+                btn.id = 'sbBtn_' + i;
+                btn.innerHTML =
+                    '<span class="sb-icon">' + (s.icon || '🔊') + '</span>' +
+                    '<span class="sb-label">' + (s.label || 'Son ' + (i+1)) + '</span>';
+                btn.onclick = (function(sound, idx){ return function(){ sbAdminPlay(sound, idx); }; })(s, i);
+                grid.appendChild(btn);
+            });
+            if (!hasSounds) {
+                grid.innerHTML = '<div style="color:#444;font-size:0.72em;padding:4px 0;">Aucun son configuré. Lis les instructions dans le code (variable SOUNDBOARD_SOUNDS).</div>';
+            }
+        }
+
+        // Admin : déclencher un son pour tous les joueurs
+        function sbAdminPlay(sound, idx) {
+            if (!firebaseDB) { sbAdminStatus('⚠️ Firebase non connecté'); return; }
+            if (!sound.url) { sbAdminStatus('⚠️ URL vide pour ce son'); return; }
+            var loop = !!(document.getElementById('sbLoopCheck') && document.getElementById('sbLoopCheck').checked);
+            document.querySelectorAll('.sb-btn').forEach(function(b){ b.classList.remove('playing'); });
+            var btn = document.getElementById('sbBtn_' + idx);
+            if (btn) btn.classList.add('playing');
+            firebaseDB.ref('admin/soundboard').set({ url: sound.url, label: sound.label || '', loop: loop, ts: Date.now() })
+                .then(function(){ sbAdminStatus('✅ ' + (sound.label || 'Son') + (loop ? ' 🔁' : '') + ' envoyé !'); })
+                .catch(function(e){ sbAdminStatus('❌ ' + e.message); });
+        }
+
+        // Admin : couper le son pour tous
+        function sbStopAll() {
+            if (!firebaseDB) { sbAdminStatus('⚠️ Firebase non connecté'); return; }
+            document.querySelectorAll('.sb-btn').forEach(function(b){ b.classList.remove('playing'); });
+            firebaseDB.ref('admin/soundboard').set({ stop: true, ts: Date.now() })
+                .then(function(){ sbAdminStatus('🔇 Son coupé pour tous'); })
+                .catch(function(e){ sbAdminStatus('❌ ' + e.message); });
+        }
+
+        function sbAdminStatus(msg) {
+            var el = document.getElementById('sbAdminStatus');
+            if (!el) return;
+            el.textContent = msg;
+            clearTimeout(el._t);
+            el._t = setTimeout(function(){ el.textContent = ''; }, 4000);
+        }
+
+        // Joueur : écouter Firebase et jouer le son reçu
+        function _sbListenGlobal() {
+            if (!firebaseDB) return;
+            firebaseDB.ref('admin/soundboard').on('value', function(snap) {
+                var d = snap.val();
+                if (!d || !d.ts) return;
+                // Ignorer les événements déjà traités (évite replay au chargement)
+                if (d.ts <= _sbLastTs) return;
+                _sbLastTs = d.ts;
+                // Couper le son en cours si demandé
+                if (_sbCurrentAudio) {
+                    try { _sbCurrentAudio.pause(); _sbCurrentAudio.currentTime = 0; } catch(e){}
+                    _sbCurrentAudio = null;
+                }
+                if (d.stop) return; // ordre stop → juste couper
+                if (!d.url) return;
+                // Jouer le son
+                try {
+                    var audio = new Audio(d.url);
+                    audio.volume = 1.0;
+                    audio.loop   = d.loop === true;
+                    audio.play().catch(function(){});
+                    _sbCurrentAudio = audio;
+                    audio.onended = function(){ if (!audio.loop) _sbCurrentAudio = null; };
+                } catch(e) {}
+            });
         }
 
         function adminBroadcast() {
@@ -14582,7 +14747,7 @@
 
         // Label par défaut selon le type d'événement
         function _schedTypeLabel(type) {
-            return { luck:'🍀 CHANCE', gold:'💰 DOUBLE OR', theme:'🎨 NOUVEL ÉVÉNEMENT', miam:'🍖 MIAM', reload:'🔄 RECHARGEMENT FORCÉ' }[type] || '🎮 ÉVÉNEMENT';
+            return { luck:'🍀 CHANCE', gold:'💰 DOUBLE OR', theme:'🎨 NOUVEL ÉVÉNEMENT', miam:'🍖 MIAM', soundboard:'🔊 SOUNDBOARD', reload:'🔄 RECHARGEMENT FORCÉ' }[type] || '🎮 ÉVÉNEMENT';
         }
 
         // ── Repositionner les 3 bandeaux sans chevauchement ─────────
@@ -14746,6 +14911,15 @@
                         ts: Date.now()
                     }).catch(() => {});
                 }
+            } else if (ev.type === 'soundboard') {
+                if (ev.soundUrl) {
+                    firebaseDB.ref('admin/soundboard').set({
+                        url: ev.soundUrl,
+                        label: ev.soundLabel || '',
+                        loop: !!ev.soundLoop,
+                        ts: Date.now()
+                    }).catch(() => {});
+                }
             } else if (ev.type === 'reload') {
                 firebaseDB.ref('admin/forceReload').set({ ts: Date.now() }).catch(() => {});
             }
@@ -14753,11 +14927,35 @@
 
         function schedTypeChange() {
             const type = document.getElementById('schedType').value;
-            document.getElementById('schedParamsLuck').style.display   = type === 'luck'   ? 'flex' : 'none';
-            document.getElementById('schedParamsGold').style.display   = type === 'gold'   ? 'flex' : 'none';
-            document.getElementById('schedParamsTheme').style.display  = type === 'theme'  ? 'block': 'none';
-            document.getElementById('schedParamsMiam').style.display   = type === 'miam'   ? 'flex' : 'none';
-            document.getElementById('schedParamsReload').style.display = type === 'reload' ? 'block': 'none';
+            document.getElementById('schedParamsLuck').style.display       = type === 'luck'       ? 'flex' : 'none';
+            document.getElementById('schedParamsGold').style.display       = type === 'gold'       ? 'flex' : 'none';
+            document.getElementById('schedParamsTheme').style.display      = type === 'theme'      ? 'block': 'none';
+            document.getElementById('schedParamsMiam').style.display       = type === 'miam'       ? 'flex' : 'none';
+            document.getElementById('schedParamsSoundboard').style.display = type === 'soundboard' ? 'block': 'none';
+            document.getElementById('schedParamsReload').style.display     = type === 'reload'     ? 'block': 'none';
+            if (type === 'soundboard') _schedPopulateSoundSelect();
+        }
+
+        // Construit le select des sons disponibles depuis SOUNDBOARD_SOUNDS (même config que l'onglet Soundboard)
+        function _schedPopulateSoundSelect() {
+            const sel = document.getElementById('schedSoundId');
+            if (!sel || sel.options.length) return; // déjà construit
+            sel.innerHTML = '';
+            let hasSounds = false;
+            SOUNDBOARD_SOUNDS.forEach(function(s, i) {
+                if (!s.url) return; // son désactivé si pas d'URL
+                hasSounds = true;
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = (s.icon || '🔊') + ' ' + (s.label || 'Son ' + (i + 1));
+                sel.appendChild(opt);
+            });
+            if (!hasSounds) {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = 'Aucun son configuré';
+                sel.appendChild(opt);
+            }
         }
 
         // Toggle affichage des paramètres de compte à rebours
@@ -14796,6 +14994,15 @@
                 ev.miamMin = parseInt(document.getElementById('schedMiamMin').value) || 10;
                 ev.miamSec = parseInt(document.getElementById('schedMiamSec').value) || 0;
                 if ((ev.miamMin * 60 + ev.miamSec) <= 0) { _schedStatus('⚠️ Durée MIAM manquante'); return; }
+            } else if (type === 'soundboard') {
+                const soundIdRaw = document.getElementById('schedSoundId').value;
+                if (soundIdRaw === '') { _schedStatus('⚠️ Aucun son disponible — configure SOUNDBOARD_SOUNDS'); return; }
+                const soundIdx = parseInt(soundIdRaw);
+                const sound = SOUNDBOARD_SOUNDS[soundIdx];
+                if (!sound || !sound.url) { _schedStatus('⚠️ Son invalide'); return; }
+                ev.soundUrl   = sound.url;
+                ev.soundLabel = sound.label || '';
+                ev.soundLoop  = !!(document.getElementById('schedSoundLoop') && document.getElementById('schedSoundLoop').checked);
             } else if (type === 'reload') {
                 // Aucun paramètre supplémentaire nécessaire pour le rechargement forcé
             }
@@ -14858,7 +15065,7 @@
                 return;
             }
 
-            const TYPE_LABELS = { luck:'🍀 Chance', gold:'💰 Double or', theme:'🎨 Thème', miam:'🍖 MIAM', reload:'🔄 Rechargement forcé' };
+            const TYPE_LABELS = { luck:'🍀 Chance', gold:'💰 Double or', theme:'🎨 Thème', miam:'🍖 MIAM', soundboard:'🔊 Soundboard', reload:'🔄 Rechargement forcé' };
             const THEME_LABELS = { '':'Défaut', 'saint-patrick':'Saint Patrick', 'printemps':'Printemps',
                 'minecraft':'Minecraft', 'unchained':'Unchained', 'inazuma':'Inazuma Eleven',
                 'or':'Or', 'diamant':'Diamant', 'rainbow':'Rainbow', 'paques':'Pâques',
@@ -14892,6 +15099,8 @@
                     detail = THEME_LABELS[ev.themeId || ''] || ev.themeId || 'Défaut';
                 } else if (ev.type === 'miam') {
                     detail = 'pendant ' + (ev.miamMin || 0) + 'min ' + (ev.miamSec || 0) + 's';
+                } else if (ev.type === 'soundboard') {
+                    detail = (ev.soundLabel || 'Son') + (ev.soundLoop ? ' 🔁 en boucle' : '');
                 } else if (ev.type === 'reload') {
                     detail = 'Recharge la page de tous les joueurs';
                 }
@@ -20014,6 +20223,7 @@
                 { key:'events:scheduled',      label:'📅 Événements programmés' },
             ],
             players: [
+                { key:'players:soundboard',     label:'🔊 Soundboard' },
                 { key:'players:scratch-ticket', label:'🎟️ Ticket à gratter' },
                 { key:'players:gold',           label:'💰 Donner de l\'or' },
                 { key:'players:force-card',     label:'🎴 Forcer une carte (tous)' },
@@ -20406,6 +20616,8 @@
                 if (btn)   btn.classList.toggle('active', t === tab);
                 if (panel) panel.classList.toggle('active', t === tab);
             });
+            // Construire la grille soundboard quand l'onglet Événements est affiché
+            if (tab === 'events') sbBuildGrid();
         }
 
         function adminSaveMutationRates() {
