@@ -230,7 +230,6 @@
                         inset 0 0 40px rgba(0,200,255,0.08) !important;
             animation: ieChestFloat 4s ease-in-out infinite;
             will-change: transform;
-            overflow: visible !important;
         }
         @keyframes ieChestFloat {
             0%,100% { transform: translateY(0); }
@@ -265,12 +264,12 @@
             letter-spacing: 1px !important;
         }
         .theme-banner.inazuma {
-            background: linear-gradient(90deg, #000814, #002a6e, #0066cc, #00eaff, #ffd700, #00eaff, #0066cc, #002a6e, #000814);
+            background: linear-gradient(90deg, #001233, #0066cc, #00eaff, #ffd700, #00eaff, #0066cc, #001233);
             background-size: 300% 100%;
             color: #fff9d6;
-            box-shadow: 0 4px 35px rgba(0,212,255,0.9), 0 0 70px rgba(0,140,255,0.45);
-            animation: bannerShift 3s linear infinite;
-            text-shadow: 0 0 22px rgba(255,255,255,0.9), 0 0 45px rgba(0,212,255,0.8);
+            box-shadow: 0 4px 0 rgba(0,0,0,0.8), 0 4px 30px rgba(0,212,255,0.6);
+            animation: bannerShift 4s linear infinite;
+            text-shadow: 2px 2px 0 #001233, 0 0 14px rgba(0,212,255,0.8);
             letter-spacing: 5px;
             border-bottom: 3px solid #00eaff;
             font-style: italic;
@@ -3300,7 +3299,113 @@
             #promoToggleEmoji { font-size: 1em; }
         }
 
-        /* ═══ INTERFACE CODE PROMO — vraie modale centrée ═══ */
+        /* ═══ BOUTIQUE DE SONS — bouton miroir à gauche du bouton code promo ═══ */
+        .shop-sound-box {
+            position: fixed;
+            top: 50%;
+            left: 52px;
+            transform: translateY(-50%);
+            z-index: 4100;
+        }
+        .shop-sound-toggle {
+            display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+            width:128px; height:128px;
+            background:linear-gradient(180deg,#00d4a8,#00997a 45%,#005a47); border:3px solid #00ffc8;
+            border-radius:22px; color:#fff; font-size:0.82em; font-weight:900; letter-spacing:1px;
+            padding:10px; cursor:pointer; transition:all 0.2s;
+            font-family:'Arial Black',Arial,sans-serif;
+            box-shadow:0 6px 0 #00271f, 0 0 0 rgba(0,255,200,0.6);
+            text-shadow:0 1px 3px rgba(0,0,0,0.5);
+            animation: promoBtnPulse 2s ease-in-out infinite;
+        }
+        .shop-sound-toggle:hover  { transform:translateY(-2px) scale(1.04); border-color:#fff; filter:brightness(1.1); }
+        .shop-sound-toggle:active { transform:translateY(2px) scale(0.98); box-shadow:0 2px 0 #00271f; }
+        #soundShopToggleEmoji { font-size:2.2em; line-height:1; }
+        @media (max-width: 1199px) {
+            .shop-sound-box {
+                position: static;
+                top: auto; left: auto; transform: none;
+                display:flex; justify-content:flex-start; margin: 10px 0 6px;
+            }
+            .shop-sound-toggle {
+                flex-direction: row; width: auto; height: auto;
+                padding: 14px 22px; border-radius: 16px; font-size: 0.98em; gap: 9px;
+            }
+            #soundShopToggleEmoji { font-size: 1em; }
+        }
+        /* Modale boutique de sons — même habillage que la modale code promo */
+        .sound-shop-modal {
+            display: none;
+            position: fixed; inset: 0; z-index: 9500;
+            background: rgba(0,8,6,0.82);
+            backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .sound-shop-modal.open { display: flex; }
+        .sound-shop-modal-box {
+            width: 100%; max-width: 420px; max-height: 80vh; overflow-y: auto;
+            background: linear-gradient(160deg, #00251d 0%, #001310 100%);
+            border: 3px solid #00ffc8;
+            border-radius: 24px;
+            padding: 28px 22px 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 50px rgba(0,255,200,0.18);
+            position: relative;
+            animation: promoModalIn 0.25s cubic-bezier(0.18,0.89,0.32,1.28);
+        }
+        .sound-shop-modal-close {
+            position: absolute; top: 14px; right: 16px;
+            background: rgba(255,255,255,0.08); border: none;
+            color: #aef0e0; width: 30px; height: 30px; border-radius: 50%;
+            font-size: 1.1em; line-height: 1; cursor: pointer; transition: all 0.15s;
+        }
+        .sound-shop-modal-close:hover { background: rgba(255,80,80,0.25); color: #fff; transform: rotate(90deg); }
+        .sound-shop-modal-title {
+            color: #fff; font-size: 1.25em; font-weight: 900; letter-spacing: 1px;
+            text-align: center; margin-bottom: 4px;
+            font-family: 'Arial Black', Arial, sans-serif;
+            text-shadow: 0 0 12px rgba(0,255,200,0.5);
+        }
+        .sound-shop-modal-sub {
+            color: rgba(174,240,224,0.65); font-size: 0.76em; text-align: center;
+            margin-bottom: 16px; line-height: 1.4;
+        }
+        .sound-shop-list { display: flex; flex-direction: column; gap: 8px; }
+        .sound-shop-item {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(0,0,0,0.35); border: 2px solid rgba(0,255,200,0.2);
+            border-radius: 14px; padding: 10px 12px;
+        }
+        .sound-shop-item-icon { font-size: 1.6em; flex-shrink: 0; width: 36px; text-align: center; }
+        .sound-shop-item-info { flex: 1; min-width: 0; }
+        .sound-shop-item-name {
+            color: #fff; font-size: 0.85em; font-weight: 900;
+            font-family: 'Arial Black', Arial, sans-serif;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .sound-shop-item-price { font-size: 0.74em; font-weight: 700; margin-top: 2px; }
+        .sound-shop-item-price-base { color: rgba(174,240,224,0.55); }
+        .sound-shop-item-price-discounted { color: #00ff88; }
+        .sound-shop-item-price-tag {
+            display:inline-block; background:rgba(231,76,60,0.85); color:#fff; font-size:0.85em;
+            font-weight:900; padding:1px 6px; border-radius:6px; margin-right:5px;
+        }
+        .sound-shop-buy-btn {
+            background:linear-gradient(180deg,#00d4a8,#00997a 50%,#005a47); border:2px solid #00ffc8;
+            border-radius:10px; color:#fff; font-size:0.78em; font-weight:900; letter-spacing:0.5px;
+            padding:9px 14px; cursor:pointer; transition:all 0.2s; white-space:nowrap;
+            font-family:'Arial Black',Arial,sans-serif;
+            box-shadow:0 4px 0 #00271f; flex-shrink: 0;
+        }
+        .sound-shop-buy-btn:hover  { transform:translateY(-1px); filter:brightness(1.1); }
+        .sound-shop-buy-btn:active { transform:translateY(1px); box-shadow:0 1px 0 #00271f; }
+        .sound-shop-buy-btn:disabled { opacity:0.45; cursor:not-allowed; }
+        .sound-shop-empty {
+            color: rgba(174,240,224,0.5); font-size: 0.8em; text-align: center; padding: 20px 10px;
+        }
+        .sound-shop-msg { font-size: 0.78em; font-weight: 700; text-align: center; min-height: 18px; margin-top: 10px; }
+        .sound-shop-msg.ok  { color: #00ff88; }
+        .sound-shop-msg.err { color: #ff5555; }        /* ═══ INTERFACE CODE PROMO — vraie modale centrée ═══ */
         .promo-modal {
             display: none;
             position: fixed; inset: 0; z-index: 9500;
@@ -8381,6 +8486,24 @@
                 </div>
             </div>
 
+            <!-- Boutique de sons -->
+            <div class="shop-sound-box">
+                <button id="soundShopToggleBtn" class="shop-sound-toggle" onclick="openSoundShopModal()">
+                    <span id="soundShopToggleEmoji">🎵</span> Sons
+                </button>
+            </div>
+
+            <!-- Interface boutique de sons — vraie modale centrée -->
+            <div class="sound-shop-modal" id="soundShopModal" onclick="if(event.target===this) closeSoundShopModal();">
+                <div class="sound-shop-modal-box">
+                    <button class="sound-shop-modal-close" onclick="closeSoundShopModal()" aria-label="Fermer">✕</button>
+                    <div class="sound-shop-modal-title">🎵 Boutique de sons</div>
+                    <div class="sound-shop-modal-sub">Achète un son qui se joue une seule fois pour toi. Pour le rejouer, il faudra le racheter.</div>
+                    <div class="sound-shop-list" id="soundShopList"></div>
+                    <div class="sound-shop-msg" id="soundShopMsg"></div>
+                </div>
+            </div>
+
             <div class="shop-items">
                 <div class="shop-item common" onclick="buyCard('common')">
                     <div class="shop-item-inner">
@@ -8584,24 +8707,26 @@
         //   1. Va sur catbox.moe → uploade ton fichier MP3
         //   2. Copie l'URL directe obtenue (ex: https://files.catbox.moe/abc123.mp3)
         //   3. Remplace l'url ci-dessous
-        //   4. Change icon (emoji) et label (nom affiché sur le bouton)
+        //   4. Change icon (emoji), label (nom affiché sur le bouton) et price (prix en or
+        //      dans la boutique — c'est ICI que tu définis le prix, pas dans l'admin panel)
         // Tu peux avoir jusqu'à 12 sons. Pour en désactiver un, mets url: ''
+        // Chaque son ajouté ici apparaît automatiquement dans la boutique (bouton "🎵 Sons").
         // ══════════════════════════════════════════════════════════
         const SOUNDBOARD_SOUNDS = [
-            { icon:'🚨', label:'Alerte',      url:'https://www.image2url.com/r2/default/audio/1782128398718-8556565e-7dab-42ec-ae0c-fceefe5b7863.mp3' },
-            { icon:'🗣️', label:'FAH',         url:'https://www.image2url.com/r2/default/audio/1782128282031-d2ea0f16-16c3-41aa-a059-0385a96570ef.mp3' },
-            { icon:'💀', label:'OUF',    url:'https://www.image2url.com/r2/default/audio/1782128457790-b3f36665-bb4e-45ab-a362-90e4a86ab022.mp3' },
-            { icon:'🔥', label:'GET OUT',         url:'https://www.image2url.com/r2/default/audio/1782128505181-824dfb58-ff38-4421-8cc4-5836b137cfbf.mp3' },
-            { icon:'⚡', label:'BRAINROT RAP',      url:'https://www.image2url.com/r2/default/audio/1782128648686-bc9cb7ca-c699-4a8c-b116-e0db99f39c01.mp3' },
-            { icon:'🎵', label:'OUTRO',        url:'https://www.image2url.com/r2/default/audio/1782128757250-5b6d2e84-b6a5-4620-9a23-92ce4ae484f7.mp3' },
-            { icon:'💥', label:'ADMIN ABUSE',         url:'https://www.image2url.com/r2/default/audio/1782130189882-9e43bc4d-d365-417e-ac97-2864ea670738.mp3' },
-            { icon:'🏆', label:'FTG',     url:'https://www.image2url.com/r2/default/audio/1782130272604-bf870938-08d2-4bba-9257-56ddc83b5576.mp3' },
-            { icon:'😂', label:'FART',          url:'https://www.image2url.com/r2/default/audio/1782130246680-1ce76ab7-e989-482b-a131-b342fb0e0faa.mp3' },
-            { icon:'👻', label:'MITROX',          url:'https://www.image2url.com/r2/default/audio/1782130399554-a641df0a-5921-4b30-b39a-ce330f6fc741.mp3' },
-            { icon:'🎺', label:'NCS',      url:'https://mp3tourl.com/audio/1782130724610-89880e82-d1cb-4082-acbf-3f22e1ba41ef.mp3' },
-            { icon:'🌊', label:'MAJI DE KANSHA',        url:'https://mp3tourl.com/audio/1782130912377-d290d473-7964-47cb-9a99-64f3a9b9edfc.mp3' },
-            { icon:'🏝️', label:'TUNG TUNG GOD',        url:'https://mp3tourl.com/audio/1782209529061-417f8f09-5bca-4cef-82dc-747f3db78e99.mp3' },
-            { icon:'⚽', label:'IE best anime',        url:'https://mp3tourl.com/audio/1782210397035-77113618-7a75-4417-aacf-997064229bfa.mp3' },
+            { icon:'🚨', label:'Alerte',      url:'https://www.image2url.com/r2/default/audio/1782128398718-8556565e-7dab-42ec-ae0c-fceefe5b7863.mp3', price:5000 },
+            { icon:'🗣️', label:'FAH',         url:'https://www.image2url.com/r2/default/audio/1782128282031-d2ea0f16-16c3-41aa-a059-0385a96570ef.mp3', price:7500 },
+            { icon:'💀', label:'OUF',    url:'https://www.image2url.com/r2/default/audio/1782128457790-b3f36665-bb4e-45ab-a362-90e4a86ab022.mp3', price:5000 },
+            { icon:'🔥', label:'GET OUT',         url:'https://www.image2url.com/r2/default/audio/1782128505181-824dfb58-ff38-4421-8cc4-5836b137cfbf.mp3', price:7500 },
+            { icon:'⚡', label:'BRAINROT RAP',      url:'https://www.image2url.com/r2/default/audio/1782128648686-bc9cb7ca-c699-4a8c-b116-e0db99f39c01.mp3', price:100000 },
+            { icon:'🎵', label:'OUTRO',        url:'https://www.image2url.com/r2/default/audio/1782128757250-5b6d2e84-b6a5-4620-9a23-92ce4ae484f7.mp3', price:50000 },
+            { icon:'💥', label:'ADMIN ABUSE',         url:'https://www.image2url.com/r2/default/audio/1782130189882-9e43bc4d-d365-417e-ac97-2864ea670738.mp3', price:10000 },
+            { icon:'🏆', label:'FTG',     url:'https://www.image2url.com/r2/default/audio/1782130272604-bf870938-08d2-4bba-9257-56ddc83b5576.mp3', price:10000 },
+            { icon:'😂', label:'FART',          url:'https://www.image2url.com/r2/default/audio/1782130246680-1ce76ab7-e989-482b-a131-b342fb0e0faa.mp3', price:50000 },
+            { icon:'👻', label:'MITROX',          url:'https://www.image2url.com/r2/default/audio/1782130399554-a641df0a-5921-4b30-b39a-ce330f6fc741.mp3', price:1000 },
+            { icon:'🎺', label:'NCS',      url:'https://mp3tourl.com/audio/1782130724610-89880e82-d1cb-4082-acbf-3f22e1ba41ef.mp3', price:500000 },
+            { icon:'🌊', label:'MAJI DE KANSHA',        url:'https://mp3tourl.com/audio/1782130912377-d290d473-7964-47cb-9a99-64f3a9b9edfc.mp3', price:50000 },
+            { icon:'🏝️', label:'TUNG TUNG GOD',        url:'https://mp3tourl.com/audio/1782209529061-417f8f09-5bca-4cef-82dc-747f3db78e99.mp3', price:100000 },
+            { icon:'⚽', label:'IE best anime',        url:'https://mp3tourl.com/audio/1782210397035-77113618-7a75-4417-aacf-997064229bfa.mp3', price:5000 },
         ];
 
         // ═══ IMAGE DU BOUTON "CODE PROMO" ═══
@@ -12587,6 +12712,8 @@
                     el.textContent = '💰 ' + base.toLocaleString();
                 }
             });
+            // Rafraîchir aussi les prix de la boutique de sons si elle est ouverte
+            if (typeof _renderSoundShopList === 'function') _renderSoundShopList();
         }
 
         // Retourne le prix effectif après réduction
@@ -12595,6 +12722,95 @@
                 return Math.max(1, Math.floor(basePrice * (1 - window._shopDiscountPct / 100)));
             }
             return basePrice;
+        }
+
+        // ═══ BOUTIQUE DE SONS ═══
+        // Lit dynamiquement SOUNDBOARD_SOUNDS (configuré dans le code, prix inclus) :
+        // tout son ajouté là apparaît automatiquement ici, sans rien faire en plus.
+        // Achat = lecture locale du son une seule fois pour l'acheteur (jamais de
+        // broadcast Firebase, contrairement au soundboard admin qui joue pour tous).
+        function openSoundShopModal() {
+            playSound('nav');
+            _renderSoundShopList();
+            document.getElementById('soundShopModal').classList.add('open');
+        }
+
+        function closeSoundShopModal() {
+            document.getElementById('soundShopModal').classList.remove('open');
+            const msg = document.getElementById('soundShopMsg');
+            if (msg) { msg.textContent = ''; msg.className = 'sound-shop-msg'; }
+        }
+
+        function _renderSoundShopList() {
+            const list = document.getElementById('soundShopList');
+            if (!list) return; // boutique de sons pas dans le DOM (sécurité)
+            const pct    = window._shopDiscountPct || 0;
+            const active = pct > 0 && window._shopDiscountExpiry > Date.now();
+
+            const available = SOUNDBOARD_SOUNDS
+                .map((s, i) => ({ sound: s, idx: i }))
+                .filter(e => e.sound.url && typeof e.sound.price === 'number' && e.sound.price > 0);
+
+            if (!available.length) {
+                list.innerHTML = '<div class="sound-shop-empty">Aucun son disponible pour le moment.</div>';
+                return;
+            }
+
+            list.innerHTML = '';
+            available.forEach(({ sound, idx }) => {
+                const base = sound.price;
+                const discounted = active ? Math.max(1, Math.floor(base * (1 - pct / 100))) : base;
+                const priceHtml = active
+                    ? '<span class="sound-shop-item-price-tag">-' + pct + '%</span>' +
+                      '<span class="sound-shop-item-price-base" style="text-decoration:line-through;">💰 ' + base.toLocaleString() + '</span> ' +
+                      '<span class="sound-shop-item-price-discounted">💰 ' + discounted.toLocaleString() + '</span>'
+                    : '<span class="sound-shop-item-price-base">💰 ' + base.toLocaleString() + '</span>';
+
+                const row = document.createElement('div');
+                row.className = 'sound-shop-item';
+                row.innerHTML =
+                    '<div class="sound-shop-item-icon">' + (sound.icon || '🔊') + '</div>' +
+                    '<div class="sound-shop-item-info">' +
+                        '<div class="sound-shop-item-name">' + (sound.label || 'Son ' + (idx + 1)) + '</div>' +
+                        '<div class="sound-shop-item-price">' + priceHtml + '</div>' +
+                    '</div>' +
+                    '<button class="sound-shop-buy-btn" onclick="buySoundOnce(' + idx + ')">▶️ Acheter</button>';
+                list.appendChild(row);
+            });
+        }
+
+        // Achète et joue un son une seule fois, localement, pour l'acheteur uniquement.
+        function buySoundOnce(idx) {
+            const sound = SOUNDBOARD_SOUNDS[idx];
+            const msgEl = document.getElementById('soundShopMsg');
+            if (!sound || !sound.url) {
+                if (msgEl) { msgEl.textContent = '❌ Son indisponible'; msgEl.className = 'sound-shop-msg err'; }
+                return;
+            }
+            const price = _getEffectiveShopPrice(sound.price || 0);
+            if (stats.totalGold < price) {
+                if (msgEl) { msgEl.textContent = '❌ Pas assez d\'or ! Il te faut ' + price.toLocaleString() + ' or.'; msgEl.className = 'sound-shop-msg err'; }
+                playSound('error');
+                return;
+            }
+
+            stats.totalGold -= price;
+            const goldDisplay = document.getElementById('totalGoldDisplay');
+            if (goldDisplay) goldDisplay.textContent = stats.totalGold.toLocaleString();
+            const shopGoldDisplay = document.getElementById('shopGoldDisplay');
+            if (shopGoldDisplay) shopGoldDisplay.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
+            autoSave();
+
+            // Lecture locale, une seule fois, pour l'acheteur uniquement
+            try {
+                const audio = new Audio(sound.url);
+                audio.volume = 1.0;
+                audio.play().catch(() => {});
+            } catch (e) {}
+
+            if (msgEl) { msgEl.textContent = '✅ ' + (sound.label || 'Son') + ' joué !'; msgEl.className = 'sound-shop-msg ok'; }
+            clearTimeout(msgEl && msgEl._t);
+            if (msgEl) msgEl._t = setTimeout(() => { msgEl.textContent = ''; msgEl.className = 'sound-shop-msg'; }, 3000);
         }
 
         function adminActivateShopDiscount() {
