@@ -8211,6 +8211,20 @@
                     <div style="color:#555;font-size:0.72em;margin-top:8px;" id="adminShopDiscountStatus"></div>
                 </div>
 
+                <!-- BOUTIQUE GLOBALE — activer/désactiver -->
+                <div class="admin-section" data-ga-feat="shop:global-toggle" style="border-color:rgba(150,60,255,0.4);background:rgba(150,60,255,0.03);margin-top:10px;">
+                    <div class="admin-section-title" style="color:#b03cff;">⚡ Boutique Globale</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:12px;">Active ou désactive le bouton "⚡ Boutique Globale" pour tous les joueurs. Quand désactivée, le bouton disparaît totalement de la boutique jusqu'à réactivation.</div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                        <span id="adminGlobalShopStatusDot" style="width:12px;height:12px;border-radius:50%;background:#e74c3c;box-shadow:0 0 8px rgba(231,76,60,0.6);flex-shrink:0;"></span>
+                        <span id="adminGlobalShopStatusText" style="color:#aaa;font-size:0.8em;font-weight:700;">Statut : chargement…</span>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="admin-btn" onclick="adminEnableGlobalShop()" style="background:linear-gradient(180deg,#5a00aa,#2d0055);box-shadow:0 4px 0 #160028;border:2px solid rgba(180,80,255,0.5);">⚡ Activer</button>
+                        <button class="admin-btn" onclick="adminDisableGlobalShop()" style="background:linear-gradient(180deg,#3a0a0a,#1a0505);box-shadow:0 4px 0 #0a0000;border:2px solid rgba(231,76,60,0.4);color:#e74c3c;">⏹ Désactiver</button>
+                    </div>
+                </div>
+
                 <!-- CODES PROMO -->
                 <div class="admin-section" data-ga-feat="shop:promo-codes" style="border-color:rgba(0,255,200,0.4);background:rgba(0,255,200,0.03);margin-top:10px;">
                     <div class="admin-section-title" style="color:#00ffc8;">🎟️ Codes Promo</div>
@@ -8719,8 +8733,8 @@
             </div>
             <button class="sell-btn-shop" onclick="openSellDuplicates()">💸 VENDRE MES DOUBLONS</button>
             <button class="shop-x10-btn" onclick="openBuyTenModal()">🎲 ACHAT ×10 — Réduction 20% sur toutes les raretés</button>
-            <div class="shop-global-box">
-                <button class="shop-global-toggle" onclick="openGlobalShop()">⚡ Boutique Globale</button>
+            <div class="shop-global-box" id="shopGlobalBox">
+                <button class="shop-global-toggle" id="shopGlobalToggleBtn" onclick="openGlobalShop()">⚡ Boutique Globale</button>
             </div>
             <button class="shop-close-btn" onclick="closeShop()"><span>✕ Fermer</span></button>
         </div>
@@ -12410,6 +12424,30 @@
             // Soundboard — écoute en temps réel (joueurs)
             _sbListenGlobal();
 
+            // Boutique Globale — activé/désactivé par l'admin, en temps réel pour tous
+            firebaseDB.ref('admin/globalShopEnabled').on('value', snap => {
+                const enabled = snap.val();
+                // Par défaut (valeur jamais définie) : activée
+                const isEnabled = (enabled === null || enabled === undefined) ? true : !!enabled;
+                window._globalShopEnabled = isEnabled;
+                const box = document.getElementById('shopGlobalBox');
+                if (box) box.style.display = isEnabled ? '' : 'none';
+                // Sécurité : si la modale était ouverte et que ça vient d'être désactivé, la fermer
+                if (!isEnabled) {
+                    const modal = document.getElementById('globalShopModal');
+                    if (modal && modal.classList.contains('open')) modal.classList.remove('open');
+                }
+                // Mettre à jour l'affichage admin si le panel est ouvert
+                const dot  = document.getElementById('adminGlobalShopStatusDot');
+                const text = document.getElementById('adminGlobalShopStatusText');
+                if (dot && text) {
+                    dot.style.background  = isEnabled ? '#2ecc71' : '#e74c3c';
+                    dot.style.boxShadow   = isEnabled ? '0 0 8px rgba(46,204,113,0.6)' : '0 0 8px rgba(231,76,60,0.6)';
+                    text.textContent      = isEnabled ? 'Statut : ✅ Activée pour tous les joueurs' : 'Statut : ⛔ Désactivée pour tous les joueurs';
+                    text.style.color      = isEnabled ? '#2ecc71' : '#e74c3c';
+                }
+            });
+
             // Admin délégué — listener joueur (bouton rouge)
             _gaListenForPlayer();
             // Admin délégué — listener admin (liste)
@@ -12978,6 +13016,20 @@
                 .then(() => { _adminShopDiscountStatus('✅ Réduction désactivée'); })
                 .catch(e => _adminShopDiscountStatus('Erreur : ' + e.message));
         }
+
+        // ── Boutique Globale : activer/désactiver pour tous les joueurs ──
+        function adminEnableGlobalShop() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            firebaseDB.ref('admin/globalShopEnabled').set(true)
+                .then(() => adminStatus('✅ Boutique Globale activée pour tous les joueurs.'))
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+        function adminDisableGlobalShop() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            firebaseDB.ref('admin/globalShopEnabled').set(false)
+                .then(() => adminStatus('⛔ Boutique Globale désactivée pour tous les joueurs.'))
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
         function _adminShopDiscountStatus(msg) {
             const el = document.getElementById('adminShopDiscountStatus');
             if (!el) return;
@@ -13391,6 +13443,7 @@
         var _gspCooldownEnds   = {}; // { 'luck2': timestamp, ... }
 
         function openGlobalShop() {
+            if (window._globalShopEnabled === false) return; // sécurité : désactivée par l'admin
             _gspBuildSoundList();
             _gspApplyDiscount();
             document.getElementById('globalShopModal').classList.add('open');
@@ -20825,9 +20878,10 @@
                 { key:'players:stats-book',     label:'📊 Stats et livre d\'un joueur' },
             ],
             shop: [
-                { key:'shop:prices',       label:'🏪 Prix de la boutique' },
-                { key:'shop:discount',     label:'🏷️ Réduction globale' },
-                { key:'shop:promo-codes',  label:'🎟️ Codes promo' },
+                { key:'shop:prices',        label:'🏪 Prix de la boutique' },
+                { key:'shop:discount',      label:'🏷️ Réduction globale' },
+                { key:'shop:global-toggle', label:'⚡ Boutique Globale (on/off)' },
+                { key:'shop:promo-codes',   label:'🎟️ Codes promo' },
             ],
             mutations: [
                 { key:'mutations:rates', label:'🧬 Taux de drop' },
