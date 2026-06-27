@@ -3253,6 +3253,92 @@
         }
         .sb-stop-btn:hover  { border-color:#ff5566; transform:translateY(-1px); }
         .sb-stop-btn:active { transform:translateY(1px); }
+
+        /* ═══ BOUTIQUE GLOBALE (Pouvoirs) ═══ */
+        .global-shop-modal {
+            display:none; position:fixed; inset:0; z-index:70000;
+            background:rgba(0,0,0,0.82); backdrop-filter:blur(6px);
+            justify-content:center; align-items:center; padding:16px;
+        }
+        .global-shop-modal.open { display:flex; }
+        .global-shop-box {
+            background:linear-gradient(160deg,#0d0020 0%,#06000f 100%);
+            border:2px solid rgba(220,100,255,0.4); border-radius:22px;
+            padding:22px 20px 18px; width:100%; max-width:460px; max-height:88vh;
+            overflow-y:auto; position:relative;
+            box-shadow:0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(180,60,255,0.2);
+        }
+        .global-shop-box::-webkit-scrollbar { width:4px; }
+        .global-shop-box::-webkit-scrollbar-thumb { background:rgba(180,60,255,0.3); border-radius:2px; }
+        .global-shop-close {
+            position:absolute; top:12px; right:12px; background:none; border:none;
+            color:rgba(255,255,255,0.45); font-size:1.2em; cursor:pointer; padding:4px;
+            transition:color 0.2s;
+        }
+        .global-shop-close:hover { color:#fff; }
+        .global-shop-title {
+            text-align:center; font-size:1.2em; font-weight:900; color:#e080ff;
+            letter-spacing:2px; margin-bottom:4px;
+            text-shadow:0 0 20px rgba(200,80,255,0.6);
+        }
+        .global-shop-sub {
+            text-align:center; font-size:0.72em; color:#886699; margin-bottom:16px;
+        }
+        .global-shop-section-title {
+            font-size:0.7em; font-weight:900; letter-spacing:2px; color:#cc66ff;
+            margin:14px 0 8px; padding-bottom:5px;
+            border-bottom:1px solid rgba(180,60,255,0.2);
+        }
+        .gsp-card {
+            display:flex; align-items:center; gap:12px; cursor:pointer;
+            background:rgba(255,255,255,0.03); border:1px solid rgba(180,60,255,0.2);
+            border-radius:14px; padding:11px 13px; margin-bottom:8px;
+            transition:all 0.15s; position:relative; overflow:hidden;
+        }
+        .gsp-card:hover { border-color:rgba(220,100,255,0.55); background:rgba(180,60,255,0.07); transform:translateY(-1px); }
+        .gsp-card:active { transform:translateY(0); }
+        .gsp-card.on-cooldown { opacity:0.5; cursor:not-allowed; pointer-events:none; }
+        .gsp-card-icon { font-size:1.7em; flex-shrink:0; width:38px; text-align:center; }
+        .gsp-card-info { flex:1; min-width:0; }
+        .gsp-card-name { font-size:0.82em; font-weight:900; color:#fff; margin-bottom:2px; }
+        .gsp-card-desc { font-size:0.67em; color:#886699; line-height:1.4; }
+        .gsp-card-price {
+            background:linear-gradient(180deg,#c87800,#7a4800);
+            border:1px solid rgba(255,180,0,0.4); border-radius:10px;
+            color:#ffd700; font-size:0.72em; font-weight:900;
+            padding:5px 9px; flex-shrink:0; white-space:nowrap;
+        }
+        .gsp-cooldown-bar {
+            position:absolute; bottom:0; left:0; height:3px;
+            background:linear-gradient(90deg,#cc66ff,#8833cc);
+            border-radius:0 0 0 14px; width:0%; transition:none;
+            pointer-events:none;
+        }
+        .gsp-msg-input {
+            width:100%; background:rgba(0,0,0,0.35); border:1px solid rgba(180,60,255,0.3);
+            border-radius:10px; color:#fff; padding:9px 12px; font-size:0.82em;
+            outline:none; margin-bottom:8px; font-family:inherit; box-sizing:border-box;
+        }
+        .gsp-msg-input:focus { border-color:rgba(220,100,255,0.6); }
+        .gsp-msg-input::placeholder { color:rgba(255,255,255,0.22); }
+        .gsp-status { font-size:0.72em; min-height:16px; text-align:center; margin-top:6px; font-weight:700; }
+        .gsp-status.ok  { color:#00ff88; }
+        .gsp-status.err { color:#ff5555; }
+        .shop-global-box { display:contents; }
+        .shop-global-toggle {
+            display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+            width:100%;
+            background:linear-gradient(180deg,#9a3dff,#6b1fc9 45%,#4a0f8a); border:3px solid #cc88ff;
+            border-radius:16px; color:#fff; font-size:0.92em; font-weight:900; letter-spacing:1px;
+            padding:14px 22px; cursor:pointer; transition:all 0.2s;
+            font-family:'Arial Black',Arial,sans-serif;
+            box-shadow:0 6px 0 #2a0060, 0 0 0 rgba(180,80,255,0.6);
+            text-shadow:0 1px 3px rgba(0,0,0,0.5);
+            animation: promoBtnPulse 2s ease-in-out infinite;
+        }
+        .shop-global-toggle:hover  { transform:translateY(-2px) scale(1.04); border-color:#fff; filter:brightness(1.1); }
+        .shop-global-toggle:active { transform:translateY(2px) scale(0.98); box-shadow:0 2px 0 #2a0060; animation:none; }
+
         /* Bouton carré flottant à droite (PC uniquement, quand la place le permet) */
         .shop-promo-box {
             position: fixed;
@@ -8493,6 +8579,67 @@
                 </button>
             </div>
 
+            <!-- Modale Boutique Globale -->
+            <div class="global-shop-modal" id="globalShopModal" onclick="if(event.target===this)closeGlobalShop()">
+                <div class="global-shop-box">
+                    <button class="global-shop-close" onclick="closeGlobalShop()" aria-label="Fermer">✕</button>
+                    <div class="global-shop-title">⚡ BOUTIQUE GLOBALE</div>
+                    <div class="global-shop-sub">Ces achats impactent TOUS les joueurs connectés en temps réel.</div>
+
+                    <!-- Chance globale -->
+                    <div class="global-shop-section-title">🍀 CHANCE GLOBALE</div>
+                    <div class="gsp-card" id="gspLuck2" onclick="gspBuyLuck(2)">
+                        <div class="gsp-card-icon">🍀</div>
+                        <div class="gsp-card-info">
+                            <div class="gsp-card-name">Chance ×2 (5 min)</div>
+                            <div class="gsp-card-desc">Luck ×2 pour tous les joueurs pendant 5 minutes</div>
+                        </div>
+                        <div class="gsp-card-price" id="gspLuck2Price">💰 400 000</div>
+                        <div class="gsp-cooldown-bar" id="gspLuck2Bar"></div>
+                    </div>
+                    <div class="gsp-card" id="gspLuck4" onclick="gspBuyLuck(4)">
+                        <div class="gsp-card-icon">🍀🍀</div>
+                        <div class="gsp-card-info">
+                            <div class="gsp-card-name">Chance ×4 (3 min)</div>
+                            <div class="gsp-card-desc">Luck ×4 pour tous les joueurs pendant 3 minutes</div>
+                        </div>
+                        <div class="gsp-card-price" id="gspLuck4Price">💰 600 000</div>
+                        <div class="gsp-cooldown-bar" id="gspLuck4Bar"></div>
+                    </div>
+                    <div class="gsp-card" id="gspLuck8" onclick="gspBuyLuck(8)">
+                        <div class="gsp-card-icon">🍀🍀🍀</div>
+                        <div class="gsp-card-info">
+                            <div class="gsp-card-name">Chance ×8 (2 min)</div>
+                            <div class="gsp-card-desc">Luck ×8 pour tous les joueurs pendant 2 minutes</div>
+                        </div>
+                        <div class="gsp-card-price" id="gspLuck8Price">💰 800 000</div>
+                        <div class="gsp-cooldown-bar" id="gspLuck8Bar"></div>
+                    </div>
+
+                    <!-- Message global -->
+                    <div class="global-shop-section-title">📢 MESSAGE GLOBAL</div>
+                    <div class="gsp-card" id="gspMsgCard" style="flex-direction:column;align-items:stretch;gap:8px;" onclick="">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div class="gsp-card-icon">📢</div>
+                            <div class="gsp-card-info">
+                                <div class="gsp-card-name">Message pour tous</div>
+                                <div class="gsp-card-desc">Envoie un message visible par tous les joueurs (style admin)</div>
+                            </div>
+                            <div class="gsp-card-price">💰 1 000 000</div>
+                        </div>
+                        <textarea id="gspMsgInput" class="gsp-msg-input" rows="2" maxlength="120" placeholder="Écris ton message ici…" onclick="event.stopPropagation()"></textarea>
+                        <button onclick="event.stopPropagation();gspBuyMessage()" style="background:linear-gradient(180deg,#8833cc,#4a1280);border:2px solid rgba(180,60,255,0.5);border-radius:10px;color:#e080ff;font-size:0.8em;font-weight:900;padding:8px 0;cursor:pointer;width:100%;transition:all 0.15s;" onmouseover="this.style.borderColor='#e080ff'" onmouseout="this.style.borderColor='rgba(180,60,255,0.5)'">📢 Envoyer le message — 💰 1 000 000</button>
+                        <div class="gsp-cooldown-bar" id="gspMsgBar"></div>
+                    </div>
+
+                    <!-- Son global -->
+                    <div class="global-shop-section-title">🔊 SON GLOBAL</div>
+                    <div id="gspSoundList"></div>
+
+                    <div class="gsp-status" id="gspStatus"></div>
+                </div>
+            </div>
+
             <!-- Interface boutique de sons — vraie modale centrée -->
             <div class="sound-shop-modal" id="soundShopModal" onclick="if(event.target===this) closeSoundShopModal();">
                 <div class="sound-shop-modal-box">
@@ -8572,6 +8719,9 @@
             </div>
             <button class="sell-btn-shop" onclick="openSellDuplicates()">💸 VENDRE MES DOUBLONS</button>
             <button class="shop-x10-btn" onclick="openBuyTenModal()">🎲 ACHAT ×10 — Réduction 20% sur toutes les raretés</button>
+            <div class="shop-global-box">
+                <button class="shop-global-toggle" onclick="openGlobalShop()">⚡ Boutique Globale</button>
+            </div>
             <button class="shop-close-btn" onclick="closeShop()"><span>✕ Fermer</span></button>
         </div>
     </div>
@@ -13222,6 +13372,230 @@
                     audio.onended = function(){ if (!audio.loop) _sbCurrentAudio = null; };
                 } catch(e) {}
             });
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // BOUTIQUE GLOBALE — Pouvoirs achetés par les joueurs
+        // Réutilise admin/luck, admin/broadcast, admin/soundboard
+        // Cooldown local (par type) + cooldown Firebase anti-spam
+        // ═══════════════════════════════════════════════════════
+
+        const GSP_LUCK_PRICES  = { 2: 400000, 4: 600000, 8: 800000 };
+        const GSP_LUCK_DUR_MS  = { 2: 5*60*1000, 4: 3*60*1000, 8: 2*60*1000 };
+        const GSP_MSG_PRICE    = 1000000;
+        const GSP_SOUND_MULT   = 100; // prix normal × 100
+        const GSP_COOLDOWNS    = { luck: 60*1000, msg: 30*1000, sound: 30*1000 }; // ms côté client
+        const GSP_FIREBASE_CD  = { luck: 2*60*1000, msg: 60*1000, sound: 30*1000 }; // cooldown anti-spam Firebase
+
+        var _gspCooldownTimers = {}; // { 'luck2': intervalId, ... }
+        var _gspCooldownEnds   = {}; // { 'luck2': timestamp, ... }
+
+        function openGlobalShop() {
+            _gspBuildSoundList();
+            _gspApplyDiscount();
+            document.getElementById('globalShopModal').classList.add('open');
+        }
+        function closeGlobalShop() {
+            document.getElementById('globalShopModal').classList.remove('open');
+        }
+
+        // Appliquer la réduction boutique sur les prix luck
+        function _gspApplyDiscount() {
+            var disc = typeof _currentShopDiscount === 'number' ? _currentShopDiscount : 0;
+            var factor = disc > 0 ? (1 - disc / 100) : 1;
+            [2, 4, 8].forEach(function(m) {
+                var el = document.getElementById('gspLuck' + m + 'Price');
+                var base = GSP_LUCK_PRICES[m];
+                var final = Math.round(base * factor);
+                if (el) el.textContent = '💰 ' + final.toLocaleString();
+            });
+        }
+
+        // ── Acheter Luck globale ──────────────────────────────────
+        function gspBuyLuck(mult) {
+            if (!firebaseDB) { _gspStatus('⚠️ Firebase non connecté', 'err'); return; }
+            var cdKey = 'luck' + mult;
+            if (_gspCooldownEnds[cdKey] && Date.now() < _gspCooldownEnds[cdKey]) {
+                _gspStatus('⏳ Cooldown actif, patiente encore…', 'err'); return;
+            }
+            var disc   = typeof _currentShopDiscount === 'number' ? _currentShopDiscount : 0;
+            var factor = disc > 0 ? (1 - disc / 100) : 1;
+            var price  = Math.round(GSP_LUCK_PRICES[mult] * factor);
+            if (stats.totalGold < price) { _gspStatus('💸 Pas assez d\'or ! Il te faut ' + price.toLocaleString() + ' 💰', 'err'); return; }
+
+            // Vérifier le cooldown Firebase anti-spam
+            firebaseDB.ref('admin/gspCooldown/luck').once('value').then(function(snap) {
+                var d = snap.val();
+                if (d && d.ts && (Date.now() - d.ts) < GSP_FIREBASE_CD.luck) {
+                    var rem = Math.ceil((GSP_FIREBASE_CD.luck - (Date.now() - d.ts)) / 1000);
+                    _gspStatus('⏳ Quelqu\'un vient d\'activer une Luck ! Attends ' + rem + 's', 'err');
+                    return;
+                }
+                // Débiter l'or
+                stats.totalGold -= price;
+                _gspUpdateGoldDisplay();
+                autoSave();
+                var pseudo = localStorage.getItem('tradePseudo') || 'Un joueur';
+                var durMs  = GSP_LUCK_DUR_MS[mult];
+                // Écrire Firebase luck (même format qu'adminSetLuck)
+                firebaseDB.ref('admin/luck').set({ multiplier: mult, durationMs: durMs, ts: Date.now() })
+                    .then(function() {
+                        // Enregistrer cooldown anti-spam
+                        firebaseDB.ref('admin/gspCooldown/luck').set({ ts: Date.now(), by: pseudo }).catch(function(){});
+                        // Broadcast automatique
+                        var durLabel = GSP_LUCK_DUR_MS[mult] / 60000 + ' min';
+                        firebaseDB.ref('admin/broadcast').set({ msg: '🍀 ' + pseudo + ' a activé la Chance ×' + mult + ' pour ' + durLabel + ' pour tout le monde !', ts: Date.now(), from: 'BOUTIQUE GLOBALE' }).catch(function(){});
+                        _gspStatus('✅ Chance ×' + mult + ' activée pour ' + durLabel + ' !', 'ok');
+                        _gspStartCooldown(cdKey, GSP_COOLDOWNS.luck, 'gsp' + cdKey.charAt(0).toUpperCase() + cdKey.slice(1) + 'Bar');
+                    })
+                    .catch(function(e) {
+                        // Rembourser si échec
+                        stats.totalGold += price;
+                        _gspUpdateGoldDisplay();
+                        autoSave();
+                        _gspStatus('❌ Erreur : ' + e.message, 'err');
+                    });
+            }).catch(function() { _gspStatus('❌ Erreur réseau', 'err'); });
+        }
+
+        // ── Acheter Message global ────────────────────────────────
+        function gspBuyMessage() {
+            if (!firebaseDB) { _gspStatus('⚠️ Firebase non connecté', 'err'); return; }
+            if (_gspCooldownEnds['msg'] && Date.now() < _gspCooldownEnds['msg']) {
+                _gspStatus('⏳ Cooldown actif, patiente encore…', 'err'); return;
+            }
+            var msg = (document.getElementById('gspMsgInput').value || '').trim();
+            if (!msg) { _gspStatus('⚠️ Écris un message d\'abord', 'err'); return; }
+            if (stats.totalGold < GSP_MSG_PRICE) { _gspStatus('💸 Pas assez d\'or ! Il te faut 1 000 000 💰', 'err'); return; }
+
+            firebaseDB.ref('admin/gspCooldown/msg').once('value').then(function(snap) {
+                var d = snap.val();
+                if (d && d.ts && (Date.now() - d.ts) < GSP_FIREBASE_CD.msg) {
+                    var rem = Math.ceil((GSP_FIREBASE_CD.msg - (Date.now() - d.ts)) / 1000);
+                    _gspStatus('⏳ Attends encore ' + rem + 's avant d\'envoyer un message', 'err'); return;
+                }
+                stats.totalGold -= GSP_MSG_PRICE;
+                _gspUpdateGoldDisplay();
+                autoSave();
+                var pseudo = localStorage.getItem('tradePseudo') || 'Un joueur';
+                firebaseDB.ref('admin/broadcast').set({ msg: msg, ts: Date.now(), from: pseudo })
+                    .then(function() {
+                        firebaseDB.ref('admin/gspCooldown/msg').set({ ts: Date.now(), by: pseudo }).catch(function(){});
+                        document.getElementById('gspMsgInput').value = '';
+                        _gspStatus('✅ Message envoyé !', 'ok');
+                        _gspStartCooldown('msg', GSP_COOLDOWNS.msg, 'gspMsgBar');
+                    })
+                    .catch(function(e) {
+                        stats.totalGold += GSP_MSG_PRICE;
+                        _gspUpdateGoldDisplay();
+                        autoSave();
+                        _gspStatus('❌ Erreur : ' + e.message, 'err');
+                    });
+            }).catch(function() { _gspStatus('❌ Erreur réseau', 'err'); });
+        }
+
+        // ── Acheter Son global ────────────────────────────────────
+        function gspBuySound(idx) {
+            if (!firebaseDB) { _gspStatus('⚠️ Firebase non connecté', 'err'); return; }
+            var cdKey = 'sound' + idx;
+            if (_gspCooldownEnds[cdKey] && Date.now() < _gspCooldownEnds[cdKey]) {
+                _gspStatus('⏳ Cooldown actif, patiente encore…', 'err'); return;
+            }
+            var sound = SOUNDBOARD_SOUNDS[idx];
+            if (!sound || !sound.url) { _gspStatus('⚠️ Son non disponible', 'err'); return; }
+            var price = Math.round((sound.price || 5000) * GSP_SOUND_MULT);
+            if (stats.totalGold < price) { _gspStatus('💸 Pas assez d\'or ! Il te faut ' + price.toLocaleString() + ' 💰', 'err'); return; }
+
+            firebaseDB.ref('admin/gspCooldown/sound').once('value').then(function(snap) {
+                var d = snap.val();
+                if (d && d.ts && (Date.now() - d.ts) < GSP_FIREBASE_CD.sound) {
+                    var rem = Math.ceil((GSP_FIREBASE_CD.sound - (Date.now() - d.ts)) / 1000);
+                    _gspStatus('⏳ Un son vient d\'être joué ! Attends ' + rem + 's', 'err'); return;
+                }
+                stats.totalGold -= price;
+                _gspUpdateGoldDisplay();
+                autoSave();
+                var pseudo = localStorage.getItem('tradePseudo') || 'Un joueur';
+                firebaseDB.ref('admin/soundboard').set({ url: sound.url, label: sound.label || '', loop: false, ts: Date.now() })
+                    .then(function() {
+                        firebaseDB.ref('admin/gspCooldown/sound').set({ ts: Date.now(), by: pseudo }).catch(function(){});
+                        firebaseDB.ref('admin/broadcast').set({ msg: '🔊 ' + pseudo + ' a joué le son "' + (sound.label || 'son') + '" pour tout le monde !', ts: Date.now(), from: 'BOUTIQUE GLOBALE' }).catch(function(){});
+                        _gspStatus('✅ Son "' + (sound.label || 'son') + '" joué pour tous !', 'ok');
+                        _gspStartCooldown(cdKey, GSP_COOLDOWNS.sound, 'gspSoundBar_' + idx);
+                    })
+                    .catch(function(e) {
+                        stats.totalGold += price;
+                        _gspUpdateGoldDisplay();
+                        autoSave();
+                        _gspStatus('❌ Erreur : ' + e.message, 'err');
+                    });
+            }).catch(function() { _gspStatus('❌ Erreur réseau', 'err'); });
+        }
+
+        // ── Construire la liste des sons ──────────────────────────
+        function _gspBuildSoundList() {
+            var list = document.getElementById('gspSoundList');
+            if (!list) return;
+            list.innerHTML = '';
+            var hasSounds = false;
+            SOUNDBOARD_SOUNDS.forEach(function(s, i) {
+                if (!s.url) return;
+                hasSounds = true;
+                var price = Math.round((s.price || 5000) * GSP_SOUND_MULT);
+                var card = document.createElement('div');
+                card.className = 'gsp-card';
+                card.id = 'gspSoundCard_' + i;
+                card.innerHTML =
+                    '<div class="gsp-card-icon">' + (s.icon || '🔊') + '</div>' +
+                    '<div class="gsp-card-info">' +
+                        '<div class="gsp-card-name">' + (s.label || 'Son ' + (i+1)) + '</div>' +
+                        '<div class="gsp-card-desc">Joue ce son pour tous les joueurs</div>' +
+                    '</div>' +
+                    '<div class="gsp-card-price">💰 ' + price.toLocaleString() + '</div>' +
+                    '<div class="gsp-cooldown-bar" id="gspSoundBar_' + i + '"></div>';
+                card.onclick = (function(idx){ return function(){ gspBuySound(idx); }; })(i);
+                list.appendChild(card);
+            });
+            if (!hasSounds) {
+                list.innerHTML = '<div style="color:#444;font-size:0.72em;padding:4px 0;">Aucun son disponible.</div>';
+            }
+        }
+
+        // ── Cooldown visuel (barre de progression) ────────────────
+        function _gspStartCooldown(cdKey, durationMs, barId) {
+            _gspCooldownEnds[cdKey] = Date.now() + durationMs;
+            if (_gspCooldownTimers[cdKey]) clearInterval(_gspCooldownTimers[cdKey]);
+            var bar = document.getElementById(barId);
+            _gspCooldownTimers[cdKey] = setInterval(function() {
+                var remaining = _gspCooldownEnds[cdKey] - Date.now();
+                var pct = Math.max(0, remaining / durationMs * 100);
+                if (bar) { bar.style.width = pct + '%'; bar.style.transition = 'width 1s linear'; }
+                if (remaining <= 0) {
+                    clearInterval(_gspCooldownTimers[cdKey]);
+                    delete _gspCooldownTimers[cdKey];
+                    delete _gspCooldownEnds[cdKey];
+                    if (bar) bar.style.width = '0%';
+                }
+            }, 500);
+            if (bar) { bar.style.width = '100%'; bar.style.transition = 'none'; }
+        }
+
+        // ── Mise à jour affichage or ──────────────────────────────
+        function _gspUpdateGoldDisplay() {
+            var d1 = document.getElementById('totalGoldDisplay');
+            var d2 = document.getElementById('shopGoldDisplay');
+            if (d1) d1.textContent = stats.totalGold.toLocaleString();
+            if (d2) d2.textContent = '💰 ' + stats.totalGold.toLocaleString() + ' Or';
+        }
+
+        // ── Message de statut ─────────────────────────────────────
+        function _gspStatus(msg, type) {
+            var el = document.getElementById('gspStatus');
+            if (!el) return;
+            el.textContent = msg;
+            el.className = 'gsp-status ' + (type || '');
+            clearTimeout(el._t);
+            el._t = setTimeout(function() { el.textContent = ''; el.className = 'gsp-status'; }, 5000);
         }
 
         function adminBroadcast() {
