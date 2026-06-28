@@ -5211,6 +5211,51 @@
         }
 
 
+        /* ═══ MODE MAINTENANCE ═══ */
+        .maintenance-overlay {
+            display: none;
+            position: fixed; inset: 0; z-index: 4500;
+            background: radial-gradient(ellipse at 50% 30%, #1a0030 0%, #050008 75%);
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 24px; box-sizing: border-box; text-align: center;
+            overflow-y: auto;
+        }
+        .maintenance-overlay.open { display: flex; }
+        .maintenance-box {
+            max-width: 520px; width: 100%;
+            display: flex; flex-direction: column; align-items: center; gap: 18px;
+        }
+        .maintenance-icon {
+            font-size: 4em;
+            animation: maintenancePulse 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 25px rgba(180,80,255,0.6));
+        }
+        @keyframes maintenancePulse {
+            0%, 100% { transform: scale(1);   opacity: 1;   }
+            50%      { transform: scale(1.08); opacity: 0.85; }
+        }
+        .maintenance-title {
+            color: #fff; font-size: 1.7em; font-weight: 900; letter-spacing: 1px;
+            font-family: 'Arial Black', Arial, sans-serif;
+            text-shadow: 0 0 25px rgba(180,80,255,0.7);
+            margin: 0;
+        }
+        .maintenance-img {
+            max-width: 100%; max-height: 260px; width: auto; height: auto;
+            object-fit: contain; border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(180,80,255,0.3);
+            display: none;
+        }
+        .maintenance-img.shown { display: block; }
+        .maintenance-text {
+            color: rgba(255,255,255,0.75); font-size: 1em; line-height: 1.6;
+            max-width: 440px; white-space: pre-wrap; word-break: break-word;
+        }
+        .maintenance-footer {
+            color: rgba(180,80,255,0.5); font-size: 0.72em; letter-spacing: 2px;
+            text-transform: uppercase; margin-top: 4px;
+        }
+
         .auth-top-btn {
             position:fixed; top:14px; right:14px; z-index:5000;
             background:linear-gradient(180deg,#0a1628,#050d1a);
@@ -6956,6 +7001,20 @@
         <span id="authTopLabel">CONNEXION</span>
     </div>
 
+    <!-- ════ MODE MAINTENANCE — écran plein écran pour tous les joueurs ════ -->
+    <!-- L'accès admin (bouton connexion ci-dessus + mot de passe) reste TOUJOURS
+         accessible : cet overlay a un z-index inférieur (4500) et ne capture
+         aucun clic en dehors de sa propre zone. -->
+    <div class="maintenance-overlay" id="maintenanceOverlay">
+        <div class="maintenance-box">
+            <div class="maintenance-icon">🔒</div>
+            <h1 class="maintenance-title">🔒 Le jeu est en pause</h1>
+            <img class="maintenance-img" id="maintenanceImg" src="" alt="" onerror="this.classList.remove('shown');">
+            <div class="maintenance-text" id="maintenanceText">Le jeu est actuellement en maintenance. Reviens un peu plus tard !</div>
+            <div class="maintenance-footer">Maintenance en cours</div>
+        </div>
+    </div>
+
     <!-- ════ TICKET À GRATTER QUOTIDIEN ════ -->
     <div id="scratchOverlay">
         <div class="scratch-ticket-wrap">
@@ -8384,6 +8443,26 @@
                         </div>
                     </div>
                     <button class="admin-btn blue" onclick="adminRefreshGlobalStats()" style="margin-top:10px;font-size:0.8em;padding:9px;">🔄 Actualiser</button>
+                </div>
+
+                <!-- MODE MAINTENANCE -->
+                <div class="admin-section" data-ga-feat="stats:maintenance" style="border-color:rgba(180,80,255,0.4);background:rgba(150,60,255,0.03);margin-top:12px;">
+                    <div class="admin-section-title" style="color:#b03cff;">🔒 Mode maintenance</div>
+                    <div style="color:#555;font-size:0.72em;margin-bottom:12px;">Bloque totalement l'accès au jeu pour tous les joueurs avec un écran "Le jeu est en pause". L'accès admin reste toujours possible via le code admin.</div>
+
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                        <span id="adminMaintenanceStatusDot" style="width:12px;height:12px;border-radius:50%;background:#2ecc71;box-shadow:0 0 8px rgba(46,204,113,0.6);flex-shrink:0;"></span>
+                        <span id="adminMaintenanceStatusText" style="color:#2ecc71;font-size:0.8em;font-weight:700;">Statut : ✅ Jeu accessible normalement</span>
+                    </div>
+
+                    <div style="color:#888;font-size:0.7em;margin-bottom:6px;">Message affiché aux joueurs :</div>
+                    <textarea id="adminMaintenanceMsgInput" class="admin-input" rows="3" style="width:100%;resize:vertical;margin-bottom:10px;font-family:inherit;" placeholder="Le jeu est actuellement en maintenance. Reviens un peu plus tard !"></textarea>
+
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="admin-btn" onclick="adminEnableMaintenance()" style="background:linear-gradient(180deg,#5a00aa,#2d0055);box-shadow:0 4px 0 #160028;border:2px solid rgba(180,80,255,0.5);">🔒 Activer la maintenance</button>
+                        <button class="admin-btn" onclick="adminDisableMaintenance()" style="background:linear-gradient(180deg,#006622,#003311);box-shadow:0 4px 0 #001a09;border:2px solid rgba(46,204,113,0.5);">✅ Désactiver</button>
+                        <button class="admin-btn blue" onclick="adminUpdateMaintenanceMsg()">💾 Mettre à jour le message</button>
+                    </div>
                 </div>
 
                 <!-- Dashboard drop rates -->
@@ -12453,6 +12532,42 @@
             // Admin délégué — listener admin (liste)
             _gaListenForAdmin();
 
+            // Mode maintenance — activé/désactivé par l'admin, en temps réel pour tous
+            // L'accès admin (bouton connexion + mot de passe) n'est JAMAIS affecté :
+            // cet overlay a un z-index strictement inférieur et ne touche à aucun
+            // élément d'authentification admin.
+            firebaseDB.ref('admin/maintenance').on('value', snap => {
+                const d = snap.val();
+                const isActive = !!(d && d.active);
+                window._maintenanceActive = isActive;
+                const overlay = document.getElementById('maintenanceOverlay');
+                const textEl  = document.getElementById('maintenanceText');
+                const imgEl   = document.getElementById('maintenanceImg');
+                if (textEl) textEl.textContent = (d && d.message) ? d.message : 'Le jeu est actuellement en maintenance. Reviens un peu plus tard !';
+                if (imgEl) {
+                    if (MAINTENANCE_IMAGE_URL) {
+                        imgEl.src = MAINTENANCE_IMAGE_URL;
+                        imgEl.classList.add('shown');
+                    } else {
+                        imgEl.classList.remove('shown');
+                    }
+                }
+                if (overlay) overlay.classList.toggle('open', isActive);
+                // Mettre à jour l'affichage admin si le panel est ouvert
+                const dot  = document.getElementById('adminMaintenanceStatusDot');
+                const text = document.getElementById('adminMaintenanceStatusText');
+                if (dot && text) {
+                    dot.style.background = isActive ? '#e74c3c' : '#2ecc71';
+                    dot.style.boxShadow  = isActive ? '0 0 8px rgba(231,76,60,0.6)' : '0 0 8px rgba(46,204,113,0.6)';
+                    text.textContent     = isActive ? 'Statut : 🔒 Maintenance ACTIVE pour tous les joueurs' : 'Statut : ✅ Jeu accessible normalement';
+                    text.style.color     = isActive ? '#e74c3c' : '#2ecc71';
+                }
+                const msgInput = document.getElementById('adminMaintenanceMsgInput');
+                if (msgInput && document.activeElement !== msgInput && d && d.message) {
+                    msgInput.value = d.message;
+                }
+            });
+
             } // fin bloc _globalListenersAttached
 
             // ── Listener ticket admin broadcast (pour tous) ──
@@ -13030,6 +13145,30 @@
                 .then(() => adminStatus('⛔ Boutique Globale désactivée pour tous les joueurs.'))
                 .catch(e => adminStatus('Erreur : ' + e.message));
         }
+
+        // ── Mode Maintenance : activer/désactiver + message personnalisé ──
+        function adminEnableMaintenance() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            const msgEl = document.getElementById('adminMaintenanceMsgInput');
+            const message = (msgEl && msgEl.value.trim()) ? msgEl.value.trim() : 'Le jeu est actuellement en maintenance. Reviens un peu plus tard !';
+            firebaseDB.ref('admin/maintenance').set({ active: true, message, ts: Date.now() })
+                .then(() => adminStatus('🔒 Mode maintenance ACTIVÉ pour tous les joueurs.'))
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+        function adminDisableMaintenance() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            firebaseDB.ref('admin/maintenance/active').set(false)
+                .then(() => adminStatus('✅ Mode maintenance désactivé — jeu accessible pour tous.'))
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
+        function adminUpdateMaintenanceMsg() {
+            if (!firebaseDB) { adminStatus('⚠️ Firebase non connecté'); return; }
+            const msgEl = document.getElementById('adminMaintenanceMsgInput');
+            const message = (msgEl && msgEl.value.trim()) ? msgEl.value.trim() : 'Le jeu est actuellement en maintenance. Reviens un peu plus tard !';
+            firebaseDB.ref('admin/maintenance/message').set(message)
+                .then(() => adminStatus('✅ Message de maintenance mis à jour.'))
+                .catch(e => adminStatus('Erreur : ' + e.message));
+        }
         function _adminShopDiscountStatus(msg) {
             const el = document.getElementById('adminShopDiscountStatus');
             if (!el) return;
@@ -13055,6 +13194,11 @@
         });
 
         const ADMIN_PSEUDO = 'Sachmns';
+
+        // ═══ MODE MAINTENANCE — image affichée sur l'écran de pause ═══
+        // Modifie cette URL directement ici (PAS dans l'admin panel).
+        // Laisse une chaîne vide '' pour n'afficher aucune image.
+        const MAINTENANCE_IMAGE_URL = 'https://cdn-icons-png.flaticon.com/512/4411/4411553.png';
 
         // Triple-tap sur le titre du jeu (mobile uniquement) pour ouvrir le panel admin
         (function() {
@@ -13401,28 +13545,35 @@
         // Joueur : écouter Firebase et jouer le son reçu
         function _sbListenGlobal() {
             if (!firebaseDB) return;
-            firebaseDB.ref('admin/soundboard').on('value', function(snap) {
+            // Lire silencieusement le ts actuel en base AVANT d'attacher le listener.
+            // Sans ça, le .on('value') se déclenche immédiatement au chargement avec
+            // la dernière valeur en base (même vieille de plusieurs jours), et rejoue
+            // le son alors que personne n'a rien déclenché.
+            firebaseDB.ref('admin/soundboard').once('value').then(function(snap) {
                 var d = snap.val();
-                if (!d || !d.ts) return;
-                // Ignorer les événements déjà traités (évite replay au chargement)
-                if (d.ts <= _sbLastTs) return;
-                _sbLastTs = d.ts;
-                // Couper le son en cours si demandé
-                if (_sbCurrentAudio) {
-                    try { _sbCurrentAudio.pause(); _sbCurrentAudio.currentTime = 0; } catch(e){}
-                    _sbCurrentAudio = null;
-                }
-                if (d.stop) return; // ordre stop → juste couper
-                if (!d.url) return;
-                // Jouer le son
-                try {
-                    var audio = new Audio(d.url);
-                    audio.volume = 1.0;
-                    audio.loop   = d.loop === true;
-                    audio.play().catch(function(){});
-                    _sbCurrentAudio = audio;
-                    audio.onended = function(){ if (!audio.loop) _sbCurrentAudio = null; };
-                } catch(e) {}
+                if (d && d.ts) _sbLastTs = d.ts; // mémoriser le ts sans jouer le son
+            }).catch(function(){}).then(function() {
+                // Attacher le listener seulement après avoir initialisé _sbLastTs
+                firebaseDB.ref('admin/soundboard').on('value', function(snap) {
+                    var d = snap.val();
+                    if (!d || !d.ts) return;
+                    if (d.ts <= _sbLastTs) return; // déjà traité ou antérieur à la connexion
+                    _sbLastTs = d.ts;
+                    if (_sbCurrentAudio) {
+                        try { _sbCurrentAudio.pause(); _sbCurrentAudio.currentTime = 0; } catch(e){}
+                        _sbCurrentAudio = null;
+                    }
+                    if (d.stop) return;
+                    if (!d.url) return;
+                    try {
+                        var audio = new Audio(d.url);
+                        audio.volume = 1.0;
+                        audio.loop   = d.loop === true;
+                        audio.play().catch(function(){});
+                        _sbCurrentAudio = audio;
+                        audio.onended = function(){ if (!audio.loop) _sbCurrentAudio = null; };
+                    } catch(e) {}
+                });
             });
         }
 
@@ -20888,9 +21039,10 @@
                 { key:'mutations:boost', label:'⚡ Boost ×2 mutation' },
             ],
             stats: [
-                { key:'stats:global',    label:'🌍 Statistiques globales' },
-                { key:'stats:dashboard', label:'📉 Dashboard (drop rates, cartes, top)' },
-                { key:'stats:popup',     label:'📣 Pop-up pour les joueurs' },
+                { key:'stats:global',      label:'🌍 Statistiques globales' },
+                { key:'stats:maintenance', label:'🔒 Mode maintenance' },
+                { key:'stats:dashboard',   label:'📉 Dashboard (drop rates, cartes, top)' },
+                { key:'stats:popup',       label:'📣 Pop-up pour les joueurs' },
             ],
             security: [
                 { key:'security:antiabuse', label:'🛡️ Système Anti-Abus' },
